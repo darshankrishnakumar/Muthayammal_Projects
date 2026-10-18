@@ -1,0 +1,92 @@
+[
+  {
+    "task": "input_validator",
+    "class": "apple_fruit",
+    "split": "train",
+    "filename": "rot_apple_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_fruit\\rot_apple_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\train\\apple_fruit\\rot_apple_sample.jpg",
+    "md5": "332f61f77e3c6e9a408e02b3ef64851b"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_fruit",
+    "split": "train",
+    "filename": "normal_apple_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_fruit\\normal_apple_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\train\\apple_fruit\\normal_apple_sample.jpg",
+    "md5": "77af1913ef9974f8e995a42777221cb4"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_fruit",
+    "split": "val",
+    "filename": "scab_apple_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_fruit\\scab_apple_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\val\\apple_fruit\\scab_apple_sample.jpg",
+    "md5": "61bee9e99a00c74af83ff0e6a079aee5"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_fruit",
+    "split": "test",
+    "filename": "blotch_apple_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_fruit\\blotch_apple_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\test\\apple_fruit\\blotch_apple_sample.jpg",
+    "md5": "e15593a915119a3841ab2cace83d5ae0"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_leaf",
+    "split": "train",
+    "filename": "healthy_leaf_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_leaf\\healthy_leaf_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\train\\apple_leaf\\healthy_leaf_sample.jpg",
+    "md5": "136e6ac61b7d1d13bc8cdcb560f44769"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_leaf",
+    "split": "train",
+    "filename": "cedar_rust_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_leaf\\cedar_rust_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\train\\apple_leaf\\cedar_rust_sample.jpg",
+    "md5": "8d6b516d39ee2522c8b862cef6c6afea"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_leaf",
+    "split": "val",
+    "filename": "scab_leaf_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_leaf\\scab_leaf_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\val\\apple_leaf\\scab_leaf_sample.jpg",
+    "md5": "96bae4bde97f745f6776e70771abce95"
+  },
+  {
+    "task": "input_validator",
+    "class": "apple_leaf",
+    "split": "test",
+    "filename": "black_rot_leaf_sample.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\apple_leaf\\black_rot_leaf_sample.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\test\\apple_leaf\\black_rot_leaf_sample.jpg",
+    "md5": "eec268f0144a0cf0e2602127eb7d8c54"
+  },
+  {
+    "task": "input_validator",
+    "class": "unsupported",
+    "split": "train",
+    "filename": "unsupported_benchmark.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\unsupported\\unsupported_benchmark.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\train\\unsupported\\unsupported_benchmark.jpg",
+    "md5": "a8dabe45f0bf472bf016649788bd0f50"
+  },
+  {
+    "task": "input_validator",
+    "class": "unsupported",
+    "split": "test",
+    "filename": "unsupported_benchmark.jpg",
+    "original_path": "datasets\\raw\\demo_reference\\validator\\unsupported\\unsupported_benchmark.jpg",
+    "processed_path": "datasets\\processed\\input_validator\\test\\unsupported\\unsupported_benchmark.jpg",
+    "md5": "a8dabe45f0bf472bf016649788bd0f50"
+  }
+]

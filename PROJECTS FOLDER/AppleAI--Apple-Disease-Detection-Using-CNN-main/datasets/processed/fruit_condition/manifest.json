@@ -1,0 +1,1280 @@
+[
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.15.09 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.15.09 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.15.09 PM.png",
+    "md5": "f6e89f1bdfe65b2a7ad9e06e35522606"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.09.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.09.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.09.54 PM.png",
+    "md5": "693c52c68b5f40a7f546280f7922d04d"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.02.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.02.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.02.54 PM.png",
+    "md5": "ed7af8e048d9c11c2fef1d73bf2640f6"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.13.31 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.13.31 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.13.31 PM.png",
+    "md5": "f57cce72714aff2e5a348677a625a2a2"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.27.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.27.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.27.54 PM.png",
+    "md5": "08c896d10b380f4ada7bd9354e2c325a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.04.24 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.04.24 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.04.24 PM.png",
+    "md5": "d96807ac9f19ce2caa1834e2ed1a895b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.21.51 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.21.51 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.21.51 PM.png",
+    "md5": "f7fa52d24daec4f9fbae8f1cea9b295e"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.32.38 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.32.38 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.32.38 PM.png",
+    "md5": "e5eeccab065c37808385ca1f6e9560b3"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.02.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.02.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.02.43 PM.png",
+    "md5": "410067c364b38961cf757663a7a242e4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.00.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.00.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.00.43 PM.png",
+    "md5": "49055b50bd44cc00e4e80f0a7fd34307"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.34.07 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.34.07 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.34.07 PM.png",
+    "md5": "91d4f326879032ca17e9f5a5d7224a1e"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.11.02 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.11.02 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.11.02 PM.png",
+    "md5": "50b9c5bc3d03245eb5f0a7031c8c35a8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.09.31 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.09.31 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.09.31 PM.png",
+    "md5": "603b68eb2654bdefb8fdae7df783be13"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.12.56 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.12.56 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.12.56 PM.png",
+    "md5": "1bdce6eec7f2c9a440c17472624b6491"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "md5": "94d225e98e50da3ce99bcd874c35c83d"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.32.50 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.32.50 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.32.50 PM.png",
+    "md5": "cca9a9d8b0090d459b739bd0b80ba4cb"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.25.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.25.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.25.43 PM.png",
+    "md5": "3c522e14e05ab701ff696d428197fae1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.32.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.32.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.32.43 PM.png",
+    "md5": "2dbcf8b14c7b331ca50ebb69fcd67804"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.06.28 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.06.28 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.06.28 PM.png",
+    "md5": "9c7dddf13364dae6eb911f31f50afed1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.00.35 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.00.35 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.00.35 PM.png",
+    "md5": "e4e5b2636bc4bd21848ce9da2f9983bb"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.17.58 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.17.58 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.17.58 PM.png",
+    "md5": "f5341c4da4f871c17fcbc57294699c95"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.28.59 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.28.59 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.28.59 PM.png",
+    "md5": "3b86db66516018391dc8af4818e7b652"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 4.59.49 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 4.59.49 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 4.59.49 PM.png",
+    "md5": "b554e6d01f3c1f620276de4e51f89414"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.13.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.13.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.13.54 PM.png",
+    "md5": "0d88fcd460214a7eb412710420c809c9"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.01.01 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.01.01 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.01.01 PM.png",
+    "md5": "9b0bcbbafbbf3efeecfd911519c66b4a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.05.34 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.05.34 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.05.34 PM.png",
+    "md5": "1432893d732e20afea3c2a60c37ba1a8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.10.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.10.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.10.43 PM.png",
+    "md5": "86fbb4183177c9a710b7d9f3e7614a67"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.16.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.16.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.16.37 PM.png",
+    "md5": "0f34e3478c046eb0bb5d1983873dd713"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.27.34 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.27.34 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.27.34 PM.png",
+    "md5": "8dac54385db4f59f26e62251d750c57b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.08.05 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.08.05 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.08.05 PM.png",
+    "md5": "7ec4801a1d4a802d8256426f30393c2d"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.14.48 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.14.48 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.14.48 PM.png",
+    "md5": "b1e9054a2c72931c411f8efac83acf45"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.14.01 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.14.01 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.14.01 PM.png",
+    "md5": "44b3cfc380b9c8c770c071546d3c4d09"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.04.59 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.04.59 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.04.59 PM.png",
+    "md5": "b5c7362197f234c69fc133be3a9b5ef8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.04.16 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.04.16 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.04.16 PM.png",
+    "md5": "3f477d68d5fd12d9ed2ce45e59bcb973"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.02.08 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.02.08 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.02.08 PM.png",
+    "md5": "43d81d0ba876d639c192e1f7275d300d"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.04.42 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.04.42 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.04.42 PM.png",
+    "md5": "d378fe1713737566e812e5a6eaf7fe03"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.05.41 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.05.41 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.05.41 PM.png",
+    "md5": "411e26347a447f4b1d6f5b39d488c35f"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.28.24 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.28.24 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.28.24 PM.png",
+    "md5": "69eebd2168695e386e3973a29b0dc8a8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.13.25 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.13.25 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.13.25 PM.png",
+    "md5": "a3088987927598153e7ba16511a0e063"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.07.05 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.07.05 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.07.05 PM.png",
+    "md5": "c47d192a42af90c9f282079b47e1f0b3"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.07.18 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.07.18 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.07.18 PM.png",
+    "md5": "1b68b3d2bc72f4f3802022549614af19"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 4.59.44 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 4.59.44 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 4.59.44 PM.png",
+    "md5": "e254ef13e34d869178f003f8089ec56c"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.09.40 PM.png",
+    "md5": "c0b175f7a640eca9f24b5a65a5bfe0a2"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "md5": "b0d3948803b39b85fa04ab4b652ee88a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.10.29 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.10.29 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.10.29 PM.png",
+    "md5": "e23eb4482313cf3ac50b5a0c29889994"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.03.47 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.03.47 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.03.47 PM.png",
+    "md5": "cd165b40e37441b4e872c25e88d141b3"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.15.45 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.15.45 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.15.45 PM.png",
+    "md5": "811163ce92f41654fbe296273a0bcef1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.24.19 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.24.19 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.24.19 PM.png",
+    "md5": "4db59f2e4cd3130ea6069c6b6b743a12"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 5.29.13 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.29.13 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Fresh\\Screen Shot 2018-06-08 at 5.29.13 PM.png",
+    "md5": "b6544c8b3ef3e3764b75540ef7871932"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.28.04 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.28.04 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.28.04 PM.png",
+    "md5": "66cf413197a72f28a0f00772d31c0b4a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.29.18 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.29.18 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.29.18 PM.png",
+    "md5": "c47e01ce03890a93151987843b3e1e98"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.07.52 PM.png",
+    "md5": "20585064ee4ec84e6390b0efe753dbb7"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.14.20 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.14.20 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.14.20 PM.png",
+    "md5": "7ab7ded91068c750a94720a1a50fdddc"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.06.23 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.06.23 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.06.23 PM.png",
+    "md5": "8dd88572e803f1cec951785fb7a643aa"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.27.06 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.27.06 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.27.06 PM.png",
+    "md5": "46268dc36c64a0dd3acc99f69fb922a7"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.21.06 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.21.06 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.21.06 PM.png",
+    "md5": "1fe349a6358f4ddd1946adc58d44ebdc"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "sample_normal_apple.jpg",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\sample_normal_apple.jpg",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\sample_normal_apple.jpg",
+    "md5": "77af1913ef9974f8e995a42777221cb4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "rotated_by_15_Screen Shot 2018-06-08 at 5.08.46 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.08.46 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\rotated_by_15_Screen Shot 2018-06-08 at 5.08.46 PM.png",
+    "md5": "0442653c24a1fbfbd8b028a61bbba0be"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 5.03.40 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.03.40 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Fresh\\Screen Shot 2018-06-08 at 5.03.40 PM.png",
+    "md5": "2a47b56f3d4d8c95f7ec59efd905f272"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.01.15 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.01.15 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.01.15 PM.png",
+    "md5": "15414bac6f8c407741737a40d76a6c92"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.01.22 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.01.22 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.01.22 PM.png",
+    "md5": "63166748ce75b1788cb5e8421fc4d6ed"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.16.06 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.16.06 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.16.06 PM.png",
+    "md5": "5f78f72bef50e9a6b9c386e783f6eb3f"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.26.19 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.26.19 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.26.19 PM.png",
+    "md5": "7ddec225aa0dd77c2ad3fd7e11be6c50"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.07.26 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.07.26 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.07.26 PM.png",
+    "md5": "2bdfe97482606afcad5baf0fefc3f6fd"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.08.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.08.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.08.37 PM.png",
+    "md5": "8e4dc2c4ce413de850a3aec380111448"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.09.47 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.09.47 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.09.47 PM.png",
+    "md5": "adf77442a0911264da53072fe5eb7eb5"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.16.28 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.16.28 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.16.28 PM.png",
+    "md5": "8b44ddaa85ab2b2cd6395495cca37532"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.19.58 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.19.58 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.19.58 PM.png",
+    "md5": "e207402c84b10247b69262aa3b8a9581"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.25.28 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.25.28 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.25.28 PM.png",
+    "md5": "fab154c5b0992e1cc1e8f560099bc6e8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.01.41 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.01.41 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.01.41 PM.png",
+    "md5": "c9c62cabaca33141636c2aa4452877cd"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Fresh",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-08 at 5.09.17 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Fresh\\Screen Shot 2018-06-08 at 5.09.17 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Fresh\\Screen Shot 2018-06-08 at 5.09.17 PM.png",
+    "md5": "d1aaf0c12cb6e7ef68dd09f1c3b99792"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.51.45 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.51.45 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.51.45 PM.png",
+    "md5": "eae02146f261ef51a5ed8c6bf4b545f7"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.43.48 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.43.48 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.43.48 PM.png",
+    "md5": "d8be5a010e7c8804b23a4a2218652af0"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.30.51 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.30.51 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.30.51 PM.png",
+    "md5": "44e00e4e89538d2bc31ff1913633bdd2"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.51.08 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.51.08 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.51.08 PM.png",
+    "md5": "cc96952fb7be16f4bdb258caaf117716"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.04.04 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.04.04 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.04.04 PM.png",
+    "md5": "983eba28aaf42f11884ad9cc644f047f"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.34.49 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.34.49 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.34.49 PM.png",
+    "md5": "cd9cf5468b0dc0166d6cbb4e8b5fe453"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.59.13 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.59.13 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.59.13 PM.png",
+    "md5": "47dc938449e7a81126a6da168bdfaedd"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.25.04 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.25.04 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.25.04 PM.png",
+    "md5": "d3028a6f9ae5d10a386d0084428972f1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.20.34 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.20.34 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.20.34 PM.png",
+    "md5": "02b5f7a22e7824503e55c3735ab516d5"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.29.10 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.29.10 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.29.10 PM.png",
+    "md5": "4a3c6365f310d0690fd1da8606f3429e"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.26.09 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.26.09 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.26.09 PM.png",
+    "md5": "448cf6a87032aab03856f4a3b3b7baa1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.48.09 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.48.09 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.48.09 PM.png",
+    "md5": "2d62066f3972c71eec97022dc8e06814"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.39.53 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.39.53 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.39.53 PM.png",
+    "md5": "d953c9dbe2218153a08950a90c4adf9b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.46.32 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.46.32 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.46.32 PM.png",
+    "md5": "ad5c541ce63eb029e26e2ed56797f17a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.41.14 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.41.14 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.41.14 PM.png",
+    "md5": "f085f3d1344fdd8c5858009f979f47f4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.25.24 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.25.24 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.25.24 PM.png",
+    "md5": "f876217f3ab84a24e2b4f1ea8246dd9e"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.01.38 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.01.38 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.01.38 PM.png",
+    "md5": "5a437d55fbc74a132897aaf3ca348fd6"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.25.17 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.25.17 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.25.17 PM.png",
+    "md5": "73e207543e015c9a00a2ef4e2ecf8901"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.39.51 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.39.51 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.39.51 PM.png",
+    "md5": "605cec3d81d5956b4155e7ef634b9daf"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.28.07 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.28.07 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.28.07 PM.png",
+    "md5": "82c1baa384deb037641f4a90592d8e16"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.58.30 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.58.30 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.58.30 PM.png",
+    "md5": "c0b6165705898823ecff2d5614c2d70a"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.06.30 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.06.30 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.06.30 PM.png",
+    "md5": "bd4c51a1209c6c1c4b009d9d598c27df"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.26.55 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.26.55 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.26.55 PM.png",
+    "md5": "7375ab12d2c73ce5897ec3e63d857f60"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.51.16 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.51.16 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.51.16 PM.png",
+    "md5": "8631a9258081e8715932510cb3f13bd4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.29.20 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.29.20 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.29.20 PM.png",
+    "md5": "72a5f89b011b19ad0e2e662b767b1868"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.35.38 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.35.38 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.35.38 PM.png",
+    "md5": "335f21472e67dc7e65af0dd9e30497c4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.44.36 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.44.36 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.44.36 PM.png",
+    "md5": "2244f3c0ca6befa39de8f828b6271807"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.58.04 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.58.04 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.58.04 PM.png",
+    "md5": "ab96837c52a009f98a69bc80faa3e7d2"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.03.31 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.03.31 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.03.31 PM.png",
+    "md5": "7ff4a58c5156567ade8d1d595c341b40"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.43.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.43.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.43.54 PM.png",
+    "md5": "06a3fc213a271fba59b743b816b4d9ab"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.50.14 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.50.14 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.50.14 PM.png",
+    "md5": "0816b5607942db3627154b0cd3544ee3"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.51.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.51.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.51.37 PM.png",
+    "md5": "0cd3518279746c348fe30b33b9397fc4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.34.47 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.34.47 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.34.47 PM.png",
+    "md5": "a4bde5dcac382a04a60e8e41120c188c"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.22.39 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.22.39 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.22.39 PM.png",
+    "md5": "0e600dfa03f9ed53cc0060ed44cad713"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.30.45 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.30.45 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.30.45 PM.png",
+    "md5": "94d731350d0c9c449e15f2426af020c3"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.34.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.34.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.34.37 PM.png",
+    "md5": "27c20665888db779ac2f1f5f952601e8"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.37.53 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.37.53 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.37.53 PM.png",
+    "md5": "b9a4f4f83352f5b099e795fd7e29d9db"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.05.38 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.05.38 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.05.38 PM.png",
+    "md5": "321d5ed31138d2a58d7cc2043d5b7495"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.47.50 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.47.50 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.47.50 PM.png",
+    "md5": "1f181f7f26e632becffaecd1e2c950eb"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.42.30 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.42.30 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.42.30 PM.png",
+    "md5": "adc30cd698b7a0f201f8748a28a7d23c"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.38.13 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.38.13 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.38.13 PM.png",
+    "md5": "99544b05b64078a02c36ae27dc768325"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.15.34 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.15.34 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.15.34 PM.png",
+    "md5": "50eacbf22e6b0d53de6659aec8d75898"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.46.08 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.46.08 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.46.08 PM.png",
+    "md5": "c3046dc5fafdd8c0bf46c296ff3254ff"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.42.58 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.42.58 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.42.58 PM.png",
+    "md5": "b68562c609ec5554c530c6df0ba4e53b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.46.25 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.46.25 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.46.25 PM.png",
+    "md5": "e56bfbc6a73424df616c15cb45aadece"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-08 at 2.31.03 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.31.03 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-08 at 2.31.03 PM.png",
+    "md5": "2e1f17ed74928ac0eccd6d57872bd9eb"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.53.57 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.53.57 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.53.57 PM.png",
+    "md5": "3de36de5eb3b9c15a8812f05f325b45c"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 2.59.23 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.59.23 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 2.59.23 PM.png",
+    "md5": "5b29e2dd08688fcd4ebc3f0574772392"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "train",
+    "filename": "Screen Shot 2018-06-07 at 3.17.32 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.17.32 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\train\\Rotten\\Screen Shot 2018-06-07 at 3.17.32 PM.png",
+    "md5": "668f10e909de4c444cd996c873390d2b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-07 at 3.04.10 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.04.10 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-07 at 3.04.10 PM.png",
+    "md5": "2fa69b0466b031cfbe8b6b20a1c45e48"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 2.24.46 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.24.46 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-08 at 2.24.46 PM.png",
+    "md5": "d3ed1841e9306403db08de491fec0daa"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-07 at 2.39.20 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.39.20 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-07 at 2.39.20 PM.png",
+    "md5": "9cb974e8c26d7c0a44730ed1fd071fb7"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 2.48.43 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.48.43 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-08 at 2.48.43 PM.png",
+    "md5": "43477d226328be8be160ec2236c15fd0"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 2.37.03 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.37.03 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-08 at 2.37.03 PM.png",
+    "md5": "b93fd386e9d4be37f472cfd5f31b2d80"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-07 at 3.03.02 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.03.02 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-07 at 3.03.02 PM.png",
+    "md5": "71d9ceaf6e4164f879cecc0b68e21678"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-07 at 2.59.09 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.59.09 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-07 at 2.59.09 PM.png",
+    "md5": "23c5aa7d7c453fb6aafa8894a4fa90af"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "sample_rot_apple.jpg",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\sample_rot_apple.jpg",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\sample_rot_apple.jpg",
+    "md5": "332f61f77e3c6e9a408e02b3ef64851b"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-08 at 2.45.44 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-08 at 2.45.44 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-08 at 2.45.44 PM.png",
+    "md5": "91749ddf7aad88fda0867ac728f2c5fd"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "val",
+    "filename": "Screen Shot 2018-06-07 at 2.21.09 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.21.09 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\val\\Rotten\\Screen Shot 2018-06-07 at 2.21.09 PM.png",
+    "md5": "6b74a4f0f8a558c3161d0aac8ed559e4"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.16.54 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.16.54 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.16.54 PM.png",
+    "md5": "dcc009325e9b15bbc07ef9c3247ceb97"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.18.25 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.18.25 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.18.25 PM.png",
+    "md5": "289ddb9e0b60f51d1f63ba3e5b488733"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.54.41 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.54.41 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.54.41 PM.png",
+    "md5": "fb8caa68e7c263e030ffc04da92c4051"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 3.02.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.02.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 3.02.37 PM.png",
+    "md5": "bc71887151910ee2932716eafcc9cffa"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.38.59 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.38.59 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.38.59 PM.png",
+    "md5": "0f92f9a41936e191ea25358b787597f5"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.39.35 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.39.35 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.39.35 PM.png",
+    "md5": "f9958b12751cce2d0857028a6d7b8336"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.42.37 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.42.37 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.42.37 PM.png",
+    "md5": "82b83dfb30aad59a102c7db28b97c91d"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.56.47 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.56.47 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.56.47 PM.png",
+    "md5": "9baff00e07d7bf61fd57c3c0cc7ece73"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.58.38 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.58.38 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.58.38 PM.png",
+    "md5": "e00baeb708f6133de241b2984dd69c4f"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 3.00.25 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 3.00.25 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 3.00.25 PM.png",
+    "md5": "fb1f765e2732f080efd3a3c31fea5cc1"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.20.04 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.20.04 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.20.04 PM.png",
+    "md5": "b0b89ed289b6c2b1d75ab7f775451726"
+  },
+  {
+    "task": "fruit_condition",
+    "class": "Rotten",
+    "split": "test",
+    "filename": "Screen Shot 2018-06-07 at 2.39.44 PM.png",
+    "original_path": "datasets\\raw\\fruit_condition\\Rotten\\Screen Shot 2018-06-07 at 2.39.44 PM.png",
+    "processed_path": "datasets\\processed\\fruit_condition\\test\\Rotten\\Screen Shot 2018-06-07 at 2.39.44 PM.png",
+    "md5": "ed7bf721f73773f749a372cbd3ee9e2d"
+  }
+]

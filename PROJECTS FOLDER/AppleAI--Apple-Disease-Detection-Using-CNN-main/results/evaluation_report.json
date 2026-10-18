@@ -1,0 +1,128 @@
+{
+  "task_name": "leaf_disease",
+  "checkpoint": "models/apple_leaf_disease_v1.pth",
+  "total_test_samples": 28,
+  "overall_accuracy_pct": 85.71,
+  "rejection_threshold": 0.6,
+  "uncertain_sample_count": 4,
+  "classes": [
+    "Apple_Scab",
+    "Black_Rot",
+    "Cedar_Apple_Rust",
+    "Healthy"
+  ],
+  "macro_precision_pct": 87.3,
+  "macro_recall_pct": 85.71,
+  "macro_f1_pct": 85.57,
+  "per_class_metrics": {
+    "Apple_Scab": {
+      "precision_pct": 77.78,
+      "recall_pct": 100.0,
+      "f1_score_pct": 87.5,
+      "test_support": 7
+    },
+    "Black_Rot": {
+      "precision_pct": 85.71,
+      "recall_pct": 85.71,
+      "f1_score_pct": 85.71,
+      "test_support": 7
+    },
+    "Cedar_Apple_Rust": {
+      "precision_pct": 85.71,
+      "recall_pct": 85.71,
+      "f1_score_pct": 85.71,
+      "test_support": 7
+    },
+    "Healthy": {
+      "precision_pct": 100.0,
+      "recall_pct": 71.43,
+      "f1_score_pct": 83.33,
+      "test_support": 7
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "Apple_Scab",
+      "Black_Rot",
+      "Cedar_Apple_Rust",
+      "Healthy"
+    ],
+    "matrix": [
+      [
+        7,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        6,
+        1,
+        0
+      ],
+      [
+        1,
+        0,
+        6,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        5
+      ]
+    ]
+  },
+  "misclassifications": [
+    {
+      "file": "datasets\\processed\\leaf_disease\\test\\Black_Rot\\sample_black_rot_leaf.jpg",
+      "true_class": "Black_Rot",
+      "predicted_class": "Cedar_Apple_Rust",
+      "confidence": 38.71,
+      "probabilities": {
+        "Apple_Scab": 26.96,
+        "Black_Rot": 29.66,
+        "Cedar_Apple_Rust": 38.71,
+        "Healthy": 4.67
+      }
+    },
+    {
+      "file": "datasets\\processed\\leaf_disease\\test\\Cedar_Apple_Rust\\sample_cedar_rust_leaf.jpg",
+      "true_class": "Cedar_Apple_Rust",
+      "predicted_class": "Apple_Scab",
+      "confidence": 39.46,
+      "probabilities": {
+        "Apple_Scab": 39.46,
+        "Black_Rot": 19.49,
+        "Cedar_Apple_Rust": 22.67,
+        "Healthy": 18.38
+      }
+    },
+    {
+      "file": "datasets\\processed\\leaf_disease\\test\\Healthy\\00907d8b-6ae6-4306-bfd7-d54471981a86___RS_HL 5709.JPG",
+      "true_class": "Healthy",
+      "predicted_class": "Black_Rot",
+      "confidence": 35.36,
+      "probabilities": {
+        "Apple_Scab": 28.87,
+        "Black_Rot": 35.36,
+        "Cedar_Apple_Rust": 0.75,
+        "Healthy": 35.02
+      }
+    },
+    {
+      "file": "datasets\\processed\\leaf_disease\\test\\Healthy\\sample_healthy_leaf.jpg",
+      "true_class": "Healthy",
+      "predicted_class": "Apple_Scab",
+      "confidence": 68.35,
+      "probabilities": {
+        "Apple_Scab": 68.35,
+        "Black_Rot": 7.71,
+        "Cedar_Apple_Rust": 7.89,
+        "Healthy": 16.05
+      }
+    }
+  ],
+  "disclaimer": "Evaluation was conducted on held-out untouched test data. Laboratory dataset accuracy must NOT be conflated with guaranteed wild orchard or consumer-grade real-world accuracy."
+}

@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "task_name": "fruit_condition",
+  "model_architecture": "MobileNetV2",
+  "pretrained_weights": "MobileNet_V2_Weights.DEFAULT (ImageNet-1K)",
+  "classes": [
+    "Fresh",
+    "Rotten"
+  ],
+  "class_to_idx": {
+    "Fresh": 0,
+    "Rotten": 1
+  },
+  "input_dimensions": [
+    3,
+    224,
+    224
+  ],
+  "normalization": {
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "training_metadata": {
+    "seed": 42,
+    "device": "cpu",
+    "epochs_head": 5,
+    "epochs_fine": 5,
+    "batch_size": 16,
+    "best_val_loss": 0.0844,
+    "test_metrics": {
+      "test_loss": 0.0916,
+      "test_accuracy": 100.0,
+      "test_macro_f1": 100.0
+    }
+  }
+}

@@ -1,0 +1,1533 @@
+{
+  "dataset_path": "D:\\vicky folder\\AppleAI--Apple-Disease-Detection-Using-CNN-main\\datasets\\raw\\leaf_disease",
+  "classes": [
+    "Apple_Scab",
+    "Black_Rot",
+    "Cedar_Apple_Rust",
+    "Healthy"
+  ],
+  "class_counts": {
+    "Apple_Scab": 41,
+    "Black_Rot": 41,
+    "Cedar_Apple_Rust": 41,
+    "Healthy": 41
+  },
+  "valid_samples": [
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\00075aa8-d81a-4184-8541-b692b78d398a___FREC_Scab 3335.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "841d0bf56e5ab96bb96b0953c49eb31a",
+      "dhash": "990e274d7d816133"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\01a66316-0e98-4d3b-a56f-d78752cd043f___FREC_Scab 3003.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b864c04c6195b89d7d7555311dbc3ca4",
+      "dhash": "8307161b191d343c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\01f3deaa-6143-4b6c-9c22-620a46d8be04___FREC_Scab 3112.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "2265a73c77faf5468e8b90e6dd67897c",
+      "dhash": "c7037266d2bc2c6d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0208f4eb-45a4-4399-904e-989ac2c6257c___FREC_Scab 3037.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "aadb92fad55b3241b30b15d718c95775",
+      "dhash": "301c2613292ac6f6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\023123cb-7b69-4c9f-a521-766d7c8543bb___FREC_Scab 3487.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "d3c6c92c783dcd4398d82979b018d93d",
+      "dhash": "9607030b0fd9cb63"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0261a6e4-21f8-481a-8827-b674e6955644___FREC_Scab 3055.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b1e96401d1d1386a45e461b631d737c4",
+      "dhash": "c603315050702088"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\029424b0-0ef5-491b-9ef5-069190d24d8f___FREC_Scab 3504.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "756bc832683d4349f214c2a7071e47b8",
+      "dhash": "6253133363676e59"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\03354abb-aa1c-4f9d-a1ef-9f40505cd539___FREC_Scab 3355.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8768fa3f7b1d48e110f315f8308a2c18",
+      "dhash": "238f1d6bdecee4d3"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0340dc35-5215-48ab-8db7-06af99fcb358___FREC_Scab 2966.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5f5fdeca824eabe2ce8506699a644f66",
+      "dhash": "46963367272b3018"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0395b847-2c73-4674-826f-33a6afb5b4fe___FREC_Scab 3287.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ffe18f9ceb151607bb6a89484ac7005f",
+      "dhash": "c29b333323666d2d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\03eccb1a-0368-4ac7-9f48-7546037b775a___FREC_Scab 3334.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "715f02cf022c8d2838ff1a49a4684e34",
+      "dhash": "080c0e1c193a3023"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0537ad56-3d24-4e97-a947-65b9b37f8988___FREC_Scab 3079.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "46073b81e4dbe9800e0ff7335d7ee84b",
+      "dhash": "383c5fcb71391cc7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\058d5e64-2c57-45ba-94cb-ac83fd1885a0___FREC_Scab 3181.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "832064a2425894a6cc76ec682fe99dc9",
+      "dhash": "e3870646c6c3e604"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0631708e-5bac-4611-8ff9-6d5ee87ce3b3___FREC_Scab 3252.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "558e968cb287ab622ae2414c938d2775",
+      "dhash": "fbe6933331339999"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0672ab32-9fce-41f3-ae69-e39c48a0a292___FREC_Scab 3347.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "3dcebc83edc7eea310cf6c92dda62979",
+      "dhash": "0e1d393e1d353f1a"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\06cf74b6-d895-4a09-b3b1-bc63579f8c33___FREC_Scab 3128.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "0c575fac4ce98e52e14912507f587d24",
+      "dhash": "000103336fffffff"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\073b509f-c1ea-4e61-881b-2e874c5f4199___FREC_Scab 3286.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5dda386bf4237f57484bc2ece00b87ab",
+      "dhash": "9e23696968700407"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\075b1885-250b-4b3e-8168-e54efdbb04e8___FREC_Scab 3173.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "90c4e8a9f2f46fdc0b29382f4575191d",
+      "dhash": "a207173f363e7b3f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0812e1e4-6d1b-4264-8f23-6519354fc5a6___FREC_Scab 3293.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "af102e6b8eb94b3e04aae1fae887dceb",
+      "dhash": "cec7c3f171737b37"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0896ecbc-1af2-4868-8279-ed302acb29bc___FREC_Scab 3339.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "80a63ae1d2754686a163fe96a4bd0cc8",
+      "dhash": "f3c69307672d8983"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\08c42d78-aa7b-4106-b0c1-b260f898dcba___FREC_Scab 3151.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "9c9d84281579006f7afca8ba5c01224a",
+      "dhash": "27171b29296d2727"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\095c9131-a0cb-47de-898a-f9371f208c01___FREC_Scab 3109.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "02636cb2c08296b23cdcb288fd1973a4",
+      "dhash": "8c1b1b3933b326ac"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\09ba6ad9-aa8d-4493-b1bf-818a4b30c4aa___FREC_Scab 2981.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "538046759148d2268aa4533c67b8fdc7",
+      "dhash": "a5cd9d9163664cf8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\09e40e4f-f8bc-4537-b20d-0b244760dbf4___FREC_Scab 3216.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e4bcba648b57df656b723c1ba1c3709f",
+      "dhash": "c93613cd25240505"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0a14783a-838a-4d4f-a671-ff98011714c6___FREC_Scab 3288.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "589432a4c7a74ccfd0f7a81aec20029f",
+      "dhash": "9a0c666333339b8d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0a5e9323-dbad-432d-ac58-d291718345d9___FREC_Scab 3417.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "fcd5d839fab8877fcb73c3ce37817138",
+      "dhash": "1c1f012221252326"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0a6812de-7416-4ffe-aba9-307599a02c84___FREC_Scab 2973.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "70387ac9760f2895ed56709fe44b9b70",
+      "dhash": "03448c3070e4e1e3"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0a769a71-052a-4f19-a4d8-b0f0cb75541c___FREC_Scab 3165.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "41ae22fa44b81586a0e516a391ff35e9",
+      "dhash": "5299393034313386"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0b170906-9436-4c0d-84c1-c396ad9d909b___FREC_Scab 3101.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6eeb70cc74b4994c36f103825b0f399e",
+      "dhash": "3c7771383c9e4b20"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0b1e31fa-cbc0-41ed-9139-c794e6855e82___FREC_Scab 3089.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a4d9740240acf62e8c4f656acd65308c",
+      "dhash": "4e93393979682918"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0b4a52e3-e15e-4117-b2e8-7cdb5dca3ce9___FREC_Scab 3137.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5e2df031f26a1e42c31ae7a3013398f6",
+      "dhash": "b2fc777bb99d87a6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0c620ec5-11cf-4120-94ab-1311e99df147___FREC_Scab 3131.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6756e28b6dfdc41091cebca6a4338e9e",
+      "dhash": "23439b1f0c181c19"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0cbfa4fa-63d8-43ce-9385-ff140e524b69___FREC_Scab 3164.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f9d85d9b6077d25f1fbaff92265ab3d9",
+      "dhash": "189cb79393090c06"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0d3c0790-7833-470b-ac6e-94d0a3bf3e7c___FREC_Scab 2959.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "aafe0f0479f6a41c2558d10e88f87f9c",
+      "dhash": "e6833d3c81e563e3"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0d8d5b80-962d-4381-8d3b-9eca3f2f1bb0___FREC_Scab 3449.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "532704a675494acb6250d4fcb009884a",
+      "dhash": "04070b2b23273181"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0db71c1d-93d7-4481-b0d0-b73f995131a9___FREC_Scab 2976.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "7fef85e91782b8ce77eebb1df5843f3d",
+      "dhash": "cb0b7e76e363319b"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0e90fe4a-e8b6-4186-9429-a9fea180af9a___FREC_Scab 3391.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "4cd9b38de5da75fec57a0fdbc21f29ee",
+      "dhash": "491e3363c3a59336"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\0ea78733-9404-4536-8793-a108c66269b3___FREC_Scab 3145.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a15381d7b3fb221d75d4b346887ce1a6",
+      "dhash": "4627331e3e1e0e1e"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\10072248-60e2-4190-b4df-14e8ab61008c___FREC_Scab 3445.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b1f801ce68e121004cdb9e066cbddccb",
+      "dhash": "67674b4b45cbcb4f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\106aaa5f-c98d-482d-88ef-8e5170e9072d___FREC_Scab 3489.JPG",
+      "class": "Apple_Scab",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "658a950b8144bd166a77d2400e21f610",
+      "dhash": "650d3d51397b73a7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Apple_Scab\\sample_scab_leaf.jpg",
+      "class": "Apple_Scab",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "md5": "96bae4bde97f745f6776e70771abce95",
+      "dhash": "ab8da4aba2cfc1c5"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0090d05d-d797-4c99-abd4-3b9cb323a5fd___JR_FrgE.S 8727.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e6c7c9883df4f01243662aa29b8d63eb",
+      "dhash": "1cfff93d1f9f1e63"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\00e909aa-e3ae-4558-9961-336bb0f35db3___JR_FrgE.S 8593.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e1e0d7d64483643e31136ad8497552bb",
+      "dhash": "2f6365351b8665a4"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0139bc6d-391c-4fd1-bcae-cc74dabfddd7___JR_FrgE.S 2734.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "efe820998b6cd27d4668dc748bb1f715",
+      "dhash": "8f6d41c3c74e3c7b"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0199a733-6d3f-4e66-a903-2d1d34457871___JR_FrgE.S 3079.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ec24683a5254e11684be461246635631",
+      "dhash": "8c272359550b0724"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\01e94c43-0879-4e8c-9b61-c48cfed88dab___JR_FrgE.S 3024.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "fcafafd3d2e048ef9b47c38b0459f233",
+      "dhash": "941623470d2b1b86"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\02168189-aa75-4284-a7f0-8ca5901ea783___JR_FrgE.S 2948.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "58cbd02acfa2942711fefba3c5aacc66",
+      "dhash": "c6872d395d393336"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\02186b4f-a9e1-4d19-ae3d-6cfb0f4b106a___JR_FrgE.S 2828.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "bc53869c8cc94fa805c9f9b2a7a077fe",
+      "dhash": "6ed6b3c3c909e3f2"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\02859ed3-f56a-4315-82a5-c1cb72717225___JR_FrgE.S 8584.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8bbfcc78e8dd14817f9fd9be157a1a4a",
+      "dhash": "277b6d69670ed810"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\028d1f49-303d-46b6-ae2b-50862fab78ca___JR_FrgE.S 2748.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "30ffcce34b70e7b48400a8aaadc7526b",
+      "dhash": "986ec9d96326dc5a"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\032cf235-07ff-478f-b347-d55c07835bc5___JR_FrgE.S 8778.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5e37c8e83b72937fe54966b12436ee57",
+      "dhash": "0733280813965890"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\033b1492-d5cf-4de7-a195-941f7780e092___JR_FrgE.S 8710.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a26cfcaef04b54827da86ba871647c6e",
+      "dhash": "1f7fd9e34f3c627b"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\03fd7154-2e33-4fb6-999d-bfc3a3f467fe___JR_FrgE.S 8681.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b7d55344174e5f9571497365f46259f0",
+      "dhash": "8305182123062d60"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\04de1246-ecfa-4d2c-bc2d-16b81b0bd364___JR_FrgE.S 2970.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ab567e75e14831504edb379482c911bf",
+      "dhash": "8e233171391d8fc9"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\04e74a0c-bda4-4e06-aeab-ec24b1007994___JR_FrgE.S 8782.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "c8d52ff89f76255dd4e01977b695e445",
+      "dhash": "3c575371398be1cd"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\05421496-3901-424d-b44a-1be1f2734cf1___JR_FrgE.S 3005.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e71fd779ab3b54e239ad3563eff7ddf0",
+      "dhash": "428b092519123528"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\057c985f-2a00-40fe-b48f-590aabd3babe___JR_FrgE.S 3015.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "70270da61697ee069866b3796f4bf4b2",
+      "dhash": "00263339998362c1"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\05fb01a0-fd64-4b3d-a512-c0bda181811e___JR_FrgE.S 2889.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "2f721d787b5c9cc5c88d77f335d89a83",
+      "dhash": "0c0531929283d692"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\05fd8037-fd27-4d26-9e5d-9a47856ab134___JR_FrgE.S 8770.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f7be7ef8133a925e6dca834cf59411db",
+      "dhash": "872931636e7c6548"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0612c9fa-e647-4083-85e7-b1638452c24b___JR_FrgE.S 8771.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b20683c495c78050599e7477422fe479",
+      "dhash": "2e667373330ec7d1"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\073553c2-0e42-4c86-b929-b2201f3f7756___JR_FrgE.S 2819.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "fb6e218b52fb86ca334ebbca6683394c",
+      "dhash": "0a1b245c3c240d03"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\076d95c0-1ca7-4ee8-9558-0f18e617813d___JR_FrgE.S 2737.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e326e45a174f7f5b327bb8e13bf6b39a",
+      "dhash": "922105307119138e"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\079d0ba3-b207-4fc7-ace3-f2fe25c796b3___JR_FrgE.S 3038.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "2055a689df3002bb1e1be55aa57b24fa",
+      "dhash": "c79f1d7363c746f8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\07dbfcca-71aa-4c14-b895-60dfb63f701d___JR_FrgE.S 3063.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "eef45e46b04957b72894bcb886cf2215",
+      "dhash": "4e0b596d099193a6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\07f6b5a7-47cd-4012-8fcd-969d1d7245b9___JR_FrgE.S 2961.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "bf9ef9f7d3ef2031645b1aa5f0a56bd4",
+      "dhash": "0c25214939114744"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\085625a8-236d-4f71-bd40-78e3e4f24eb0___JR_FrgE.S 2732.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "84ac5c02940b6505d6afe3557c029c5d",
+      "dhash": "a63753c7c767b7cf"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\09baab32-8360-4251-9c84-a5ce6bfdfff1___JR_FrgE.S 2883.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "d781de58ade3e0bb4e3fbb5f8e50df04",
+      "dhash": "9747e3e5e53e3db7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0b37761a-de32-47ee-a3a4-e138b97ef542___JR_FrgE.S 2908.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b42333a4ee0d86dc104ef589181ae5b7",
+      "dhash": "923366cfcb4f4c61"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0b8dabb7-5f1b-4fdc-b3fa-30b289707b90___JR_FrgE.S 3047.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f3f8687844695ea602e8c7216522ac23",
+      "dhash": "0f2520303013091d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0bb8fb61-d561-43fd-89a3-d24d253adef9___JR_FrgE.S 2849.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f8c509c8d6f6098e03ff5b1a45f33dd0",
+      "dhash": "c78f3939393dae6d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0bc40cc3-6a85-480e-a22f-967a866a56a1___JR_FrgE.S 2784.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "95488dd5fca12efe3b640c230f1b4406",
+      "dhash": "3333357a3433eac8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0c7c7992-fb1c-444b-b226-69de186cea14___JR_FrgE.S 8627.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f45101c5949e707be5e80cb714bfed59",
+      "dhash": "870d6347590f4cd9"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0c8432e0-0484-470c-a774-7cce596b9e64___JR_FrgE.S 2841.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e17cf4e6413f3688d1b04737235274d0",
+      "dhash": "3f6f518585112be6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0ca16873-eeac-47e9-9a87-1859950daab7___JR_FrgE.S 2835.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f5fd426d6291032cfd7933707cd467da",
+      "dhash": "9e375185c55347a7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0cc47b2d-4a92-4bbd-af46-945165dd1960___JR_FrgE.S 8586.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a1939f0fd8b64326e642d4be40dfdb07",
+      "dhash": "3c2ef36b339bcdfc"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0ce8b939-3bdf-4078-8715-c0cb48afb078___JR_FrgE.S 2777.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f19e8793734442ba86015fd1e3c68502",
+      "dhash": "0e0924262409623c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0cefbd12-c195-40cd-b2d1-be0f9ee550b4___JR_FrgE.S 8762.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "225009c82ff474d846f2b7174142ae5b",
+      "dhash": "1c4e5a0f03412124"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0d17b92b-8ec2-4a00-a8ff-9daea3fed2e8___JR_FrgE.S 2915.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "c674680c4194643923dafc1477c5fd8e",
+      "dhash": "c5873365e3e35f2f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0e84adc9-3e97-48e2-b1fd-7d04f9e92cb0___JR_FrgE.S 2949.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "cde764fb3a9743169bf0f0bc56530cd5",
+      "dhash": "4f6d2c4e06001002"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0ebea6f4-08e4-4380-86f8-34d854697e32___JR_FrgE.S 2877.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "cba48c86b84aebe91656510501b6c0f2",
+      "dhash": "c6851c193d272660"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\0f3d45f4-e121-42cd-a5b6-be2f866a0574___JR_FrgE.S 2870.JPG",
+      "class": "Black_Rot",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "41c6cb5bb34f1431488ee9ea531f9802",
+      "dhash": "8f63e3e56f2f7b6f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Black_Rot\\sample_black_rot_leaf.jpg",
+      "class": "Black_Rot",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "md5": "eec268f0144a0cf0e2602127eb7d8c54",
+      "dhash": "b64ac66161904872"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\025b2b9a-0ec4-4132-96ac-7f2832d0db4a___FREC_C.Rust 3655.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "c0208107570b8d61ef94e3e0ef505504",
+      "dhash": "0021200088090400"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0321e067-d13b-47d0-b3a6-76ba6f357d02___FREC_C.Rust 3667.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "c3fb936653b96f92debd602bc220a2fa",
+      "dhash": "a049981018910240"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0340baaa-e9cc-4c04-8f9b-c204180d9ae3___FREC_C.Rust 3805.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "617e0f98e549cf48fe9d03049892b2b7",
+      "dhash": "489694090f1f173f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\04da297e-5238-41b1-a8a0-0c87c6c2f21f___FREC_C.Rust 4394.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "40843efc01db443dfd3c08e159d0f8eb",
+      "dhash": "fe3f2f377f3b9b49"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\052e3deb-0499-4685-bc39-cea7f1df0700___FREC_C.Rust 3742.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "eb5ab1798c633a9f30325152d735fa0c",
+      "dhash": "cf4f67efef7f2b9c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\064b14b5-af1b-4bcf-afe7-a061e5669dbb___FREC_C.Rust 9839.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "36226c127e3cd233ab7d42c442596da9",
+      "dhash": "204696333b164c50"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\072f23fb-0b1a-43b9-a548-3981120ff33c___FREC_C.Rust 0133.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b097d6610f7b84333676327714d27c1e",
+      "dhash": "448d1d3c38389ac2"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\09239528-a0a0-4a2d-af03-c5d5f7a27710___FREC_C.Rust 4024.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f89c952edc569fc4431766cd58e85f97",
+      "dhash": "c6294d0c24240c00"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\097f37e1-d490-42e6-84d2-51e5385bf886___FREC_C.Rust 9861.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "59c4b612eeaeda133884347a58fd75bc",
+      "dhash": "9e1b697131138eef"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0a41c25a-f9a6-4c34-8e5c-7f89a6ac4c40___FREC_C.Rust 9807.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "478c357871ce725132edbc64c21fffb3",
+      "dhash": "0d1f363e36170d73"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0cd24b0c-0a9d-483f-8734-5c08988e029f___FREC_C.Rust 3762.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "d9984f4ebc536bc1c9e74148c5f51e5e",
+      "dhash": "bd6f67674f2726cc"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0ce943e7-3fed-41cb-8430-0e0f54ff2bc4___FREC_C.Rust 0014.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8dd04c7d8344650a74c8f80d889d6e33",
+      "dhash": "0c0f347e359d4414"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\0fbdccdc-fb96-475a-92bb-65734592c895___FREC_C.Rust 3619.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "9e81882beb64e7c60efc4154d55f4e0c",
+      "dhash": "d2bc3636b2aeccf2"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\112cfc79-00ab-4920-a235-977c134bdb5d___FREC_C.Rust 4365.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "36961a61ea44f6a8ea039890a00a5d42",
+      "dhash": "1301444323172703"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\11a41b2a-5bf3-458a-801c-0898dd280c1e___FREC_C.Rust 9874.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ad049650e8bb15a726c131d55896627a",
+      "dhash": "db96b67b7972f6f7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1440b8ad-ba66-44dc-aeff-13515fe5eb68___FREC_C.Rust 3816.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "aee57dd57fe1b7e0d1491d248e8274a5",
+      "dhash": "6460a2913c3d89c8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1798ac41-0f49-4007-9df5-7e41e3077e51___FREC_C.Rust 3656.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "3f49f8843e6f13ae11b5dfbefb43c1fd",
+      "dhash": "110909151f3b3f2f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\17b9f64c-4660-424f-9c8e-d9a49654e512___FREC_C.Rust 3776.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "362835af4a894ad91a07bee132c442a8",
+      "dhash": "606071f4f0f3eff7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\18ba5927-bf67-47ff-bdcf-11056e368b60___FREC_C.Rust 4258.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5de2532a41c4075242dc198232a8886e",
+      "dhash": "d464e4c4ec8d96c6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\19335371-d443-4629-bb10-ef4e0b7215c0___FREC_C.Rust 0064.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "482114c0305205cbdcd2757b4a770dca",
+      "dhash": "00000e928202060c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1a67f47d-d35d-4c47-a336-af8ec6141113___FREC_C.Rust 4404.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "9c59f0c1b6b31528cf58f3bba7b0596e",
+      "dhash": "00481838349599ca"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1a69060b-e45e-4d95-881c-f6d1960dffcd___FREC_C.Rust 0065.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "1eb0cc1dee9d73f5a786ab4ccf6f7583",
+      "dhash": "00002222210c0c04"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1a80b84d-1a5a-4e23-8deb-823ba928e29a___FREC_C.Rust 4431.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "58d0b374a25bb37c0defac8bd46a9a29",
+      "dhash": "0210181206cc4030"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1b567c7d-1041-4240-a56c-8ea94e6252b4___FREC_C.Rust 4245.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "9a19fece19d823a124d0a33c0d8edd3b",
+      "dhash": "e89231317272e684"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1cfc6e73-1d86-4fb9-bffb-010163531711___FREC_C.Rust 3944.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6694dac37b2de04fbd35eadb5991e589",
+      "dhash": "e0c8832101310302"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1d4dee76-8af5-4bce-ba44-ef87ffd664de___FREC_C.Rust 3628.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5eb3b79d94d31a140d42b7eb60c4f0b6",
+      "dhash": "fdda4d666e3edefb"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1e099d8e-b40c-4cf3-bb52-4e77b5a2dc69___FREC_C.Rust 0155.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "0f849b55594e191d2d6f7b86a0d86e5b",
+      "dhash": "0607081446301988"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\1ec3e679-2b1e-4243-9e62-67f8f04314b3___FREC_C.Rust 4328.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "978979de467377d38afb31820a4f809b",
+      "dhash": "ffe6e3e9fc7cd9db"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\20ef08f2-96ae-4148-942c-3d7708cd94d8___FREC_C.Rust 9830.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8ddae66d2046e124a25885cb4a87e86a",
+      "dhash": "5d96d33bae97d7f7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\23f6e0fa-3860-48a5-a3f4-4e64b54a3046___FREC_C.Rust 4336.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "41e9ddac89200938b3e4bed9711b7e85",
+      "dhash": "24220987e466f4b7"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\24f68f21-8edb-49df-b0f1-d75ac66631fd___FREC_C.Rust 9937.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b107d6271704dbd616c1e0e5fe378bfa",
+      "dhash": "0c1e33372533379c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\252e347b-262e-4dd8-8d6d-852324d5bcfd___FREC_C.Rust 3841.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "682ab17593c39bd6e3a9800ffc3e6139",
+      "dhash": "0707070f773797fb"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2770fd33-4612-4c09-80a7-dbac2ec8ff82___FREC_C.Rust 4049.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "7ce72cb9c5bde0768cc7064a378d0f2c",
+      "dhash": "edc706ffe7e33313"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\27d7abba-647b-4f0c-aa4a-3978dccd4f5b___FREC_C.Rust 4092.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "33962b34ce68ca716544d7ffe594e52f",
+      "dhash": "f2b93938103918c0"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2824df6c-6e1e-4dc5-9035-098c32988662___FREC_C.Rust 4292.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "01197a79dc82d6bdae34f100790fd7ec",
+      "dhash": "dcec6e7e72b2f6f2"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\290ad123-7702-4219-9773-17e07f22438c___FREC_C.Rust 4444.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "3e5358f4f5c5f4d7113b64a6043593e4",
+      "dhash": "ffdf3b99dbfbdcdc"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2a6fe192-977f-482c-8af7-3465448920f4___FREC_C.Rust 9919.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "5ebbd5dd88396ee2b2fc475ae9dcd7ed",
+      "dhash": "1a3f7e7b3f3f3fbf"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2ac8d689-f30a-4eee-a856-86c92f8dcbd2___FREC_C.Rust 3952.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "2cf312005634c7ad5493011c297965ed",
+      "dhash": "cf0647c3e3632797"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2af1177b-1a2f-4dbe-b7f1-93118342d44e___FREC_C.Rust 0036.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "abf1d69d20efb5bbcb702f13fddb9a3a",
+      "dhash": "e0cccbb32b93cee8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\2dd8a8e6-8774-49a9-a712-9fa6b9ef21f3___FREC_C.Rust 3594.JPG",
+      "class": "Cedar_Apple_Rust",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8c61d53dbd416dedf006ab6660a5a994",
+      "dhash": "0009010105870f1f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Cedar_Apple_Rust\\sample_cedar_rust_leaf.jpg",
+      "class": "Cedar_Apple_Rust",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "md5": "8d6b516d39ee2522c8b862cef6c6afea",
+      "dhash": "839ab6b78f4cccb3"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0055dd26-23a7-4415-ac61-e0b44ebfaf80___RS_HL 5672.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ef0d896f30c9a545f15df11a4cb59718",
+      "dhash": "989e2f373f1e1c92"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\00907d8b-6ae6-4306-bfd7-d54471981a86___RS_HL 5709.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "18022f67406b6c5f8d8bddc712070053",
+      "dhash": "6487332143653326"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0098dbd9-286a-4d6a-bf4b-5459d66f88c0___RS_HL 5776.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a866a6e6688b14d5b0b7d778cc2b39ac",
+      "dhash": "61819f3d31230641"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\00a6039c-e425-4f7d-81b1-d6b0e668517e___RS_HL 7669.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "fe7a3397d602dffb1cd67921d093e0cb",
+      "dhash": "833934363a3e0f4e"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\00fca0da-2db3-481b-b98a-9b67bb7b105c___RS_HL 7708.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f77ff65daba07c7cf60124491c66fd7d",
+      "dhash": "d94f8d193b267e3b"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\010125c0-e6f2-4f3d-b469-dd98ffecbb01___RS_HL 7948.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "3b9e532b08e068d635f0331b0745dad9",
+      "dhash": "0041113021010b40"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\011d02f3-5c3c-4484-a384-b1a0a0dbdec1___RS_HL 7544.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "ff8f2590df3abca75eecbad77b07c006",
+      "dhash": "0f4771715a390940"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\013b7c70-5e3b-42b7-86af-167815a5b04f___RS_HL 7480.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e5cb4d2f705fbe6bd663145c6adaedcf",
+      "dhash": "9c0633393c9c0c04"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\017fd21b-142f-4988-849a-5fd316ea9a1b___RS_HL 6279.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "4b479a51cc2a4268f4c59c47ed03e90f",
+      "dhash": "191f1f033333934a"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0181db4e-718e-41bc-b6ed-92863471fa85___RS_HL 5941.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "adba514eb79a9a730c70ac38af5bdc73",
+      "dhash": "f9e34b09931f1e68"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0199bffc-baee-499f-8e03-5dadb8b671be___RS_HL 8042.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f20f1fe81dfff79db88446facae9f4d9",
+      "dhash": "db3b41d5e35edcff"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\01b32971-5125-4982-98e2-22daa9ae864a___RS_HL 7977.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "041972e817c4421ee56432d07c2424bf",
+      "dhash": "0804020b0b120404"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\01efa999-757d-487e-8250-27c7854c0ca8___RS_HL 7515.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "334e2ac82825fb58e8382003d9d9c21b",
+      "dhash": "ff6f6f2f3597cdbd"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\022b515d-41fd-448e-abac-e8722c32d864___RS_HL 8131.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e6e9c443258f7c3a949411bf9a8273f6",
+      "dhash": "ff5f67176f27275c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\023810b0-18e6-4352-9dfa-c2f4c034cda5___RS_HL 7538.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "d396b25b06b8c576786fa79da66c58e2",
+      "dhash": "000a1a162c6cecd9"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02720439-ecbd-4c7a-9382-4c8156b6f15b___RS_HL 5918.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f4af77d9eec2f2ab5c3b585a13da4f49",
+      "dhash": "adcf971313270c9c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02847045-4405-467c-9ccb-7ba2ab1d574c___RS_HL 5943.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6360f46abb81d69b9aeb59973bc3e404",
+      "dhash": "b1c10b13336f1f3d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02a0f44c-9cbe-4a2e-9710-296692635ec6___RS_HL 5789.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "4f204ab460ffcb0e1e0fe5b7e29b23fb",
+      "dhash": "981e37331f139e48"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02cd3257-a42f-4fbc-8056-a41d5aabfbc3___RS_HL 8029.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "86638e3bda02ce95ae366eb87d85e2d8",
+      "dhash": "012206823c34041b"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02d0257a-d21a-43a4-9348-472043df801e___RS_HL 6065.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "65aeb3c446debdfa76aa51dfe42620d8",
+      "dhash": "114199333b73078f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\02fe229e-2b2e-4e1e-b56f-3af97996bee6___RS_HL 8134.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "0f16f863d6a302bb08971b3ad23c8155",
+      "dhash": "4c36136b23130800"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03109942-bfa2-4728-b375-4f02a95957de___RS_HL 8066.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "13397c4c6b80c433c9407ff20bbc786b",
+      "dhash": "73e7cbc39b36aed8"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03152113-855b-4eab-8a4f-7d78d92240d0___RS_HL 5838.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8fa00d9c1a58aa1f8cc834557d986a5c",
+      "dhash": "02061e3e3c79730e"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\036e9351-118e-4795-9f80-74c369b98c88___RS_HL 7513.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "459eda2421d22d8044af4f11c5bd8847",
+      "dhash": "e79f9d497937ffbf"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\039d297c-374b-47cd-bed1-a94ac757eb8b___RS_HL 7612.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "f4129781ebf4ce5d899f2f304b5bc7b3",
+      "dhash": "c3072767133e8ddb"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03aebf5c-6cca-40da-b61d-f3f83e1cbf9e___RS_HL 8080.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "cd6d8585891c0e8f5764bb591182b95b",
+      "dhash": "ff7f6f673b8fc7dc"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03cb0cf0-04cf-4549-a2b8-44ed75b2e56c___RS_HL 7460.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "344e50c1b8026f8d7d5d89bf8e4f811a",
+      "dhash": "cd19797bb3376fff"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03d420e7-42a1-41d8-9600-16d577043c64___RS_HL 5738.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6cb8da86a0213782d8ad81842d7d221b",
+      "dhash": "c71d397173631e9d"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03d9267c-935a-487b-a27f-fa22f935b299___RS_HL 5671.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "faa7a08b56dc72c6b83442ab0bffe2c7",
+      "dhash": "bb5f270f3f87ddbc"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\03f6a4b2-d08b-4f7f-8a8e-d132ff3eca8b___RS_HL 6226.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "6933d0bf289138733e11123f1997f394",
+      "dhash": "1e272b0911138668"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\04032305-5ca9-4110-b517-461f13c95f18___RS_HL 7446.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "b2def0c2f3a0169f5305504acf35dfad",
+      "dhash": "cf8e0f636561339e"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\04125537-801d-4e15-b66c-224b09b4e1a7___RS_HL 7457.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a8d0090294c6658a7e613273da1669b6",
+      "dhash": "3413094420310920"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\041482f6-6dd6-4ac9-9e59-e973c9bcaf6d___RS_HL 8155.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "9f57bf025657590ef0d4661d904bfde7",
+      "dhash": "2c66393c1c0c0506"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\04467511-de12-439c-853f-ef4d99785541___RS_HL 7367.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "548be13e3bf05741f9c44eb25b37d40b",
+      "dhash": "70717858280e4430"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\044a96a2-d5ac-490b-8c57-2c1859cdf8f3___RS_HL 7991.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "8e6c75f8c9e93dcd20abb9705963511d",
+      "dhash": "82c383237b676f1f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0460b7aa-4eb0-4c0b-80e5-055ced6684a3___RS_HL 6287.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a50a4ff3e0352edd72b7e7e966394fc1",
+      "dhash": "0491438529332e3c"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\04d4f065-5cb8-4122-b479-d1362d007276___RS_HL 7719.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "cd4fae9ef67fd79c2459a7f2b37c3b98",
+      "dhash": "7f3f373b1b1f87e6"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\04f426ce-8f6f-400a-94f9-c513255d2fa4___RS_HL 7823.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "e623cb530bade4bbc51a8de6e84f7d4c",
+      "dhash": "c0783c2663610f03"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0576bbc4-37b3-413c-8a35-4138c2da69a7___RS_HL 8038.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "a67ce07ed52c0331e186a19e39c84e8e",
+      "dhash": "180c3239191c0401"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\0580ddaa-0221-4adc-8b64-8ce1842f5f07___RS_HL 6242.JPG",
+      "class": "Healthy",
+      "width": 256,
+      "height": 256,
+      "mode": "RGB",
+      "md5": "0e95f778e2906b73854773d10272a41d",
+      "dhash": "f9e3c9191b1b1f7f"
+    },
+    {
+      "path": "datasets\\raw\\leaf_disease\\Healthy\\sample_healthy_leaf.jpg",
+      "class": "Healthy",
+      "width": 1024,
+      "height": 1024,
+      "mode": "RGB",
+      "md5": "136e6ac61b7d1d13bc8cdcb560f44769",
+      "dhash": "e8526ba5e7e59353"
+    }
+  ],
+  "corrupted_samples": [],
+  "exact_duplicates": [],
+  "near_duplicates": [],
+  "dimension_stats": {
+    "Apple_Scab": {
+      "min_width": 256,
+      "max_width": 1024,
+      "min_height": 256,
+      "max_height": 1024,
+      "avg_width": 274.7,
+      "avg_height": 274.7
+    },
+    "Black_Rot": {
+      "min_width": 256,
+      "max_width": 1024,
+      "min_height": 256,
+      "max_height": 1024,
+      "avg_width": 274.7,
+      "avg_height": 274.7
+    },
+    "Cedar_Apple_Rust": {
+      "min_width": 256,
+      "max_width": 1024,
+      "min_height": 256,
+      "max_height": 1024,
+      "avg_width": 274.7,
+      "avg_height": 274.7
+    },
+    "Healthy": {
+      "min_width": 256,
+      "max_width": 1024,
+      "min_height": 256,
+      "max_height": 1024,
+      "avg_width": 274.7,
+      "avg_height": 274.7
+    }
+  },
+  "class_balance_ratio": 1.0,
+  "is_sufficient": true,
+  "sufficiency_notes": []
+}

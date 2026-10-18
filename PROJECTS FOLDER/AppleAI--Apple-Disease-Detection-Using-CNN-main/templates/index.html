@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Fruit Disease Prediction and Recommendation System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- TOP NAVIGATION BAR -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path>
+                        <path d="M10 2c1 .5 2 2 2 5"></path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-title">Apple Fruit Disease Prediction & Recommendation System</div>
+                    <div class="brand-subtitle">Convolutional Neural Network (CNN) Leaf & Fruit Diagnostic Decision-Support Suite</div>
+                </div>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="status-pill">
+                    <span class="status-dot pulsing"></span>
+                    <span class="status-label">CNN & Recommendation Engine Active</span>
+                </div>
+                <div class="port-tag">PORT 5003</div>
+                <a href="http://127.0.0.1:5003" target="_blank" class="nav-link-btn" title="Open in new window">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    <span>localhost:5003</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- SUBHEADER TABS -->
+        <div class="tabs-bar">
+            <button class="tab-btn active" data-tab="tab-diagnosis">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Real-Time Diagnosis & Decision Support
+            </button>
+            <button class="tab-btn" data-tab="tab-layers">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                CNN Feature Maps & Grad-CAM
+            </button>
+            <button class="tab-btn" data-tab="tab-encyclopedia">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path></svg>
+                Treatment & Pathology Guide
+            </button>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+
+            <!-- TAB 1: DIAGNOSIS & DECISION SUPPORT -->
+            <section id="tab-diagnosis" class="tab-pane active">
+                <div class="diagnosis-grid">
+                    
+                    <!-- LEFT COLUMN: INPUT CONTROLS -->
+                    <div class="control-card card">
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <h3>Apple Leaf & Fruit Specimen Input</h3>
+                                <p class="card-desc">Capture or upload apple foliage/fruit images for automated CNN disease feature extraction.</p>
+                            </div>
+                        </div>
+
+                        <!-- 1-CLICK AUTHENTIC DATASET PRESETS -->
+                        <div class="presets-section">
+                            <label class="section-label">1-Click Validated Demonstration Presets</label>
+                            <div class="presets-grid-scroll" id="presetsGrid">
+                                <div class="preset-btn" data-sample="cedar_rust">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-cedar_rust" alt="Cedar Rust">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Cedar Apple Rust</div>
+                                        <div class="preset-subtag">Leaf Lesions (Orange)</div>
+                                    </div>
+                                </div>
+                                <div class="preset-btn" data-sample="scab_leaf">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-scab_leaf" alt="Scab Leaf">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Apple Scab</div>
+                                        <div class="preset-subtag">Foliar Scab (Olive)</div>
+                                    </div>
+                                </div>
+                                <div class="preset-btn" data-sample="black_rot_leaf">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-black_rot_leaf" alt="Black Rot Leaf">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Black Rot</div>
+                                        <div class="preset-subtag">Frog-Eye Leaf Spot</div>
+                                    </div>
+                                </div>
+                                <div class="preset-btn" data-sample="healthy_leaf">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-healthy_leaf" alt="Healthy Leaf">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Healthy Apple</div>
+                                        <div class="preset-subtag">Vigorous Foliage</div>
+                                    </div>
+                                </div>
+                                <div class="preset-btn" data-sample="scab_fruit">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-scab_fruit" alt="Scab Fruit">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Apple Scab (Fruit)</div>
+                                        <div class="preset-subtag">Epidermal Cork Loci</div>
+                                    </div>
+                                </div>
+                                <div class="preset-btn" data-sample="rot_fruit">
+                                    <div class="preset-thumb-wrapper">
+                                        <img src="" class="preset-thumb-img" id="thumb-rot_fruit" alt="Black Rot Fruit">
+                                    </div>
+                                    <div class="preset-info">
+                                        <div class="preset-name">Black Rot (Fruit)</div>
+                                        <div class="preset-subtag">Concentric Ring Decay</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DRAG & DROP UPLOAD ZONE -->
+                        <div class="dropzone" id="dropZone">
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                            <div class="dropzone-content">
+                                <div class="upload-icon-circle">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                </div>
+                                <div class="dropzone-title">Upload Apple Leaf or Fruit Image</div>
+                                <div class="dropzone-sub">Drag & drop image here or click to browse (JPG, PNG, WEBP)</div>
+                            </div>
+                        </div>
+
+                        <!-- WEBCAM & BROWSE BUTTONS -->
+                        <div class="input-actions-bar">
+                            <button class="btn btn-secondary" id="browseBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                Browse Files
+                            </button>
+                            <button class="btn btn-secondary" id="webcamBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                Field Camera
+                            </button>
+                        </div>
+
+                        <!-- WEBCAM DRAWER -->
+                        <div class="webcam-box" id="webcamBox" style="display: none;">
+                            <video id="webcamVideo" autoplay playsinline></video>
+                            <canvas id="webcamCanvas" style="display: none;"></canvas>
+                            <div class="webcam-controls">
+                                <button class="btn btn-primary" id="captureWebcamBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                                    Capture Specimen
+                                </button>
+                                <button class="btn btn-secondary" id="closeWebcamBtn">Close Camera</button>
+                            </div>
+                        </div>
+
+                        <!-- MODEL ARCHITECTURE SELECTION -->
+                        <div class="model-select-group">
+                            <label class="section-label">CNN Classification Engine</label>
+                            <div class="model-cards">
+                                <label class="model-option">
+                                    <input type="radio" name="modelType" value="transfer" checked>
+                                    <div class="model-option-card">
+                                        <div class="model-option-title">MobileNetV2 Transfer Learning Backbone</div>
+                                        <div class="model-option-desc">Inverted residual depthwise separable convolutions (Optimal precision)</div>
+                                    </div>
+                                </label>
+                                <label class="model-option">
+                                    <input type="radio" name="modelType" value="custom_cnn">
+                                    <div class="model-option-card">
+                                        <div class="model-option-title">AppleCustomCNN (Paper 4-Layer Architecture)</div>
+                                        <div class="model-option-desc">Sequential Conv2D (128-128-64-64) with MaxPool & Dropout</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT BUTTON -->
+                        <button class="btn btn-primary btn-block btn-lg" id="runDiagnosisBtn" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            Run CNN Disease Diagnosis & Generate Prescriptions
+                        </button>
+                    </div>
+
+                    <!-- RIGHT COLUMN: RESULTS, GRAD-CAM & DECISION SUPPORT -->
+                    <div class="results-column">
+                        
+                        <!-- EMPTY STATE -->
+                        <div class="card empty-card" id="emptyStateCard">
+                            <div class="empty-graphic">
+                                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path></svg>
+                            </div>
+                            <h3>Awaiting Apple Specimen</h3>
+                            <p>Select any validated demonstration preset above or upload an apple leaf/fruit image to trigger automated disease prediction and decision-support treatment prescriptions.</p>
+                        </div>
+
+                        <!-- LOADING STATE -->
+                        <div class="card loading-card" id="loadingCard" style="display: none;">
+                            <div class="scanner-box">
+                                <div class="scanner-line"></div>
+                                <img src="" id="loadingPreviewImg" alt="Scanning">
+                            </div>
+                            <h4 id="loadingStepText">Extracting Foliar Features Through Convolutional Layers...</h4>
+                            <p class="loading-sub">Computing Grad-CAM saliency maps and querying decision-support module</p>
+                        </div>
+
+                        <!-- ACTIVE RESULTS VIEW -->
+                        <div id="resultsView" style="display: none;">
+                            
+                            <!-- PRIMARY DIAGNOSIS CARD -->
+                            <div class="card diagnosis-card">
+                                <div id="resUncertaintyBanner" style="display: none; background: #fff1f2; border: 1px solid #fecdd3; color: #be123c; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 0.88rem; line-height: 1.45; font-weight: 500;"></div>
+                                <div class="diagnosis-top-banner">
+                                    <div class="diagnosis-header-info">
+                                        <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
+                                            <span class="severity-badge" id="resSeverityBadge">High Severity</span>
+                                            <span id="resSpecimenBadge" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 999px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-weight: 600;">Specimen: Validated</span>
+                                        </div>
+                                        <h2 class="disease-title" id="resDiseaseTitle">Apple Scab</h2>
+                                        <div class="scientific-name" id="resScientificName">Venturia inaequalis</div>
+                                    </div>
+                                    <div class="confidence-circle-wrap">
+                                        <div class="confidence-val" id="resConfidenceVal">99.4%</div>
+                                        <div class="confidence-lbl">Prediction Confidence</div>
+                                    </div>
+                                </div>
+                                <p class="disease-summary" id="resDiseaseDesc"></p>
+                            </div>
+
+                            <!-- GRAD-CAM VISUAL SALIENCY COMPARISON -->
+                            <div class="card visual-card">
+                                <div class="card-header">
+                                    <div class="card-title-group">
+                                        <h3>Grad-CAM Attention Heatmap</h3>
+                                        <p class="card-desc">Visualizes convolutional feature map activations highlighting the exact lesion loci.</p>
+                                    </div>
+                                    <div class="overlay-slider-control">
+                                        <span class="slider-lbl">Heatmap Blend:</span>
+                                        <input type="range" id="heatmapOpacity" min="0" max="100" value="85">
+                                        <span class="slider-val" id="sliderVal">85%</span>
+                                    </div>
+                                </div>
+
+                                <div class="visual-comparison-grid">
+                                    <div class="img-preview-box">
+                                        <div class="img-box-header">Input Specimen</div>
+                                        <div class="img-container">
+                                            <img id="resOrigImg" src="" alt="Specimen">
+                                        </div>
+                                    </div>
+                                    <div class="img-preview-box">
+                                        <div class="img-box-header">Grad-CAM Convolutional Heatmap</div>
+                                        <div class="img-container">
+                                            <img id="resCamImg" src="" alt="Grad-CAM Saliency">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SOFTMAX PROBABILITIES BARS -->
+                            <div class="card probs-card">
+                                <div class="card-header">
+                                    <div class="card-title-group">
+                                        <h3>Softmax Probability Distribution Across Conditions</h3>
+                                        <p class="card-desc">Confidence distribution evaluated across the target disease classes.</p>
+                                    </div>
+                                </div>
+
+                                <div class="prob-bars-list" id="resProbBarsList">
+                                    <!-- Dynamic Bars Inserted Here -->
+                                </div>
+                            </div>
+
+                            <!-- DECISION-SUPPORT RECOMMENDATION MODULE -->
+                            <div class="card recommendation-suite-card">
+                                <div class="card-header">
+                                    <div class="card-title-group">
+                                        <h3>🌾 Automated Decision-Support & Treatment Recommendation Module</h3>
+                                        <p class="card-desc">Tailored agricultural advisory to assist farmers in early intervention and crop loss reduction.</p>
+                                    </div>
+                                </div>
+
+                                <div class="recommendations-container">
+                                    
+                                    <!-- 1. PESTICIDE SUGGESTIONS -->
+                                    <div class="rec-section-block">
+                                        <div class="rec-section-header">
+                                            <div class="rec-icon chemical">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                                            </div>
+                                            <div>
+                                                <h4>Pesticide & Fungicide Suggestions (FRAC Standard)</h4>
+                                                <p>Targeted chemical interventions with active ingredients, dosage rates, and timing.</p>
+                                            </div>
+                                        </div>
+                                        <div class="pesticide-table-wrap">
+                                            <table class="pesticide-table" id="resPesticideTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product / Active Ingredient</th>
+                                                        <th>FRAC Group / Mode of Action</th>
+                                                        <th>Recommended Application Rate</th>
+                                                        <th>Application Timing & Precautions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="resPesticideBody">
+                                                    <!-- Dynamic rows -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. PREVENTIVE MEASURES & 3. ORGANIC REMEDIES -->
+                                    <div class="rec-two-col-grid">
+                                        
+                                        <!-- PREVENTIVE MEASURES -->
+                                        <div class="rec-card-box">
+                                            <div class="rec-box-title">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                                Preventive Measures & Orchard Hygiene
+                                            </div>
+                                            <ul class="rec-bullet-list" id="resPreventiveList">
+                                                <!-- Dynamic list -->
+                                            </ul>
+                                        </div>
+
+                                        <!-- ORGANIC REMEDIES -->
+                                        <div class="rec-card-box">
+                                            <div class="rec-box-title">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>
+                                                Organic Remedies & Biological Controls
+                                            </div>
+                                            <div class="organic-items-list" id="resOrganicList">
+                                                <!-- Dynamic organic items -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- TAB 2: CNN LAYER ACTIVATIONS & FEATURE MAPS -->
+            <section id="tab-layers" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2>Convolutional Layer Feature Extraction Hierarchy</h2>
+                            <p class="card-desc">The CNN algorithm decomposes apple leaf/fruit images from low-level edges into semantic disease pathology features.</p>
+                        </div>
+                    </div>
+
+                    <div class="layers-container" id="layersContainer">
+                        <div class="layer-block">
+                            <div class="layer-header">
+                                <div class="layer-tag">Layer 1</div>
+                                <h4>Conv2D (128 Filters, 3×3 Kernel) — Low-Level Edges & Leaf Vein Contours</h4>
+                                <span class="layer-dim">Feature Map: 222×222</span>
+                            </div>
+                            <div class="filter-thumbs-grid" id="layerThumbConv1">
+                                <div class="empty-filter-notice">Run diagnosis on any specimen to inspect live filter activations.</div>
+                            </div>
+                        </div>
+
+                        <div class="layer-block">
+                            <div class="layer-header">
+                                <div class="layer-tag">Layer 2</div>
+                                <h4>Conv2D (128 Filters, 3×3 Kernel) — Surface Textures & Curvatures</h4>
+                                <span class="layer-dim">Feature Map: 109×109</span>
+                            </div>
+                            <div class="filter-thumbs-grid" id="layerThumbConv2">
+                                <div class="empty-filter-notice">Run diagnosis on any specimen to inspect live filter activations.</div>
+                            </div>
+                        </div>
+
+                        <div class="layer-block">
+                            <div class="layer-header">
+                                <div class="layer-tag">Layer 3</div>
+                                <h4>Conv2D (64 Filters, 3×3 Kernel) — Spot Margins, Rust Rings & Necrotic Patches</h4>
+                                <span class="layer-dim">Feature Map: 52×52</span>
+                            </div>
+                            <div class="filter-thumbs-grid" id="layerThumbConv3">
+                                <div class="empty-filter-notice">Run diagnosis on any specimen to inspect live filter activations.</div>
+                            </div>
+                        </div>
+
+                        <div class="layer-block">
+                            <div class="layer-header">
+                                <div class="layer-tag">Layer 4</div>
+                                <h4>Conv2D (64 Filters, 3×3 Kernel) — High-Level Pathology Classification Features</h4>
+                                <span class="layer-dim">Feature Map: 24×24</span>
+                            </div>
+                            <div class="filter-thumbs-grid" id="layerThumbConv4">
+                                <div class="empty-filter-notice">Run diagnosis on any specimen to inspect live filter activations.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: TREATMENT & PATHOLOGY ENCYCLOPEDIA -->
+            <section id="tab-encyclopedia" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <h2>Apple Foliar & Fruit Pathology Encyclopedia</h2>
+                            <p class="card-desc">Detailed biological taxonomy, symptoms, and comprehensive treatment protocols for target conditions.</p>
+                        </div>
+                    </div>
+
+                    <div class="encyclopedia-grid" id="encyclopediaGrid">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <span>Apple Fruit Disease Prediction and Recommendation System</span>
+                <span class="sep">•</span>
+                <span>Deep Learning CNN Algorithm</span>
+                <span class="sep">•</span>
+                <span>Automated Decision-Support Module</span>
+            </div>
+            <div class="footer-right">
+                <span>Localhost Link: <a href="http://localhost:5003">http://localhost:5003</a></span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

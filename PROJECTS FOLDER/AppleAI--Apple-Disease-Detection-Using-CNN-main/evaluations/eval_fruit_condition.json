@@ -1,0 +1,48 @@
+{
+  "task_name": "fruit_condition",
+  "checkpoint": "models/apple_fruit_condition_v1.pth",
+  "total_test_samples": 24,
+  "overall_accuracy_pct": 100.0,
+  "rejection_threshold": 0.6,
+  "uncertain_sample_count": 1,
+  "classes": [
+    "Fresh",
+    "Rotten"
+  ],
+  "roc_auc": 1.0,
+  "macro_precision_pct": 100.0,
+  "macro_recall_pct": 100.0,
+  "macro_f1_pct": 100.0,
+  "per_class_metrics": {
+    "Fresh": {
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "test_support": 12
+    },
+    "Rotten": {
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score_pct": 100.0,
+      "test_support": 12
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "Fresh",
+      "Rotten"
+    ],
+    "matrix": [
+      [
+        12,
+        0
+      ],
+      [
+        0,
+        12
+      ]
+    ]
+  },
+  "misclassifications": [],
+  "disclaimer": "Evaluation was conducted on held-out untouched test data. Laboratory dataset accuracy must NOT be conflated with guaranteed wild orchard or consumer-grade real-world accuracy."
+}
