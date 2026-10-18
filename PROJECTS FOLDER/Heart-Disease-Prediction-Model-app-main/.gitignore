@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+env/
+
+# Node
+frontend/node_modules/
+
+# DO NOT ignore frontend/dist - it needs to be on GitHub for Render

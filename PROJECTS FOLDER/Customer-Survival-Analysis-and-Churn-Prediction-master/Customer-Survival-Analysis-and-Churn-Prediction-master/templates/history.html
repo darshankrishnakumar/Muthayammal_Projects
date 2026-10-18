@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Prediction History - Telecom Analytics{% endblock %}
+
+{% block content %}
+<div class="view-header">
+  <h2 class="view-title">Customer Prediction History & Audit Trail</h2>
+  <p class="view-subtitle">Persistent repository of evaluated subscriber records stored in the analytics database.</p>
+</div>
+
+<!-- Filter & Search Bar -->
+<div class="content-card filter-card">
+  <div class="filter-flex-row">
+    <div class="filter-inputs">
+      <input type="text" id="historySearchInput" class="dark-input" placeholder="Search by Customer ID, contract, payment method...">
+      <select id="historyFilterStatus" class="dark-input" style="width: 180px;">
+        <option value="ALL">All Statuses</option>
+        <option value="Churn">Churn Only</option>
+        <option value="No Churn">No Churn Only</option>
+      </select>
+    </div>
+    <div class="filter-count">
+      Total Stored Records: <strong>{{ all_predictions | length }}</strong>
+    </div>
+  </div>
+</div>
+
+<!-- History Table Card -->
+<div class="content-card">
+  <div class="table-responsive">
+    <table class="data-table" id="historyTable">
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>Prediction Timestamp</th>
+          <th>Plan & Contract</th>
+          <th>Monthly</th>
+          <th>Tenure</th>
+          <th>Probability</th>
+          <th>Predicted Status</th>
+          <th>Risk Level</th>
+          <th>CLTV</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if all_predictions %}
+          {% for r in all_predictions %}
+            <tr data-status="{{ r.prediction_status }}">
+              <td class="font-bold text-white">{{ r.customer_id }}</td>
+              <td class="text-muted" style="font-size: 0.8rem;">{{ r.prediction_date }}</td>
+              <td>{{ r.contract }}</td>
+              <td>${{ "%.2f"|format(r.monthly_charges) }}</td>
+              <td>{{ r.tenure }} mo</td>
+              <td class="font-bold">{{ "%.1f"|format(r.churn_probability * 100) }}%</td>
+              <td>
+                {% if r.prediction_status == 'Churn' %}
+                  <span class="status-badge badge-churn">Churn</span>
+                {% else %}
+                  <span class="status-badge badge-stay">No Churn</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if r.risk_level == 'High' %}
+                  <span class="risk-badge risk-high">High</span>
+                {% elif r.risk_level == 'Medium' %}
+                  <span class="risk-badge risk-medium">Medium</span>
+                {% else %}
+                  <span class="risk-badge risk-low">Low</span>
+                {% endif %}
+              </td>
+              <td>${{ "%.2f"|format(r.cltv) }}</td>
+              <td>
+                <button type="button" class="btn btn-action" 
+                        data-customer='{{ r | tojson }}' 
+                        onclick="viewCustomerDetails(this)">
+                  View Details
+                </button>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="10" class="text-center text-muted" style="padding: 2.5rem;">No customer records logged yet.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Dialog for Customer Details -->
+<div id="customerDetailModal" class="dark-modal-overlay" style="display: none;">
+  <div class="dark-modal-card">
+    <div class="modal-header-row">
+      <h3 class="modal-title">Subscriber Profile & Evaluation Details</h3>
+      <button onclick="closeCustomerModal()" class="modal-close-btn">&times;</button>
+    </div>
+    
+    <div id="customerModalContent">
+      <!-- Populated dynamically by main.js -->
+    </div>
+
+    <div class="modal-footer-row">
+      <button onclick="closeCustomerModal()" class="btn btn-secondary">Close</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

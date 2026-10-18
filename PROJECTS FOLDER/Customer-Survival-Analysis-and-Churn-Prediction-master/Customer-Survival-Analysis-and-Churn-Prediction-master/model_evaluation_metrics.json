@@ -1,0 +1,81 @@
+{
+  "total_dataset_records": 7043,
+  "train_records": 5634,
+  "test_records": 1409,
+  "test": {
+    "accuracy": 0.7658,
+    "precision": 0.5435,
+    "recall": 0.7353,
+    "f1": 0.625,
+    "roc_auc": 0.8388,
+    "confusion_matrix": {
+      "tn": 804,
+      "fp": 231,
+      "fn": 99,
+      "tp": 275
+    }
+  },
+  "train": {
+    "accuracy": 0.7994,
+    "precision": 0.587,
+    "recall": 0.8234,
+    "f1": 0.6854,
+    "roc_auc": 0.8631,
+    "confusion_matrix": {
+      "tn": 3273,
+      "fp": 866,
+      "fn": 264,
+      "tp": 1231
+    }
+  },
+  "feature_names": [
+    "gender",
+    "SeniorCitizen",
+    "Partner",
+    "Dependents",
+    "tenure",
+    "PhoneService",
+    "MultipleLines",
+    "OnlineSecurity",
+    "OnlineBackup",
+    "DeviceProtection",
+    "TechSupport",
+    "StreamingTV",
+    "StreamingMovies",
+    "PaperlessBilling",
+    "MonthlyCharges",
+    "TotalCharges",
+    "InternetService_Fiber optic",
+    "InternetService_No",
+    "Contract_One year",
+    "Contract_Two year",
+    "PaymentMethod_Credit card (automatic)",
+    "PaymentMethod_Electronic check",
+    "PaymentMethod_Mailed check"
+  ],
+  "feature_importances": [
+    0.0141,
+    0.0154,
+    0.0148,
+    0.0152,
+    0.1799,
+    0.008,
+    0.0138,
+    0.0247,
+    0.0138,
+    0.0116,
+    0.0236,
+    0.0119,
+    0.0147,
+    0.0241,
+    0.1291,
+    0.1519,
+    0.0785,
+    0.0378,
+    0.0396,
+    0.1045,
+    0.0109,
+    0.0499,
+    0.0121
+  ]
+}

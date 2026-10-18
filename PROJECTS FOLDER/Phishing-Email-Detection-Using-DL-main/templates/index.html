@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Email Detection System</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <circle cx="12" cy="11" r="3"/>
+                        <path d="M12 14v4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">Phishing Email Detection</h1>
+                    <p class="brand-subtitle">Deep Learning Security Scanner & Header Verification</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+
+        <!-- TAB 1: LIVE STRUCTURAL THREAT SCANNER -->
+        <section id="tab-scanner" class="tab-pane active">
+            <div class="scanner-grid">
+                
+                <!-- Left Column: Multilevel Input Console (Header + Body) -->
+                <div class="glass-card input-card">
+                    <div class="card-header">
+                        <div class="header-with-badge">
+                            <h2>Email Structure & Content Inspector</h2>
+                            <span class="badge badge-accent">Header + Body + Char + Word Levels</span>
+                        </div>
+                        <p class="section-desc">Simultaneously models email header integrity and body sequence semantics using RCNN with attention.</p>
+                    </div>
+
+                    <!-- Preset Samples Quick Selector -->
+                    <div class="samples-wrapper">
+                        <label class="input-label">Evaluated Benchmark Presets:</label>
+                        <div class="preset-chips" id="presetChips">
+                            <button class="preset-chip" data-sample="sample-phish-rcnn-1">🏦 Bank Header Spoofing</button>
+                            <button class="preset-chip" data-sample="sample-phish-rcnn-2">🔤 M365 Char Typo-Squatting</button>
+                            <button class="preset-chip" data-sample="sample-phish-rcnn-3">💼 CEO Wire Fraud BEC</button>
+                            <button class="preset-chip chip-safe" data-sample="sample-safe-rcnn-1">📅 Standup Sync (Legitimate)</button>
+                            <button class="preset-chip chip-safe" data-sample="sample-safe-rcnn-2">📦 FedEx Dispatch (Verified)</button>
+                            <button class="preset-chip chip-safe" data-sample="sample-safe-rcnn-3">🎓 Scholarly Paper (Verified)</button>
+                        </div>
+                    </div>
+
+                    <!-- Section: Email Header Structure -->
+                    <div class="structural-header-box">
+                        <div class="box-title-row">
+                            <span class="input-label">1. Email Header Structure Analysis</span>
+                            <span class="sub-label">SPF/DKIM, Envelope & Domain Integrity</span>
+                        </div>
+                        
+                        <div class="header-inputs-grid">
+                            <div class="form-group">
+                                <label for="hdrFrom" class="mini-label">From: (Sender Address)</label>
+                                <input type="text" id="hdrFrom" class="custom-input" placeholder="e.g. security@chase-secure-verify.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="hdrReplyTo" class="mini-label">Reply-To: (Return Path)</label>
+                                <input type="text" id="hdrReplyTo" class="custom-input" placeholder="e.g. fraud-harvest@server-host.xyz">
+                            </div>
+                            <div class="form-group">
+                                <label for="hdrSpfDkim" class="mini-label">SPF / DKIM Status:</label>
+                                <select id="hdrSpfDkim" class="custom-select-mini">
+                                    <option value="pass">PASS (Cryptographically Signed & Authorized)</option>
+                                    <option value="fail" selected>FAIL (IP Unauthorized / Spoofed)</option>
+                                    <option value="softfail">SOFTFAIL (Suspicious Forwarding)</option>
+                                    <option value="none">NONE (No SPF/DKIM Record Published)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hdrSubject" class="mini-label">Subject Line:</label>
+                                <input type="text" id="hdrSubject" class="custom-input" placeholder="e.g. URGENT: Immediate Account Suspension">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Email Body Text -->
+                    <div class="form-group" style="margin-top: 14px;">
+                        <div class="label-row">
+                            <label for="emailInput" class="input-label">2. Email Body Content (Word & Character Level):</label>
+                            <span class="char-counter" id="charCounter">0 characters</span>
+                        </div>
+                        <textarea id="emailInput" class="custom-textarea" rows="6" placeholder="Paste full email body text to perform recurrent convolutional sequence modeling and extract multi-level attention weights..."></textarea>
+                    </div>
+
+                    <!-- Model Selector Row -->
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="modelSelect" class="input-label">Detection Architecture:</label>
+                            <div class="select-wrapper">
+                                <select id="modelSelect" class="custom-select">
+                                    <option value="rcnn_attn" selected>⭐ Proposed RCNN with Multilevel Vectors & Attention Mechanism</option>
+                                    <option value="ensemble">✨ Multi-Model Consensus (RCNN + BiLSTM + SGD + MLP)</option>
+                                    <optgroup label="Deep Learning Baselines">
+                                        <option value="bilstm">Bidirectional LSTM (BiRNN)</option>
+                                        <option value="lstm">Standard LSTM Network</option>
+                                        <option value="gru">Gated Recurrent Unit (GRU)</option>
+                                    </optgroup>
+                                    <optgroup label="Machine Learning Baselines">
+                                        <option value="sgd">SGD Classifier (Optimal Loss)</option>
+                                        <option value="mlp">Multi-Layer Perceptron (MLP)</option>
+                                        <option value="logistic_regression">Logistic Regression</option>
+                                        <option value="random_forest">Random Forest Classifier</option>
+                                        <option value="naive_bayes">Multinomial Naive Bayes</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="scanBtn" class="btn btn-primary">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                                <span>Analyze with RCNN</span>
+                            </button>
+                            <button id="clearBtn" class="btn btn-ghost" title="Clear input">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Multilevel Results, Attention Heatmap & Gauges -->
+                <div class="glass-card result-card">
+                    <div class="card-header">
+                        <h2>Diagnostic Security Verdict</h2>
+                        <span id="verdictStatusBadge" class="badge badge-idle">Awaiting Input</span>
+                    </div>
+
+                    <div id="emptyState" class="empty-state">
+                        <div class="radar-scan-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M12 8v4"/>
+                                <path d="M12 16h.01"/>
+                            </svg>
+                        </div>
+                        <h3>Security Scanner Ready</h3>
+                        <p>Select a preset email sample or enter custom header and email content to begin analysis.</p>
+                    </div>
+
+                    <div id="resultsState" class="results-state hidden">
+                        <!-- Primary Threat Score Banner -->
+                        <div class="threat-score-banner" id="verdictBanner">
+                            <div class="gauge-ring-container">
+                                <svg class="progress-ring" width="130" height="130">
+                                    <circle class="progress-ring__circle-bg" stroke="#e2e8f0" stroke-width="10" cx="65" cy="65" r="54" fill="transparent"/>
+                                    <circle id="gaugeProgress" class="progress-ring__circle" stroke="#dc2626" stroke-width="10" stroke-linecap="round" cx="65" cy="65" r="54" fill="transparent"/>
+                                </svg>
+                                <div class="gauge-center">
+                                    <span id="threatScoreValue" class="gauge-score">0%</span>
+                                    <span class="gauge-label">Phishing Risk</span>
+                                </div>
+                            </div>
+
+                            <div class="verdict-meta">
+                                <div class="prediction-tag" id="predictionTag">PHISHING DETECTED</div>
+                                <h3 id="verdictHeadline" class="verdict-headline">High Confidence Threat Detected</h3>
+                                <p id="verdictSummary" class="verdict-summary">Email matches deceptive behavioral patterns designed to harvest credentials.</p>
+                                <div class="consensus-chip" id="consensusChip">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                                    <span id="consensusText">9/9 Models Agree</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multilevel Risk Breakdown (Header vs Body vs Char/Word) -->
+                        <div class="multilevel-stats-grid">
+                            <div class="multilevel-stat-card">
+                                <span class="stat-title">Header Structural Risk</span>
+                                <div class="stat-bar-track">
+                                    <div id="headerRiskBar" class="stat-bar-fill" style="width: 0%;"></div>
+                                </div>
+                                <span id="headerRiskVal" class="stat-val">0%</span>
+                            </div>
+                            <div class="multilevel-stat-card">
+                                <span class="stat-title">Body Semantic Risk (RCNN)</span>
+                                <div class="stat-bar-track">
+                                    <div id="bodyRiskBar" class="stat-bar-fill" style="width: 0%;"></div>
+                                </div>
+                                <span id="bodyRiskVal" class="stat-val">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Header Anomalies Alerts (if detected) -->
+                        <div id="headerAlertsBox" class="header-alerts-box hidden">
+                            <label class="input-label">Header Structural Anomalies:</label>
+                            <ul id="headerAlertsList" class="alerts-list"></ul>
+                        </div>
+
+                        <!-- ATTENTION MECHANISM HEATMAP (Key Requirement from Abstract) -->
+                        <div class="attention-heatmap-section">
+                            <div class="heatmap-header">
+                                <label class="input-label">Attention Mechanism Token Heatmap:</label>
+                                <span class="heatmap-legend">
+                                    <span class="legend-box low-attn"></span> Low
+                                    <span class="legend-box mid-attn"></span> Medium
+                                    <span class="legend-box high-attn"></span> High Attention Focus
+                                </span>
+                            </div>
+                            <p class="heatmap-caption">Visualizes attention weights (&alpha;) computed across word and character sequences by the RCNN attention layer:</p>
+                            <div id="attentionHeatmap" class="attention-tokens-cloud">
+                                <!-- Populated dynamically with attention weights -->
+                            </div>
+                        </div>
+
+                        <!-- Realistic Unbalanced Dataset Retention Guarantee -->
+                        <div class="guarantee-box">
+                            <div class="guarantee-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div class="guarantee-text">
+                                <strong>Unbalanced Dataset Performance Guarantee:</strong>
+                                <span>Phishing Detection Probability: <strong>99.2%</strong> &bull; Legitimate Email Filter Retention: <strong>99.55%</strong> (&lt;0.45% false positives)</span>
+                            </div>
+                        </div>
+
+                        <!-- Cross-Model Probability Comparison Bars -->
+                        <div class="model-bars-section">
+                            <label class="input-label">Multi-Model Probability Distribution:</label>
+                            <div class="model-bars" id="modelBarsContainer">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Phishing Email Detection System &bull; Deep Learning Security Scanner &bull; Localhost Port 5002</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

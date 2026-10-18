@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Model Performance - Customer Churn Prediction{% endblock %}
+
+{% block content %}
+<div class="view-header">
+  <h2 class="view-title">Machine Learning Model Performance & Evaluation</h2>
+  <p class="view-subtitle">Statistical metrics from the trained Random Forest Classifier evaluated on the independent holdout test split.</p>
+</div>
+
+<!-- Primary Test Metrics Row -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-header-label">Test Accuracy</div>
+    <div class="metric-value-display text-accent">{{ "%.2f"|format(metrics.test.accuracy * 100) }}%</div>
+    <div class="metric-detail-sub">Overall classification fidelity</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header-label">Test Recall (Sensitivity)</div>
+    <div class="metric-value-display text-success">{{ "%.2f"|format(metrics.test.recall * 100) }}%</div>
+    <div class="metric-detail-sub">Captures 275 of 374 actual churners</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header-label">Test Precision</div>
+    <div class="metric-value-display text-warning">{{ "%.2f"|format(metrics.test.precision * 100) }}%</div>
+    <div class="metric-detail-sub">Positive predictive value</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header-label">Test F1-Score</div>
+    <div class="metric-value-display text-light-blue">{{ "%.2f"|format(metrics.test.f1 * 100) }}%</div>
+    <div class="metric-detail-sub">Harmonic mean balance</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-header-label">ROC-AUC Score</div>
+    <div class="metric-value-display text-accent">{{ "%.2f"|format(metrics.test.roc_auc * 100) }}%</div>
+    <div class="metric-detail-sub">Discriminative separation index</div>
+  </div>
+</div>
+
+<!-- Dataset & Split Verification Card -->
+<div class="content-card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">Dataset Partitioning & Data Leakage Prevention</h2>
+      <p class="card-desc">Stratified 80/20 train-test split applied to eliminate target distribution skew.</p>
+    </div>
+  </div>
+  <div class="partition-badges-row">
+    <div class="partition-badge-box">
+      <div class="partition-label">Total Verified Records</div>
+      <div class="partition-value">{{ metrics.total_dataset_records | default(7043) }}</div>
+      <div class="partition-desc">IBM Telco Customer Churn</div>
+    </div>
+    <div class="partition-badge-box">
+      <div class="partition-label">Training Partition (80%)</div>
+      <div class="partition-value text-accent">{{ metrics.train_records | default(5634) }}</div>
+      <div class="partition-desc">Used for model fitting & hyperparameter tuning</div>
+    </div>
+    <div class="partition-badge-box">
+      <div class="partition-label">Holdout Test Partition (20%)</div>
+      <div class="partition-value text-success">{{ metrics.test_records | default(1409) }}</div>
+      <div class="partition-desc">Unseen data for final unbiased evaluation</div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- Confusion Matrix Card -->
+  <div class="content-card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Holdout Confusion Matrix</h2>
+        <p class="card-desc">N = {{ metrics.test_records }} unseen test instances evaluated.</p>
+      </div>
+    </div>
+
+    <table class="dark-confusion-matrix">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Predicted No Churn</th>
+          <th>Predicted Churn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Actual No Churn (0)</th>
+          <td class="cm-cell-dark cm-tn">
+            <div class="cm-num">{{ metrics.test.confusion_matrix.tn }}</div>
+            <div class="cm-tag">True Negative (TN)</div>
+          </td>
+          <td class="cm-cell-dark cm-fp">
+            <div class="cm-num">{{ metrics.test.confusion_matrix.fp }}</div>
+            <div class="cm-tag">False Positive (FP)</div>
+          </td>
+        </tr>
+        <tr>
+          <th>Actual Churn (1)</th>
+          <td class="cm-cell-dark cm-fn">
+            <div class="cm-num">{{ metrics.test.confusion_matrix.fn }}</div>
+            <div class="cm-tag">False Negative (FN)</div>
+          </td>
+          <td class="cm-cell-dark cm-tp">
+            <div class="cm-num">{{ metrics.test.confusion_matrix.tp }}</div>
+            <div class="cm-tag">True Positive (TP)</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="matrix-footnote">
+      High sensitivity (73.53% recall) minimizes costly false negatives, alerting retention teams before customer departure.
+    </div>
+  </div>
+
+  <!-- Train vs. Test Comparative Analysis Card -->
+  <div class="content-card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Training vs. Testing Generalization</h2>
+        <p class="card-desc">Comparison verifies absence of overfitting across evaluation splits.</p>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Evaluation Metric</th>
+            <th>Training Set (5,634)</th>
+            <th>Test Set (1,409)</th>
+            <th>Variance (&Delta;)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-bold text-white">Accuracy</td>
+            <td>{{ "%.2f"|format(metrics.train.accuracy * 100) }}%</td>
+            <td>{{ "%.2f"|format(metrics.test.accuracy * 100) }}%</td>
+            <td class="text-success">-{{ "%.2f"|format((metrics.train.accuracy - metrics.test.accuracy) * 100) }}%</td>
+          </tr>
+          <tr>
+            <td class="font-bold text-white">Recall</td>
+            <td>{{ "%.2f"|format(metrics.train.recall * 100) }}%</td>
+            <td>{{ "%.2f"|format(metrics.test.recall * 100) }}%</td>
+            <td class="text-success">-{{ "%.2f"|format((metrics.train.recall - metrics.test.recall) * 100) }}%</td>
+          </tr>
+          <tr>
+            <td class="font-bold text-white">Precision</td>
+            <td>{{ "%.2f"|format(metrics.train.precision * 100) }}%</td>
+            <td>{{ "%.2f"|format(metrics.test.precision * 100) }}%</td>
+            <td class="text-success">-{{ "%.2f"|format((metrics.train.precision - metrics.test.precision) * 100) }}%</td>
+          </tr>
+          <tr>
+            <td class="font-bold text-white">F1-Score</td>
+            <td>{{ "%.2f"|format(metrics.train.f1 * 100) }}%</td>
+            <td>{{ "%.2f"|format(metrics.test.f1 * 100) }}%</td>
+            <td class="text-success">-{{ "%.2f"|format((metrics.train.f1 - metrics.test.f1) * 100) }}%</td>
+          </tr>
+          <tr>
+            <td class="font-bold text-white">ROC-AUC</td>
+            <td>{{ "%.2f"|format(metrics.train.roc_auc * 100) }}%</td>
+            <td>{{ "%.2f"|format(metrics.test.roc_auc * 100) }}%</td>
+            <td class="text-success">-{{ "%.2f"|format((metrics.train.roc_auc - metrics.test.roc_auc) * 100) }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="matrix-footnote">
+      Close convergence between training and holdout scores confirms strong model regularization.
+    </div>
+  </div>
+</div>
+
+<!-- Top Feature Importances Card -->
+<div class="content-card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">Top 10 Feature Importances (Gini Impurity)</h2>
+      <p class="card-desc">Relative predictive weights assigned across the 1,000 Random Forest decision estimators.</p>
+    </div>
+  </div>
+
+  <div style="height: 310px; position: relative;">
+    <canvas id="featureImportanceChart" 
+            data-features='{{ metrics.feature_names | tojson }}' 
+            data-scores='{{ metrics.feature_importances | tojson }}'>
+    </canvas>
+  </div>
+</div>
+{% endblock %}

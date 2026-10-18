@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Customer Churn Prediction System{% endblock %} - Telecom Intelligence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="app-body">
+  <div class="app-layout">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">TC</div>
+        <div class="brand-info">
+          <span class="brand-name">Telecom Intelligence</span>
+          <span class="brand-sub">Churn Analytics</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">MAIN NAVIGATION</div>
+        <ul class="nav-menu">
+          <li>
+            <a href="{{ url_for('home') }}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+              <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('predict_page') }}" class="nav-item {% if active_page == 'predict' %}active{% endif %}">
+              <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              <span>Predict Churn</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('history_page') }}" class="nav-item {% if active_page == 'history' %}active{% endif %}">
+              <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Prediction History</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('performance_page') }}" class="nav-item {% if active_page == 'performance' %}active{% endif %}">
+              <svg class="nav-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              <span>Model Performance</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status-card">
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">Production Model Online</span>
+          </div>
+          <div class="model-meta">Random Forest (1,000 Trees)</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="main-wrapper">
+      <!-- TOP HEADER -->
+      <header class="app-topbar">
+        <div class="topbar-heading">
+          <h1 class="topbar-title">Customer Churn Prediction</h1>
+          <p class="topbar-subtitle">Analyze customer behavior and identify potential churn using machine learning.</p>
+        </div>
+        <div class="topbar-badge">
+          <span class="status-dot"></span>
+          <span>Engine: Active</span>
+        </div>
+      </header>
+
+      <!-- VIEW CONTENT -->
+      <main class="page-content">
+        {% block content %}{% endblock %}
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <div class="footer-left">
+          <span>Customer Churn Prediction System: A Machine Learning Approach</span>
+        </div>
+        <div class="footer-right">
+          <span>IBM Telco Benchmark Dataset (7,043 Records)</span> • 
+          <span>Cox Proportional Hazards & Random Forest</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}?v=2.0"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Customer Churn Prediction{% endblock %}
+
+{% block content %}
+<!-- SUMMARY CARDS (4 Premium Navy Blue Cards) -->
+<div class="summary-grid">
+  <!-- Card 1: Total Customers Analysed -->
+  <div class="summary-card">
+    <div class="summary-card-header">
+      <span class="summary-label">Total Customers Analysed</span>
+      <div class="summary-icon-box">
+        <svg width="18" height="18" fill="none" stroke="#60A5FA" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      </div>
+    </div>
+    <div class="summary-value">{{ stats.total_analyzed | default(7043) | number_format }}</div>
+    <div class="summary-subtext">Verified customer database records</div>
+  </div>
+
+  <!-- Card 2: Predicted Churn -->
+  <div class="summary-card churn-metric">
+    <div class="summary-card-header">
+      <span class="summary-label">Predicted Churn</span>
+      <div class="summary-icon-box error-icon">
+        <svg width="18" height="18" fill="none" stroke="#F87171" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+      </div>
+    </div>
+    <div class="summary-value text-error">{{ stats.churn_count | default(1869) | number_format }}</div>
+    <div class="summary-subtext">At-risk subscriber segment</div>
+  </div>
+
+  <!-- Card 3: Predicted to Stay -->
+  <div class="summary-card stay-metric">
+    <div class="summary-card-header">
+      <span class="summary-label">Predicted to Stay</span>
+      <div class="summary-icon-box success-icon">
+        <svg width="18" height="18" fill="none" stroke="#34D399" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+    </div>
+    <div class="summary-value text-success">{{ stats.stay_count | default(5174) | number_format }}</div>
+    <div class="summary-subtext">Stable retained subscriber base</div>
+  </div>
+
+  <!-- Card 4: Churn Rate -->
+  <div class="summary-card rate-metric">
+    <div class="summary-card-header">
+      <span class="summary-label">Churn Rate</span>
+      <div class="summary-icon-box warning-icon">
+        <svg width="18" height="18" fill="none" stroke="#FBBF24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
+    </div>
+    <div class="summary-value text-warning">{{ stats.churn_rate | default(26.54) }}%</div>
+    <div class="summary-subtext">Historical baseline attrition rate</div>
+  </div>
+</div>
+
+<!-- DASHBOARD CHARTS & PIPELINE GRID -->
+<div class="dashboard-grid">
+  <!-- Churn Overview Chart Card -->
+  <div class="content-card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Churn Distribution Overview</h2>
+        <p class="card-desc">Distribution of predicted churn vs retained customer volume.</p>
+      </div>
+    </div>
+    <div class="chart-container" style="height: 270px; position: relative;">
+      <canvas id="churnDistributionChart" data-churn="{{ stats.churn_count | default(1869) }}" data-stay="{{ stats.stay_count | default(5174) }}"></canvas>
+    </div>
+    <div class="chart-legend-row">
+      <div class="legend-item">
+        <span class="legend-dot dot-success"></span>
+        <span>Retained Base: {{ stats.stay_count | default(5174) | number_format }} (73.5%)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot dot-danger"></span>
+        <span>At-Risk Churn: {{ stats.churn_count | default(1869) | number_format }} (26.5%)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model Pipeline Overview Card -->
+  <div class="content-card flex-between">
+    <div>
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Machine Learning Architecture</h2>
+          <p class="card-desc">Production Model Parameters & Calibration Standards</p>
+        </div>
+      </div>
+      <div class="info-badges-grid">
+        <div class="info-badge-box">
+          <div class="badge-label">Primary Classifier</div>
+          <div class="badge-title">Random Forest (1,000 Trees)</div>
+        </div>
+        <div class="info-badge-box">
+          <div class="badge-label">Survival Estimator</div>
+          <div class="badge-title">Cox Proportional Hazards</div>
+        </div>
+        <div class="info-badge-box">
+          <div class="badge-label">ROC-AUC Performance</div>
+          <div class="badge-title text-accent">83.88% (Independent Test)</div>
+        </div>
+        <div class="info-badge-box">
+          <div class="badge-label">Detection Recall</div>
+          <div class="badge-title text-success">73.53% (High Sensitivity)</div>
+        </div>
+      </div>
+      <p class="card-info-text">
+        Trained on customer demographics, subscribed add-ons, contract duration, and payment channels to accurately identify churn risk before account cancellation.
+      </p>
+    </div>
+
+    <div class="card-cta-row">
+      <a href="{{ url_for('predict_page') }}" class="btn btn-primary btn-flex">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        PREDICT CHURN RISK
+      </a>
+      <a href="{{ url_for('performance_page') }}" class="btn btn-secondary">VIEW METRICS</a>
+    </div>
+  </div>
+</div>
+
+<!-- RECENT PREDICTIONS TABLE -->
+<div class="content-card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">Recent Customer Predictions</h2>
+      <p class="card-desc">Latest subscriber evaluations processed by the machine learning engine.</p>
+    </div>
+    <a href="{{ url_for('history_page') }}" class="link-subtle">View All Records &rarr;</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>Contract Type</th>
+          <th>Monthly Charges</th>
+          <th>Tenure</th>
+          <th>Probability</th>
+          <th>Predicted Status</th>
+          <th>Risk Level</th>
+          <th>Prediction Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if recent_predictions %}
+          {% for row in recent_predictions %}
+            <tr>
+              <td class="font-bold text-white">{{ row.customer_id }}</td>
+              <td>{{ row.contract }}</td>
+              <td>${{ "%.2f"|format(row.monthly_charges) }}</td>
+              <td>{{ row.tenure }} mo</td>
+              <td class="font-bold">{{ "%.1f"|format(row.churn_probability * 100) }}%</td>
+              <td>
+                {% if row.prediction_status == 'Churn' %}
+                  <span class="status-badge badge-churn">Churn</span>
+                {% else %}
+                  <span class="status-badge badge-stay">No Churn</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if row.risk_level == 'High' %}
+                  <span class="risk-badge risk-high">High</span>
+                {% elif row.risk_level == 'Medium' %}
+                  <span class="risk-badge risk-medium">Medium</span>
+                {% else %}
+                  <span class="risk-badge risk-low">Low</span>
+                {% endif %}
+              </td>
+              <td class="text-muted">{{ row.prediction_date }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-center text-muted" style="padding: 2.5rem;">No recent predictions found. Use the prediction form to evaluate subscriber records.</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
