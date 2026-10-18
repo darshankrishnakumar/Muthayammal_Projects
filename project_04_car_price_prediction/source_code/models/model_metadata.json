@@ -17,9 +17,9 @@
     },
     "Random Forest Regression": {
       "train_r2": 0.9922,
-      "test_r2": 0.9721,
-      "test_rmse": 1.404,
-      "test_mae": 0.8847,
+      "test_r2": 0.9723,
+      "test_rmse": 1.3989,
+      "test_mae": 0.8835,
       "params": "{'bootstrap': True, 'ccp_alpha': 0.0, 'criterion': 'squared_error', 'max_depth': 12, 'max_features': 1.0, 'max_leaf_nodes': None, 'max_samples': None, 'min_impurity_decrease': 0.0, 'min_samples_leaf': 1, 'min_samples_split': 3, 'min_weight_fraction_leaf': 0.0, 'monotonic_cst': None, 'n_estimators': 150, 'n_jobs': None, 'oob_score': False, 'random_state': 42, 'verbose': 0, 'warm_start': False}"
     }
   },
@@ -34,27 +34,22 @@
     {
       "feature": "Vehicle Age",
       "key": "Car_Age",
-      "importance_pct": 13.29
+      "importance_pct": 13.3
     },
     {
       "feature": "Odometer (Kms Driven)",
       "key": "Kms_Driven",
-      "importance_pct": 9.3
+      "importance_pct": 9.31
     },
     {
       "feature": "Manufacturer Brand",
       "key": "Brand",
-      "importance_pct": 1.3
+      "importance_pct": 1.32
     },
     {
       "feature": "Previous Owners",
       "key": "Owner",
-      "importance_pct": 0.34
-    },
-    {
-      "feature": "Fuel Powertrain",
-      "key": "Fuel_Type",
-      "importance_pct": 0.23
+      "importance_pct": 0.33
     },
     {
       "feature": "Seller Channel (Dealer vs Direct)",
@@ -64,7 +59,12 @@
     {
       "feature": "Transmission Type",
       "key": "Transmission",
-      "importance_pct": 0.19
+      "importance_pct": 0.2
+    },
+    {
+      "feature": "Fuel Powertrain",
+      "key": "Fuel_Type",
+      "importance_pct": 0.2
     }
   ],
   "numerical_features": [

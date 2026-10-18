@@ -23,12 +23,16 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
 
 # Setup logging
+_models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
+os.makedirs(_models_dir, exist_ok=True)
+_log_file = os.path.join(_models_dir, "training.log")
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("models/training.log", mode="w", encoding="utf-8")
+        logging.FileHandler(_log_file, mode="w", encoding="utf-8")
     ]
 )
 logger = logging.getLogger("CarPriceTrainer")

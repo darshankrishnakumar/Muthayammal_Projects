@@ -138,6 +138,11 @@ def load_model(model_path: str = config.MODEL_SAVE_PATH) -> Optional[Pipeline]:
         return None
     try:
         pipeline = joblib.load(model_path)
+        if isinstance(pipeline, dict) and "preprocessor" in pipeline and "classifier" in pipeline:
+            pipeline = Pipeline(steps=[
+                ("preprocessor", pipeline["preprocessor"]),
+                ("classifier", pipeline["classifier"])
+            ])
         return pipeline
     except Exception as e:
         print(f"[WARNING] Failed to load GBM model from {model_path}: {e}")

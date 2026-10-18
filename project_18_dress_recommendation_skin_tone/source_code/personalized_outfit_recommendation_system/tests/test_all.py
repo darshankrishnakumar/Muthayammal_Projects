@@ -10,11 +10,14 @@ Covers:
 """
 
 import os
+import sys
 import tempfile
 import unittest
 import cv2
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from backend.dataset_loader import load_catalogue
 from backend.tfidf_recommender import TFIDFRecommender

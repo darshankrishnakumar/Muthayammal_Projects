@@ -10,7 +10,7 @@ RAW_DATA_DIR = os.path.join(DATA_DIR, "raw")
 PROCESSED_DATA_DIR = os.path.join(DATA_DIR, "processed")
 SYNTHETIC_DATA_DIR = os.path.join(DATA_DIR, "synthetic")
 
-CATALOGUE_PATH = os.path.join(PROCESSED_DATA_DIR, "clothing_catalogue.csv")
+CATALOGUE_PATH = os.path.join(DATA_DIR, "clothing_catalogue.csv")
 SYNTHETIC_CATALOGUE_PATH = os.path.join(SYNTHETIC_DATA_DIR, "synthetic_clothing_catalogue.csv")
 TRAINING_DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "user_preference_training_data.csv")
 DB_PATH = os.path.join(DATA_DIR, "user_data.db")
@@ -19,6 +19,7 @@ OUTFITS_DIR = os.path.join(BASE_DIR, "outfits")
 # Models paths
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 GBM_MODEL_PATH = os.path.join(MODELS_DIR, "gbm_pipeline.joblib")
+MODEL_SAVE_PATH = GBM_MODEL_PATH
 TFIDF_VECTORIZER_PATH = os.path.join(MODELS_DIR, "tfidf_vectorizer.joblib")
 TFIDF_MATRIX_PATH = os.path.join(MODELS_DIR, "tfidf_matrix.npz")
 CLIP_CACHE_PATH = os.path.join(MODELS_DIR, "clip_embeddings", "catalog_embeddings.npz")
