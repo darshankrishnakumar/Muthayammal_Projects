@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Network Intrusion Detection System (NIDS) | Project 26 | Orbyte Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #050811;
+  --panel: rgba(12, 18, 34, 0.9);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #38bdf8;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --accent-purple: #a855f7;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --mono-font: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Header */
+.header {
+  background: rgba(10, 15, 29, 0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand-group { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+}
+.brand-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+
+.defense-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #34d399; box-shadow: 0 0 10px #34d399;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Stats Banner */
+.stats-banner {
+  max-width: 1400px;
+  margin: 20px auto 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+}
+.stat-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; }
+.stat-value { font-size: 26px; font-weight: 800; font-family: var(--mono-font); }
+.stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* Tabs */
+.tab-bar {
+  max-width: 1400px;
+  margin: 24px auto 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.tab-btn {
+  background: none; border: none;
+  color: var(--text-muted);
+  font-size: 13px; font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+/* Main content */
+.main-wrapper {
+  max-width: 1400px;
+  margin: 24px auto 60px auto;
+  padding: 0 32px;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+}
+.card-title {
+  font-size: 16px; font-weight: 800; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Tables */
+.custom-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.custom-table th {
+  text-align: left; padding: 12px 14px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); border-bottom: 1px solid var(--panel-border);
+}
+.custom-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-family: var(--mono-font); font-size: 12px;
+}
+.custom-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* Badges */
+.badge-tag {
+  display: inline-block; padding: 4px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; font-family: var(--mono-font);
+}
+.badge-clean { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-critical { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); animation: flash 1s infinite alternate; }
+.badge-high { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.badge-zeroday { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+
+@keyframes flash {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #fff; border: none;
+  padding: 10px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff; border: none;
+  padding: 5px 12px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+}
+
+/* Attack buttons */
+.attack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+.attack-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  padding: 14px; border-radius: 12px;
+  cursor: pointer; text-align: left;
+  transition: all 0.2s;
+}
+.attack-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+.attack-btn-title { font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 4px; }
+.attack-btn-desc { font-size: 11px; color: var(--text-muted); }
+
+/* Code box */
+.code-box {
+  background: #020409;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 14px;
+  font-family: var(--mono-font);
+  font-size: 12px;
+  color: #38bdf8;
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow-y: auto;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand-group">
+    <div class="brand-icon">🔒</div>
+    <div>
+      <div class="brand-title">AI Network Intrusion Detection System (NIDS)</div>
+      <div class="brand-sub">Project 26 • NSL-KDD & CICIDS2018 Ensemble ML • Deep Packet Anomaly Engine</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="defense-badge">
+      <span class="pulse-dot"></span>
+      <span>AUTOMATED DEFENSE: ACTIVE</span>
+    </div>
+    <button class="btn-primary" onclick="exportForensicPcap()">📥 Export Incident PCAP Log</button>
+  </div>
+</header>
+
+<!-- Stats Banner -->
+<section class="stats-banner">
+  <div class="stat-card">
+    <div class="stat-title">Flow Packets Monitored</div>
+    <div class="stat-value" id="statTotalFlows" style="color:var(--accent-cyan)">0</div>
+    <div class="stat-sub">Real-time flow telemetry</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Attacks Intercepted</div>
+    <div class="stat-value" id="statAttacks" style="color:var(--accent-rose)">0</div>
+    <div class="stat-sub" id="statThreatPercent">Threat Ratio: 0.0%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">IPs in Quarantine</div>
+    <div class="stat-value" id="statQuarantine" style="color:var(--accent-amber)">0</div>
+    <div class="stat-sub">Active iptables DROP rules</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">System Throughput</div>
+    <div class="stat-value" id="statThroughput" style="color:var(--accent-emerald)">640 PPS</div>
+    <div class="stat-sub" id="statBandwidth">Bandwidth: 72.4 Mbps</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Ensemble Model</div>
+    <div class="stat-value" style="color:#c084fc">Random Forest</div>
+    <div class="stat-sub">+ Autoencoder Zero-Day</div>
+  </div>
+</section>
+
+<!-- Tab Navigation -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(0, this)">📡 Live Flow Telematics & Threat Radar</button>
+  <button class="tab-btn" onclick="switchTab(1, this)">💥 Attack Signature Injection Studio</button>
+  <button class="tab-btn" onclick="switchTab(2, this)">🔬 Zero-Day Autoencoder Reconstruction</button>
+  <button class="tab-btn" onclick="switchTab(3, this)">🛡️ Active Defense & Firewall Quarantine</button>
+</nav>
+
+<main class="main-wrapper">
+
+  <!-- TAB 0: LIVE TELEMETRY & RADAR -->
+  <div class="tab-content active" id="tab0">
+    <div class="grid-2">
+      <!-- Live Packet Log -->
+      <div class="card">
+        <div class="card-title">
+          <span>📡 Live Deep Packet Flows</span>
+          <span style="font-size:12px;color:var(--text-muted);font-weight:600">Auto-stream: 1.8s</span>
+        </div>
+        <div style="max-height:540px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Source IP</th>
+                <th>Proto / Srv</th>
+                <th>Bytes</th>
+                <th>Classification</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="flowTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Radar Display -->
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;text-align:center">
+        <div class="card-title" style="width:100%">
+          <span>🎯 Real-Time 360° Threat Radar</span>
+          <span class="badge-tag badge-clean" id="radarStatusBadge">DEFENSE READY</span>
+        </div>
+
+        <div style="position:relative;margin:10px 0">
+          <canvas id="radarCanvas" width="340" height="340" style="display:block;border-radius:50%;background:#03050c;border:2px solid rgba(56,189,248,0.2)"></canvas>
+        </div>
+
+        <div style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);border-radius:12px;padding:14px;margin-top:10px;text-align:left">
+          <div style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Latest Incident Telemetry:</div>
+          <div id="latestIncidentText" style="font-size:13px;font-family:var(--mono-font);color:#f8fafc">Monitoring network interfaces eth0 / en0...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: ATTACK INJECTION STUDIO -->
+  <div class="tab-content" id="tab1">
+    <div class="grid-2">
+      <!-- Attack Triggers -->
+      <div class="card">
+        <div class="card-title">
+          <span>💥 Attack Vector Simulation Testbench</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+          Select and inject simulated high-velocity cyber attack vectors to observe real-time classification response.
+        </p>
+
+        <div class="attack-grid">
+          <div class="attack-btn" onclick="triggerAttack('SYN_Flood')">
+            <div class="attack-btn-title" style="color:#ef4444">⚡ SYN Flood DDoS</div>
+            <div class="attack-btn-desc">High connection rate (450 pps), S0 SYN timeout, exhausts socket pool.</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('Port_Scan')">
+            <div class="attack-btn-title" style="color:#f59e0b">🔍 Nmap Stealth Port Scan</div>
+            <div class="attack-btn-desc">Sequential REJ probes across ports 21–8080 reconnaissance.</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('SSH_BruteForce')">
+            <div class="attack-btn-title" style="color:#ef4444">🔑 SSH Dictionary Brute Force</div>
+            <div class="attack-btn-desc">Rapid authentication bursts targeting port 22 with credential payloads.</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('Mirai_Botnet')">
+            <div class="attack-btn-title" style="color:#a855f7">🤖 Mirai Botnet C2 Beacon</div>
+            <div class="attack-btn-desc">Persistent low-frequency telemetry beaconing to external C2 controller.</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('Zero_Day')">
+            <div class="attack-btn-title" style="color:#38bdf8">☣️ Zero-Day Shellcode Anomaly</div>
+            <div class="attack-btn-desc">Unknown payload signature exceeding Autoencoder reconstruction loss.</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('Normal')">
+            <div class="attack-btn-title" style="color:#10b981">🛡️ Normal Web Browsing</div>
+            <div class="attack-btn-desc">Standard HTTPS TLS 1.3 handshake with balanced payload bytes.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Packet Inspection Result -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔬 Live Inspector Diagnostic</span>
+          <span class="badge-tag badge-clean" id="inspResultBadge">READY</span>
+        </div>
+
+        <div id="inspResultContainer" style="padding:16px;background:rgba(255,255,255,0.02);border-radius:12px;font-size:13px;line-height:1.6">
+          Inject an attack vector from the left to view deep flow extraction, signature matching, and automated firewall response.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: ZERO-DAY AUTOENCODER -->
+  <div class="tab-content" id="tab2">
+    <div class="grid-2">
+      <!-- Autoencoder Theory & Gauge -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔬 Autoencoder Reconstruction Loss Metric</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:18px">
+          Supervised machine learning algorithms (like Random Forest) can only recognize <strong>known, previously trained attack signatures</strong>. 
+          To catch <strong>Zero-Day exploits</strong>, this system uses an unsupervised Autoencoder that reconstructs benign network flow distributions. 
+          When an unknown exploit arrives, the reconstruction loss spikes past the tolerance threshold (τ = 0.0450).
+        </p>
+
+        <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--panel-border)">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">Autoencoder Loss Function:</div>
+          <div style="font-family:var(--mono-font);color:#38bdf8;font-size:13px">
+            L(x, x̂) = || x - Decode(Encode(x)) ||²
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Zero-Day Flag Trigger: L(x, x̂) > 0.0450</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-family:var(--mono-font);margin-top:20px">
+          <span>Current Flow Reconstruction Loss:</span>
+          <span id="currentLossText" style="color:#38bdf8;font-weight:700">0.0124</span>
+        </div>
+        <div style="height:12px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;margin-top:8px">
+          <div id="lossFillBar" style="height:100%;width:25%;background:#10b981;transition:width 0.4s ease"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:6px;font-family:var(--mono-font)">
+          <span>0.00 (Normal)</span>
+          <span style="color:#f59e0b">0.045 (Threshold Cutoff)</span>
+          <span>0.10 (Severe Anomaly)</span>
+        </div>
+      </div>
+
+      <!-- Feature Distribution Matrix -->
+      <div class="card">
+        <div class="card-title">
+          <span>📊 Monitored Flow Dimensions (NSL-KDD)</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;font-family:var(--mono-font)">
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">duration:</span> Connection time in seconds
+          </div>
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">src_bytes:</span> Bytes from client to host
+          </div>
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">dst_bytes:</span> Response bytes from host
+          </div>
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">count:</span> Syn connections past 2s
+          </div>
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">serror_rate:</span> % connections with SYN errors
+          </div>
+          <div style="background:rgba(255,255,255,0.02);padding:10px;border-radius:8px">
+            <span style="color:var(--text-muted)">rerror_rate:</span> % connections with REJ errors
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: FIREWALL QUARANTINE -->
+  <div class="tab-content" id="tab3">
+    <div class="grid-2">
+      <!-- Blacklisted IP Table -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔒 Quarantined Malicious IPs</span>
+          <span class="badge-tag badge-critical" id="quarantineCountBadge">0 BLOCKED</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">
+          IPs caught exhibiting critical DoS, Botnet C2, or Brute Force signatures are blocked instantly.
+        </p>
+
+        <div style="max-height:420px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Attacker IP</th>
+                <th>Trigger Reason</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="quarantineTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Generated Firewall Rules -->
+      <div class="card">
+        <div class="card-title">
+          <span>🛡️ Automated Linux / Cloud Firewall Rules</span>
+          <button class="btn-primary" style="padding:5px 12px;font-size:11px" onclick="copyFirewallRules()">📋 Copy Script</button>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Generated iptables Drop Rules:</p>
+        <div class="code-box" id="iptablesRulesBox"># Generating firewall rules...</div>
+
+        <p style="font-size:12px;color:var(--text-muted);margin-top:14px;margin-bottom:8px">Generated Ubuntu ufw Rules:</p>
+        <div class="code-box" id="ufwRulesBox"># Generating ufw rules...</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const BACKEND_URL = 'http://localhost:5026/api';
+let streamTimer = null;
+let radarAngle = 0;
+let radarBlips = [];
+
+// Audio alarm synthesizer
+function playAlarmChime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(920, ctx.currentTime);
+    osc.frequency.setValueAtTime(1240, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.28);
+  } catch(e){}
+}
+
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab${idx}`).classList.add('active');
+  if (idx === 3) {
+    loadQuarantineRules();
+  }
+}
+
+async function init() {
+  await fetchStats();
+  await loadTrafficLog();
+  startStream();
+  requestAnimationFrame(animateRadar);
+  loadQuarantineRules();
+}
+
+async function fetchStats() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/stats`);
+    if (!res.ok) return;
+    const data = await res.json();
+    document.getElementById('statTotalFlows').textContent = data.total_flows_inspected;
+    document.getElementById('statAttacks').textContent = data.attacks_intercepted;
+    document.getElementById('statThreatPercent').textContent = `Threat Ratio: ${data.threat_ratio_percent}%`;
+    document.getElementById('statQuarantine').textContent = data.active_quarantine_count;
+    document.getElementById('statThroughput').textContent = `${data.system_throughput_pps} PPS`;
+    document.getElementById('statBandwidth').textContent = `Bandwidth: ${data.bandwidth_mbps} Mbps`;
+  } catch(e){}
+}
+
+async function loadTrafficLog() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/traffic/log?limit=25`);
+    if (!res.ok) return;
+    const flows = await res.json();
+    const tbody = document.getElementById('flowTableBody');
+    tbody.innerHTML = '';
+    flows.forEach(f => renderFlowRow(f, false));
+    if (flows.length > 0) updateLatestIncident(flows[0]);
+  } catch(e){}
+}
+
+function renderFlowRow(f, prepend = true) {
+  const tbody = document.getElementById('flowTableBody');
+  const tr = document.createElement('tr');
+  const badgeClass = f.severity === 'CRITICAL' ? 'badge-critical' : f.severity === 'HIGH' ? 'badge-high' : f.severity === 'SAFE' ? 'badge-clean' : 'badge-zeroday';
+
+  tr.innerHTML = `
+    <td style="color:var(--text-muted)">${new Date(f.timestamp).toLocaleTimeString()}</td>
+    <td><strong>${f.src_ip}</strong></td>
+    <td>${f.protocol}/${f.service} [${f.flag}]</td>
+    <td style="font-weight:700">${f.src_bytes}b</td>
+    <td><span class="badge-tag ${badgeClass}">${f.attack_name}</span></td>
+    <td>
+      ${f.is_attack ? `<button class="btn-danger" onclick="quarantineIp('${f.src_ip}')">Quarantine</button>` : `<span style="color:#34d399">✓ Allow</span>`}
+    </td>
+  `;
+
+  if (prepend) {
+    tbody.insertBefore(tr, tbody.firstChild);
+    if (tbody.children.length > 35) tbody.removeChild(tbody.lastChild);
+  } else {
+    tbody.appendChild(tr);
+  }
+}
+
+function startStream() {
+  if (streamTimer) clearInterval(streamTimer);
+  streamTimer = setInterval(fetchNextFlow, 1900);
+}
+
+async function fetchNextFlow() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/stream/next`);
+    if (!res.ok) return;
+    const flow = await res.json();
+    renderFlowRow(flow, true);
+    updateLatestIncident(flow);
+    fetchStats();
+
+    // Add blip to radar
+    addRadarBlip(flow);
+
+    if (flow.is_attack) {
+      playAlarmChime();
+    }
+  } catch(e){}
+}
+
+function updateLatestIncident(flow) {
+  document.getElementById('latestIncidentText').innerHTML = `
+    <strong>${flow.src_ip}</strong> ➔ ${flow.dst_ip} • ${flow.protocol} ${flow.service}<br/>
+    Status: <span style="color:${flow.is_attack ? '#f87171' : '#34d399'};font-weight:700">${flow.attack_name} (${flow.confidence}%)</span> • Loss: ${flow.reconstruction_error}
+  `;
+
+  const lossVal = flow.reconstruction_error || 0.01;
+  document.getElementById('currentLossText').textContent = lossVal.toFixed(4);
+  const fillPct = Math.min(100, (lossVal / 0.10) * 100);
+  const fill = document.getElementById('lossFillBar');
+  fill.style.width = `${fillPct}%`;
+  fill.style.background = lossVal > 0.045 ? '#ef4444' : '#10b981';
+}
+
+// 360 Threat Radar
+function addRadarBlip(flow) {
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 30 + Math.random() * 120;
+  radarBlips.push({
+    x: Math.cos(angle) * dist,
+    y: Math.sin(angle) * dist,
+    isAttack: flow.is_attack,
+    alpha: 1.0
+  });
+  if (radarBlips.length > 25) radarBlips.shift();
+}
+
+function animateRadar() {
+  const canvas = document.getElementById('radarCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  ctx.fillStyle = 'rgba(3, 5, 12, 0.18)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Concentric radar grid rings
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+  ctx.lineWidth = 1;
+  [40, 80, 120, 160].forEach(r => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  // Crosshairs
+  ctx.beginPath();
+  ctx.moveTo(cx, 0); ctx.lineTo(cx, canvas.height);
+  ctx.moveTo(0, cy); ctx.lineTo(canvas.width, cy);
+  ctx.stroke();
+
+  // Rotating scan beam
+  radarAngle = (radarAngle + 0.04) % (Math.PI * 2);
+  const beamX = cx + Math.cos(radarAngle) * 165;
+  const beamY = cy + Math.sin(radarAngle) * 165;
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, 165, radarAngle - 0.35, radarAngle);
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(beamX, beamY);
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Render Blips
+  radarBlips.forEach(b => {
+    ctx.beginPath();
+    ctx.arc(cx + b.x, cy + b.y, b.isAttack ? 4 : 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = b.isAttack ? `rgba(239, 68, 68, ${b.alpha})` : `rgba(52, 211, 153, ${b.alpha})`;
+    ctx.fill();
+    b.alpha = Math.max(0.1, b.alpha - 0.005);
+  });
+
+  requestAnimationFrame(animateRadar);
+}
+
+// Attack Simulation
+async function triggerAttack(type) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/simulate/attack`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ attack_type: type })
+    });
+    const flow = await res.json();
+    renderFlowRow(flow, true);
+    updateLatestIncident(flow);
+    addRadarBlip(flow);
+    fetchStats();
+
+    const badge = document.getElementById('inspResultBadge');
+    badge.textContent = flow.attack_name;
+    badge.className = `badge-tag ${flow.is_attack ? 'badge-critical' : 'badge-clean'}`;
+
+    document.getElementById('inspResultContainer').innerHTML = `
+      <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#fff">${flow.attack_name} (${flow.category})</div>
+      <div><strong>Severity:</strong> <span style="color:${flow.is_attack ? '#f87171' : '#34d399'};font-weight:700">${flow.severity}</span></div>
+      <div><strong>Signature Confidence:</strong> ${flow.confidence}%</div>
+      <div><strong>Reconstruction Error:</strong> ${flow.reconstruction_error} (Threshold: 0.0450)</div>
+      <div><strong>Firewall Automated Response:</strong> <span style="color:#f87171;font-weight:700">${flow.firewall_action}</span></div>
+      <div style="margin-top:10px;font-family:var(--mono-font);color:var(--text-muted);font-size:12px">
+        Flow Details: ${flow.flow_summary}
+      </div>
+    `;
+
+    if (flow.is_attack) playAlarmChime();
+  } catch(e){}
+}
+
+// Quarantine
+async function quarantineIp(ip) {
+  try {
+    await fetch(`${BACKEND_URL}/quarantine`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ ip, reason: 'Manual SOC Operator Quarantine' })
+    });
+    fetchStats();
+    loadQuarantineRules();
+  } catch(e){}
+}
+
+async function unquarantineIp(ip) {
+  try {
+    await fetch(`${BACKEND_URL}/quarantine`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ ip })
+    });
+    fetchStats();
+    loadQuarantineRules();
+  } catch(e){}
+}
+
+async function loadQuarantineRules() {
+  try {
+    const [qRes, rRes] = await Promise.all([
+      fetch(`${BACKEND_URL}/quarantine`),
+      fetch(`${BACKEND_URL}/firewall/rules`)
+    ]);
+    const ips = await qRes.json();
+    const rules = await rRes.json();
+
+    document.getElementById('quarantineCountBadge').textContent = `${ips.length} BLOCKED`;
+    const tbody = document.getElementById('quarantineTableBody');
+    if (ips.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted)">No IP addresses currently quarantined</td></tr>';
+    } else {
+      tbody.innerHTML = ips.map(item => `
+        <tr>
+          <td><strong style="color:#f87171">${item.ip}</strong></td>
+          <td>${item.reason}</td>
+          <td><button class="btn-primary" style="padding:4px 8px;font-size:11px" onclick="unquarantineIp('${item.ip}')">Unblock</button></td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('iptablesRulesBox').textContent = rules.iptables_script || '# No active rules';
+    document.getElementById('ufwRulesBox').textContent = rules.ufw_script || '# No active rules';
+  } catch(e){}
+}
+
+function copyFirewallRules() {
+  const text = document.getElementById('iptablesRulesBox').textContent;
+  navigator.clipboard.writeText(text);
+  alert('Copied iptables rules to clipboard!');
+}
+
+async function exportForensicPcap() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/traffic/log?limit=200`);
+    const flows = await res.json();
+    const blob = new Blob([JSON.stringify({
+      export_title: 'Orbyte Global NIDS Forensic Flow Log',
+      exported_at: new Date().toISOString(),
+      flows_count: flows.length,
+      packets: flows
+    }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `NIDS_Forensic_Report_${Date.now()}.json`;
+    a.click();
+  } catch(e){
+    alert('Error exporting PCAP forensic log');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

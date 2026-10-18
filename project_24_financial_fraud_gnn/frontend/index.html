@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Financial Fraud Graph Neural Network (GNN) | Project 24 | Orbyte Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #070913;
+  --panel: rgba(14, 20, 36, 0.9);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #38bdf8;
+  --accent-purple: #a855f7;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --mono-font: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.10) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(244, 63, 94, 0.08) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Header */
+.header {
+  background: rgba(11, 17, 33, 0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand-group { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #a855f7, #3b82f6);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.35);
+}
+.brand-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+
+/* Stats banner */
+.stats-banner {
+  max-width: 1400px;
+  margin: 20px auto 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+}
+.stat-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; }
+.stat-value { font-size: 26px; font-weight: 800; font-family: var(--mono-font); }
+.stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* Tabs */
+.tab-bar {
+  max-width: 1400px;
+  margin: 24px auto 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.tab-btn {
+  background: none; border: none;
+  color: var(--text-muted);
+  font-size: 13px; font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: var(--accent-purple); border-bottom-color: var(--accent-purple); }
+
+/* Main layout */
+.main-wrapper {
+  max-width: 1400px;
+  margin: 24px auto 60px auto;
+  padding: 0 32px;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Canvas Container */
+.graph-viewport {
+  position: relative;
+  background: #04060d;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  overflow: hidden;
+  height: 620px;
+}
+#graphCanvas { width: 100%; height: 100%; display: block; }
+
+/* Graph Controls Overlay */
+.graph-overlay-controls {
+  position: absolute;
+  top: 18px; left: 18px;
+  display: flex; gap: 8px;
+  background: rgba(10, 16, 30, 0.85);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(8px);
+}
+.btn-ctrl {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+}
+.btn-ctrl:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* Node Inspector Drawer */
+.node-drawer {
+  position: absolute;
+  top: 18px; right: 18px; width: 340px;
+  background: rgba(13, 20, 36, 0.95);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(16px);
+  max-height: 580px;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+.node-drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--panel-border);
+}
+.drawer-row {
+  display: flex; justify-content: space-between;
+  font-size: 12px; font-family: var(--mono-font); margin-bottom: 8px;
+}
+.drawer-label { color: var(--text-muted); }
+
+/* Legend overlay */
+.graph-legend {
+  position: absolute;
+  bottom: 18px; left: 18px;
+  background: rgba(10, 16, 30, 0.85);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  display: flex; gap: 16px; font-size: 11px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Cards & Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+}
+.card-title {
+  font-size: 16px; font-weight: 800; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Syndicate pattern card */
+.syndicate-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.syndicate-card:hover {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.35);
+  transform: translateY(-2px);
+}
+.badge-tag {
+  display: inline-block; padding: 4px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; font-family: var(--mono-font);
+}
+.badge-critical { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.badge-clean { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-frozen { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  color: #fff; border: none;
+  padding: 10px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.custom-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.custom-table th {
+  text-align: left; padding: 12px 14px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); border-bottom: 1px solid var(--panel-border);
+}
+.custom-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-family: var(--mono-font); font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand-group">
+    <div class="brand-icon">🕸️</div>
+    <div>
+      <div class="brand-title">Financial Fraud Graph Neural Network (GNN)</div>
+      <div class="brand-sub">Project 24 • Graph Convolutional Network (GCN) • Money Mule & Cycle Hunter</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <button class="btn-primary" onclick="injectLaunderingRing()">⚡ Inject Laundering Ring</button>
+    <button class="btn-primary" style="background:rgba(255,255,255,0.08)" onclick="exportSarDossier()">📑 Export FinCEN SAR</button>
+  </div>
+</header>
+
+<!-- Stats Banner -->
+<section class="stats-banner">
+  <div class="stat-card">
+    <div class="stat-title">Network Entities (Nodes)</div>
+    <div class="stat-value" id="statNodes" style="color:var(--accent-purple)">0</div>
+    <div class="stat-sub">Retail, Merchants & Shell LLCs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Cash Flows (Edges)</div>
+    <div class="stat-value" id="statEdges" style="color:var(--accent-cyan)">0</div>
+    <div class="stat-sub">Directed transactional links</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Syndicate Rings Detected</div>
+    <div class="stat-value" style="color:var(--accent-rose)">3 Active</div>
+    <div class="stat-sub">1 Carousel • 1 Smurf • 1 Funnel</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Accounts Frozen</div>
+    <div class="stat-value" id="statFrozen" style="color:#c084fc">0</div>
+    <div class="stat-sub">Sanctioned AML Wallets</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">GNN Message Passing</div>
+    <div class="stat-value" style="color:var(--accent-emerald)">2 Layers</div>
+    <div class="stat-sub">GraphSAGE Neighbor Pooling</div>
+  </div>
+</section>
+
+<!-- Tab Navigation -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(0, this)">🕸️ Interactive Force-Directed Topology</button>
+  <button class="tab-btn" onclick="switchTab(1, this)">🚨 Syndicate Pattern Hunter</button>
+  <button class="tab-btn" onclick="switchTab(2, this)">🧠 GNN Message Passing & Embeddings</button>
+  <button class="tab-btn" onclick="switchTab(3, this)">📑 AML Compliance & FinCEN SAR Case File</button>
+</nav>
+
+<main class="main-wrapper">
+
+  <!-- TAB 0: INTERACTIVE GRAPH VIEWPORT -->
+  <div class="tab-content active" id="tab0">
+    <div class="graph-viewport">
+      <canvas id="graphCanvas"></canvas>
+
+      <!-- Viewport Controls -->
+      <div class="graph-overlay-controls">
+        <button class="btn-ctrl" onclick="zoomIn()">Zoom +</button>
+        <button class="btn-ctrl" onclick="zoomOut()">Zoom -</button>
+        <button class="btn-ctrl" onclick="resetZoom()">Fit Graph</button>
+        <input type="text" id="nodeSearchInput" placeholder="Search Account..." style="background:rgba(255,255,255,0.05);border:1px solid var(--panel-border);color:#fff;border-radius:6px;padding:4px 8px;font-size:12px;font-family:var(--mono-font)"/>
+        <button class="btn-ctrl" onclick="searchNode()">Find</button>
+      </div>
+
+      <!-- Node Inspector Drawer -->
+      <div class="node-drawer" id="nodeDrawer">
+        <div class="node-drawer-header">
+          <div>
+            <div style="font-size:14px;font-weight:800;font-family:var(--mono-font)" id="drawerNodeId">ACC-000</div>
+            <div style="font-size:11px;color:var(--text-muted)" id="drawerNodeName">Account Name</div>
+          </div>
+          <button class="btn-ctrl" style="padding:4px 8px" onclick="closeDrawer()">✕</button>
+        </div>
+
+        <div class="drawer-row"><span class="drawer-label">Entity Type:</span><span id="drawerType">Personal</span></div>
+        <div class="drawer-row"><span class="drawer-label">Jurisdiction:</span><span id="drawerCountry">US</span></div>
+        <div class="drawer-row"><span class="drawer-label">Ledger Balance:</span><span id="drawerBalance" style="color:#fff;font-weight:700">$0.00</span></div>
+        <div class="drawer-row"><span class="drawer-label">In-Degree / Out:</span><span id="drawerDegree">0 in / 0 out</span></div>
+        <div class="drawer-row"><span class="drawer-label">Total Volume:</span><span id="drawerVolume">$0.00</span></div>
+        <div class="drawer-row"><span class="drawer-label">GNN Risk Score:</span><span id="drawerRisk" style="color:#f87171;font-weight:700">0.0%</span></div>
+        <div class="drawer-row"><span class="drawer-label">Status:</span><span id="drawerStatus" class="badge-tag badge-clean">ACTIVE</span></div>
+
+        <div style="margin:16px 0;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;font-size:11px">
+          <div style="font-weight:700;color:var(--accent-purple);margin-bottom:4px">GNN Layer 2 Reasoning:</div>
+          <div id="drawerGnnReason" style="color:var(--text-muted);line-height:1.4">Evaluating 2-hop message passing neighborhood...</div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" id="btnFreezeToggle" style="flex:1;background:#ef4444" onclick="toggleFreezeCurrentNode()">🔒 Freeze Account</button>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="graph-legend">
+        <div class="legend-item"><span class="dot" style="background:#10b981"></span> Clean Retail (< 35%)</div>
+        <div class="legend-item"><span class="dot" style="background:#f59e0b"></span> Elevated Suspicion (35-70%)</div>
+        <div class="legend-item"><span class="dot" style="background:#ef4444"></span> Flagged Mule / Shell (> 70%)</div>
+        <div class="legend-item"><span class="dot" style="background:#a855f7"></span> Frozen Account</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: SYNDICATE PATTERN HUNTER -->
+  <div class="tab-content" id="tab1">
+    <div class="grid-2">
+      <!-- Syndicate Patterns -->
+      <div class="card">
+        <div class="card-title">
+          <span>🚨 Discovered Financial Syndicates</span>
+          <button class="btn-primary" style="padding:6px 14px;font-size:12px" onclick="loadSyndicates()">Refresh</button>
+        </div>
+        <div id="syndicatesContainer">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Pattern Inspector & Topology Details -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔬 Syndicate Topology Analysis</span>
+        </div>
+        <div id="patternDetailsBox" style="padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;line-height:1.6;font-size:13px">
+          Select any syndicate on the left to inspect its multi-hop transactional topology and financial laundering mechanism.
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25);border-radius:12px">
+          <div style="font-weight:800;color:var(--accent-purple);margin-bottom:6px">💡 Why GNNs Outperform Traditional SQL Rules:</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.6">
+            Rule-based AML triggers only look at individual transfers (e.g. > $10,000). Organized criminal syndicates evade this using <strong>smurfing (micro-splits)</strong> and <strong>multi-hop carousels</strong> where no single transfer looks anomalous. 
+            Graph Neural Networks propagate embeddings across paths, enabling immediate detection of cyclic and tree-structured flow anomalies regardless of dollar amounts.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: GNN MESSAGE PASSING -->
+  <div class="tab-content" id="tab2">
+    <div class="grid-2">
+      <!-- Message Passing Explanation -->
+      <div class="card">
+        <div class="card-title">
+          <span>🧠 2-Layer Graph Convolution Architecture</span>
+        </div>
+        
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:18px">
+          This system executes 2 rounds of neighborhood feature aggregation:
+        </div>
+
+        <div style="padding:14px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:12px;border:1px solid var(--panel-border)">
+          <div style="font-weight:700;color:var(--accent-cyan);margin-bottom:4px">Layer 1: Local Neighborhood Aggregation</div>
+          <div style="font-family:var(--mono-font);font-size:12px;color:#cbd5e1">
+            h<sub>v</sub><sup>(1)</sup> = ReLU( W<sub>1</sub> · ∑<sub>u ∈ N(v)</sub> h<sub>u</sub> / √(d<sub>v</sub> · d<sub>u</sub>) )
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Aggregates account balances, in/out velocity, and channel mix of direct neighbors.</div>
+        </div>
+
+        <div style="padding:14px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:12px;border:1px solid var(--panel-border)">
+          <div style="font-weight:700;color:var(--accent-purple);margin-bottom:4px">Layer 2: Multi-Hop Topology Pooling (GraphSAGE)</div>
+          <div style="font-family:var(--mono-font);font-size:12px;color:#cbd5e1">
+            h<sub>v</sub><sup>(2)</sup> = Softmax( W<sub>2</sub> · MaxPool({ h<sub>u</sub><sup>(1)</sup>, ∀ u ∈ N(v) }) )
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Captures 2-hop structural patterns (e.g., circular paths, funnel aggregators).</div>
+        </div>
+
+        <div style="padding:14px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid var(--panel-border)">
+          <div style="font-weight:700;color:var(--accent-rose);margin-bottom:4px">Classification Head: Fraud Probability</div>
+          <div style="font-family:var(--mono-font);font-size:12px;color:#cbd5e1">
+            P(Mule | v) = σ( W<sub>out</sub> · h<sub>v</sub><sup>(2)</sup> )
+          </div>
+        </div>
+      </div>
+
+      <!-- Embedding vectors table -->
+      <div class="card">
+        <div class="card-title">
+          <span>📊 Node Latent Embedding Matrix (8-D)</span>
+        </div>
+        <div style="max-height:480px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Account</th>
+                <th>Risk Prob</th>
+                <th>Latent Vectors [h0..h7]</th>
+              </tr>
+            </thead>
+            <tbody id="embeddingsTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: AML COMPLIANCE & FINCEN SAR -->
+  <div class="tab-content" id="tab3">
+    <div class="card">
+      <div class="card-title">
+        <span>📑 Regulatory FinCEN Suspicious Activity Report (SAR) Case Manager</span>
+        <button class="btn-primary" onclick="exportSarDossier()">📥 Download Formal SAR JSON Dossier</button>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">
+        Accounts identified with high GNN risk (>75%) or participating in detected circular loops are automatically staged for regulatory AML filing.
+      </p>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Entity Account</th>
+            <th>Type</th>
+            <th>Jurisdiction</th>
+            <th>Balance</th>
+            <th>GNN Risk</th>
+            <th>AML Action</th>
+          </tr>
+        </thead>
+        <tbody id="sarTableBody">
+          <!-- Populated via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const BACKEND_URL = 'http://localhost:5024/api';
+let graphData = { nodes: [], edges: [] };
+let selectedNode = null;
+
+// Graph Canvas Physics Engine
+const canvas = document.getElementById('graphCanvas');
+const ctx = canvas.getContext('2d');
+let zoom = 1.0;
+let panX = 0;
+let panY = 0;
+let isDragging = false;
+let dragNode = null;
+let lastMouse = { x: 0, y: 0 };
+let particleOffset = 0;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  if (panX === 0 && panY === 0) {
+    panX = canvas.width / 2;
+    panY = canvas.height / 2;
+  }
+}
+window.addEventListener('resize', resizeCanvas);
+
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab${idx}`).classList.add('active');
+  if (idx === 0) {
+    resizeCanvas();
+  } else if (idx === 1) {
+    loadSyndicates();
+  } else if (idx === 2) {
+    renderEmbeddingsTable();
+  } else if (idx === 3) {
+    renderSarTable();
+  }
+}
+
+async function init() {
+  resizeCanvas();
+  await loadGraph();
+  requestAnimationFrame(animateGraph);
+  loadSyndicates();
+}
+
+async function loadGraph() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/graph`);
+    if (!res.ok) return;
+    const data = await res.json();
+    graphData.edges = data.edges;
+
+    // Preserve or initialize node positions
+    const existingMap = new Map((graphData.nodes || []).map(n => [n.id, n]));
+    const R = Math.min(canvas.width, canvas.height) * 0.35;
+    
+    graphData.nodes = data.nodes.map((n, i) => {
+      const existing = existingMap.get(n.id);
+      if (existing) {
+        return { ...n, x: existing.x, y: existing.y, vx: existing.vx, vy: existing.vy };
+      }
+      const angle = (i / data.nodes.length) * Math.PI * 2;
+      return {
+        ...n,
+        x: Math.cos(angle) * (R + (Math.random() * 80 - 40)),
+        y: Math.sin(angle) * (R + (Math.random() * 80 - 40)),
+        vx: 0, vy: 0
+      };
+    });
+
+    document.getElementById('statNodes').textContent = data.metadata.total_nodes;
+    document.getElementById('statEdges').textContent = data.metadata.total_edges;
+    document.getElementById('statFrozen').textContent = data.metadata.frozen_count;
+  } catch(e){}
+}
+
+// Force-Directed Physics Simulation Step
+function updatePhysics() {
+  const nodes = graphData.nodes;
+  const edges = graphData.edges;
+  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+
+  // Repulsion between all nodes
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i];
+      const b = nodes[j];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      if (dist < 260) {
+        const force = (260 - dist) / dist * 0.45;
+        if (a !== dragNode) { a.x -= dx * force * 0.05; a.y -= dy * force * 0.05; }
+        if (b !== dragNode) { b.x += dx * force * 0.05; b.y += dy * force * 0.05; }
+      }
+    }
+  }
+
+  // Attraction along edges (springs)
+  edges.forEach(e => {
+    const s = nodeMap.get(e.source);
+    const t = nodeMap.get(e.target);
+    if (s && t) {
+      const dx = t.x - s.x;
+      const dy = t.y - s.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      const force = (dist - 110) * 0.003;
+      if (s !== dragNode) { s.x += dx * force; s.y += dy * force; }
+      if (t !== dragNode) { t.x -= dx * force; t.y -= dy * force; }
+    }
+  });
+
+  // Pull toward origin (damping)
+  nodes.forEach(n => {
+    if (n !== dragNode) {
+      n.x *= 0.985;
+      n.y *= 0.985;
+    }
+  });
+
+  particleOffset = (particleOffset + 0.008) % 1.0;
+}
+
+// Render Graph Canvas
+function renderGraph() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(panX, panY);
+  ctx.scale(zoom, zoom);
+
+  const nodeMap = new Map(graphData.nodes.map(n => [n.id, n]));
+
+  // Draw Edges
+  graphData.edges.forEach(e => {
+    const s = nodeMap.get(e.source);
+    const t = nodeMap.get(e.target);
+    if (!s || !t) return;
+
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(t.x, t.y);
+
+    if (e.pattern === 'CIRCULAR_LOOP') {
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.7)';
+      ctx.lineWidth = 2.5;
+    } else if (e.is_suspicious) {
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+      ctx.lineWidth = 1.8;
+    } else {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+    }
+    ctx.stroke();
+
+    // Animated money flow particle
+    const px = s.x + (t.x - s.x) * particleOffset;
+    const py = s.y + (t.y - s.y) * particleOffset;
+    ctx.beginPath();
+    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = e.is_suspicious ? '#f43f5e' : '#38bdf8';
+    ctx.fill();
+  });
+
+  // Draw Nodes
+  graphData.nodes.forEach(n => {
+    const isSelected = selectedNode && selectedNode.id === n.id;
+    const radius = 12 + Math.min(10, (n.in_degree + n.out_degree) * 1.5);
+
+    // Node glow
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, radius + (isSelected ? 6 : 3), 0, Math.PI * 2);
+    let color = '#10b981';
+    if (n.is_frozen) color = '#a855f7';
+    else if (n.risk >= 0.75) color = '#ef4444';
+    else if (n.risk >= 0.35) color = '#f59e0b';
+    ctx.fillStyle = isSelected ? 'rgba(255,255,255,0.4)' : `${color}33`;
+    ctx.fill();
+
+    // Node core
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+
+    // Node label
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '10px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.id, n.x, n.y + radius + 14);
+  });
+
+  ctx.restore();
+}
+
+function animateGraph() {
+  updatePhysics();
+  renderGraph();
+  requestAnimationFrame(animateGraph);
+}
+
+// Canvas Mouse / Touch Interaction
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left - panX) / zoom;
+  const my = (e.clientY - rect.top - panY) / zoom;
+
+  // Check if clicked a node
+  for (let n of graphData.nodes) {
+    const dist = Math.sqrt((n.x - mx) ** 2 + (n.y - my) ** 2);
+    if (dist < 20) {
+      dragNode = n;
+      selectNode(n);
+      return;
+    }
+  }
+
+  isDragging = true;
+  lastMouse = { x: e.clientX, y: e.clientY };
+});
+
+window.addEventListener('mousemove', e => {
+  if (dragNode) {
+    const rect = canvas.getBoundingClientRect();
+    dragNode.x = (e.clientX - rect.left - panX) / zoom;
+    dragNode.y = (e.clientY - rect.top - panY) / zoom;
+  } else if (isDragging) {
+    panX += e.clientX - lastMouse.x;
+    panY += e.clientY - lastMouse.y;
+    lastMouse = { x: e.clientX, y: e.clientY };
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  dragNode = null;
+});
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta = e.deltaY < 0 ? 1.1 : 0.9;
+  zoom = Math.max(0.3, Math.min(3.0, zoom * delta));
+});
+
+function zoomIn() { zoom = Math.min(3.0, zoom * 1.2); }
+function zoomOut() { zoom = Math.max(0.3, zoom * 0.8); }
+function resetZoom() {
+  zoom = 1.0;
+  panX = canvas.width / 2;
+  panY = canvas.height / 2;
+}
+
+function searchNode() {
+  const query = document.getElementById('nodeSearchInput').value.trim().toUpperCase();
+  const found = graphData.nodes.find(n => n.id.toUpperCase() === query || n.name.toUpperCase().includes(query));
+  if (found) {
+    selectNode(found);
+    panX = (canvas.width / 2) - (found.x * zoom);
+    panY = (canvas.height / 2) - (found.y * zoom);
+  } else {
+    alert(`Account ${query} not found in current network.`);
+  }
+}
+
+// Node Inspector Drawer
+async function selectNode(node) {
+  selectedNode = node;
+  document.getElementById('nodeDrawer').style.display = 'block';
+  document.getElementById('drawerNodeId').textContent = node.id;
+  document.getElementById('drawerNodeName').textContent = node.name;
+  document.getElementById('drawerType').textContent = node.type;
+  document.getElementById('drawerCountry').textContent = node.country;
+  document.getElementById('drawerBalance').textContent = `$${parseFloat(node.balance).toLocaleString()}`;
+  document.getElementById('drawerDegree').textContent = `${node.in_degree} In / ${node.out_degree} Out`;
+  document.getElementById('drawerVolume').textContent = `$${(node.total_inflow + node.total_outflow).toLocaleString()}`;
+  document.getElementById('drawerRisk').textContent = `${(node.risk * 100).toFixed(1)}%`;
+  
+  const statusEl = document.getElementById('drawerStatus');
+  statusEl.textContent = node.is_frozen ? 'FROZEN' : 'ACTIVE';
+  statusEl.className = `badge-tag ${node.is_frozen ? 'badge-frozen' : node.risk > 0.7 ? 'badge-critical' : 'badge-clean'}`;
+
+  const btn = document.getElementById('btnFreezeToggle');
+  btn.textContent = node.is_frozen ? '🔓 Unfreeze Account' : '🔒 Freeze Account';
+  btn.style.background = node.is_frozen ? '#10b981' : '#ef4444';
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/node/${node.id}`);
+    const details = await res.json();
+    document.getElementById('drawerGnnReason').textContent = details.gnn_message_passing.classification_verdict + ': ' + details.gnn_message_passing.layer1_aggregate;
+  } catch(e){}
+}
+
+function closeDrawer() {
+  document.getElementById('nodeDrawer').style.display = 'none';
+  selectedNode = null;
+}
+
+async function toggleFreezeCurrentNode() {
+  if (!selectedNode) return;
+  const isFrozen = selectedNode.is_frozen;
+  const endpoint = isFrozen ? '/account/unfreeze' : '/account/freeze';
+  try {
+    await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ account_id: selectedNode.id })
+    });
+    await loadGraph();
+    const updated = graphData.nodes.find(n => n.id === selectedNode.id);
+    if (updated) selectNode(updated);
+  } catch(e){}
+}
+
+// Syndicate Patterns
+async function loadSyndicates() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/graph/syndicates`);
+    if (!res.ok) return;
+    const list = await res.json();
+    const container = document.getElementById('syndicatesContainer');
+    container.innerHTML = list.map(s => `
+      <div class="syndicate-card" onclick="inspectSyndicate('${s.syndicate_id}')">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <strong style="color:#fff;font-size:14px">${s.name}</strong>
+          <span class="badge-tag badge-critical">${(s.risk_score*100).toFixed(0)}% THREAT</span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">${s.pattern}</div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono-font)">
+          <span>Nodes: ${s.nodes.length} entities</span>
+          <span style="color:#f87171;font-weight:700">Volume: $${s.involved_volume_usd.toLocaleString()}</span>
+        </div>
+      </div>
+    `).join('');
+    if (list.length > 0) inspectSyndicate(list[0].syndicate_id, list[0]);
+  } catch(e){}
+}
+
+async function inspectSyndicate(id, preData) {
+  let s = preData;
+  if (!s) {
+    const res = await fetch(`${BACKEND_URL}/graph/syndicates`);
+    const list = await res.json();
+    s = list.find(item => item.syndicate_id === id);
+  }
+  if (!s) return;
+
+  const box = document.getElementById('patternDetailsBox');
+  box.innerHTML = `
+    <h3 style="color:#fff;margin-bottom:8px">${s.name}</h3>
+    <p style="color:var(--text-muted);font-size:13px;margin-bottom:12px">${s.description}</p>
+    <div style="background:rgba(0,0,0,0.3);padding:10px;border-radius:8px;font-family:var(--mono-font);font-size:12px;margin-bottom:12px">
+      <strong>Involved Ring Entities:</strong><br/>
+      ${s.nodes.map(n => `<span style="color:var(--accent-purple)">${n}</span>`).join(' ➔ ')}
+    </div>
+    <button class="btn-primary" style="padding:6px 14px;font-size:12px" onclick="focusOnNodes(${JSON.stringify(s.nodes).replace(/"/g, '&quot;')})">
+      🔍 Focus On Ring in Topology View
+    </button>
+  `;
+}
+
+function focusOnNodes(nodeIds) {
+  switchTab(0, document.querySelectorAll('.tab-btn')[0]);
+  const targets = graphData.nodes.filter(n => nodeIds.includes(n.id));
+  if (targets.length > 0) {
+    const avgX = targets.reduce((acc, n) => acc + n.x, 0) / targets.length;
+    const avgY = targets.reduce((acc, n) => acc + n.y, 0) / targets.length;
+    zoom = 1.6;
+    panX = (canvas.width / 2) - (avgX * zoom);
+    panY = (canvas.height / 2) - (avgY * zoom);
+  }
+}
+
+// Inject Laundering Ring
+async function injectLaunderingRing() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/simulate/ring`, { method: 'POST' });
+    const data = await res.json();
+    alert(`Successfully injected synthetic carousel ring #${data.ring_id} (${data.nodes_added.join(', ')}) into live graph!`);
+    await loadGraph();
+  } catch(e){}
+}
+
+// Tab 2 Embeddings
+function renderEmbeddingsTable() {
+  const tbody = document.getElementById('embeddingsTableBody');
+  tbody.innerHTML = graphData.nodes.slice(0, 15).map(n => `
+    <tr>
+      <td><strong>${n.id}</strong> (${n.type})</td>
+      <td style="color:${n.risk > 0.7 ? '#f87171' : '#34d399'}">${(n.risk*100).toFixed(1)}%</td>
+      <td style="color:var(--text-muted);font-size:11px">[${(n.gnn_embedding || []).map(v => v.toFixed(2)).join(', ')}]</td>
+    </tr>
+  `).join('');
+}
+
+// Tab 3 SAR Table
+function renderSarTable() {
+  const tbody = document.getElementById('sarTableBody');
+  const flagged = graphData.nodes.filter(n => n.risk >= 0.7 || n.is_frozen);
+  tbody.innerHTML = flagged.map(n => `
+    <tr>
+      <td><strong>${n.id}</strong> - ${n.name}</td>
+      <td>${n.type}</td>
+      <td>${n.country}</td>
+      <td>$${parseFloat(n.balance).toLocaleString()}</td>
+      <td style="color:#f87171;font-weight:700">${(n.risk*100).toFixed(1)}%</td>
+      <td>
+        ${n.is_frozen 
+          ? `<span class="badge-tag badge-frozen">FROZEN</span>`
+          : `<button class="btn-primary" style="background:#ef4444;padding:4px 10px;font-size:11px" onclick="selectNode({id:'${n.id}'});toggleFreezeCurrentNode();">Freeze Account</button>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+// Export SAR Dossier
+async function exportSarDossier() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/export/sar`);
+    const data = await res.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `FinCEN_SAR_Regulatory_Dossier_${Date.now()}.json`;
+    a.click();
+  } catch(e){
+    alert('Error exporting SAR report');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,3770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VIGIL-8 // Autonomous YOLOv8 Weapon Detection & Public Security System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+:root {
+  --bg-primary: #06080f;
+  --bg-secondary: #0b101d;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --bg-card-hover: rgba(30, 41, 59, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(239, 68, 68, 0.35);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --accent-red: #ef4444;
+  --accent-red-glow: rgba(239, 68, 68, 0.4);
+  --accent-orange: #f97316;
+  --accent-yellow: #eab308;
+  --accent-green: #10b981;
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --accent-purple: #a855f7;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.5;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(239, 68, 68, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.05) 0%, transparent 45%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* ─── EMERGENCY LOCKDOWN BANNER ────────────────────────────────────────── */
+#lockdownBanner {
+  display: none;
+  background: linear-gradient(90deg, #b91c1c, #dc2626, #b91c1c);
+  background-size: 200% 100%;
+  animation: strobe 2s infinite linear;
+  color: #fff;
+  padding: 10px 24px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #fecaca;
+  box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7);
+  z-index: 1000;
+  position: relative;
+}
+@keyframes strobe {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ─── TOP APP HEADER ──────────────────────────────────────────────────── */
+.app-header {
+  background: rgba(11, 16, 29, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 20px var(--accent-red-glow);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.brand-titles h1 {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-titles h1 span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+.brand-titles p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.header-status-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.telemetry-chip {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot-green { background: #10b981; box-shadow: 0 0 10px #10b981; }
+.dot-red { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+.dot-amber { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+
+.btn-header {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  border: none;
+}
+.btn-lockdown {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+  color: #fff;
+  border: 1px solid rgba(254, 202, 202, 0.3);
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+}
+.btn-lockdown:hover {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  transform: translateY(-1px);
+}
+.btn-audio {
+  background: rgba(15, 23, 42, 0.8);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+.btn-audio:hover { color: #fff; border-color: #64748b; }
+.btn-audio.active {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+/* ─── NAVIGATION TABS ──────────────────────────────────────────────────── */
+.nav-tabs {
+  background: rgba(15, 23, 42, 0.7);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 28px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+}
+.tab-btn.active {
+  color: #fff;
+  border-bottom-color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.08);
+}
+.tab-badge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── MAIN LAYOUT CONTAINER ────────────────────────────────────────────── */
+.content-wrapper {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+  animation: fadeIn 0.25s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── CARD COMPONENTS ──────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.2s;
+}
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ─── LIVE DETECTION CONSOLE (TAB 1) ───────────────────────────────────── */
+.console-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+}
+@media (max-width: 1100px) {
+  .console-grid { grid-template-columns: 1fr; }
+}
+
+.viewport-container {
+  position: relative;
+  background: #020408;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+}
+.canvas-wrap {
+  position: relative;
+  max-width: 100%;
+  max-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#detectionCanvas {
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 6px;
+  display: block;
+}
+#liveVideo {
+  display: none;
+  max-width: 100%;
+  max-height: 520px;
+}
+
+/* Radar & HUD Overlay Elements */
+.hud-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(239, 68, 68, 0.7);
+  pointer-events: none;
+}
+.hud-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+.hud-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+.hud-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+.hud-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
+
+.hud-telemetry-badge {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #38bdf8;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+.hud-laser-scan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.9), transparent);
+  box-shadow: 0 0 15px #ef4444;
+  pointer-events: none;
+  opacity: 0;
+}
+.scanning .hud-laser-scan {
+  opacity: 1;
+  animation: scanLine 2s infinite ease-in-out;
+}
+@keyframes scanLine {
+  0% { top: 0%; }
+  50% { top: 98%; }
+  100% { top: 0%; }
+}
+
+.empty-viewport-hint {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 40px;
+}
+.empty-viewport-hint svg {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+/* Viewport Controls Bar */
+.viewport-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.btn-action {
+  flex: 1;
+  min-width: 130px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: rgba(30, 41, 59, 0.6);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.btn-action:hover {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.btn-action-primary {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+}
+.btn-action-primary:hover {
+  background: linear-gradient(135deg, #dc2626, #991b1b);
+}
+.btn-action-webcam.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+/* Slider Controls */
+.tuning-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  background: rgba(11, 16, 29, 0.6);
+  border: 1px solid var(--border-subtle);
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-top: 14px;
+}
+.tuning-item label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.tuning-item label span {
+  font-family: var(--font-mono);
+  color: #38bdf8;
+}
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #334155;
+  outline: none;
+  accent-color: var(--accent-red);
+}
+.select-input {
+  width: 100%;
+  padding: 6px 10px;
+  background: #0f172a;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+/* Preset Scenarios Gallery */
+.preset-section {
+  margin-top: 20px;
+}
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+@media (max-width: 768px) {
+  .preset-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.preset-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.preset-card:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(30, 41, 59, 0.7);
+  transform: translateY(-2px);
+}
+.preset-thumb {
+  width: 100%;
+  height: 64px;
+  background: #020617;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.preset-name {
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+.preset-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+.tag-crit { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.tag-high { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+.tag-med { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+.tag-safe { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+/* ─── RIGHT INSPECTION PANEL (RESULTS & FORENSICS) ───────────────────────── */
+.threat-status-card {
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.threat-status-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 6px; height: 100%;
+}
+.status-CRITICAL {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+.status-CRITICAL::before { background: #ef4444; }
+.status-HIGH {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.5);
+}
+.status-HIGH::before { background: #f97316; }
+.status-MEDIUM {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.5);
+}
+.status-MEDIUM::before { background: #eab308; }
+.status-SAFE {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+.status-SAFE::before { background: #10b981; }
+
+.status-badge-title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.status-rec-text {
+  font-size: 13px;
+  color: var(--text-main);
+  margin-top: 8px;
+  font-weight: 600;
+}
+.status-sub-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Detections List */
+.detections-container {
+  margin-bottom: 16px;
+}
+.detection-item {
+  background: rgba(11, 16, 29, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-left: 4px solid var(--accent-red);
+}
+.det-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.det-name {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.det-coords {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.det-meter {
+  width: 90px;
+  text-align: right;
+}
+.det-conf-val {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 14px;
+  color: #f87171;
+}
+.conf-bar {
+  width: 100%;
+  height: 5px;
+  background: #334155;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.conf-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316, #ef4444);
+}
+
+/* Image Forensics Grid */
+.forensics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+.forensic-metric {
+  text-align: center;
+}
+.forensic-lbl {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.forensic-val {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-top: 2px;
+}
+
+/* ─── CCTV SURVEILLANCE WALL (TAB 2) ───────────────────────────────────── */
+.cctv-matrix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .cctv-matrix { grid-template-columns: 1fr; }
+}
+.cctv-cam-card {
+  background: #020617;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+.cctv-cam-header {
+  padding: 10px 14px;
+  background: rgba(15, 23, 42, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 13px;
+  font-weight: 700;
+}
+.cctv-badge-rec {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.blink-dot {
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.cctv-feed-screen {
+  position: relative;
+  height: 240px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cctv-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.cctv-overlay-info {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.cctv-cam-footer {
+  padding: 10px 14px;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+
+/* ─── YOLOv8 MODEL ARCHITECTURE (TAB 3) ────────────────────────────────── */
+.metrics-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 1100px) {
+  .metrics-kpi-row { grid-template-columns: repeat(3, 1fr); }
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+.kpi-val {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 800;
+  color: #38bdf8;
+  margin-top: 4px;
+}
+.kpi-lbl {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.model-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) {
+  .model-charts-grid { grid-template-columns: 1fr; }
+}
+
+/* Confusion Matrix Table */
+.cm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: center;
+  margin-top: 10px;
+}
+.cm-table th, .cm-table td {
+  padding: 8px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cm-table th {
+  background: rgba(30, 41, 59, 0.6);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.cm-cell-high { background: rgba(16, 185, 129, 0.35); color: #34d399; font-weight: 700; }
+.cm-cell-med { background: rgba(234, 179, 8, 0.25); color: #facc15; }
+.cm-cell-low { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.cm-cell-zero { background: rgba(15, 23, 42, 0.4); color: var(--text-dim); }
+
+/* Architecture Stages Breakdown */
+.arch-flow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 14px;
+}
+@media (max-width: 800px) {
+  .arch-flow-grid { grid-template-columns: 1fr; }
+}
+.arch-card {
+  background: rgba(11, 16, 29, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+}
+.arch-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 6px;
+}
+.arch-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ─── INCIDENT AUDIT LOGS (TAB 4) ──────────────────────────────────────── */
+.filter-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.table-responsive {
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+.data-table th {
+  background: rgba(30, 41, 59, 0.6);
+  color: var(--text-muted);
+  padding: 12px 14px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.data-table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.badge-sev {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.sev-CRITICAL { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+.sev-HIGH { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); }
+.sev-MEDIUM { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+.sev-SAFE { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+.status-select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #0f172a;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+/* ─── AUTO-SCAN CONTROLS ───────────────────────────────────────────────── */
+.autoscan-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(11, 16, 29, 0.7);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-top: 14px;
+}
+.autoscan-bar label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.btn-autoscan {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+.btn-autoscan.running {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+  animation: pulse-red 1.5s infinite;
+}
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 0 28px rgba(239, 68, 68, 0.9); }
+}
+.autoscan-counter {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 800;
+  color: #ef4444;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ─── DUAL COMPARE TAB ──────────────────────────────────────────────────── */
+.dual-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .dual-compare-grid { grid-template-columns: 1fr; } }
+.compare-viewport {
+  background: #020408;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.compare-canvas { max-width: 100%; max-height: 340px; display: block; border-radius: 6px; }
+.compare-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.75);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.compare-result-strip {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 13px;
+  min-height: 52px;
+}
+
+/* ─── HEATMAP TAB ───────────────────────────────────────────────────────── */
+.heatmap-container {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 900px) { .heatmap-container { grid-template-columns: 1fr; } }
+#heatmapCanvas {
+  border-radius: 10px;
+  cursor: crosshair;
+  width: 100%;
+  display: block;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.heatmap-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.heatmap-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.legend-swatch {
+  width: 24px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* ─── RADIO DISPATCH TAB ────────────────────────────────────────────────── */
+.radio-console {
+  background: #020408;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.radio-header {
+  background: rgba(16, 185, 129, 0.1);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.radio-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #34d399;
+}
+.radio-log {
+  height: 420px;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.radio-message {
+  display: flex;
+  gap: 12px;
+  animation: slideInLeft 0.35s ease-out;
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.radio-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.radio-body {
+  flex: 1;
+}
+.radio-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+.radio-callsign {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+}
+.radio-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.radio-text {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+.radio-input-bar {
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+}
+#radioInput {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+#radioInput:focus { border-color: #10b981; }
+.radio-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1000px) { .radio-grid { grid-template-columns: 1fr; } }
+.active-units-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.unit-card {
+  background: rgba(11, 16, 29, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.unit-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: blink 1.8s infinite;
+}
+
+/* ─── ANALYTICS & HEATMAP (TAB 5) ──────────────────────────────────────── */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) {
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+
+.zone-risk-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.zone-risk-card {
+  background: rgba(11, 16, 29, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+}
+.zone-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.risk-meter {
+  height: 6px;
+  background: #334155;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.risk-fill {
+  height: 100%;
+}
+
+/* ─── ACADEMIC DOCS (TAB 6) ────────────────────────────────────────────── */
+.docs-prose {
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.docs-prose h2 {
+  color: #f8fafc;
+  font-size: 20px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+.docs-prose h3 {
+  color: #38bdf8;
+  font-size: 16px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+.docs-prose p, .docs-prose ul {
+  margin-bottom: 14px;
+}
+.docs-prose ul {
+  padding-left: 20px;
+}
+.docs-prose code {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  color: #f43f5e;
+}
+.docs-prose pre {
+  background: #020617;
+  border: 1px solid var(--border-subtle);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+
+/* Modal Popup */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-box {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 14px;
+  max-width: 600px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+</style>
+</head>
+<body>
+
+<!-- EMERGENCY SITE LOCKDOWN BANNER -->
+<div id="lockdownBanner">
+  ⚠️ CODE RED LOCKDOWN ACTIVE // ALL ELECTRONIC SECURITY GATES SEALED // ARMED PATROL DISPATCHED ⚠️
+</div>
+
+<!-- TOP APP HEADER -->
+<header class="app-header">
+  <div class="brand-group">
+    <div class="brand-logo">🛡️</div>
+    <div class="brand-titles">
+      <h1>VIGIL-8 <span>YOLOv8 DEEP AI</span></h1>
+      <p>Autonomous Weapon Detection & Threat Telemetry // College Project 20 of 55</p>
+    </div>
+  </div>
+
+  <div class="header-status-strip">
+    <div class="telemetry-chip">
+      <span class="dot dot-green" id="serverDot"></span>
+      <span id="backendStatusText">BACKEND: ONLINE (PORT 5020)</span>
+    </div>
+    <div class="telemetry-chip">
+      <span id="deviceBadge">DEVICE: APPLE MPS METAL</span>
+    </div>
+    <button class="btn-header btn-audio active" id="audioToggleBtn" onclick="toggleAudio()" title="Toggle Tactical Audio Siren">
+      <span id="audioIcon">🔊</span> <span id="audioText">SIREN: ARMED</span>
+    </button>
+    <button class="btn-header btn-lockdown" id="lockdownBtn" onclick="triggerLockdown()">
+      🚨 LOCKDOWN PROTOCOL
+    </button>
+  </div>
+</header>
+
+<!-- NAVIGATION TABS -->
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('console')">
+    🎯 Live Detection Console
+  </button>
+  <button class="tab-btn" onclick="switchTab('dual')">
+    ⚖️ Dual Compare
+  </button>
+  <button class="tab-btn" onclick="switchTab('heatmap')">
+    🔥 Threat Heatmap
+  </button>
+  <button class="tab-btn" onclick="switchTab('radio')">
+    📡 Security Radio <span class="tab-badge" id="radioMsgCount">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('cctv')">
+    📹 CCTV Wall <span class="tab-badge" id="cctvCamCount">4 CAM</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('model')">
+    🧠 YOLOv8 Model
+  </button>
+  <button class="tab-btn" onclick="switchTab('logs')">
+    📋 Audit Logs <span class="tab-badge" id="incidentLogCount">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('analytics')">
+    📊 Analytics
+  </button>
+  <button class="tab-btn" onclick="switchTab('docs')">
+    📄 Docs
+  </button>
+</nav>
+
+<!-- MAIN CONTENT WRAPPER -->
+<main class="content-wrapper">
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 1: LIVE DETECTION CONSOLE -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel active" id="tab-console">
+    <div class="console-grid">
+      <!-- Left Column: Visual Viewport & Controls -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📹 Real-Time Computer Vision Viewport</span>
+          </div>
+          <div class="card-subtitle" id="viewportResolution">Resolution: Ready // Standby</div>
+        </div>
+
+        <div class="viewport-container" id="viewportBox">
+          <!-- Cyberpunk HUD Brackets -->
+          <div class="hud-corner hud-tl"></div>
+          <div class="hud-corner hud-tr"></div>
+          <div class="hud-corner hud-bl"></div>
+          <div class="hud-corner hud-br"></div>
+          
+          <div class="hud-telemetry-badge">
+            <span id="hudFps">FPS: 30</span>
+            <span id="hudInferenceTime">LATENCY: 12.4ms</span>
+            <span id="hudTargetCount">TARGETS: 0</span>
+          </div>
+
+          <div class="hud-laser-scan" id="laserScan"></div>
+
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="detectionCanvas" width="640" height="420"></canvas>
+            <video id="liveVideo" autoplay playsinline muted></video>
+          </div>
+        </div>
+
+        <!-- Viewport Action Buttons -->
+        <div class="viewport-actions">
+          <input type="file" id="filePicker" accept="image/*" style="display:none" onchange="handleFileUpload(event)"/>
+          <button class="btn-action" onclick="document.getElementById('filePicker').click()">
+            📁 Upload Surveillance Image
+          </button>
+          <button class="btn-action btn-action-webcam" id="webcamBtn" onclick="toggleWebcam()">
+            🎥 Live Camera Feed
+          </button>
+          <button class="btn-action btn-action-primary" id="analyzeBtn" onclick="analyzeCurrentFrame()">
+            🔍 Execute YOLOv8 Scan
+          </button>
+          <button class="btn-action" onclick="clearViewport()">
+            🔄 Reset Viewport
+          </button>
+        </div>
+
+        <!-- Real-Time Model Tuning Drawer -->
+        <div class="tuning-panel">
+          <div class="tuning-item">
+            <label>Confidence Threshold: <span id="confVal">0.45</span></label>
+            <input type="range" class="slider" id="confSlider" min="0.10" max="0.95" step="0.05" value="0.45" oninput="updateTuning()"/>
+          </div>
+          <div class="tuning-item">
+            <label>IoU NMS Overlap: <span id="iouVal">0.45</span></label>
+            <input type="range" class="slider" id="iouSlider" min="0.10" max="0.90" step="0.05" value="0.45" oninput="updateTuning()"/>
+          </div>
+          <div class="tuning-item">
+            <label>Surveillance Zone:</label>
+            <select class="select-input" id="cameraSelector">
+              <option value="CAM-01">CAM-01: Terminal 2 Concourse</option>
+              <option value="CAM-02">CAM-02: Baggage Cargo X-Ray</option>
+              <option value="CAM-03">CAM-03: Perimeter Gate 4</option>
+              <option value="CAM-04">CAM-04: VIP Lounge Concourse</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Auto-Scan Mode Bar -->
+        <div class="autoscan-bar">
+          <label>⏱ AUTO-SCAN:</label>
+          <button class="btn-autoscan" id="autoscanBtn" onclick="toggleAutoScan()">▶ START</button>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <label style="font-size:12px; color:var(--text-dim); white-space:nowrap;">Every</label>
+            <select class="select-input" id="autoscanInterval" style="width:90px;">
+              <option value="2000">2 sec</option>
+              <option value="4000" selected>4 sec</option>
+              <option value="6000">6 sec</option>
+              <option value="10000">10 sec</option>
+            </select>
+          </div>
+          <div style="flex:1; text-align:center;">
+            <div style="font-size:11px; color:var(--text-dim); font-family:var(--font-mono); margin-bottom:2px;">NEXT SCAN IN</div>
+            <div class="autoscan-counter" id="autoscanCounter">—</div>
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono);" id="autoscanScanCount">Scans: 0</div>
+        </div>
+
+        <!-- Preset Security Scenarios Gallery -->
+        <div class="preset-section">
+          <div class="card-title" style="margin-bottom: 8px;">
+            <span>⚡ Instant Security Presets (Click to Load & Test)</span>
+          </div>
+          <div class="preset-grid">
+            <div class="preset-card" onclick="loadPreset('handgun')">
+              <div class="preset-thumb">🔫</div>
+              <div class="preset-name">
+                <span>Handgun Intrusion</span>
+                <span class="preset-tag tag-crit">CRITICAL</span>
+              </div>
+            </div>
+            <div class="preset-card" onclick="loadPreset('knife')">
+              <div class="preset-thumb">🔪</div>
+              <div class="preset-name">
+                <span>Subway Knife Threat</span>
+                <span class="preset-tag tag-high">HIGH</span>
+              </div>
+            </div>
+            <div class="preset-card" onclick="loadPreset('rifle')">
+              <div class="preset-thumb">🪖</div>
+              <div class="preset-name">
+                <span>Perimeter Rifle Breach</span>
+                <span class="preset-tag tag-crit">CRITICAL</span>
+              </div>
+            </div>
+            <div class="preset-card" onclick="loadPreset('explosive')">
+              <div class="preset-thumb">💣</div>
+              <div class="preset-name">
+                <span>Suspicious Explosive IED</span>
+                <span class="preset-tag tag-crit">CRITICAL</span>
+              </div>
+            </div>
+            <div class="preset-card" onclick="loadPreset('holster')">
+              <div class="preset-thumb">🛡️</div>
+              <div class="preset-name">
+                <span>Authorized Holster</span>
+                <span class="preset-tag tag-med">MEDIUM</span>
+              </div>
+            </div>
+            <div class="preset-card" onclick="loadPreset('civilian')">
+              <div class="preset-thumb">🚶‍♂️</div>
+              <div class="preset-name">
+                <span>Clear Civilian Zone</span>
+                <span class="preset-tag tag-safe">SAFE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Threat Assessment & Forensics -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🛡️ Threat Assessment & Interdiction</span>
+          </div>
+          <div class="card-subtitle" id="lastScanTimestamp">Standby</div>
+        </div>
+
+        <!-- Dynamic Severity Alert Banner -->
+        <div class="threat-status-card status-SAFE" id="threatStatusBanner">
+          <div class="status-badge-title" id="statusTitle">
+            <span>✅ STATUS: NORMAL (SAFE)</span>
+          </div>
+          <div class="status-rec-text" id="statusRecommendation">
+            No weapon signatures identified. Normal civilian surveillance protocol active.
+          </div>
+          <div class="status-sub-text" id="statusSummary">
+            Inference engine standing by for frame input.
+          </div>
+        </div>
+
+        <!-- Computer Vision Forensics Telemetry -->
+        <div class="forensics-grid">
+          <div class="forensic-metric">
+            <div class="forensic-lbl">Sharpness</div>
+            <div class="forensic-val" id="fSharpness">214.8</div>
+          </div>
+          <div class="forensic-metric">
+            <div class="forensic-lbl">Brightness</div>
+            <div class="forensic-val" id="fBrightness">132.0</div>
+          </div>
+          <div class="forensic-metric">
+            <div class="forensic-lbl">Contrast</div>
+            <div class="forensic-val" id="fContrast">68.4</div>
+          </div>
+          <div class="forensic-metric">
+            <div class="forensic-lbl">Edge Density</div>
+            <div class="forensic-val" id="fEdge">4.82%</div>
+          </div>
+        </div>
+
+        <!-- Identified Targets List -->
+        <div class="detections-container">
+          <div class="card-title" style="margin-bottom: 10px; font-size: 13px;">
+            <span>🎯 Bounding Box Objects Detected</span>
+          </div>
+          <div id="detectionListContainer">
+            <div style="color: var(--text-dim); font-size: 13px; text-align: center; padding: 20px;">
+              No weapon targets detected in current frame.
+            </div>
+          </div>
+        </div>
+
+        <!-- Dispatch Interdiction Action Bar -->
+        <div style="margin-top: 18px; border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+          <button class="btn-action btn-action-primary" style="width: 100%; margin-bottom: 8px;" onclick="dispatchSecurityTeam()">
+            🚨 Dispatch Security Response Team
+          </button>
+          <button class="btn-action" style="width: 100%;" onclick="flagFalsePositive()">
+            ⚠️ Flag Current Frame as False Positive
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 2: CCTV MULTI-CAM SURVEILLANCE WALL -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-cctv">
+    <div class="card-header" style="margin-bottom: 20px;">
+      <div>
+        <h2 style="font-size: 18px; font-weight: 800;">📹 4-Quadrant CCTV Surveillance Matrix</h2>
+        <p style="color: var(--text-muted); font-size: 13px;">Live multi-spectrum security video monitoring across all perimeter checkpoints</p>
+      </div>
+      <div>
+        <button class="btn-action" onclick="refreshAllCctv()">🔄 Refresh All Feeds</button>
+      </div>
+    </div>
+
+    <div class="cctv-matrix" id="cctvGrid">
+      <!-- Camera cards will be dynamically mounted here -->
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 3: YOLOv8 MODEL ARCHITECTURE & BENCHMARKS -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-model">
+    <!-- KPI Row -->
+    <div class="metrics-kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Model Precision</div>
+        <div class="kpi-val" style="color: #34d399;">94.6%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Recall Rate</div>
+        <div class="kpi-val" style="color: #38bdf8;">92.1%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Harmonic F1-Score</div>
+        <div class="kpi-val" style="color: #a855f7;">93.3%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">mAP @ 0.50 IoU</div>
+        <div class="kpi-val" style="color: #facc15;">93.8%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">mAP @ 0.50:0.95</div>
+        <div class="kpi-val" style="color: #fb923c;">79.2%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Inference Latency</div>
+        <div class="kpi-val" style="color: #f43f5e;">12.4 ms</div>
+      </div>
+    </div>
+
+    <!-- Charts Grid: Confusion Matrix & Class mAP -->
+    <div class="model-charts-grid">
+      <!-- Confusion Matrix Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🔲 Normalized Confusion Matrix (Test Set: N=2,450)</span>
+          </div>
+          <div class="card-subtitle">5 Weapon Classes + Background</div>
+        </div>
+        <div class="table-responsive">
+          <table class="cm-table">
+            <thead>
+              <tr>
+                <th>True \ Pred</th>
+                <th>Pistol</th>
+                <th>Rifle</th>
+                <th>Knife</th>
+                <th>Explosive</th>
+                <th>Holster</th>
+                <th>BG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Pistol</th>
+                <td class="cm-cell-high">96%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-low">2%</td>
+              </tr>
+              <tr>
+                <th>Rifle</th>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-high">94%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-low">3%</td>
+              </tr>
+              <tr>
+                <th>Knife</th>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-high">93%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-med">6%</td>
+              </tr>
+              <tr>
+                <th>Explosive</th>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-low">2%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-high">91%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-med">6%</td>
+              </tr>
+              <tr>
+                <th>Holster</th>
+                <td class="cm-cell-low">2%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-zero">0%</td>
+                <td class="cm-cell-high">95%</td>
+                <td class="cm-cell-low">2%</td>
+              </tr>
+              <tr>
+                <th>Background</th>
+                <td class="cm-cell-low">2%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-low">3%</td>
+                <td class="cm-cell-low">2%</td>
+                <td class="cm-cell-low">1%</td>
+                <td class="cm-cell-high">91%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Class Breakdown Chart -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📊 Weapon Category mAP@0.5 Benchmarks</span>
+          </div>
+          <div class="card-subtitle">Fine-tuned weights on 14,850 annotations</div>
+        </div>
+        <div style="height: 260px; position: relative;">
+          <canvas id="mapClassChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Neural Architecture Breakdown -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🏗️ YOLOv8 Neural Network Architecture Pipeline</span>
+        </div>
+        <div class="card-subtitle">225 Layers // 3,011,048 Parameters // Anchor-Free Head</div>
+      </div>
+      <div class="arch-flow-grid">
+        <div class="arch-card">
+          <h3>1. Feature Backbone (CSPDarknet53)</h3>
+          <p>
+            Extracts rich multi-scale spatial representations. Employs C2f (Cross Stage Partial with 2 Convolutions) modules 
+            and SPPF (Spatial Pyramid Pooling - Fast) to capture fine-grained contours of concealed firearms and bladed edges.
+          </p>
+        </div>
+        <div class="arch-card">
+          <h3>2. Feature Aggregation Neck (PAN-FPN)</h3>
+          <p>
+            Combines bottom-up path augmentation with top-down feature pyramids. Merges semantic context with low-level spatial 
+            textures to preserve weapon detection fidelity across small, medium, and large target scales.
+          </p>
+        </div>
+        <div class="arch-card">
+          <h3>3. Decoupled Detection Head</h3>
+          <p>
+            Separates object classification (Binary Cross-Entropy Loss) from bounding-box regression (CIoU + Distribution Focal Loss). 
+            Employs Anchor-Free prediction with Task-Aligned Assigner for millisecond-level inference.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 4: INCIDENT AUDIT LOGS -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-logs">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">📋 Security Incident Audit Logs</h2>
+          <p style="color: var(--text-muted); font-size: 13px;">Complete chain-of-custody tracking of all weapon detections and dispatcher interdictions</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-action" onclick="exportAuditReport('json')">📥 Export JSON</button>
+          <button class="btn-action" onclick="exportAuditReport('csv')">📊 Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-toolbar">
+        <div class="filter-group">
+          <label style="font-size: 12px; color: var(--text-muted);">Severity:</label>
+          <select class="select-input" id="filterSeverity" onchange="renderIncidentTable()">
+            <option value="ALL">All Severities</option>
+            <option value="CRITICAL">Critical Threats</option>
+            <option value="HIGH">High Threats</option>
+            <option value="MEDIUM">Medium Advisories</option>
+            <option value="SAFE">Safe / Cleared</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label style="font-size: 12px; color: var(--text-muted);">Camera Source:</label>
+          <select class="select-input" id="filterCam" onchange="renderIncidentTable()">
+            <option value="ALL">All Cameras</option>
+            <option value="CAM-01">CAM-01: Terminal 2</option>
+            <option value="CAM-02">CAM-02: Baggage X-Ray</option>
+            <option value="CAM-03">CAM-03: Perimeter Gate</option>
+            <option value="CAM-04">CAM-04: VIP Lounge</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <span style="font-size: 12px; color: var(--text-muted);" id="incidentFilteredCount">Showing 0 records</span>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Incident ID</th>
+              <th>Timestamp (UTC)</th>
+              <th>Camera ID</th>
+              <th>Detected Weapons</th>
+              <th>Severity</th>
+              <th>Action Protocol</th>
+              <th>Investigation Status</th>
+            </tr>
+          </thead>
+          <tbody id="incidentTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 5: THREAT ANALYTICS & RISK HEATMAP -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-analytics">
+    <!-- Analytics KPI Row -->
+    <div class="metrics-kpi-row" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Total Visual Scans</div>
+        <div class="kpi-val" id="statTotalScans">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Confirmed Threats</div>
+        <div class="kpi-val" style="color: #ef4444;" id="statThreats">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Clear Screenings</div>
+        <div class="kpi-val" style="color: #10b981;" id="statClear">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Threat Rate</div>
+        <div class="kpi-val" style="color: #f59e0b;" id="statRate">0%</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="analytics-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🍩 Weapon Class Distribution</span>
+          </div>
+          <div class="card-subtitle">Firearms vs Bladed vs Explosives</div>
+        </div>
+        <div style="height: 260px; position: relative;">
+          <canvas id="weaponDonutChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📈 8-Hour Surveillance Scan Timeline</span>
+          </div>
+          <div class="card-subtitle">Scans Conducted vs Threat Hits</div>
+        </div>
+        <div style="height: 260px; position: relative;">
+          <canvas id="timelineBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Zone Risk Matrix -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🗺️ Security Zone Threat Risk Matrix</span>
+        </div>
+        <div class="card-subtitle">Dynamic threat vulnerability indices</div>
+      </div>
+      <div class="zone-risk-matrix">
+        <div class="zone-risk-card">
+          <div class="zone-header">
+            <span>Terminal 2 Checkpoint (CAM-01)</span>
+            <span style="color: #ef4444; font-weight: 800;">HIGH (78%)</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">High foot-traffic passenger screening corridor. Elevated detection rate for concealed blades.</p>
+          <div class="risk-meter">
+            <div class="risk-fill" style="width: 78%; background: #ef4444;"></div>
+          </div>
+        </div>
+        <div class="zone-risk-card">
+          <div class="zone-header">
+            <span>Cargo Baggage X-Ray (CAM-02)</span>
+            <span style="color: #f59e0b; font-weight: 800;">ELEVATED (55%)</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Multi-spectrum luggage inspection conveyor. Occasional suspicious parcel alerts.</p>
+          <div class="risk-meter">
+            <div class="risk-fill" style="width: 55%; background: #f59e0b;"></div>
+          </div>
+        </div>
+        <div class="zone-risk-card">
+          <div class="zone-header">
+            <span>Gate 4 Perimeter Access (CAM-03)</span>
+            <span style="color: #ef4444; font-weight: 800;">CRITICAL (84%)</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Outer boundary vehicle fence. Night vision surveillance detects potential perimeter incursions.</p>
+          <div class="risk-meter">
+            <div class="risk-fill" style="width: 84%; background: #ef4444;"></div>
+          </div>
+        </div>
+        <div class="zone-risk-card">
+          <div class="zone-header">
+            <span>VIP Executive Concourse (CAM-04)</span>
+            <span style="color: #10b981; font-weight: 800;">LOW (14%)</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted);">Restricted diplomatic access lounge with pre-vetted security clearances.</p>
+          <div class="risk-meter">
+            <div class="risk-fill" style="width: 14%; background: #10b981;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB: DUAL IMAGE COMPARE -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-dual">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header">
+        <div>
+          <h2 style="font-size:18px; font-weight:800;">⚖️ Dual-Image Threat Comparison Engine</h2>
+          <p style="color:var(--text-muted); font-size:13px;">Simultaneously analyze and compare two surveillance frames side-by-side</p>
+        </div>
+        <button class="btn-action btn-action-primary" onclick="runDualComparison()" id="dualRunBtn">🔍 Run Both Scans</button>
+      </div>
+
+      <div class="dual-compare-grid">
+        <!-- Frame A -->
+        <div class="card" style="padding:14px;">
+          <div class="card-title" style="margin-bottom:10px;">🅰 Frame Alpha</div>
+          <div class="compare-viewport" id="compareViewA">
+            <div class="compare-label">FRAME-A // STANDBY</div>
+            <canvas class="compare-canvas" id="compareCanvasA" width="560" height="320"></canvas>
+          </div>
+          <div class="compare-result-strip" id="compareResultA" style="color:var(--text-dim);">No scan yet — select a preset below</div>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <select class="select-input" id="dualPresetA" style="flex:1;">
+              <option value="handgun">🔫 Handgun Intrusion</option>
+              <option value="knife">🔪 Knife Threat</option>
+              <option value="rifle">🪖 Rifle Breach</option>
+              <option value="explosive">💣 Explosive IED</option>
+              <option value="holster">🛡️ Auth Holster</option>
+              <option value="civilian">🚶 Civilian (Clear)</option>
+            </select>
+            <input type="file" id="dualFileA" accept="image/*" style="display:none" onchange="dualUpload('A', event)"/>
+            <button class="btn-action" style="padding:6px 12px; font-size:12px;" onclick="document.getElementById('dualFileA').click()">📁 Upload</button>
+          </div>
+        </div>
+
+        <!-- Frame B -->
+        <div class="card" style="padding:14px;">
+          <div class="card-title" style="margin-bottom:10px;">🅱 Frame Beta</div>
+          <div class="compare-viewport" id="compareViewB">
+            <div class="compare-label">FRAME-B // STANDBY</div>
+            <canvas class="compare-canvas" id="compareCanvasB" width="560" height="320"></canvas>
+          </div>
+          <div class="compare-result-strip" id="compareResultB" style="color:var(--text-dim);">No scan yet — select a preset below</div>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <select class="select-input" id="dualPresetB" style="flex:1;">
+              <option value="civilian">🚶 Civilian (Clear)</option>
+              <option value="knife">🔪 Knife Threat</option>
+              <option value="handgun">🔫 Handgun Intrusion</option>
+              <option value="rifle">🪖 Rifle Breach</option>
+              <option value="explosive">💣 Explosive IED</option>
+              <option value="holster">🛡️ Auth Holster</option>
+            </select>
+            <input type="file" id="dualFileB" accept="image/*" style="display:none" onchange="dualUpload('B', event)"/>
+            <button class="btn-action" style="padding:6px 12px; font-size:12px;" onclick="document.getElementById('dualFileB').click()">📁 Upload</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Summary -->
+      <div id="dualSummaryBar" style="display:none; margin-top:16px; padding:14px 18px; border-radius:10px; border:1px solid var(--border-subtle); background:rgba(11,16,29,0.7);">
+        <div style="font-weight:800; font-size:14px; margin-bottom:8px;">📊 Comparative Analysis Summary</div>
+        <div id="dualSummaryContent" style="font-size:13px; color:var(--text-muted); display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB: THREAT HEATMAP PAINTER -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-heatmap">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2 style="font-size:18px; font-weight:800;">🔥 Interactive Threat Zone Heatmap</h2>
+          <p style="color:var(--text-muted); font-size:13px;">Paint threat density onto the facility floor plan — click & drag to mark zones</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-action" onclick="clearHeatmap()">🗑 Clear</button>
+          <button class="btn-action btn-action-primary" onclick="exportHeatmap()">💾 Export PNG</button>
+        </div>
+      </div>
+
+      <div class="heatmap-container">
+        <canvas id="heatmapCanvas" width="900" height="540"></canvas>
+
+        <div class="heatmap-tools card" style="padding:16px;">
+          <div class="card-title" style="margin-bottom:12px;">🎨 Threat Paint Controls</div>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Threat Type</label>
+            <select class="select-input" id="heatmapThreatType" style="width:100%;" onchange="updateHeatmapBrush()">
+              <option value="critical">🔴 CRITICAL — Active Shooter</option>
+              <option value="high">🟠 HIGH — Blade / Firearm</option>
+              <option value="medium">🟡 MEDIUM — Suspicious Activity</option>
+              <option value="safe">🟢 SAFE — Cleared Zone</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between;">
+              <span>Brush Radius</span><span id="brushRadiusVal" style="color:#38bdf8; font-family:var(--font-mono);">40px</span>
+            </label>
+            <input type="range" class="slider" id="brushRadius" min="10" max="90" value="40" oninput="document.getElementById('brushRadiusVal').textContent=this.value+'px'"/>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="font-size:12px; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between;">
+              <span>Intensity</span><span id="brushIntensityVal" style="color:#38bdf8; font-family:var(--font-mono);">0.55</span>
+            </label>
+            <input type="range" class="slider" id="brushIntensity" min="0.1" max="1.0" step="0.05" value="0.55" oninput="document.getElementById('brushIntensityVal').textContent=parseFloat(this.value).toFixed(2)"/>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <div class="card-title" style="font-size:13px; margin-bottom:10px;">Legend</div>
+            <div class="heatmap-legend">
+              <div class="legend-row"><div class="legend-swatch" style="background:#ef4444;"></div>Critical Threat Zone</div>
+              <div class="legend-row"><div class="legend-swatch" style="background:#f97316;"></div>High Threat Zone</div>
+              <div class="legend-row"><div class="legend-swatch" style="background:#eab308;"></div>Medium Advisory Zone</div>
+              <div class="legend-row"><div class="legend-swatch" style="background:#10b981;"></div>Cleared / Safe Zone</div>
+            </div>
+          </div>
+
+          <div style="background:rgba(2,6,23,0.6); border:1px solid var(--border-subtle); border-radius:8px; padding:10px; font-size:12px; color:var(--text-muted); font-family:var(--font-mono);" id="heatmapStats">
+            Painted: 0 zones<br>Dominant: —<br>Coverage: 0%
+          </div>
+
+          <button class="btn-action" style="width:100%; margin-top:12px;" onclick="autoPopulateHeatmap()">⚡ Auto-Populate from Incidents</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB: SECURITY RADIO DISPATCH -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-radio">
+    <div class="radio-grid">
+      <div class="radio-console">
+        <div class="radio-header">
+          <div class="radio-status-pill">
+            <div class="dot dot-green"></div>
+            <span style="font-weight:800;">VIGIL-8 DISPATCH RADIO // CHANNEL 7</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-action" style="padding:5px 12px; font-size:12px;" onclick="clearRadioLog()">🗑 Clear</button>
+            <button class="btn-action btn-action-primary" style="padding:5px 12px; font-size:12px;" onclick="sendRadioMessage()">📡 Broadcast</button>
+          </div>
+        </div>
+        <div class="radio-log" id="radioLog"></div>
+        <div class="radio-input-bar">
+          <input type="text" id="radioInput" placeholder="Type tactical message... (Enter to send)" onkeydown="if(event.key==='Enter') sendRadioMessage()"/>
+          <select class="select-input" id="radioCallsign" style="width:150px;">
+            <option value="ALPHA-1">ALPHA-1 (Commander)</option>
+            <option value="BRAVO-3">BRAVO-3 (Patrol)</option>
+            <option value="CHARLIE-7">CHARLIE-7 (Intel)</option>
+            <option value="DISPATCH">DISPATCH (HQ)</option>
+          </select>
+          <button class="btn-action btn-action-primary" style="padding:8px 14px;" onclick="sendRadioMessage()">Send</button>
+        </div>
+      </div>
+
+      <div class="active-units-panel">
+        <div class="card-title" style="margin-bottom:8px;">👮 Active Security Units</div>
+        <div class="unit-card">
+          <div class="unit-dot" style="background:#10b981;"></div>
+          <div>
+            <div style="font-weight:800; font-size:13px; font-family:var(--font-mono);">ALPHA-1</div>
+            <div style="font-size:11px; color:var(--text-dim);">Commander // Terminal 2</div>
+          </div>
+          <div style="margin-left:auto; font-size:11px; color:#10b981; font-family:var(--font-mono);">ON-DUTY</div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-dot" style="background:#10b981;"></div>
+          <div>
+            <div style="font-weight:800; font-size:13px; font-family:var(--font-mono);">BRAVO-3</div>
+            <div style="font-size:11px; color:var(--text-dim);">Armed Patrol // Perimeter</div>
+          </div>
+          <div style="margin-left:auto; font-size:11px; color:#10b981; font-family:var(--font-mono);">PATROL</div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-dot" style="background:#f59e0b;"></div>
+          <div>
+            <div style="font-weight:800; font-size:13px; font-family:var(--font-mono);">CHARLIE-7</div>
+            <div style="font-size:11px; color:var(--text-dim);">Intel Analyst // Control</div>
+          </div>
+          <div style="margin-left:auto; font-size:11px; color:#f59e0b; font-family:var(--font-mono);">STANDBY</div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-dot" style="background:#ef4444;"></div>
+          <div>
+            <div style="font-weight:800; font-size:13px; font-family:var(--font-mono);">DELTA-2</div>
+            <div style="font-size:11px; color:var(--text-dim);">K9 Unit // Gate 4</div>
+          </div>
+          <div style="margin-left:auto; font-size:11px; color:#ef4444; font-family:var(--font-mono);">RESPONDING</div>
+        </div>
+        <div class="unit-card">
+          <div class="unit-dot" style="background:#10b981;"></div>
+          <div>
+            <div style="font-weight:800; font-size:13px; font-family:var(--font-mono);">DISPATCH</div>
+            <div style="font-size:11px; color:var(--text-dim);">HQ Control // VIGIL-8 AI</div>
+          </div>
+          <div style="margin-left:auto; font-size:11px; color:#10b981; font-family:var(--font-mono);">ONLINE</div>
+        </div>
+
+        <div class="card" style="padding:14px; margin-top:4px;">
+          <div class="card-title" style="font-size:13px; margin-bottom:10px;">📻 Incident Broadcast Stats</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div style="text-align:center;">
+              <div style="font-size:10px; color:var(--text-dim);">MESSAGES</div>
+              <div style="font-family:var(--font-mono); font-size:20px; font-weight:800; color:#38bdf8;" id="radioTotalMsg">0</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:10px; color:var(--text-dim);">ALERTS</div>
+              <div style="font-family:var(--font-mono); font-size:20px; font-weight:800; color:#ef4444;" id="radioAlertCount">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- TAB 6: ABSTRACT & ENGINEERING SPECIFICATIONS -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="tab-panel" id="tab-docs">
+    <div class="card docs-prose">
+      <h2>Project 20: Weapon Detection Using Machine Learning YOLOv8</h2>
+      <p>
+        <strong>Domain:</strong> Computer Vision & Public Security &bull; 
+        <strong>Module:</strong> <code>project_20_weapon_detection</code> &bull; 
+        <strong>Architecture:</strong> Deep Convolutional Neural Network (YOLOv8) + OpenCV Acceleration
+      </p>
+
+      <h3>📄 Official Project Abstract</h3>
+      <p>
+        Weapon detection using machine learning, specifically through the use of YOLOv8 (You Only Look Once version 8), 
+        aims to enhance security systems by automatically identifying weapons in real-time from images. YOLOv8, a 
+        state-of-the-art object detection algorithm, leverages deep learning techniques to detect and classify objects with high 
+        accuracy and efficiency. By training on large datasets of weapon images, YOLOv8 can identify various types of weapons, 
+        such as guns, knives, and explosives, even in complex and crowded environments. This automated detection system can 
+        significantly improve public safety by quickly identifying potential threats and enabling faster response times.
+      </p>
+
+      <h3>⚙️ Mathematical Objective Function & Loss Formulations</h3>
+      <p>
+        YOLOv8 eliminates predefined anchor priors and utilizes a <strong>Task-Aligned Assigner</strong> to optimize an 
+        anchor-free loss function composed of classification and bounding-box regression components:
+      </p>
+      <pre>
+Loss_total = λ_cls * L_BCE + λ_box * L_CIoU + λ_dfl * L_DFL
+
+Where:
+  • L_BCE: Variational Binary Cross-Entropy classification loss across weapon classes.
+  • L_CIoU: Complete Intersection-over-Union loss taking overlap area, aspect ratio, and centroid distances into account:
+            CIoU = 1 - IoU + (ρ²(b, b_gt) / c²) + α * v
+  • L_DFL: Distribution Focal Loss modeling continuous bounding-box distribution offsets near true target edges.
+      </pre>
+
+      <h3>🛠️ Implementation Phases</h3>
+      <h4>Phase 1 — Requirements, Data Pipeline and Prototype</h4>
+      <ul>
+        <li>Defined 5 core security classes: <code>handgun</code>, <code>assault_rifle</code>, <code>knife</code>, <code>explosive</code>, <code>holster</code>.</li>
+        <li>Established image normalization, sharpening, edge density calculation, and high-resolution spatial scaling pipelines.</li>
+        <li>Created automated visual verification logs ensuring all detections trace directly back to bounding box coordinates on source canvases.</li>
+      </ul>
+
+      <h4>Phase 2 — Optimization, Multi-Camera Integration & Validation</h4>
+      <ul>
+        <li>Implemented dual-mode execution with live Flask REST microservice on <code>http://localhost:5020</code> and autonomous client-side mathematical fallbacks.</li>
+        <li>Integrated live WebRTC / MediaDevices camera stream support for real-time webcam weapon surveillance.</li>
+        <li>Engineered security audit logging with incident status tracking (<code>ACTIVE_ALERT</code>, <code>UNDER_REVIEW</code>, <code>SECURITY_DISPATCHED</code>, <code>RESOLVED</code>, <code>FALSE_POSITIVE</code>).</li>
+        <li>Developed emergency site lockdown protocol simulating automated security checkpoint response.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ─── GLOBAL APPLICATION STATE ────────────────────────────────────────── */
+const API_BASE = 'http://localhost:5020/api';
+let isBackendOnline = false;
+let audioEnabled = true;
+let isWebcamRunning = false;
+let webcamStream = null;
+let currentImageData = null;
+let currentDetections = [];
+let incidentList = [];
+let currentLockdown = false;
+
+// Auto-Scan state
+let autoScanRunning = false;
+let autoScanInterval = null;
+let autoScanCountdown = null;
+let autoScanCount = 0;
+let autoScanTick = 0;
+let autoScanIntervalMs = 4000;
+
+// Dual Compare state
+let dualImageA = null;
+let dualImageB = null;
+
+// Heatmap state
+let heatmapData = [];
+let heatmapPainting = false;
+let heatmapCtx = null;
+let heatmapBrushColor = 'rgba(239,68,68,0.55)';
+
+// Radio state
+let radioMessages = [];
+let radioAlerts = 0;
+let radioAutoTimer = null;
+
+// Audio Context Synthesizer for Tactical Siren
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playTacticalSiren(severity) {
+  if (!audioEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    const now = ctx.currentTime;
+    if (severity === 'CRITICAL') {
+      // Urgent warble siren
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1760, now + 0.15);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.3);
+      osc.frequency.exponentialRampToValueAtTime(1760, now + 0.45);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } else if (severity === 'HIGH') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(700, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.25);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } else if (severity === 'MEDIUM') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    }
+  } catch (err) {
+    console.warn("Audio alert error:", err);
+  }
+}
+
+function toggleAudio() {
+  audioEnabled = !audioEnabled;
+  const btn = document.getElementById('audioToggleBtn');
+  const icon = document.getElementById('audioIcon');
+  const text = document.getElementById('audioText');
+  if (audioEnabled) {
+    btn.classList.add('active');
+    icon.textContent = '🔊';
+    text.textContent = 'SIREN: ARMED';
+    playTacticalSiren('MEDIUM');
+  } else {
+    btn.classList.remove('active');
+    icon.textContent = '🔇';
+    text.textContent = 'SIREN: MUTED';
+  }
+}
+
+/* ─── TAB SWITCHER ────────────────────────────────────────────────────── */
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+  
+  const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => 
+    b.getAttribute('onclick')?.includes(tabId)
+  );
+  if (targetBtn) targetBtn.classList.add('active');
+
+  const panel = document.getElementById(`tab-${tabId}`);
+  if (panel) panel.classList.add('active');
+
+  if (tabId === 'model') renderModelCharts();
+  if (tabId === 'analytics') renderAnalyticsCharts();
+  if (tabId === 'cctv') renderCctvWall();
+  if (tabId === 'logs') renderIncidentTable();
+  if (tabId === 'heatmap') initHeatmap();
+  if (tabId === 'dual') initDualCompare();
+  if (tabId === 'radio') startRadioAutoMessages();
+}
+
+/* ─── HEALTH CHECK & DUAL-MODE DETECTION ──────────────────────────────── */
+async function checkBackendHealth() {
+  try {
+    const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(2500) });
+    if (res.ok) {
+      const data = await res.json();
+      isBackendOnline = true;
+      document.getElementById('serverDot').className = 'dot dot-green';
+      document.getElementById('backendStatusText').textContent = 'BACKEND: ONLINE (PORT 5020)';
+      document.getElementById('deviceBadge').textContent = `DEVICE: ${data.device || 'MPS METAL'}`;
+      loadIncidentHistory();
+      loadSystemStats();
+      return;
+    }
+  } catch (e) {
+    // Backend offline fallback
+  }
+  isBackendOnline = false;
+  document.getElementById('serverDot').className = 'dot dot-amber';
+  document.getElementById('backendStatusText').textContent = 'BACKEND: OFFLINE (SIMULATION ACTIVE)';
+  document.getElementById('deviceBadge').textContent = 'CLIENT AI: STANDALONE';
+}
+
+/* ─── VIEWPORT CANVAS RENDERING & DRAWING ─────────────────────────────── */
+const canvas = document.getElementById('detectionCanvas');
+const ctx = canvas.getContext('2d');
+
+function drawFrameWithBoundingBoxes(imgElement, detections) {
+  if (!imgElement) return;
+  const w = imgElement.naturalWidth || imgElement.videoWidth || imgElement.width || 640;
+  const h = imgElement.naturalHeight || imgElement.videoHeight || imgElement.height || 420;
+
+  canvas.width = w;
+  canvas.height = h;
+  ctx.drawImage(imgElement, 0, 0, w, h);
+
+  document.getElementById('viewportResolution').textContent = `Resolution: ${w}x${h}px // RGB`;
+
+  // Draw detections
+  detections.forEach((det, idx) => {
+    const { bbox, class: clsName, confidence, severity } = det;
+    const x = bbox.x;
+    const y = bbox.y;
+    const bw = bbox.width;
+    const bh = bbox.height;
+
+    const color = det.color || (severity === 'CRITICAL' ? '#ef4444' : severity === 'HIGH' ? '#f97316' : '#eab308');
+
+    // 1. Semi-transparent bounding box
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(x, y, bw, bh);
+
+    ctx.fillStyle = severity === 'CRITICAL' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(249, 115, 22, 0.15)';
+    ctx.fillRect(x, y, bw, bh);
+
+    // 2. High-Tech Corner Brackets
+    const bLen = Math.min(18, bw / 3, bh / 3);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#ffffff';
+
+    // Top-left corner
+    ctx.beginPath();
+    ctx.moveTo(x, y + bLen); ctx.lineTo(x, y); ctx.lineTo(x + bLen, y);
+    ctx.stroke();
+    // Top-right corner
+    ctx.beginPath();
+    ctx.moveTo(x + bw - bLen, y); ctx.lineTo(x + bw, y); ctx.lineTo(x + bw, y + bLen);
+    ctx.stroke();
+    // Bottom-left corner
+    ctx.beginPath();
+    ctx.moveTo(x, y + bh - bLen); ctx.lineTo(x, y + bh); ctx.lineTo(x + bLen, y + bh);
+    ctx.stroke();
+    // Bottom-right corner
+    ctx.beginPath();
+    ctx.moveTo(x + bw - bLen, y + bh); ctx.lineTo(x + bw, y + bh); ctx.lineTo(x + bw, y + bh - bLen);
+    ctx.stroke();
+
+    // 3. Center Targeting Reticle
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x + bw / 2 - 8, y + bh / 2); ctx.lineTo(x + bw / 2 + 8, y + bh / 2);
+    ctx.moveTo(x + bw / 2, y + bh / 2 - 8); ctx.lineTo(x + bw / 2, y + bh / 2 + 8);
+    ctx.stroke();
+
+    // 4. Label Badge Header
+    const labelText = `${clsName.toUpperCase()} [${Math.round(confidence * 100)}%]`;
+    ctx.font = 'bold 12px "JetBrains Mono", monospace';
+    const textWidth = ctx.measureText(labelText).width;
+    
+    ctx.fillStyle = color;
+    ctx.fillRect(x, Math.max(0, y - 22), textWidth + 14, 22);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(labelText, x + 7, Math.max(16, y - 6));
+  });
+
+  // Update HUD
+  document.getElementById('hudTargetCount').textContent = `TARGETS: ${detections.length}`;
+}
+
+function clearViewport() {
+  if (isWebcamRunning) stopWebcam();
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw Standby Grid
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < canvas.width; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+  
+  ctx.fillStyle = '#64748b';
+  ctx.font = '14px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('SURVEILLANCE HUD: STANDBY // LOAD IMAGE OR CAMERA', canvas.width / 2, canvas.height / 2);
+  ctx.textAlign = 'left';
+
+  currentImageData = null;
+  currentDetections = [];
+  updateInspectionUI({
+    alert_level: 'SAFE',
+    message: 'Standby: Viewport cleared.',
+    recommended_action: 'Select a preset scenario or upload an image to begin weapon analysis.',
+    detections: [],
+    inference_time_ms: 0,
+    forensics: { sharpness: 0, brightness: 0, contrast: 0, edge_density_pct: 0 }
+  });
+}
+
+/* ─── PRESET GENERATOR & SCENARIO BUILDER ─────────────────────────────── */
+function loadPreset(presetKey) {
+  if (isWebcamRunning) stopWebcam();
+  const offscreen = document.createElement('canvas');
+  offscreen.width = 640;
+  offscreen.height = 420;
+  const octx = offscreen.getContext('2d');
+
+  // Background environment
+  const grad = octx.createLinearGradient(0, 0, 640, 420);
+
+  let presetDetections = [];
+  let scenarioTitle = '';
+
+  if (presetKey === 'handgun') {
+    grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#1e293b');
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // Draw airport security scanner belt & silhouette
+    octx.fillStyle = '#334155'; octx.fillRect(50, 260, 540, 140);
+    octx.fillStyle = '#475569'; octx.fillRect(80, 200, 480, 60);
+    // Passenger silhouette
+    octx.fillStyle = '#1e1b4b'; octx.beginPath(); octx.arc(320, 140, 40, 0, Math.PI * 2); octx.fill();
+    octx.fillRect(280, 180, 80, 160);
+    // Metallic handgun shape
+    octx.fillStyle = '#090d16';
+    octx.fillRect(310, 220, 65, 20); // barrel
+    octx.fillRect(345, 220, 22, 50); // grip
+    octx.fillRect(332, 235, 14, 15); // trigger guard
+
+    presetDetections = [{
+      id: 'det-hg01',
+      class: 'handgun',
+      category: 'Firearm',
+      confidence: 0.964,
+      severity: 'CRITICAL',
+      color: '#ef4444',
+      bbox: { x: 295, y: 210, width: 85, height: 75 }
+    }];
+    scenarioTitle = 'Airport Checkpoint: Concealed Semi-Automatic Handgun';
+
+  } else if (presetKey === 'knife') {
+    grad.addColorStop(0, '#111827'); grad.addColorStop(1, '#030712');
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // Subway transit turnstile
+    octx.fillStyle = '#374151'; octx.fillRect(100, 240, 440, 180);
+    octx.fillStyle = '#4b5563'; octx.fillRect(260, 120, 120, 220); // commuter
+    // Combat knife
+    octx.fillStyle = '#9ca3af'; // silver blade
+    octx.beginPath();
+    octx.moveTo(270, 220); octx.lineTo(340, 240); octx.lineTo(270, 250);
+    octx.fill();
+    octx.fillStyle = '#111827'; octx.fillRect(245, 226, 30, 16); // hilt
+
+    presetDetections = [{
+      id: 'det-kf01',
+      class: 'knife',
+      category: 'Bladed Weapon',
+      confidence: 0.938,
+      severity: 'HIGH',
+      color: '#f97316',
+      bbox: { x: 235, y: 210, width: 115, height: 50 }
+    }];
+    scenarioTitle = 'Subway Concourse: Exposed Combat Knife';
+
+  } else if (presetKey === 'rifle') {
+    grad.addColorStop(0, '#052e16'); grad.addColorStop(1, '#020617'); // night vision green
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // Fence wires
+    octx.strokeStyle = '#14532d'; octx.lineWidth = 2;
+    for (let i = 0; i < 640; i += 30) {
+      octx.beginPath(); octx.moveTo(i, 0); octx.lineTo(i + 40, 420); octx.stroke();
+    }
+    // Intruder with rifle
+    octx.fillStyle = '#064e3b'; octx.fillRect(200, 140, 110, 230);
+    octx.fillStyle = '#022c22';
+    octx.fillRect(170, 190, 190, 22); // long rifle barrel
+    octx.fillRect(240, 210, 25, 45); // magazine
+    octx.fillRect(320, 195, 40, 35); // rifle stock
+
+    presetDetections = [{
+      id: 'det-rf01',
+      class: 'assault_rifle',
+      category: 'Long Firearm',
+      confidence: 0.978,
+      severity: 'CRITICAL',
+      color: '#ef4444',
+      bbox: { x: 160, y: 175, width: 215, height: 90 }
+    }];
+    scenarioTitle = 'Perimeter Fence: Tactical Assault Rifle Breach';
+
+  } else if (presetKey === 'explosive') {
+    grad.addColorStop(0, '#1c1917'); grad.addColorStop(1, '#292524');
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // X-Ray orange/blue luggage palette
+    octx.fillStyle = '#0284c7'; octx.fillRect(120, 110, 400, 260); // suitcase
+    octx.fillStyle = '#f97316'; octx.fillRect(180, 160, 140, 100); // suspicious organic mass
+    // Wire detonator simulation
+    octx.strokeStyle = '#dc2626'; octx.lineWidth = 3;
+    octx.beginPath(); octx.moveTo(210, 180); octx.bezierCurveTo(240, 120, 290, 230, 310, 190); octx.stroke();
+
+    presetDetections = [{
+      id: 'det-ex01',
+      class: 'explosive',
+      category: 'IED / Explosive',
+      confidence: 0.912,
+      severity: 'CRITICAL',
+      color: '#d500f9',
+      bbox: { x: 170, y: 150, width: 160, height: 120 }
+    }];
+    scenarioTitle = 'Baggage X-Ray: Suspicious IED Explosive Package';
+
+  } else if (presetKey === 'holster') {
+    grad.addColorStop(0, '#1e293b'); grad.addColorStop(1, '#0f172a');
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // Security Officer Uniform
+    octx.fillStyle = '#1e3a8a'; octx.fillRect(250, 100, 140, 290);
+    octx.fillStyle = '#eab308'; octx.fillRect(295, 120, 30, 20); // Police badge
+    octx.fillStyle = '#0f172a'; octx.fillRect(240, 220, 35, 60); // Tactical holster
+
+    presetDetections = [{
+      id: 'det-hl01',
+      class: 'holster',
+      category: 'Tactical Gear',
+      confidence: 0.845,
+      severity: 'MEDIUM',
+      color: '#ffd600',
+      bbox: { x: 235, y: 215, width: 45, height: 75 }
+    }];
+    scenarioTitle = 'VIP Lounge: Authorized Tactical Security Holster';
+
+  } else {
+    // Civilian
+    grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#334155');
+    octx.fillStyle = grad; octx.fillRect(0, 0, 640, 420);
+    // Two commuters chatting
+    octx.fillStyle = '#475569';
+    octx.beginPath(); octx.arc(220, 140, 35, 0, Math.PI * 2); octx.fill();
+    octx.fillRect(190, 180, 60, 180);
+    octx.beginPath(); octx.arc(420, 145, 35, 0, Math.PI * 2); octx.fill();
+    octx.fillRect(390, 185, 60, 175);
+
+    presetDetections = [];
+    scenarioTitle = 'Concourse Lounge: Clear Civilian Area (No Threat)';
+  }
+
+  // Stamp timestamp and watermark onto offscreen canvas
+  octx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  octx.font = '12px "JetBrains Mono", monospace';
+  octx.fillText(`PRESET: ${scenarioTitle.toUpperCase()}`, 20, 30);
+  octx.fillText(`CAM-ID: ${document.getElementById('cameraSelector').value} // ${new Date().toISOString()}`, 20, 48);
+
+  currentImageData = offscreen.toDataURL('image/jpeg', 0.92);
+  currentDetections = presetDetections;
+
+  // Render onto main canvas
+  const img = new Image();
+  img.onload = () => {
+    drawFrameWithBoundingBoxes(img, currentDetections);
+    analyzePresetOrImage(currentImageData, currentDetections, scenarioTitle);
+  };
+  img.src = currentImageData;
+}
+
+/* ─── UPLOAD SURVEILLANCE IMAGE ───────────────────────────────────────── */
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    currentImageData = ev.target.result;
+    const img = new Image();
+    img.onload = () => {
+      // First draw raw image
+      drawFrameWithBoundingBoxes(img, []);
+      // Then trigger analysis
+      analyzeCurrentFrame();
+    };
+    img.src = currentImageData;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ─── WEBCAM STREAMING SUPPORT ────────────────────────────────────────── */
+async function toggleWebcam() {
+  const video = document.getElementById('liveVideo');
+  const btn = document.getElementById('webcamBtn');
+
+  if (isWebcamRunning) {
+    stopWebcam();
+    return;
+  }
+
+  try {
+    webcamStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 640 }, height: { ideal: 480 } },
+      audio: false
+    });
+    video.srcObject = webcamStream;
+    await video.play();
+
+    isWebcamRunning = true;
+    btn.classList.add('active');
+    btn.textContent = '⏹️ Stop Camera';
+    video.style.display = 'block';
+    canvas.style.display = 'none';
+
+    document.getElementById('viewportResolution').textContent = 'Live WebRTC Video Stream Active';
+    startWebcamInferenceLoop();
+  } catch (err) {
+    alert(`Could not start camera: ${err.message}. Ensure camera permissions are allowed.`);
+  }
+}
+
+let webcamTimer = null;
+function startWebcamInferenceLoop() {
+  const video = document.getElementById('liveVideo');
+  const tempCanvas = document.createElement('canvas');
+  const tctx = tempCanvas.getContext('2d');
+
+  webcamTimer = setInterval(() => {
+    if (!isWebcamRunning || video.paused || video.ended) return;
+    tempCanvas.width = video.videoWidth || 640;
+    tempCanvas.height = video.videoHeight || 480;
+    tctx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+    currentImageData = tempCanvas.toDataURL('image/jpeg', 0.85);
+
+    // Run continuous lightweight detection
+    sendDetectionRequest(currentImageData, true);
+  }, 1200);
+}
+
+function stopWebcam() {
+  if (webcamStream) {
+    webcamStream.getTracks().forEach(track => track.stop());
+    webcamStream = null;
+  }
+  clearInterval(webcamTimer);
+  isWebcamRunning = false;
+  const btn = document.getElementById('webcamBtn');
+  btn.classList.remove('active');
+  btn.textContent = '🎥 Live Camera Feed';
+  document.getElementById('liveVideo').style.display = 'none';
+  canvas.style.display = 'block';
+}
+
+/* ─── INFERENCE EXECUTION PIPELINE ────────────────────────────────────── */
+async function analyzeCurrentFrame() {
+  if (!currentImageData) {
+    // If empty canvas, load handgun preset as default demo
+    loadPreset('handgun');
+    return;
+  }
+  await sendDetectionRequest(currentImageData, false);
+}
+
+async function sendDetectionRequest(b64Image, isLiveLoop) {
+  const confThresh = parseFloat(document.getElementById('confSlider').value);
+  const iouThresh = parseFloat(document.getElementById('iouSlider').value);
+  const camId = document.getElementById('cameraSelector').value;
+
+  const laser = document.getElementById('laserScan');
+  laser.style.opacity = '1';
+
+  try {
+    if (isBackendOnline) {
+      const res = await fetch(`${API_BASE}/detect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image: b64Image,
+          confidence_threshold: confThresh,
+          iou_threshold: iouThresh,
+          camera_id: camId
+        })
+      });
+      const data = await res.json();
+      laser.style.opacity = '0';
+      
+      handleInferenceSuccess(data);
+      return;
+    }
+  } catch (err) {
+    console.warn("Backend error, switching to client fallback:", err);
+  }
+
+  // Client-Side Autonomous Fallback Simulation
+  laser.style.opacity = '0';
+  simulateClientInference(b64Image, confThresh, camId);
+}
+
+function analyzePresetOrImage(b64Image, presetDetections, scenarioTitle) {
+  if (isBackendOnline) {
+    sendDetectionRequest(b64Image, false);
+  } else {
+    // Use the preset detections with authentic UI update
+    const confThresh = parseFloat(document.getElementById('confSlider').value);
+    const filtered = presetDetections.filter(d => d.confidence >= confThresh);
+    const weaponDetected = filtered.length > 0;
+    const severity = weaponDetected 
+      ? (filtered.some(d => d.severity === 'CRITICAL') ? 'CRITICAL' : 'HIGH') 
+      : 'SAFE';
+
+    const simResult = {
+      success: true,
+      incident_id: `INC-${Math.floor(1000 + Math.random() * 9000)}`,
+      weapon_detected: weaponDetected,
+      alert_level: severity,
+      message: weaponDetected ? `Threat Detected: ${scenarioTitle}` : 'Clear: No weapon signatures found',
+      recommended_action: weaponDetected 
+        ? 'Deploy immediate interdiction unit to designated coordinates.' 
+        : 'All clear. Standard surveillance patrol maintain posture.',
+      detections: filtered,
+      inference_time_ms: (11.2 + Math.random() * 4.5).toFixed(1),
+      forensics: {
+        sharpness: Math.round(160 + Math.random() * 80),
+        brightness: Math.round(110 + Math.random() * 40),
+        contrast: Math.round(55 + Math.random() * 25),
+        edge_density_pct: (3.5 + Math.random() * 3.2).toFixed(2)
+      },
+      timestamp: new Date().toISOString()
+    };
+    handleInferenceSuccess(simResult);
+  }
+}
+
+function simulateClientInference(b64Image, confThresh, camId) {
+  const hasWeapons = currentDetections.length > 0;
+  const filtered = currentDetections.filter(d => d.confidence >= confThresh);
+  const severity = filtered.length > 0 
+    ? (filtered.some(d => d.severity === 'CRITICAL') ? 'CRITICAL' : 'HIGH') 
+    : 'SAFE';
+
+  const simResult = {
+    success: true,
+    incident_id: `INC-${Math.floor(1000 + Math.random() * 9000)}`,
+    weapon_detected: filtered.length > 0,
+    alert_level: severity,
+    message: filtered.length > 0 ? `Target Acquired: ${filtered.length} threat signature(s)` : 'Clear scan: Zero weapons detected',
+    recommended_action: filtered.length > 0 ? 'Tactical security interdiction recommended.' : 'Access granted.',
+    detections: filtered,
+    inference_time_ms: (12.1 + Math.random() * 3.8).toFixed(1),
+    forensics: {
+      sharpness: 195.4,
+      brightness: 128.0,
+      contrast: 62.5,
+      edge_density_pct: 4.15
+    },
+    timestamp: new Date().toISOString()
+  };
+  handleInferenceSuccess(simResult);
+}
+
+function handleInferenceSuccess(data) {
+  // Update HUD
+  document.getElementById('hudInferenceTime').textContent = `LATENCY: ${data.inference_time_ms}ms`;
+  
+  // Re-draw canvas with bounding boxes
+  if (!isWebcamRunning && currentImageData) {
+    const img = new Image();
+    img.onload = () => drawFrameWithBoundingBoxes(img, data.detections || []);
+    img.src = currentImageData;
+  }
+
+  // Audio siren trigger
+  if (data.weapon_detected) {
+    playTacticalSiren(data.alert_level);
+  }
+
+  updateInspectionUI(data);
+
+  // Add to local incident log if threat detected or manual scan
+  const newIncident = {
+    id: data.incident_id || `INC-${incidentList.length + 1}`,
+    timestamp: data.timestamp || new Date().toISOString(),
+    camera_id: document.getElementById('cameraSelector').value,
+    detections: data.detections || [],
+    weapon_detected: data.weapon_detected,
+    alert_level: data.alert_level,
+    status: data.weapon_detected ? 'ACTIVE_ALERT' : 'RESOLVED',
+    recommended_action: data.recommended_action
+  };
+  incidentList.unshift(newIncident);
+  document.getElementById('incidentLogCount').textContent = incidentList.length;
+
+  loadSystemStats();
+}
+
+/* ─── UPDATE RIGHT INSPECTION PANEL ───────────────────────────────────── */
+function updateInspectionUI(data) {
+  const banner = document.getElementById('threatStatusBanner');
+  banner.className = `threat-status-card status-${data.alert_level}`;
+
+  const title = document.getElementById('statusTitle');
+  if (data.alert_level === 'CRITICAL') {
+    title.innerHTML = '<span>🚨 CODE RED: CRITICAL WEAPON THREAT</span>';
+  } else if (data.alert_level === 'HIGH') {
+    title.innerHTML = '<span>⚠️ ELEVATED THREAT: WEAPON CONFIRMED</span>';
+  } else if (data.alert_level === 'MEDIUM') {
+    title.innerHTML = '<span>🟡 ADVISORY: POTENTIAL WEAPON/HOLSTER</span>';
+  } else {
+    title.innerHTML = '<span>✅ STATUS: NORMAL (SAFE)</span>';
+  }
+
+  document.getElementById('statusRecommendation').textContent = data.recommended_action || 'Civilian access permitted.';
+  document.getElementById('statusSummary').textContent = data.message || '';
+  document.getElementById('lastScanTimestamp').textContent = new Date().toLocaleTimeString();
+
+  // Forensics
+  if (data.forensics) {
+    document.getElementById('fSharpness').textContent = data.forensics.sharpness || 0;
+    document.getElementById('fBrightness').textContent = data.forensics.brightness || 0;
+    document.getElementById('fContrast').textContent = data.forensics.contrast || 0;
+    document.getElementById('fEdge').textContent = `${data.forensics.edge_density_pct || 0}%`;
+  }
+
+  // Detections List
+  const list = document.getElementById('detectionListContainer');
+  list.innerHTML = '';
+
+  const dets = data.detections || [];
+  if (dets.length === 0) {
+    list.innerHTML = `<div style="color: var(--text-dim); font-size: 13px; text-align: center; padding: 18px;">
+      Zero weapon targets detected. All clearance thresholds met.
+    </div>`;
+  } else {
+    dets.forEach(d => {
+      const pct = Math.round(d.confidence * 100);
+      list.innerHTML += `
+        <div class="detection-item" style="border-left-color: ${d.color || '#ef4444'}">
+          <div class="det-info">
+            <div class="det-name">
+              <span>${d.class.replace('_', ' ')}</span>
+              <span class="preset-tag tag-crit">${d.severity}</span>
+            </div>
+            <div class="det-coords">
+              Box: [x:${d.bbox.x}, y:${d.bbox.y}, w:${d.bbox.width}, h:${d.bbox.height}]
+            </div>
+          </div>
+          <div class="det-meter">
+            <div class="det-conf-val">${pct}%</div>
+            <div class="conf-bar"><div class="conf-fill" style="width: ${pct}%"></div></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+}
+
+function updateTuning() {
+  document.getElementById('confVal').textContent = document.getElementById('confSlider').value;
+  document.getElementById('iouVal').textContent = document.getElementById('iouSlider').value;
+  if (currentImageData) {
+    analyzeCurrentFrame();
+  }
+}
+
+/* ─── CCTV SURVEILLANCE MATRIX WALL (TAB 2) ───────────────────────────── */
+const CCTV_CHANNELS = [
+  { id: 'CAM-01', name: 'Terminal 2 Concourse', zone: 'Public Screening', preset: 'handgun', res: '1080p @ 30fps' },
+  { id: 'CAM-02', name: 'Baggage Screening X-Ray', zone: 'Cargo Area', preset: 'explosive', res: '4K @ 60fps' },
+  { id: 'CAM-03', name: 'Gate 4 Perimeter Fence', zone: 'Vehicle Gate', preset: 'rifle', res: '1080p @ 30fps' },
+  { id: 'CAM-04', name: 'VIP Concourse Lounge', zone: 'High Security', preset: 'holster', res: '1080p @ 30fps' }
+];
+
+function renderCctvWall() {
+  const container = document.getElementById('cctvGrid');
+  container.innerHTML = '';
+
+  CCTV_CHANNELS.forEach(cam => {
+    container.innerHTML += `
+      <div class="cctv-cam-card">
+        <div class="cctv-cam-header">
+          <span>${cam.id}: ${cam.name}</span>
+          <div class="cctv-badge-rec">
+            <div class="blink-dot"></div> REC
+          </div>
+        </div>
+        <div class="cctv-feed-screen">
+          <canvas class="cctv-canvas" id="canvas_${cam.id}"></canvas>
+          <div class="cctv-overlay-info">${cam.id} // ${cam.zone} // ${new Date().toLocaleTimeString()}</div>
+        </div>
+        <div class="cctv-cam-footer">
+          <span style="color: var(--text-dim); font-family: var(--font-mono);">${cam.res}</span>
+          <button class="btn-action" style="padding: 4px 10px; font-size: 11px;" onclick="switchCamToConsole('${cam.preset}', '${cam.id}')">
+            🔍 Inspect in Console
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  setTimeout(() => {
+    CCTV_CHANNELS.forEach(cam => {
+      const c = document.getElementById(`canvas_${cam.id}`);
+      if (!c) return;
+      c.width = 480; c.height = 240;
+      const ctx = c.getContext('2d');
+      // Draw simulated camera feed
+      ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 480, 240);
+      // Grid lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      for (let x = 0; x < 480; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 240); ctx.stroke(); }
+      for (let y = 0; y < 240; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(480, y); ctx.stroke(); }
+      
+      // CCTV timestamp
+      ctx.fillStyle = '#22c55e';
+      ctx.font = '12px "JetBrains Mono", monospace';
+      ctx.fillText(`ZONE FEED: ${cam.zone.toUpperCase()}`, 15, 25);
+
+      // Weapon targeting box simulation on feeds
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(180, 60, 120, 110);
+      ctx.fillStyle = '#ef4444';
+      ctx.fillText(`TARGET LOCKED [${cam.preset.toUpperCase()}]`, 185, 52);
+    });
+  }, 100);
+}
+
+function switchCamToConsole(presetKey, camId) {
+  document.getElementById('cameraSelector').value = camId;
+  switchTab('console');
+  loadPreset(presetKey);
+}
+
+function refreshAllCctv() {
+  renderCctvWall();
+}
+
+/* ─── INCIDENT AUDIT LOGS (TAB 4) ─────────────────────────────────────── */
+async function loadIncidentHistory() {
+  if (!isBackendOnline) return;
+  try {
+    const res = await fetch(`${API_BASE}/detections/history?limit=50`);
+    if (res.ok) {
+      incidentList = await res.json();
+      document.getElementById('incidentLogCount').textContent = incidentList.length;
+      renderIncidentTable();
+    }
+  } catch (err) {}
+}
+
+function renderIncidentTable() {
+  const tbody = document.getElementById('incidentTableBody');
+  tbody.innerHTML = '';
+
+  const sevFilter = document.getElementById('filterSeverity').value;
+  const camFilter = document.getElementById('filterCam').value;
+
+  const filtered = incidentList.filter(item => {
+    if (sevFilter !== 'ALL' && item.alert_level !== sevFilter) return false;
+    if (camFilter !== 'ALL' && item.camera_id !== camFilter) return false;
+    return true;
+  });
+
+  document.getElementById('incidentFilteredCount').textContent = `Showing ${filtered.length} of ${incidentList.length} records`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 24px; color: var(--text-dim);">No matching incident audit records found.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(inc => {
+    const weaponTags = (inc.detections || []).map(d => 
+      `<span style="background: rgba(239, 68, 68, 0.2); color:#f87171; padding: 2px 6px; border-radius: 4px; font-family:var(--font-mono); font-size:11px; margin-right:4px;">${d.class} (${Math.round(d.confidence*100)}%)</span>`
+    ).join('') || '<span style="color:var(--text-dim)">None (Clear)</span>';
+
+    tbody.innerHTML += `
+      <tr>
+        <td style="font-family: var(--font-mono); font-weight:700; color:#38bdf8;">${inc.id}</td>
+        <td style="font-family: var(--font-mono); font-size:12px;">${inc.timestamp ? new Date(inc.timestamp).toLocaleString() : 'Recent'}</td>
+        <td style="font-family: var(--font-mono);">${inc.camera_id || 'CAM-01'}</td>
+        <td>${weaponTags}</td>
+        <td><span class="badge-sev sev-${inc.alert_level || 'SAFE'}">${inc.alert_level || 'SAFE'}</span></td>
+        <td style="font-size:12px;">${inc.recommended_action || 'Civilian clearance'}</td>
+        <td>
+          <select class="status-select" onchange="updateIncidentStatus('${inc.id}', this.value)">
+            <option value="ACTIVE_ALERT" ${inc.status === 'ACTIVE_ALERT' ? 'selected' : ''}>Active Alert</option>
+            <option value="UNDER_REVIEW" ${inc.status === 'UNDER_REVIEW' ? 'selected' : ''}>Under Review</option>
+            <option value="SECURITY_DISPATCHED" ${inc.status === 'SECURITY_DISPATCHED' ? 'selected' : ''}>Patrol Dispatched</option>
+            <option value="RESOLVED" ${inc.status === 'RESOLVED' ? 'selected' : ''}>Resolved</option>
+            <option value="FALSE_POSITIVE" ${inc.status === 'FALSE_POSITIVE' ? 'selected' : ''}>False Positive</option>
+          </select>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+async function updateIncidentStatus(incId, newStatus) {
+  const inc = incidentList.find(i => i.id === incId);
+  if (inc) inc.status = newStatus;
+  
+  if (isBackendOnline) {
+    try {
+      await fetch(`${API_BASE}/incidents/${incId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (e) {}
+  }
+}
+
+function exportAuditReport(format) {
+  if (format === 'json') {
+    const jsonStr = JSON.stringify(incidentList, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `VIGIL8_Weapon_Audit_${Date.now()}.json`;
+    a.click();
+  } else {
+    let csv = 'Incident_ID,Timestamp,Camera_ID,Alert_Level,Status,Action\n';
+    incidentList.forEach(i => {
+      csv += `"${i.id}","${i.timestamp}","${i.camera_id}","${i.alert_level}","${i.status}","${i.recommended_action || ''}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `VIGIL8_Weapon_Audit_${Date.now()}.csv`;
+    a.click();
+  }
+}
+
+/* ─── EMERGENCY LOCKDOWN & INTERDICTION ACTIONS ───────────────────────── */
+async function triggerLockdown() {
+  currentLockdown = !currentLockdown;
+  const banner = document.getElementById('lockdownBanner');
+  const btn = document.getElementById('lockdownBtn');
+
+  if (currentLockdown) {
+    banner.style.display = 'block';
+    btn.style.background = '#000';
+    btn.textContent = '🔓 CANCEL LOCKDOWN';
+    playTacticalSiren('CRITICAL');
+  } else {
+    banner.style.display = 'none';
+    btn.style.background = 'linear-gradient(135deg, #dc2626, #991b1b)';
+    btn.textContent = '🚨 LOCKDOWN PROTOCOL';
+  }
+
+  if (isBackendOnline) {
+    try {
+      await fetch(`${API_BASE}/emergency/lockdown`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: currentLockdown })
+      });
+    } catch (e) {}
+  }
+}
+
+function dispatchSecurityTeam() {
+  alert('🚨 ARMED SECURITY DISPATCHED\n\nTactical response unit dispatched to camera coordinates. Checkpoint gates held.');
+  if (incidentList.length > 0) {
+    incidentList[0].status = 'SECURITY_DISPATCHED';
+    renderIncidentTable();
+  }
+}
+
+function flagFalsePositive() {
+  alert('⚠️ FRAME FLAGGED AS FALSE POSITIVE\n\nImage sample archived to validation re-training dataset queue for model weight optimization.');
+  if (incidentList.length > 0) {
+    incidentList[0].status = 'FALSE_POSITIVE';
+    renderIncidentTable();
+  }
+}
+
+/* ─── SYSTEM STATS & CHARTS ───────────────────────────────────────────── */
+async function loadSystemStats() {
+  let statsData = null;
+  if (isBackendOnline) {
+    try {
+      const res = await fetch(`${API_BASE}/stats`);
+      if (res.ok) statsData = await res.json();
+    } catch (e) {}
+  }
+
+  if (!statsData) {
+    const total = incidentList.length || 6;
+    const threats = incidentList.filter(i => i.weapon_detected).length || 4;
+    statsData = {
+      total_scans: total,
+      threats_detected: threats,
+      clear_scans: total - threats,
+      detection_rate: Math.round((threats / total) * 100),
+      class_breakdown: { handgun: 24, assault_rifle: 11, knife: 18, explosive: 6, holster: 14 }
+    };
+  }
+
+  document.getElementById('statTotalScans').textContent = statsData.total_scans || 0;
+  document.getElementById('statThreats').textContent = statsData.threats_detected || 0;
+  document.getElementById('statClear').textContent = statsData.clear_scans || 0;
+  document.getElementById('statRate').textContent = `${statsData.detection_rate || 0}%`;
+}
+
+let mapChartInstance = null;
+function renderModelCharts() {
+  if (mapChartInstance) return;
+  const ctx = document.getElementById('mapClassChart');
+  if (!ctx || !window.Chart) return;
+
+  mapChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Handgun', 'Assault Rifle', 'Combat Knife', 'Explosive/IED', 'Tactical Holster'],
+      datasets: [{
+        label: 'mAP @ 0.50 IoU',
+        data: [0.958, 0.942, 0.935, 0.914, 0.941],
+        backgroundColor: [
+          'rgba(239, 68, 68, 0.8)',
+          'rgba(244, 63, 94, 0.8)',
+          'rgba(249, 115, 22, 0.8)',
+          'rgba(217, 70, 239, 0.8)',
+          'rgba(234, 179, 8, 0.8)'
+        ],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { min: 0.8, max: 1.0, grid: { color: 'rgba(255,255,255,0.08)' } },
+        x: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+let donutChartInstance = null;
+let barChartInstance = null;
+function renderAnalyticsCharts() {
+  if (!window.Chart) return;
+  
+  if (!donutChartInstance) {
+    const dctx = document.getElementById('weaponDonutChart');
+    if (dctx) {
+      donutChartInstance = new Chart(dctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Handguns', 'Combat Knives', 'Assault Rifles', 'Explosives', 'Holsters'],
+          datasets: [{
+            data: [38, 26, 18, 8, 10],
+            backgroundColor: ['#ef4444', '#f97316', '#dc2626', '#d500f9', '#eab308'],
+            borderColor: '#0b101d',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans' } } }
+          }
+        }
+      });
+    }
+  }
+
+  if (!barChartInstance) {
+    const bctx = document.getElementById('timelineBarChart');
+    if (bctx) {
+      barChartInstance = new Chart(bctx, {
+        type: 'line',
+        data: {
+          labels: ['11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+          datasets: [
+            {
+              label: 'Total Scans',
+              data: [28, 45, 52, 61, 74, 69, 83, 92],
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.1)',
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Weapon Threats',
+              data: [1, 2, 0, 3, 1, 2, 4, 3],
+              borderColor: '#ef4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.2)',
+              fill: true,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { grid: { color: 'rgba(255,255,255,0.08)' } },
+            x: { grid: { color: 'rgba(255,255,255,0.08)' } }
+          },
+          plugins: {
+            legend: { labels: { color: '#cbd5e1' } }
+          }
+        }
+      });
+    }
+  }
+}
+
+/* ─── AUTO-SCAN MODE ──────────────────────────────────────────────────── */
+function toggleAutoScan() {
+  if (autoScanRunning) {
+    stopAutoScan();
+  } else {
+    startAutoScan();
+  }
+}
+
+function startAutoScan() {
+  autoScanRunning = true;
+  autoScanIntervalMs = parseInt(document.getElementById('autoscanInterval').value);
+  const btn = document.getElementById('autoscanBtn');
+  btn.textContent = '⏹ STOP';
+  btn.classList.add('running');
+  autoScanCount = 0;
+
+  // Run once immediately
+  runAutoScanCycle();
+
+  // Set interval for repeats
+  autoScanInterval = setInterval(() => {
+    runAutoScanCycle();
+  }, autoScanIntervalMs);
+
+  // Countdown ticker (updates every 100ms)
+  autoScanTick = autoScanIntervalMs / 1000;
+  autoScanCountdown = setInterval(() => {
+    autoScanTick -= 0.1;
+    if (autoScanTick <= 0) autoScanTick = autoScanIntervalMs / 1000;
+    document.getElementById('autoscanCounter').textContent = autoScanTick.toFixed(1) + 's';
+  }, 100);
+}
+
+function stopAutoScan() {
+  autoScanRunning = false;
+  clearInterval(autoScanInterval);
+  clearInterval(autoScanCountdown);
+  autoScanInterval = null;
+  autoScanCountdown = null;
+  const btn = document.getElementById('autoscanBtn');
+  btn.textContent = '▶ START';
+  btn.classList.remove('running');
+  document.getElementById('autoscanCounter').textContent = '—';
+}
+
+function runAutoScanCycle() {
+  autoScanCount++;
+  document.getElementById('autoscanScanCount').textContent = `Scans: ${autoScanCount}`;
+  // Cycle through presets for demo richness
+  const presets = ['handgun', 'knife', 'rifle', 'explosive', 'holster', 'civilian'];
+  const preset = presets[(autoScanCount - 1) % presets.length];
+  loadPreset(preset);
+  // Also post a radio message
+  const msgs = [
+    `Auto-scan #${autoScanCount}: ${preset.toUpperCase()} scenario loaded — running inference...`,
+    `VIGIL-8 auto-cycle triggered on ${document.getElementById('cameraSelector').value}`,
+    `Continuous monitoring active — scan ${autoScanCount} dispatched`
+  ];
+  addRadioMessage('DISPATCH', msgs[autoScanCount % msgs.length], 'system');
+}
+
+/* ─── DUAL IMAGE COMPARE ──────────────────────────────────────────────── */
+function initDualCompare() {
+  drawDualStandby('compareCanvasA', 'FRAME-A');
+  drawDualStandby('compareCanvasB', 'FRAME-B');
+}
+
+function drawDualStandby(canvasId, label) {
+  const c = document.getElementById(canvasId);
+  if (!c) return;
+  const cx = c.getContext('2d');
+  cx.fillStyle = '#020617';
+  cx.fillRect(0, 0, c.width, c.height);
+  cx.strokeStyle = 'rgba(255,255,255,0.05)';
+  for (let x = 0; x < c.width; x += 40) { cx.beginPath(); cx.moveTo(x, 0); cx.lineTo(x, c.height); cx.stroke(); }
+  for (let y = 0; y < c.height; y += 40) { cx.beginPath(); cx.moveTo(0, y); cx.lineTo(c.width, y); cx.stroke(); }
+  cx.fillStyle = '#64748b';
+  cx.font = '13px "JetBrains Mono", monospace';
+  cx.textAlign = 'center';
+  cx.fillText(`${label}: STANDBY`, c.width / 2, c.height / 2);
+  cx.textAlign = 'left';
+}
+
+function dualUpload(side, event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    if (side === 'A') dualImageA = ev.target.result;
+    else dualImageB = ev.target.result;
+    const canvasId = side === 'A' ? 'compareCanvasA' : 'compareCanvasB';
+    const img = new Image();
+    img.onload = () => {
+      const c = document.getElementById(canvasId);
+      const cx = c.getContext('2d');
+      cx.drawImage(img, 0, 0, c.width, c.height);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function buildDualPresetImageData(presetKey) {
+  const offscreen = document.createElement('canvas');
+  offscreen.width = 560; offscreen.height = 320;
+  const octx = offscreen.getContext('2d');
+  const grad = octx.createLinearGradient(0, 0, 560, 320);
+
+  const presetMap = {
+    handgun: ['#0f172a', '#1e293b'],
+    knife: ['#111827', '#030712'],
+    rifle: ['#052e16', '#020617'],
+    explosive: ['#1c1917', '#292524'],
+    holster: ['#1e293b', '#0f172a'],
+    civilian: ['#0f172a', '#334155']
+  };
+  const colors = presetMap[presetKey] || presetMap.civilian;
+  grad.addColorStop(0, colors[0]); grad.addColorStop(1, colors[1]);
+  octx.fillStyle = grad; octx.fillRect(0, 0, 560, 320);
+
+  // Draw silhouette
+  octx.fillStyle = '#334155';
+  octx.beginPath(); octx.arc(280, 100, 34, 0, Math.PI * 2); octx.fill();
+  octx.fillRect(248, 134, 64, 140);
+
+  if (presetKey !== 'civilian') {
+    // Weapon indicator
+    const wColors = { handgun:'#ef4444', knife:'#f97316', rifle:'#22c55e', explosive:'#d500f9', holster:'#eab308' };
+    octx.fillStyle = wColors[presetKey] || '#ef4444';
+    octx.fillRect(180, 160, 60, 14);
+  }
+
+  octx.fillStyle = 'rgba(255,255,255,0.45)';
+  octx.font = '11px "JetBrains Mono", monospace';
+  octx.fillText(`PRESET: ${presetKey.toUpperCase()} // ${new Date().toLocaleTimeString()}`, 12, 22);
+  return offscreen.toDataURL('image/jpeg', 0.9);
+}
+
+async function runDualComparison() {
+  const presetA = document.getElementById('dualPresetA').value;
+  const presetB = document.getElementById('dualPresetB').value;
+
+  const imgA = dualImageA || buildDualPresetImageData(presetA);
+  const imgB = dualImageB || buildDualPresetImageData(presetB);
+
+  // Draw images onto canvases
+  ['A', 'B'].forEach((side) => {
+    const img = new Image();
+    img.src = side === 'A' ? imgA : imgB;
+    img.onload = () => {
+      const c = document.getElementById(`compareCanvas${side}`);
+      const cx = c.getContext('2d');
+      cx.drawImage(img, 0, 0, c.width, c.height);
+      cx.strokeStyle = '#38bdf8'; cx.lineWidth = 2; cx.strokeRect(0, 0, c.width, c.height);
+    };
+  });
+
+  // Simulate detection results
+  const threatPresets = ['handgun', 'knife', 'rifle', 'explosive'];
+  const simResult = (imgData, preset) => {
+    const hasThreat = threatPresets.includes(preset);
+    const confidence = hasThreat ? (0.80 + Math.random() * 0.18).toFixed(3) : 0;
+    return {
+      preset,
+      hasThreat,
+      confidence: parseFloat(confidence),
+      level: hasThreat ? (preset === 'explosive' || preset === 'handgun' || preset === 'rifle' ? 'CRITICAL' : 'HIGH') : 'SAFE',
+      latency: (11 + Math.random() * 5).toFixed(1)
+    };
+  };
+
+  const resA = simResult(imgA, presetA);
+  const resB = simResult(imgB, presetB);
+
+  const levelColors = { CRITICAL: '#ef4444', HIGH: '#f97316', MEDIUM: '#eab308', SAFE: '#10b981' };
+
+  document.getElementById('compareResultA').innerHTML = `
+    <span style="color:${levelColors[resA.level]}; font-weight:800;">⬤ ${resA.level}</span>
+    &nbsp; ${resA.hasThreat ? `Detected: <b>${resA.preset.toUpperCase()}</b> @ ${(resA.confidence * 100).toFixed(1)}%` : 'No weapon signatures found'}
+    &nbsp;&nbsp; <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">Latency: ${resA.latency}ms</span>
+  `;
+  document.getElementById('compareResultB').innerHTML = `
+    <span style="color:${levelColors[resB.level]}; font-weight:800;">⬤ ${resB.level}</span>
+    &nbsp; ${resB.hasThreat ? `Detected: <b>${resB.preset.toUpperCase()}</b> @ ${(resB.confidence * 100).toFixed(1)}%` : 'No weapon signatures found'}
+    &nbsp;&nbsp; <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">Latency: ${resB.latency}ms</span>
+  `;
+
+  // Summary bar
+  const dualBar = document.getElementById('dualSummaryBar');
+  const sumContent = document.getElementById('dualSummaryContent');
+  dualBar.style.display = 'block';
+  const higherThreat = resA.level === 'CRITICAL' || resB.level === 'CRITICAL' ? 'CRITICAL' : (resA.hasThreat || resB.hasThreat ? 'THREAT DETECTED' : 'BOTH CLEAR');
+  sumContent.innerHTML = `
+    <div><strong style="color:#38bdf8;">Frame Alpha</strong><br>${resA.preset.toUpperCase()} — <span style="color:${levelColors[resA.level]}">${resA.level}</span> (${(resA.confidence * 100).toFixed(1)}%)</div>
+    <div><strong style="color:#38bdf8;">Frame Beta</strong><br>${resB.preset.toUpperCase()} — <span style="color:${levelColors[resB.level]}">${resB.level}</span> (${(resB.confidence * 100).toFixed(1)}%)</div>
+    <div><strong>Combined Assessment:</strong><br><span style="color:${resA.hasThreat || resB.hasThreat ? '#ef4444' : '#10b981'};">${higherThreat}</span></div>
+    <div><strong>Recommended Action:</strong><br>${resA.hasThreat || resB.hasThreat ? '🚨 Dispatch security team to flagged camera zones' : '✅ Both frames cleared — maintain routine patrol'}</div>
+  `;
+
+  // Overlay bounding box on threat frames
+  ['A', 'B'].forEach((side) => {
+    const res = side === 'A' ? resA : resB;
+    if (!res.hasThreat) return;
+    const c = document.getElementById(`compareCanvas${side}`);
+    const cx = c.getContext('2d');
+    const color = levelColors[res.level];
+    cx.strokeStyle = color; cx.lineWidth = 3;
+    cx.strokeRect(140, 120, 180, 110);
+    cx.fillStyle = color;
+    cx.font = 'bold 11px "JetBrains Mono", monospace';
+    cx.fillRect(140, 100, 180, 20);
+    cx.fillStyle = '#fff';
+    cx.fillText(`${res.preset.toUpperCase()} [${(res.confidence * 100).toFixed(0)}%]`, 148, 114);
+  });
+
+  // Fire radio message
+  const bothThreats = resA.hasThreat && resB.hasThreat;
+  addRadioMessage('CHARLIE-7', `Dual-frame scan complete. ${bothThreats ? 'BOTH FRAMES SHOW THREAT — escalating to ALPHA-1.' : resA.hasThreat ? 'Frame A: THREAT detected on ' + resA.preset.toUpperCase() : resB.hasThreat ? 'Frame B: THREAT detected on ' + resB.preset.toUpperCase() : 'Both frames CLEAR. No action required.'}`, bothThreats ? 'alert' : 'info');
+}
+
+/* ─── THREAT HEATMAP PAINTER ──────────────────────────────────────────── */
+let heatmapThreatCounts = { critical: 0, high: 0, medium: 0, safe: 0 };
+
+function initHeatmap() {
+  const hc = document.getElementById('heatmapCanvas');
+  if (!hc || hc.dataset.initialized) return;
+  hc.dataset.initialized = '1';
+  heatmapCtx = hc.getContext('2d');
+
+  // Draw floor plan background
+  drawFloorPlan();
+
+  // Mouse/touch events
+  hc.addEventListener('mousedown', (e) => { heatmapPainting = true; heatmapPaint(e); });
+  hc.addEventListener('mousemove', (e) => { if (heatmapPainting) heatmapPaint(e); });
+  hc.addEventListener('mouseup', () => { heatmapPainting = false; });
+  hc.addEventListener('mouseleave', () => { heatmapPainting = false; });
+}
+
+function drawFloorPlan() {
+  const hc = document.getElementById('heatmapCanvas');
+  heatmapCtx.fillStyle = '#0b1120';
+  heatmapCtx.fillRect(0, 0, hc.width, hc.height);
+
+  // Grid
+  heatmapCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  heatmapCtx.lineWidth = 1;
+  for (let x = 0; x < hc.width; x += 45) {
+    heatmapCtx.beginPath(); heatmapCtx.moveTo(x, 0); heatmapCtx.lineTo(x, hc.height); heatmapCtx.stroke();
+  }
+  for (let y = 0; y < hc.height; y += 45) {
+    heatmapCtx.beginPath(); heatmapCtx.moveTo(0, y); heatmapCtx.lineTo(hc.width, y); heatmapCtx.stroke();
+  }
+
+  // Rooms / zones
+  const zones = [
+    { x: 30, y: 30, w: 260, h: 180, label: 'Terminal 2 (CAM-01)', color: 'rgba(56,189,248,0.06)' },
+    { x: 320, y: 30, w: 240, h: 180, label: 'Baggage X-Ray (CAM-02)', color: 'rgba(249,115,22,0.06)' },
+    { x: 590, y: 30, w: 270, h: 180, label: 'Gate 4 Perimeter (CAM-03)', color: 'rgba(239,68,68,0.06)' },
+    { x: 30, y: 240, w: 360, h: 180, label: 'Concourse Corridor', color: 'rgba(255,255,255,0.03)' },
+    { x: 420, y: 240, w: 440, h: 180, label: 'VIP Lounge (CAM-04)', color: 'rgba(168,85,247,0.06)' },
+    { x: 30, y: 450, w: 830, h: 70, label: 'Exit / Arrival Hall', color: 'rgba(16,185,129,0.05)' }
+  ];
+
+  zones.forEach(z => {
+    heatmapCtx.fillStyle = z.color;
+    heatmapCtx.fillRect(z.x, z.y, z.w, z.h);
+    heatmapCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+    heatmapCtx.strokeRect(z.x, z.y, z.w, z.h);
+    heatmapCtx.fillStyle = 'rgba(255,255,255,0.35)';
+    heatmapCtx.font = '11px "JetBrains Mono", monospace';
+    heatmapCtx.fillText(z.label, z.x + 8, z.y + 16);
+  });
+
+  // Camera icons
+  const cams = [
+    { x: 155, y: 60, label: 'CAM-01' },
+    { x: 435, y: 60, label: 'CAM-02' },
+    { x: 718, y: 60, label: 'CAM-03' },
+    { x: 635, y: 270, label: 'CAM-04' }
+  ];
+  cams.forEach(c => {
+    heatmapCtx.fillStyle = '#38bdf8';
+    heatmapCtx.font = 'bold 14px sans-serif';
+    heatmapCtx.fillText('📹', c.x - 10, c.y);
+    heatmapCtx.fillStyle = '#38bdf8';
+    heatmapCtx.font = '10px "JetBrains Mono", monospace';
+    heatmapCtx.fillText(c.label, c.x - 16, c.y + 14);
+  });
+}
+
+function updateHeatmapBrush() {
+  const type = document.getElementById('heatmapThreatType').value;
+  const colorMap = {
+    critical: 'rgba(239,68,68,',
+    high: 'rgba(249,115,22,',
+    medium: 'rgba(234,179,8,',
+    safe: 'rgba(16,185,129,'
+  };
+  heatmapBrushColor = colorMap[type];
+}
+
+function heatmapPaint(e) {
+  const hc = document.getElementById('heatmapCanvas');
+  const rect = hc.getBoundingClientRect();
+  const scaleX = hc.width / rect.width;
+  const scaleY = hc.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+  const radius = parseInt(document.getElementById('brushRadius').value);
+  const intensity = parseFloat(document.getElementById('brushIntensity').value);
+
+  const type = document.getElementById('heatmapThreatType').value;
+  heatmapThreatCounts[type] = (heatmapThreatCounts[type] || 0) + 1;
+  heatmapData.push({ x, y, type });
+
+  const grad = heatmapCtx.createRadialGradient(x, y, 0, x, y, radius);
+  grad.addColorStop(0, heatmapBrushColor + intensity + ')');
+  grad.addColorStop(0.5, heatmapBrushColor + (intensity * 0.4) + ')');
+  grad.addColorStop(1, heatmapBrushColor + '0)');
+
+  heatmapCtx.fillStyle = grad;
+  heatmapCtx.beginPath();
+  heatmapCtx.arc(x, y, radius, 0, Math.PI * 2);
+  heatmapCtx.fill();
+
+  updateHeatmapStats();
+}
+
+function updateHeatmapStats() {
+  const total = heatmapData.length;
+  const dominant = Object.entries(heatmapThreatCounts).sort((a, b) => b[1] - a[1])[0];
+  const hc = document.getElementById('heatmapCanvas');
+  const coverage = Math.min(100, (total * 2.5)).toFixed(1);
+  document.getElementById('heatmapStats').innerHTML =
+    `Painted: ${total} zones<br>Dominant: ${dominant ? dominant[0].toUpperCase() : '—'}<br>Coverage: ${coverage}%`;
+}
+
+function clearHeatmap() {
+  heatmapData = [];
+  heatmapThreatCounts = { critical: 0, high: 0, medium: 0, safe: 0 };
+  if (heatmapCtx) drawFloorPlan();
+  document.getElementById('heatmapStats').innerHTML = 'Painted: 0 zones<br>Dominant: —<br>Coverage: 0%';
+}
+
+function exportHeatmap() {
+  const hc = document.getElementById('heatmapCanvas');
+  const link = document.createElement('a');
+  link.download = `VIGIL8_ThreatHeatmap_${Date.now()}.png`;
+  link.href = hc.toDataURL('image/png');
+  link.click();
+}
+
+function autoPopulateHeatmap() {
+  const hc = document.getElementById('heatmapCanvas');
+  if (!heatmapCtx) initHeatmap();
+  // Simulate painting based on incident log
+  const zoneMap = {
+    'CAM-01': { x: 155, y: 105, type: 'high' },
+    'CAM-02': { x: 435, y: 105, type: 'critical' },
+    'CAM-03': { x: 718, y: 105, type: 'critical' },
+    'CAM-04': { x: 635, y: 330, type: 'medium' }
+  };
+  incidentList.forEach(inc => {
+    const zone = zoneMap[inc.camera_id];
+    if (!zone) return;
+    const type = inc.alert_level === 'CRITICAL' ? 'critical' : inc.alert_level === 'HIGH' ? 'high' : inc.alert_level === 'MEDIUM' ? 'medium' : 'safe';
+    document.getElementById('heatmapThreatType').value = type;
+    updateHeatmapBrush();
+    // Simulate paint event
+    const fakeE = { clientX: 0, clientY: 0 };
+    const rect = hc.getBoundingClientRect();
+    // Direct paint
+    const grad = heatmapCtx.createRadialGradient(zone.x, zone.y, 0, zone.x, zone.y, 55);
+    const colorMap = { critical:'rgba(239,68,68,', high:'rgba(249,115,22,', medium:'rgba(234,179,8,', safe:'rgba(16,185,129,' };
+    grad.addColorStop(0, colorMap[type] + '0.65)');
+    grad.addColorStop(0.5, colorMap[type] + '0.25)');
+    grad.addColorStop(1, colorMap[type] + '0)');
+    heatmapCtx.fillStyle = grad;
+    heatmapCtx.beginPath(); heatmapCtx.arc(zone.x, zone.y, 55, 0, Math.PI * 2); heatmapCtx.fill();
+    heatmapData.push({ x: zone.x, y: zone.y, type });
+    heatmapThreatCounts[type] = (heatmapThreatCounts[type] || 0) + 1;
+  });
+  updateHeatmapStats();
+}
+
+/* ─── SECURITY RADIO DISPATCH ─────────────────────────────────────────── */
+const RADIO_UNITS = {
+  'ALPHA-1': { emoji: '👮', color: '#10b981' },
+  'BRAVO-3': { emoji: '🚔', color: '#3b82f6' },
+  'CHARLIE-7': { emoji: '🖥️', color: '#a855f7' },
+  'DISPATCH': { emoji: '📡', color: '#38bdf8' },
+  'DELTA-2': { emoji: '🐕', color: '#f97316' },
+  'SYSTEM': { emoji: '🤖', color: '#64748b' }
+};
+
+const AUTO_RADIO_MESSAGES = [
+  { unit: 'ALPHA-1', text: 'CAM-01 sector clear. Proceeding to Terminal 2 secondary checkpoint.', type: 'info' },
+  { unit: 'DISPATCH', text: 'All units: VIGIL-8 AI surveillance active on all 4 channels. Threat level: ELEVATED.', type: 'alert' },
+  { unit: 'BRAVO-3', text: 'Perimeter Gate 4 secured. No unauthorized personnel detected.', type: 'info' },
+  { unit: 'CHARLIE-7', text: 'Anomaly detected in Baggage X-Ray CAM-02 — pattern matches prior explosive signature. Flagging for review.', type: 'alert' },
+  { unit: 'ALPHA-1', text: 'Requesting backup at Terminal 2 North Concourse. Suspect detained.', type: 'alert' },
+  { unit: 'DISPATCH', text: 'BRAVO-3 proceed to CAM-03 intercept coordinates. Suspect: Male, ~6ft, Navy jacket.', type: 'alert' },
+  { unit: 'BRAVO-3', text: 'Copy that. ETA 2 minutes to Gate 4. K9 unit DELTA-2 en route.', type: 'info' },
+  { unit: 'CHARLIE-7', text: 'Threat confidence: 96.4% on handgun detection at CAM-01 frame 0342. Incident logged: INC-0018.', type: 'alert' },
+  { unit: 'DELTA-2', text: 'K9 unit on-site at Gate 4. Area sweep in progress.', type: 'info' },
+  { unit: 'DISPATCH', text: 'YOLOv8 inference engine processing 83 frames/hour across all channels. System nominal.', type: 'system' },
+  { unit: 'ALPHA-1', text: 'Suspect cleared — authorized security escort. False positive on holster detection. Logging for retraining.', type: 'info' },
+  { unit: 'CHARLIE-7', text: 'Site-wide scan complete. 3 incidents logged this shift. Detection accuracy: 97.1%.', type: 'system' }
+];
+
+let autoRadioIndex = 0;
+let radioStarted = false;
+
+function startRadioAutoMessages() {
+  if (radioStarted) return;
+  radioStarted = true;
+  // Seed with initial messages
+  const seed = AUTO_RADIO_MESSAGES.slice(0, 3);
+  seed.forEach((m, i) => {
+    setTimeout(() => addRadioMessage(m.unit, m.text, m.type), i * 700);
+  });
+  autoRadioIndex = 3;
+  // Continue auto messages every 6s
+  radioAutoTimer = setInterval(() => {
+    if (autoRadioIndex < AUTO_RADIO_MESSAGES.length) {
+      const m = AUTO_RADIO_MESSAGES[autoRadioIndex++];
+      addRadioMessage(m.unit, m.text, m.type);
+    } else {
+      clearInterval(radioAutoTimer);
+    }
+  }, 6000);
+}
+
+function addRadioMessage(unit, text, type = 'info') {
+  const log = document.getElementById('radioLog');
+  if (!log) return;
+
+  const unitInfo = RADIO_UNITS[unit.toUpperCase()] || RADIO_UNITS['SYSTEM'];
+  const isAlert = type === 'alert';
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+  const borderColor = isAlert ? '#ef4444' : unitInfo.color;
+
+  radioMessages.push({ unit, text, type, time });
+  if (isAlert) radioAlerts++;
+
+  const msgEl = document.createElement('div');
+  msgEl.className = 'radio-message';
+  msgEl.innerHTML = `
+    <div class="radio-avatar" style="background: ${unitInfo.color}22; border:1px solid ${unitInfo.color}44;">${unitInfo.emoji}</div>
+    <div class="radio-body">
+      <div class="radio-meta">
+        <span class="radio-callsign" style="color:${unitInfo.color};">${unit.toUpperCase()}</span>
+        ${isAlert ? '<span style="background:rgba(239,68,68,0.2); color:#f87171; font-size:10px; padding:2px 6px; border-radius:4px; font-family:var(--font-mono);">ALERT</span>' : ''}
+        <span class="radio-time">${time}</span>
+      </div>
+      <div class="radio-text" style="border-left:2px solid ${borderColor}; padding-left:8px;">${text}</div>
+    </div>
+  `;
+  log.appendChild(msgEl);
+  log.scrollTop = log.scrollHeight;
+
+  document.getElementById('radioMsgCount').textContent = radioMessages.length;
+  if (document.getElementById('radioTotalMsg')) document.getElementById('radioTotalMsg').textContent = radioMessages.length;
+  if (document.getElementById('radioAlertCount')) document.getElementById('radioAlertCount').textContent = radioAlerts;
+
+  // Audio beep for alerts
+  if (isAlert && audioEnabled) playTacticalSiren('MEDIUM');
+}
+
+function sendRadioMessage() {
+  const input = document.getElementById('radioInput');
+  const callsign = document.getElementById('radioCallsign').value;
+  const text = input.value.trim();
+  if (!text) return;
+  addRadioMessage(callsign, text, 'info');
+  input.value = '';
+  // Auto-reply from DISPATCH after 2s
+  setTimeout(() => {
+    addRadioMessage('DISPATCH', `Message received from ${callsign}. Logging to incident record.`, 'system');
+  }, 2000);
+}
+
+function clearRadioLog() {
+  radioMessages = [];
+  radioAlerts = 0;
+  radioStarted = false;
+  clearInterval(radioAutoTimer);
+  autoRadioIndex = 0;
+  const log = document.getElementById('radioLog');
+  if (log) log.innerHTML = '';
+  document.getElementById('radioMsgCount').textContent = '0';
+  if (document.getElementById('radioTotalMsg')) document.getElementById('radioTotalMsg').textContent = '0';
+  if (document.getElementById('radioAlertCount')) document.getElementById('radioAlertCount').textContent = '0';
+}
+
+// Also fire radio alert on weapon detection
+const _origHandleInference = handleInferenceSuccess;
+function handleInferenceSuccess(data) {
+  _origHandleInference(data);
+  if (data.weapon_detected) {
+    const det = (data.detections || [])[0];
+    if (det) {
+      addRadioMessage('DISPATCH',
+        `⚠️ VIGIL-8 ALERT: ${det.class.toUpperCase()} detected on ${data.forensics ? document.getElementById('cameraSelector').value : 'CAM-??'} — confidence ${(det.confidence * 100).toFixed(1)}%. ${data.recommended_action || ''}`,
+        'alert'
+      );
+    }
+  }
+}
+
+/* ─── INITIALIZATION ON LOAD ──────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', async () => {
+  clearViewport();
+  await checkBackendHealth();
+  // Auto-load handgun preset so the user sees a rich, active surveillance scene immediately
+  loadPreset('handgun');
+});
+</script>
+</body>
+</html>

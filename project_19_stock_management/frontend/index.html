@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enterprise Stock Management & Predictive Inventory System | Project 19</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #090e17;
+  --card-bg: rgba(15, 23, 42, 0.88);
+  --border: rgba(99, 102, 241, 0.2);
+  --accent-indigo: #6366f1;
+  --accent-purple: #a855f7;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --accent-amber: #f59e0b;
+  --accent-cyan: #06b6d4;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 60%);
+}
+.header {
+  background: rgba(11, 18, 33, 0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+.brand-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+.status-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 30px;
+  font-size: 12px; font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+
+/* Tabs Bar */
+.tabs-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: rgba(99, 102, 241, 0.12); color: var(--text); }
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.2));
+  border-color: rgba(99, 102, 241, 0.45);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+/* Stats Row */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; top:0; left:0; width:100%; height:3px;
+  background: linear-gradient(90deg, transparent, var(--accent-indigo), transparent);
+}
+.stat-label { font-size: 11.5px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-val { font-size: 27px; font-weight: 800; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+.stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Main Card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+/* Tables */
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.inv-table th {
+  text-align: left;
+  padding: 12px 14px;
+  color: #a5b4fc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.inv-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.inv-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* Badges */
+.badge-stock {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.in-stock { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+.low-stock { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+.out-stock { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+
+/* Buttons & Inputs */
+.btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.btn-success { background: #10b981; color: white; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+.input-box {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+.input-box:focus { border-color: var(--accent-indigo); }
+
+.chart-box {
+  height: 280px;
+  position: relative;
+  margin-top: 10px;
+}
+.chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.trans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 14px;
+}
+.trans-item {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.device-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+}
+.device-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.device-title { font-weight: 700; font-size: 14px; }
+.device-sub { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">📦</div>
+    <div>
+      <div class="brand-title">Stock Management System Pro (SMS)</div>
+      <div class="brand-sub">Project 19 · IoT & Fintech ERP · Demand Forecasting & Wholesaler Procurement</div>
+    </div>
+  </div>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    <span id="backendStatus">Connecting... (:5019)</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Stats Row -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Active Warehouse SKUs</div>
+      <div class="stat-val" id="statSkus">8</div>
+      <div class="stat-sub">Across 4 Product Categories</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Real-Time Asset Valuation</div>
+      <div class="stat-val" id="statValuation" style="color:#34d399">₹2,84,500</div>
+      <div class="stat-sub">Gross Margin: <strong id="statMargin" style="color:#6ee7b7">₹94,200</strong></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Cumulative Sales Volume</div>
+      <div class="stat-val" id="statSales" style="color:#38bdf8">₹20,250</div>
+      <div class="stat-sub">Automated POS Outflow</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Stock Below ROP</div>
+      <div class="stat-val" id="statLowStock" style="color:#f59e0b">3</div>
+      <div class="stat-sub">Wholesaler Reorder Triggered</div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab(0)">📦 Inventory & POS Sales</button>
+    <button class="tab-btn" onclick="switchTab(1)">⚡ Barcode & RFID Scanner</button>
+    <button class="tab-btn" onclick="switchTab(2)">🛒 Wholesaler Orders & Shipments</button>
+    <button class="tab-btn" onclick="switchTab(3)">📈 7-Day AI Demand Forecast</button>
+    <button class="tab-btn" onclick="switchTab(4)">📑 Reports & CSV Export</button>
+  </div>
+
+  <!-- TAB 0: INVENTORY & POS SALES -->
+  <div class="tab-pane active" id="tab0">
+    <div class="grid-2">
+      <!-- Left: Inventory Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 Real-Time Warehouse Stock Ledger</div>
+          <button class="btn btn-primary" onclick="recordQuickSale()">⚡ Quick POS Sale</button>
+        </div>
+
+        <table class="inv-table">
+          <thead>
+            <tr>
+              <th>SKU / Product</th>
+              <th>Category</th>
+              <th>Live Qty</th>
+              <th>Unit Price</th>
+              <th>ROP</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+
+        <!-- Quick Restock -->
+        <div style="margin-top:22px;font-size:13px;font-weight:700">➕ Inward Restock Intake:</div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <select class="input-box" id="restockSku" style="flex:2"></select>
+          <input type="number" class="input-box" id="restockQty" placeholder="Units to add" value="25" min="1" style="flex:1"/>
+          <button class="btn btn-primary" onclick="restockItem()">Restock Inventory</button>
+        </div>
+      </div>
+
+      <!-- Right: Outflow Chart & Activity Ledger -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📈 7-Day Sales Velocity (₹)</div>
+          <span style="font-size:11px;color:var(--text-muted)">Live Ledger</span>
+        </div>
+        <div class="chart-box">
+          <canvas id="salesCanvas" class="chart-canvas"></canvas>
+        </div>
+
+        <div style="margin-top:20px;font-size:13px;font-weight:700">🕒 Recent Stock Movements:</div>
+        <div class="trans-list" id="transList">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: BARCODE & RFID HARDWARE SIMULATOR -->
+  <div class="tab-pane" id="tab1">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚡ Handheld Barcode & UHF RFID Terminal</div>
+          <span class="badge-stock in-stock">Laser Engine Active</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">
+          Simulates optical laser scanning and UHF RFID portal archway tag detection.
+        </p>
+
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;color:#a5b4fc;font-weight:700;margin-bottom:6px">CLICK TO SCAN PRESET:</div>
+          <div id="quickScanPresets" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-bottom:16px">
+          <input type="text" class="input-box" id="hardwareScanCode" value="8901001001" style="flex:2;font-family:'JetBrains Mono'"/>
+          <select class="input-box" id="hardwareScanAction" style="flex:1.5">
+            <option value="LOOKUP">🔍 Lookup Stock</option>
+            <option value="SALE">⚡ Auto-Checkout (-1)</option>
+            <option value="INWARD">📥 Inbound Intake (+10)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;padding:12px;font-size:15px" onclick="triggerHardwareScan()">
+          ⚡ Fire Hardware Laser Scan
+        </button>
+
+        <div id="scanResultBox" style="margin-top:20px;display:none;padding:16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1)">
+          <!-- Scan details -->
+        </div>
+      </div>
+
+      <!-- Smart Scale -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚖️ IoT Smart Weighing Shelf Telemetry</div>
+          <span class="badge-stock in-stock">RS232 Synced</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px">
+          Calculates inventory quantity from load-cell weight telemetry and identifies stock shrinkage.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label style="font-size:12px;color:var(--text-muted)">Monitored SKU:</label>
+            <select class="input-box" id="scaleSkuSelect" style="width:100%;margin-top:4px"></select>
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--text-muted)">Sensor Measured Weight (kg):</label>
+            <input type="number" class="input-box" id="scaleWeightInput" value="11.25" step="0.25" style="width:100%;margin-top:4px"/>
+          </div>
+          <button class="btn btn-outline" onclick="testSmartScale()" style="padding:10px;font-weight:700">
+            Query Load-Cell Sensor Telemetry
+          </button>
+        </div>
+
+        <div id="scaleResultBox" style="margin-top:18px;display:none;padding:14px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08)">
+          <!-- Scale details -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: WHOLESALER ORDERS & SHIPMENTS -->
+  <div class="tab-pane" id="tab2">
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header">
+        <div class="card-title">🛒 Wholesaler Purchase Orders (POs)</div>
+        <button class="btn btn-primary" onclick="openPoModal()">+ New Wholesaler PO</button>
+      </div>
+
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Wholesaler</th>
+            <th>Ordered Items</th>
+            <th>Total Value</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="poTableBody">
+          <!-- Populated -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Active Cargo Shipments -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🚚 Large Cargo Shipments & Transit Logistics</div>
+        <span class="badge-stock in-stock">GPS Linked</span>
+      </div>
+      <div id="shipmentsContainer" class="grid-2">
+        <!-- Shipments cards -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: AI DEMAND FORECAST -->
+  <div class="tab-pane" id="tab3">
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header">
+        <div class="card-title">📈 7-Day Demand Forecasting (ARIMA & Exponential Moving Average)</div>
+        <span style="font-size:12px;color:#10b981;font-weight:700">Model Confidence: 95.2%</span>
+      </div>
+      <div class="chart-box" style="height:320px">
+        <canvas id="forecastCanvas" class="chart-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- ROP Alerts Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚠️ Reorder Point (ROP) Alerts & Wholesaler Auto-Replenishment</div>
+      </div>
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Product Name</th>
+            <th>Current Stock</th>
+            <th>ROP Buffer</th>
+            <th>Lead Time</th>
+            <th>Suggested PO</th>
+            <th>Urgency</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ropAlertsBody">
+          <!-- ROP items -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: REPORTS & CSV EXPORT -->
+  <div class="tab-pane" id="tab4">
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-header">
+        <div class="card-title">📑 Compliance & Management Audit Reports</div>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">
+        Export timestamped CSV reports formatted for enterprise enterprise reviews, audits, and accounting spreadsheets.
+      </p>
+
+      <div class="grid-3">
+        <div style="padding:18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px">
+          <h4 style="color:#fff;margin-bottom:6px">📦 Inventory Catalog CSV</h4>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">All SKUs, unit costs, stock valuations, and ROP limits.</p>
+          <button class="btn btn-primary" onclick="exportCsv('products')">📥 Export Catalog CSV</button>
+        </div>
+        <div style="padding:18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px">
+          <h4 style="color:#fff;margin-bottom:6px">💰 POS Sales Ledger CSV</h4>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Timestamped sales records, unit revenues, and payment modes.</p>
+          <button class="btn btn-success" onclick="exportCsv('sales')">📥 Export Sales CSV</button>
+        </div>
+        <div style="padding:18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px">
+          <h4 style="color:#fff;margin-bottom:6px">📋 Stock Movements & Audit CSV</h4>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Inward/outward movements, audit adjustments, and device tags.</p>
+          <button class="btn btn-outline" onclick="exportCsv('movements')">📥 Export Movements CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'http://localhost:5019/api';
+let isLive = false;
+
+let products = [];
+let transactions = [];
+let purchaseOrders = [];
+let shipments = [];
+let forecastData = { days: [], actual: [], predicted: [] };
+
+function playScannerBeep() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+  } catch(e){}
+}
+
+function switchTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-pane').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  if (idx === 0) setTimeout(drawSalesChart, 150);
+  if (idx === 3) setTimeout(drawForecastChart, 150);
+}
+
+async function init() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/health`, { signal: AbortSignal.timeout(1500) });
+    if (res.ok) {
+      isLive = true;
+      document.getElementById('backendStatus').textContent = '🟢 Live API Connected (:5019)';
+      document.getElementById('backendStatus').style.color = '#34d399';
+      await loadLive();
+      return;
+    }
+  } catch(e) {}
+
+  document.getElementById('backendStatus').textContent = '🟡 Simulation Mode (Offline)';
+  document.getElementById('backendStatus').style.color = '#fbbf24';
+  loadMock();
+}
+
+async function loadLive() {
+  try {
+    const [dashRes, prodRes, poRes, shipRes, fRes, movRes] = await Promise.all([
+      fetch(`${BACKEND_URL}/dashboard`).then(r=>r.json()),
+      fetch(`${BACKEND_URL}/products`).then(r=>r.json()),
+      fetch(`${BACKEND_URL}/purchases`).then(r=>r.json()),
+      fetch(`${BACKEND_URL}/shipments`).then(r=>r.json()),
+      fetch(`${BACKEND_URL}/forecast`).then(r=>r.json()),
+      fetch(`${BACKEND_URL}/movements`).then(r=>r.json())
+    ]);
+
+    products = prodRes;
+    purchaseOrders = poRes;
+    shipments = shipRes;
+    forecastData = {
+      days: fRes.forecast_series.map(s=>s.day),
+      actual: fRes.forecast_series.map(s=>s.actual),
+      predicted: fRes.forecast_series.map(s=>s.predicted)
+    };
+
+    document.getElementById('statSkus').textContent = dashRes.total_products;
+    document.getElementById('statValuation').textContent = '₹' + dashRes.total_valuation.toLocaleString('en-IN');
+    document.getElementById('statMargin').textContent = '₹' + (dashRes.gross_margin_potential || 0).toLocaleString('en-IN');
+    document.getElementById('statSales').textContent = '₹' + dashRes.total_sales.toLocaleString('en-IN');
+    document.getElementById('statLowStock').textContent = dashRes.low_stock_count;
+
+    renderInventoryTable();
+    renderTransactions(movRes);
+    renderPurchaseOrders();
+    renderShipments();
+    renderRopAlerts(fRes.reorder_alerts);
+    renderPresets();
+    setTimeout(drawSalesChart, 200);
+    setTimeout(drawForecastChart, 200);
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+function loadMock() {
+  products = [
+    { id:1, sku:'SKU-001', name:'Wireless Barcode Scanner', category:'Electronics', quantity:45, price:2450, min_stock:15, reorder_point:25, barcode:'8901001001' },
+    { id:2, sku:'SKU-002', name:'Thermal Receipt Printer', category:'Hardware', quantity:8, price:4200, min_stock:10, reorder_point:15, barcode:'8901001002' },
+    { id:3, sku:'SKU-003', name:'IoT RFID Gateway Hub', category:'Electronics', quantity:5, price:8900, min_stock:12, reorder_point:18, barcode:'8901001003' },
+    { id:4, sku:'SKU-004', name:'Digital Weighing Scale', category:'Hardware', quantity:22, price:3100, min_stock:8, reorder_point:12, barcode:'8901001004' },
+    { id:5, sku:'SKU-005', name:'Thermal Paper Roll (50pk)', category:'Consumables', quantity:120, price:450, min_stock:30, reorder_point:45, barcode:'8901001005' },
+    { id:6, sku:'SKU-006', name:'Handheld POS Terminal', category:'Hardware', quantity:14, price:12500, min_stock:5, reorder_point:8, barcode:'8901001006' }
+  ];
+  renderInventoryTable();
+  renderPresets();
+}
+
+function renderInventoryTable() {
+  const tbody = document.getElementById('inventoryBody');
+  tbody.innerHTML = products.map(p => {
+    const isOut = p.quantity === 0;
+    const isLow = p.quantity <= p.min_stock;
+    const badgeClass = isOut ? 'out-stock' : (isLow ? 'low-stock' : 'in-stock');
+    const badgeText = isOut ? 'Out of Stock' : (isLow ? '⚠️ Low Stock' : '✅ In Stock');
+    return `
+      <tr>
+        <td><strong>${p.name}</strong><br/><span style="font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono'">${p.sku} | ${p.barcode}</span></td>
+        <td><span style="color:var(--text-muted)">${p.category || 'General'}</span></td>
+        <td><strong style="font-family:'JetBrains Mono';color:${isLow ? '#f59e0b':'#34d399'}">${p.quantity}</strong></td>
+        <td style="font-family:'JetBrains Mono'">₹${p.price.toLocaleString('en-IN')}</td>
+        <td style="font-family:'JetBrains Mono'">${p.reorder_point || p.min_stock}</td>
+        <td><span class="badge-stock ${badgeClass}">${badgeText}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  const rSelect = document.getElementById('restockSku');
+  const sSelect = document.getElementById('scaleSkuSelect');
+  if (rSelect) rSelect.innerHTML = products.map(p => `<option value="${p.id}">${p.sku}: ${p.name} (${p.quantity} left)</option>`).join('');
+  if (sSelect) sSelect.innerHTML = products.map(p => `<option value="${p.sku}">${p.sku}: ${p.name} (Qty: ${p.quantity})</option>`).join('');
+}
+
+function renderTransactions(movs) {
+  const el = document.getElementById('transList');
+  if (!movs || movs.length === 0) {
+    el.innerHTML = '<div style="color:var(--text-muted);font-size:12px">No movements logged yet</div>';
+    return;
+  }
+  el.innerHTML = movs.slice(0, 6).map(m => `
+    <div class="trans-item">
+      <div>
+        <span class="badge-stock ${m.movement_type === 'IN' ? 'in-stock' : 'low-stock'}">${m.movement_type}</span>
+        <span style="margin-left:8px;font-weight:600">${m.product_name} (${m.movement_type==='IN'?'+':'-'}${m.quantity})</span>
+      </div>
+      <div style="text-align:right">
+        <span style="font-size:11px;color:var(--text-muted)">${m.reason}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPurchaseOrders() {
+  const tbody = document.getElementById('poTableBody');
+  tbody.innerHTML = purchaseOrders.map(po => `
+    <tr>
+      <td style="font-family:'JetBrains Mono';font-weight:700">${po.po_number}</td>
+      <td>${po.supplier_name}</td>
+      <td style="color:var(--text-muted)">${po.items.map(i => `${i.product_name} (${i.quantity_ordered}x)`).join(', ')}</td>
+      <td style="font-family:'JetBrains Mono';color:#10b981;font-weight:700">₹${po.total_amount.toLocaleString('en-IN')}</td>
+      <td><span class="badge-stock ${po.status==='RECEIVED'?'in-stock':'low-stock'}">${po.status}</span></td>
+      <td>
+        ${po.status !== 'RECEIVED' ?
+          `<button class="btn btn-success" style="padding:4px 10px;font-size:11px" onclick="receivePo(${po.id})">Receive Cargo</button>` :
+          `<span style="color:#10b981;font-size:12px;font-weight:700">✅ Received</span>`
+        }
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderShipments() {
+  const el = document.getElementById('shipmentsContainer');
+  el.innerHTML = shipments.map(s => `
+    <div class="device-card">
+      <div class="device-header">
+        <div>
+          <div class="device-title">🚚 ${s.tracking_number}</div>
+          <div class="device-sub">Carrier: ${s.carrier} | ${s.po_number}</div>
+        </div>
+        <span class="badge-stock ${s.status==='DELIVERED'?'in-stock':'low-stock'}">${s.status}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:10px">
+        <div>Origin: <strong>${s.origin}</strong></div>
+        <div>Destination: <strong>${s.destination}</strong></div>
+        <div style="margin-top:6px;color:#818cf8">📍 Current: <strong>${s.current_location}</strong></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRopAlerts(alerts) {
+  const tbody = document.getElementById('ropAlertsBody');
+  if (!alerts || alerts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#10b981">✅ All products safely above reorder point!</td></tr>';
+    return;
+  }
+  tbody.innerHTML = alerts.map(a => `
+    <tr>
+      <td style="font-family:'JetBrains Mono';font-weight:700">${a.sku}</td>
+      <td>${a.name}</td>
+      <td style="font-family:'JetBrains Mono';color:#ef4444;font-weight:700">${a.current_stock}</td>
+      <td style="font-family:'JetBrains Mono';color:#f59e0b">${a.reorder_point}</td>
+      <td>${a.lead_time_days} days</td>
+      <td style="font-family:'JetBrains Mono';color:#10b981;font-weight:700">+${a.suggested_reorder}</td>
+      <td><span class="badge-stock ${a.urgency==='CRITICAL'?'out-stock':'low-stock'}">${a.urgency}</span></td>
+      <td><button class="btn btn-primary" style="padding:4px 10px;font-size:11px" onclick="triggerAutoPo(${a.id}, ${a.suggested_reorder}, '${a.name}')">Wholesaler PO</button></td>
+    </tr>
+  `).join('');
+}
+
+function renderPresets() {
+  const el = document.getElementById('quickScanPresets');
+  if (!el) return;
+  el.innerHTML = products.slice(0, 5).map(p => `
+    <button class="btn btn-outline" style="padding:4px 10px;font-size:11px" onclick="setAndScan('${p.barcode}')">
+      ${p.name.slice(0,18)} (${p.barcode})
+    </button>
+  `).join('');
+}
+
+function setAndScan(code) {
+  document.getElementById('hardwareScanCode').value = code;
+  triggerHardwareScan();
+}
+
+async function triggerHardwareScan() {
+  playScannerBeep();
+  const code = document.getElementById('hardwareScanCode').value;
+  const action = document.getElementById('hardwareScanAction').value;
+  const resBox = document.getElementById('scanResultBox');
+
+  if (isLive) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/hardware/scan`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ code, action, device_id: 'HANDHELD-W01' })
+      });
+      const data = await res.json();
+      resBox.style.display = 'block';
+      resBox.innerHTML = `
+        <div style="font-weight:700;color:#34d399;font-size:14px">✅ ${data.message}</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px">
+          Product: <strong>${data.product.name}</strong> | Live Qty: <strong>${data.product.quantity}</strong> | Price: ₹${data.product.price}
+        </div>
+      `;
+      loadLive();
+      return;
+    } catch(e) {}
+  }
+
+  // Simulation fallback
+  resBox.style.display = 'block';
+  resBox.innerHTML = `<div style="color:#34d399;font-weight:700">✅ Scanned code ${code} (${action} executed in simulation)</div>`;
+}
+
+async function recordQuickSale() {
+  if (products.length === 0) return;
+  const p = products[Math.floor(Math.random() * products.length)];
+  if (isLive) {
+    await fetch(`${BACKEND_URL}/sales`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ product_id: p.id, quantity_sold: 2, customer_name: 'POS Quick Checkout' })
+    });
+    loadLive();
+  } else {
+    p.quantity = Math.max(0, p.quantity - 2);
+    renderInventoryTable();
+  }
+}
+
+async function restockItem() {
+  const pid = document.getElementById('restockSku').value;
+  const qty = parseInt(document.getElementById('restockQty').value) || 20;
+  const p = products.find(x => x.id == pid);
+  if (!p) return;
+
+  if (isLive) {
+    await fetch(`${BACKEND_URL}/products/${pid}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ quantity: p.quantity + qty })
+    });
+    loadLive();
+  } else {
+    p.quantity += qty;
+    renderInventoryTable();
+  }
+}
+
+async function receivePo(poid) {
+  if (isLive) {
+    await fetch(`${BACKEND_URL}/purchases/${poid}/receive`, { method: 'PUT' });
+    loadLive();
+  }
+}
+
+async function triggerAutoPo(pid, qty, name) {
+  if (isLive) {
+    await fetch(`${BACKEND_URL}/purchases`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        supplier_id: 1,
+        items: [{ product_id: pid, quantity_ordered: qty, unit_cost: 1500 }],
+        notes: `Automated ROP replenishment for ${name}`
+      })
+    });
+    alert(`Wholesaler Purchase Order issued for ${qty}x ${name}!`);
+    loadLive();
+  }
+}
+
+async function testSmartScale() {
+  const sku = document.getElementById('scaleSkuSelect').value;
+  const weight = parseFloat(document.getElementById('scaleWeightInput').value) || 10;
+  const box = document.getElementById('scaleResultBox');
+
+  if (isLive) {
+    const res = await fetch(`${BACKEND_URL}/hardware/telemetry`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ sku, weight_kg: weight, unit_weight_kg: 0.25 })
+    });
+    const d = await res.json();
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div style="font-weight:700;color:#fff">${d.product}</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">
+        Database Count: <strong>${d.system_qty}</strong> | Load-Cell Calculated: <strong>${d.calculated_qty_from_weight}</strong>
+      </div>
+      <div style="font-size:12px;margin-top:4px;color:${d.discrepancy===0?'#34d399':'#f59e0b'}">
+        Variance: <strong>${d.discrepancy===0?'0 (Matched)':d.discrepancy+' discrepancy'}</strong>
+      </div>
+    `;
+  }
+}
+
+function exportCsv(type) {
+  window.open(`${BACKEND_URL}/reports/export?type=${type}`, '_blank');
+}
+
+function drawSalesChart() {
+  const canvas = document.getElementById('salesCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth - 28;
+  const h = canvas.height = canvas.parentElement.clientHeight - 28;
+  ctx.clearRect(0,0,w,h);
+
+  const days = ['Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
+  const values = [4500, 7200, 11000, 8900, 14500, 16800, 20250];
+  const max = 24000;
+  const stepX = w / (days.length - 1);
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  for (let i = 0; i < 4; i++) {
+    const y = (h / 4) * i + 10;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Draw sales line
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  values.forEach((v, i) => {
+    const x = i * stepX;
+    const y = h - ((v / max) * (h - 30)) - 15;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px JetBrains Mono';
+  days.forEach((d, i) => {
+    ctx.fillText(d, i * stepX - 10, h - 2);
+  });
+}
+
+function drawForecastChart() {
+  const canvas = document.getElementById('forecastCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth - 28;
+  const h = canvas.height = canvas.parentElement.clientHeight - 28;
+  ctx.clearRect(0,0,w,h);
+
+  const days = forecastData.days.length ? forecastData.days : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const actual = forecastData.actual.length ? forecastData.actual : [22, 28, 35, 30, null, null, null];
+  const predicted = forecastData.predicted.length ? forecastData.predicted : [null, null, null, 30, 36, 42, 38];
+  const max = 50;
+  const stepX = w / (days.length - 1);
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  for (let i = 0; i < 4; i++) {
+    const y = (h / 4) * i + 10;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  // Actual (Indigo)
+  ctx.strokeStyle = '#6366f1';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  let first = true;
+  actual.forEach((v, i) => {
+    if (v !== null && v !== undefined) {
+      const x = i * stepX;
+      const y = h - ((v / max) * (h - 30)) - 15;
+      if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+
+  // Predicted (Dashed Purple)
+  ctx.strokeStyle = '#a855f7';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([6, 6]);
+  ctx.beginPath();
+  let pFirst = true;
+  predicted.forEach((v, i) => {
+    if (v !== null && v !== undefined) {
+      const x = i * stepX;
+      const y = h - ((v / max) * (h - 30)) - 15;
+      if (pFirst) { ctx.moveTo(x, y); pFirst = false; } else ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px JetBrains Mono';
+  days.forEach((d, i) => {
+    ctx.fillText(d, i * stepX - 10, h - 2);
+  });
+}
+
+window.addEventListener('resize', () => { drawSalesChart(); drawForecastChart(); });
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Credit Card Fraud Detection Engine | Project 21 | Orbyte Global</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #060913;
+  --panel: rgba(13, 20, 36, 0.85);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #38bdf8;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --mono-font: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Header */
+.header {
+  background: rgba(10, 16, 30, 0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 16px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand-group { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+.brand-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+
+.stream-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid var(--panel-border);
+}
+.btn-toggle-stream {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-toggle-stream.stopped {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+.status-pill {
+  font-size: 12px; font-weight: 700;
+  color: #34d399; display: flex; align-items: center; gap: 6px;
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #34d399; box-shadow: 0 0 10px #34d399;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Stats ticker */
+.stats-banner {
+  max-width: 1400px;
+  margin: 20px auto 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+}
+.stat-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px; font-weight: 700; }
+.stat-value { font-size: 26px; font-weight: 800; font-family: var(--mono-font); }
+.stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* Tabs */
+.tab-bar {
+  max-width: 1400px;
+  margin: 24px auto 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.tab-btn {
+  background: none; border: none;
+  color: var(--text-muted);
+  font-size: 13px; font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+/* Main content */
+.main-wrapper {
+  max-width: 1400px;
+  margin: 24px auto 60px auto;
+  padding: 0 32px;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Grids & Cards */
+.grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; }
+.grid-1-2 { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 24px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+}
+.card-title {
+  font-size: 16px; font-weight: 800;
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Table */
+.custom-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.custom-table th {
+  text-align: left; padding: 12px 14px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); border-bottom: 1px solid var(--panel-border);
+}
+.custom-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-family: var(--mono-font); font-size: 12px;
+}
+.custom-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* Badges */
+.badge-tag {
+  display: inline-block; padding: 4px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; font-family: var(--mono-font);
+}
+.badge-clean { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-medium { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.badge-critical { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); animation: flash 1s infinite alternate; }
+
+@keyframes flash {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+/* Preset buttons */
+.preset-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.preset-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.2s;
+}
+.preset-item:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+/* Form inputs */
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.form-group input, .form-group select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 13px; font-family: var(--mono-font);
+  outline: none;
+}
+.form-group input:focus { border-color: var(--accent-cyan); }
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #fff; border: none;
+  padding: 10px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff; border: none;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+}
+
+/* Waterfall bar */
+.waterfall-bar-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; font-size: 12px; font-family: var(--mono-font);
+}
+.waterfall-label { width: 60px; color: var(--text-muted); font-weight: 700; }
+.waterfall-track { flex: 1; height: 16px; background: rgba(255,255,255,0.05); border-radius: 4px; position: relative; }
+.waterfall-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+.waterfall-fill.pos { background: #ef4444; }
+.waterfall-fill.neg { background: #10b981; }
+.waterfall-val { width: 55px; text-align: right; }
+
+/* Confusion matrix box */
+.matrix-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px;
+}
+.matrix-cell {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px; padding: 16px; text-align: center;
+}
+.matrix-cell.tp { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08); }
+.matrix-cell.fn { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand-group">
+    <div class="brand-icon">💳</div>
+    <div>
+      <div class="brand-title">Credit Card Fraud Detection Engine</div>
+      <div class="brand-sub">Project 21 • Calibrated Random Forest Ensemble & PCA Attribution</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="stream-controls">
+      <span class="status-pill"><span class="pulse-dot"></span> <span id="streamStatusText">Streaming Active</span></span>
+      <button class="btn-toggle-stream" id="btnToggleStream" onclick="toggleStream()">Pause</button>
+    </div>
+    <button class="btn-primary" onclick="exportDossier()">📥 Export Forensic Dossier</button>
+  </div>
+</header>
+
+<!-- Metric Cards -->
+<section class="stats-banner">
+  <div class="stat-card">
+    <div class="stat-title">Transactions Audited</div>
+    <div class="stat-value" id="statTotalTx" style="color:var(--accent-cyan)">0</div>
+    <div class="stat-sub">Real-time telematics stream</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Fraud Intercepted</div>
+    <div class="stat-value" id="statFraudCount" style="color:var(--accent-rose)">0</div>
+    <div class="stat-sub" id="statFraudRate">Fraud Rate: 0.0%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Total Volume Audited</div>
+    <div class="stat-value" id="statTotalVol" style="color:#f8fafc">$0.00</div>
+    <div class="stat-sub" id="statFraudVol" style="color:#fca5a5">Flagged: $0.00</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Model ROC-AUC Score</div>
+    <div class="stat-value" style="color:var(--accent-emerald)">0.984</div>
+    <div class="stat-sub">Precision: 94.2% • Recall: 91.8%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-title">Inference Latency</div>
+    <div class="stat-value" style="color:#fbbf24">1.2ms</div>
+    <div class="stat-sub">35 Estimators (Gini Split)</div>
+  </div>
+</section>
+
+<!-- Tab Navigation -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(0, this)">⚡ Real-Time Telematics Stream</button>
+  <button class="tab-btn" onclick="switchTab(1, this)">🔬 Forensic Inspector & SHAP Explainability</button>
+  <button class="tab-btn" onclick="switchTab(2, this)">📊 Model Benchmarks & Threshold Studio</button>
+  <button class="tab-btn" onclick="switchTab(3, this)">📁 Batch Evaluation & Card Sanctions</button>
+</nav>
+
+<main class="main-wrapper">
+
+  <!-- TAB 0: LIVE STREAM -->
+  <div class="tab-content active" id="tab0">
+    <div class="grid-2">
+      <!-- Live Table -->
+      <div class="card">
+        <div class="card-title">
+          <span>📡 Live Transaction Feed</span>
+          <span style="font-size:12px;color:var(--text-muted);font-weight:600">Auto-refresh: 2.0s</span>
+        </div>
+        <div style="max-height:540px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Card Account</th>
+                <th>Merchant</th>
+                <th>Amount</th>
+                <th>Risk Prob</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="liveTxBody">
+              <!-- Inserted via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Real-Time Radar & Anomaly Monitor -->
+      <div class="card" style="display:flex;flex-direction:column;gap:18px">
+        <div class="card-title">
+          <span>🎯 Real-Time Anomaly Gauge</span>
+          <span class="badge-tag badge-clean" id="latestDecisionBadge">APPROVED</span>
+        </div>
+
+        <div style="text-align:center;padding:10px 0">
+          <canvas id="gaugeCanvas" width="280" height="150" style="margin:0 auto;display:block"></canvas>
+          <div style="font-size:36px;font-weight:800;font-family:var(--mono-font);margin-top:8px" id="gaugeScoreText">0.0%</div>
+          <div style="font-size:12px;color:var(--text-muted)" id="gaugeSubText">Awaiting next incoming transaction packet</div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);border-radius:14px;padding:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px">
+            Latest Attributed PCA Drivers
+          </div>
+          <div id="latestDriversContainer">
+            <div style="color:var(--text-muted);font-size:12px">Evaluating initial telemetry packets...</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn-primary" style="flex:1" onclick="injectInstantFraud()">🚨 Inject Synthetic Fraud Spike</button>
+          <button class="btn-primary" style="flex:1;background:rgba(255,255,255,0.08)" onclick="fetchStreamNext()">⚡ Force Next Packet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 1: FORENSIC INSPECTOR & SHAP EXPLAINER -->
+  <div class="tab-content" id="tab1">
+    <div class="grid-2">
+      <!-- Inspector Form -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍 Custom Transaction Testbench</span>
+        </div>
+
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">Quick Test Presets:</div>
+        <div class="preset-list">
+          <div class="preset-item" onclick="loadPreset('grocery')">
+            <span>🛒 <strong>Target Grocery Store</strong> • Normal consumer swipe</span>
+            <span style="font-family:var(--mono-font);color:var(--accent-emerald)">$42.50</span>
+          </div>
+          <div class="preset-item" onclick="loadPreset('jewelry')">
+            <span>💎 <strong>Midnight Jewelry Wire</strong> • High-risk foreign terminal</span>
+            <span style="font-family:var(--mono-font);color:var(--accent-rose)">$4,890.00</span>
+          </div>
+          <div class="preset-item" onclick="loadPreset('carding')">
+            <span>🤖 <strong>Rapid Bot Carding Sweep</strong> • Micro-charge velocity probe</span>
+            <span style="font-family:var(--mono-font);color:var(--accent-amber)">$1.10</span>
+          </div>
+          <div class="preset-item" onclick="loadPreset('crypto')">
+            <span>🪙 <strong>Foreign Crypto Smurfing</strong> • Anonymized mixer egress</span>
+            <span style="font-family:var(--mono-font);color:var(--accent-rose)">$3,800.00</span>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Merchant Name</label>
+            <input type="text" id="inspMerchant" value="Target Superstore"/>
+          </div>
+          <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" id="inspAmount" value="42.50" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>V14 (Highest Correlation)</label>
+            <input type="number" id="inspV14" value="0.12" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>V4 (Positive Impact Driver)</label>
+            <input type="number" id="inspV4" value="-0.25" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>V12 (PCA Latent Factor)</label>
+            <input type="number" id="inspV12" value="0.05" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>V10 (PCA Latent Factor)</label>
+            <input type="number" id="inspV10" value="0.18" step="0.01"/>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width:100%" onclick="runInspectorEvaluation()">
+          🔬 Evaluate With Random Forest
+        </button>
+      </div>
+
+      <!-- SHAP Waterfall Visualizer -->
+      <div class="card">
+        <div class="card-title">
+          <span>📉 Feature Attribution Waterfall</span>
+          <span id="inspVerdictBadge" class="badge-tag badge-clean">APPROVED</span>
+        </div>
+
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5">
+          Shows how each dimensional feature pushes fraud probability 
+          <span style="color:#ef4444;font-weight:700">Higher (Red)</span> or 
+          <span style="color:#10b981;font-weight:700">Lower (Green)</span> relative to base rate.
+        </div>
+
+        <div id="waterfallContainer" style="margin-top:14px">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MODEL BENCHMARKS & THRESHOLD STUDIO -->
+  <div class="tab-content" id="tab2">
+    <div class="grid-2">
+      <!-- Threshold Slider & Confusion Matrix -->
+      <div class="card">
+        <div class="card-title">
+          <span>⚙️ Decision Threshold Studio</span>
+          <span style="font-family:var(--mono-font);color:var(--accent-cyan);font-size:16px" id="thresholdDisplay">0.50</span>
+        </div>
+
+        <div style="margin:20px 0">
+          <input type="range" id="thresholdSlider" min="0.10" max="0.90" step="0.01" value="0.50" style="width:100%" oninput="onThresholdChange(this.value)"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:6px;font-family:var(--mono-font)">
+            <span>0.10 (Aggressive Fraud Catch)</span>
+            <span>0.50 (Default Balanced)</span>
+            <span>0.90 (Low Customer Friction)</span>
+          </div>
+        </div>
+
+        <div class="matrix-grid">
+          <div class="matrix-cell tp">
+            <div style="font-size:11px;color:#34d399;font-weight:700">TRUE POSITIVES (TP)</div>
+            <div style="font-size:24px;font-weight:800;font-family:var(--mono-font);margin:6px 0" id="valTP">230</div>
+            <div style="font-size:11px;color:var(--text-muted)">Fraud Caught Correctly</div>
+          </div>
+          <div class="matrix-cell">
+            <div style="font-size:11px;color:#fbbf24;font-weight:700">FALSE POSITIVES (FP)</div>
+            <div style="font-size:24px;font-weight:800;font-family:var(--mono-font);margin:6px 0" id="valFP">14</div>
+            <div style="font-size:11px;color:var(--text-muted)">Innocent Users Challenged</div>
+          </div>
+          <div class="matrix-cell fn">
+            <div style="font-size:11px;color:#f87171;font-weight:700">FALSE NEGATIVES (FN)</div>
+            <div style="font-size:24px;font-weight:800;font-family:var(--mono-font);margin:6px 0" id="valFN">20</div>
+            <div style="font-size:11px;color:var(--text-muted)">Fraud Slipped Through</div>
+          </div>
+          <div class="matrix-cell">
+            <div style="font-size:11px;color:var(--accent-cyan);font-weight:700">TRUE NEGATIVES (TN)</div>
+            <div style="font-size:24px;font-weight:800;font-family:var(--mono-font);margin:6px 0" id="valTN">9736</div>
+            <div style="font-size:11px;color:var(--text-muted)">Legitimate Trans Approved</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:14px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--panel-border)">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Projected Financial Cost-Benefit:</div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-top:6px">
+            <span style="color:#34d399">Fraud Losses Prevented:</span>
+            <span id="costSaved">$287,500</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;margin-top:4px">
+            <span style="color:#f87171">Uncaught Fraud Losses:</span>
+            <span id="costLost">$25,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROC-AUC Canvas -->
+      <div class="card">
+        <div class="card-title">
+          <span>📈 ROC-AUC Validation Curve</span>
+          <span style="color:var(--accent-emerald);font-weight:700">AUC = 0.984</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">
+          Receiver Operating Characteristic curve computed against 10,000 holdout transactions.
+        </p>
+        <canvas id="rocCanvas" width="460" height="320" style="width:100%;max-height:320px"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: BATCH EVALUATION & CARD SANCTIONS -->
+  <div class="tab-content" id="tab3">
+    <div class="grid-2">
+      <!-- Batch Upload Simulation -->
+      <div class="card">
+        <div class="card-title">
+          <span>📦 Batch Transaction Processor</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+          Simulate auditing bulk daily settlement files (e.g. 25–100 transactions per run).
+        </p>
+        <button class="btn-primary" style="margin-bottom:16px" onclick="runBatchSimulation()">
+          ⚡ Run Batch Audit Simulation (25 Records)
+        </button>
+
+        <div id="batchSummaryBox" style="display:none;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--panel-border);margin-bottom:16px">
+          <!-- Populated via JS -->
+        </div>
+
+        <div style="max-height:360px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Tx ID</th>
+                <th>Merchant</th>
+                <th>Amount</th>
+                <th>Risk Prob</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="batchTableBody">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Click 'Run Batch Audit' to evaluate records</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sanctioned / Blocked Cards -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔒 Sanctioned Cards Registry</span>
+          <span class="badge-tag badge-critical" id="blockedCountBadge">0 BLOCKED</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+          Cards immediately flagged with critical threat scoring are blacklisted.
+        </p>
+
+        <div style="display:flex;gap:10px;margin-bottom:16px">
+          <input type="text" id="manualBlockCardInput" placeholder="Enter Card ID (e.g. CARD-4912-8821)" style="flex:1;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid var(--panel-border);color:#fff;font-family:var(--mono-font)"/>
+          <button class="btn-primary" style="background:#ef4444" onclick="manualBlockCard()">Block Card</button>
+        </div>
+
+        <div style="max-height:360px;overflow-y:auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Card Account</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="blockedCardsBody">
+              <tr><td colspan="3" style="text-align:center;color:var(--text-muted)">No accounts currently blocked</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const BACKEND_URL = 'http://localhost:5021/api';
+let streamActive = true;
+let streamTimer = null;
+let currentThreshold = 0.50;
+let blockedCardsSet = new Set();
+
+// Beep audio synthesizer for fraud alert
+function playAlertBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.18);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  } catch(e){}
+}
+
+// Tab switcher
+function switchTab(idx, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`tab${idx}`).classList.add('active');
+  if (idx === 2) {
+    drawRocCurve();
+    updateMetrics(currentThreshold);
+  }
+}
+
+// Initial bootstrap
+async function init() {
+  await fetchStats();
+  await loadRecentTransactions();
+  startStreaming();
+  drawGauge(0.12);
+  runInspectorEvaluation();
+}
+
+async function fetchStats() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/stats`);
+    if (!res.ok) return;
+    const data = await res.json();
+    document.getElementById('statTotalTx').textContent = data.total_transactions;
+    document.getElementById('statFraudCount').textContent = data.fraud_detected;
+    document.getElementById('statFraudRate').textContent = `Fraud Rate: ${data.fraud_rate}%`;
+    document.getElementById('statTotalVol').textContent = `$${data.total_volume_usd.toLocaleString()}`;
+    document.getElementById('statFraudVol').textContent = `Flagged: $${data.fraud_volume_usd.toLocaleString()}`;
+  } catch(e){}
+}
+
+async function loadRecentTransactions() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/transactions?limit=25`);
+    if (!res.ok) return;
+    const txs = await res.json();
+    const tbody = document.getElementById('liveTxBody');
+    tbody.innerHTML = '';
+    txs.forEach(t => renderTxRow(t, false));
+    if (txs.length > 0) {
+      updateGaugeAndDrivers(txs[0]);
+    }
+  } catch(e){}
+}
+
+function renderTxRow(t, prepend = true) {
+  const tbody = document.getElementById('liveTxBody');
+  const tr = document.createElement('tr');
+  const badgeClass = t.risk_level === 'CRITICAL' ? 'badge-critical' : t.risk_level === 'HIGH' ? 'badge-critical' : t.risk_level === 'MEDIUM' ? 'badge-medium' : 'badge-clean';
+  
+  tr.innerHTML = `
+    <td style="color:var(--text-muted)">${new Date(t.timestamp).toLocaleTimeString()}</td>
+    <td><strong>${t.card_id}</strong></td>
+    <td>${t.merchant}</td>
+    <td style="font-weight:700;color:${t.is_fraud ? '#f87171' : '#fff'}">$${parseFloat(t.amount).toFixed(2)}</td>
+    <td><span class="badge-tag ${badgeClass}">${t.fraud_probability}% (${t.risk_level})</span></td>
+    <td>
+      ${t.is_fraud ? `<button class="btn-danger" onclick="blockCard('${t.card_id}')">Block</button>` : `<span style="color:#34d399">✓ OK</span>`}
+    </td>
+  `;
+  if (prepend) {
+    tbody.insertBefore(tr, tbody.firstChild);
+    if (tbody.children.length > 40) tbody.removeChild(tbody.lastChild);
+  } else {
+    tbody.appendChild(tr);
+  }
+}
+
+// Streaming simulation
+function startStreaming() {
+  if (streamTimer) clearInterval(streamTimer);
+  streamTimer = setInterval(fetchStreamNext, 2200);
+}
+
+function toggleStream() {
+  streamActive = !streamActive;
+  const btn = document.getElementById('btnToggleStream');
+  const txt = document.getElementById('streamStatusText');
+  if (streamActive) {
+    btn.textContent = 'Pause';
+    btn.classList.remove('stopped');
+    txt.textContent = 'Streaming Active';
+    startStreaming();
+  } else {
+    btn.textContent = 'Resume';
+    btn.classList.add('stopped');
+    txt.textContent = 'Streaming Paused';
+    clearInterval(streamTimer);
+  }
+}
+
+async function fetchStreamNext() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/stream/next`);
+    if (!res.ok) return;
+    const tx = await res.json();
+    renderTxRow(tx, true);
+    updateGaugeAndDrivers(tx);
+    fetchStats();
+    if (tx.is_fraud) {
+      playAlertBeep();
+    }
+  } catch(e){}
+}
+
+async function injectInstantFraud() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/predict`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        merchant: 'International Wire Escrow BVI',
+        features: {
+          Amount: 4950.00,
+          V14: -5.92,
+          V4: 4.88,
+          V12: -5.10,
+          V10: -4.30
+        }
+      })
+    });
+    const tx = await res.json();
+    renderTxRow(tx, true);
+    updateGaugeAndDrivers(tx);
+    fetchStats();
+    playAlertBeep();
+  } catch(e){}
+}
+
+function updateGaugeAndDrivers(tx) {
+  drawGauge(tx.risk_score);
+  document.getElementById('gaugeScoreText').textContent = `${tx.fraud_probability}%`;
+  document.getElementById('gaugeSubText').textContent = `${tx.merchant} • $${parseFloat(tx.amount).toFixed(2)}`;
+  
+  const badge = document.getElementById('latestDecisionBadge');
+  badge.textContent = tx.decision;
+  badge.className = `badge-tag ${tx.is_fraud ? 'badge-critical' : 'badge-clean'}`;
+
+  const container = document.getElementById('latestDriversContainer');
+  if (!tx.top_drivers || tx.top_drivers.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-muted);font-size:12px">All PCA components within normal bounds</div>';
+    return;
+  }
+  container.innerHTML = tx.top_drivers.map(d => `
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-family:var(--mono-font);margin-bottom:4px">
+      <span>${d.feature} (val: ${d.value})</span>
+      <span style="color:${d.direction === 'RISK_INCREASING' ? '#f87171' : '#34d399'}">
+        ${d.direction === 'RISK_INCREASING' ? '▲ Risk +' : '▼ Risk -'}${Math.abs(d.impact)}
+      </span>
+    </div>
+  `).join('');
+}
+
+// Canvas Gauge
+function drawGauge(score) {
+  const canvas = document.getElementById('gaugeCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height - 10;
+  const r = 110;
+
+  // Background track arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 0);
+  ctx.lineWidth = 18;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.stroke();
+
+  // Active colored arc
+  const endAngle = Math.PI + (score * Math.PI);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, endAngle);
+  ctx.lineWidth = 18;
+  const grad = ctx.createLinearGradient(cx - r, cy, cx + r, cy);
+  grad.addColorStop(0, '#10b981');
+  grad.addColorStop(0.5, '#f59e0b');
+  grad.addColorStop(1, '#ef4444');
+  ctx.strokeStyle = grad;
+  ctx.stroke();
+}
+
+// Presets for Inspector
+function loadPreset(type) {
+  if (type === 'grocery') {
+    document.getElementById('inspMerchant').value = 'Target Superstore Grocery';
+    document.getElementById('inspAmount').value = '42.50';
+    document.getElementById('inspV14').value = '0.12';
+    document.getElementById('inspV4').value = '-0.25';
+    document.getElementById('inspV12').value = '0.05';
+    document.getElementById('inspV10').value = '0.18';
+  } else if (type === 'jewelry') {
+    document.getElementById('inspMerchant').value = 'Midnight Luxury Jewelry Wire';
+    document.getElementById('inspAmount').value = '4890.00';
+    document.getElementById('inspV14').value = '-5.85';
+    document.getElementById('inspV4').value = '4.65';
+    document.getElementById('inspV12').value = '-4.92';
+    document.getElementById('inspV10').value = '-4.20';
+  } else if (type === 'carding') {
+    document.getElementById('inspMerchant').value = 'Rapid Micro Bot Probe';
+    document.getElementById('inspAmount').value = '1.10';
+    document.getElementById('inspV14').value = '-4.12';
+    document.getElementById('inspV4').value = '3.80';
+    document.getElementById('inspV12').value = '-3.50';
+    document.getElementById('inspV10').value = '-3.10';
+  } else if (type === 'crypto') {
+    document.getElementById('inspMerchant').value = 'Foreign Crypto Mixer Gate';
+    document.getElementById('inspAmount').value = '3800.00';
+    document.getElementById('inspV14').value = '-6.40';
+    document.getElementById('inspV4').value = '5.10';
+    document.getElementById('inspV12').value = '-5.30';
+    document.getElementById('inspV10').value = '-4.80';
+  }
+  runInspectorEvaluation();
+}
+
+async function runInspectorEvaluation() {
+  const feat = {
+    Amount: parseFloat(document.getElementById('inspAmount').value) || 0,
+    V14: parseFloat(document.getElementById('inspV14').value) || 0,
+    V4: parseFloat(document.getElementById('inspV4').value) || 0,
+    V12: parseFloat(document.getElementById('inspV12').value) || 0,
+    V10: parseFloat(document.getElementById('inspV10').value) || 0
+  };
+  const merchant = document.getElementById('inspMerchant').value;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/predict`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ merchant, features: feat })
+    });
+    const data = await res.json();
+    
+    const badge = document.getElementById('inspVerdictBadge');
+    badge.textContent = `${data.decision} (${data.fraud_probability}%)`;
+    badge.className = `badge-tag ${data.is_fraud ? 'badge-critical' : 'badge-clean'}`;
+
+    renderWaterfall(data.all_attributions || []);
+  } catch(e){}
+}
+
+function renderWaterfall(attributions) {
+  const container = document.getElementById('waterfallContainer');
+  container.innerHTML = '';
+  attributions.forEach(a => {
+    const isPos = a.impact > 0;
+    const widthPct = Math.min(100, Math.abs(a.impact) * 220);
+    const row = document.createElement('div');
+    row.className = 'waterfall-bar-row';
+    row.innerHTML = `
+      <div class="waterfall-label">${a.feature}</div>
+      <div class="waterfall-track">
+        <div class="waterfall-fill ${isPos ? 'pos' : 'neg'}" style="width:${widthPct}%"></div>
+      </div>
+      <div class="waterfall-val" style="color:${isPos ? '#f87171' : '#34d399'}">
+        ${isPos ? '+' : ''}${a.impact.toFixed(3)}
+      </div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// Threshold Studio
+async function onThresholdChange(val) {
+  currentThreshold = parseFloat(val);
+  document.getElementById('thresholdDisplay').textContent = currentThreshold.toFixed(2);
+  updateMetrics(currentThreshold);
+}
+
+async function updateMetrics(thresh) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/metrics?threshold=${thresh}`);
+    if (!res.ok) return;
+    const m = await res.json();
+    document.getElementById('valTP').textContent = m.confusion_matrix.true_positives;
+    document.getElementById('valFP').textContent = m.confusion_matrix.false_positives;
+    document.getElementById('valFN').textContent = m.confusion_matrix.false_negatives;
+    document.getElementById('valTN').textContent = m.confusion_matrix.true_negatives;
+
+    document.getElementById('costSaved').textContent = `$${m.cost_analysis.fraud_saved_usd.toLocaleString()}`;
+    document.getElementById('costLost').textContent = `$${m.cost_analysis.fraud_lost_usd.toLocaleString()}`;
+  } catch(e){}
+}
+
+function drawRocCurve() {
+  const canvas = document.getElementById('rocCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const pad = 40;
+  const w = canvas.width - (pad * 2);
+  const h = canvas.height - (pad * 2);
+
+  // Axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad);
+  ctx.lineTo(pad, pad + h);
+  ctx.lineTo(pad + w, pad + h);
+  ctx.stroke();
+
+  // Diagonal reference line
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + h);
+  ctx.lineTo(pad + w, pad);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ROC Curve
+  const points = [
+    {x: 0, y: 0},
+    {x: 0.005, y: 0.75},
+    {x: 0.012, y: 0.88},
+    {x: 0.025, y: 0.94},
+    {x: 0.060, y: 0.97},
+    {x: 0.120, y: 0.99},
+    {x: 1.0, y: 1.0}
+  ];
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3;
+  points.forEach((pt, i) => {
+    const px = pad + (pt.x * w);
+    const py = pad + h - (pt.y * h);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Axis Labels
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '10px JetBrains Mono';
+  ctx.fillText('0.0 (FPR)', pad - 10, pad + h + 18);
+  ctx.fillText('1.0', pad + w - 10, pad + h + 18);
+  ctx.fillText('1.0 (TPR)', pad - 30, pad + 10);
+}
+
+// Batch simulation
+async function runBatchSimulation() {
+  const batch = [];
+  for (let i = 0; i < 25; i++) {
+    const isF = Math.random() < 0.25;
+    batch.push({
+      id: `BATCH-${1000 + i}`,
+      merchant: isF ? 'Shady Electronics' : 'Amazon Retails',
+      features: {
+        Amount: isF ? (2000 + Math.random() * 3000) : (15 + Math.random() * 80),
+        V14: isF ? -5.2 : 0.1,
+        V4: isF ? 4.5 : -0.2
+      }
+    });
+  }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/batch/evaluate`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ transactions: batch, threshold: currentThreshold })
+    });
+    const data = await res.json();
+    
+    const summaryBox = document.getElementById('batchSummaryBox');
+    summaryBox.style.display = 'block';
+    summaryBox.innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px">
+        <span>Evaluated: ${data.total_evaluated} txns</span>
+        <span style="color:#f87171">Fraud Flagged: ${data.fraud_flagged} (${data.fraud_percentage}%)</span>
+        <span style="color:#34d399">Clean Approved: ${data.clean_count}</span>
+      </div>
+    `;
+
+    const tbody = document.getElementById('batchTableBody');
+    tbody.innerHTML = data.records.map(r => `
+      <tr>
+        <td>${r.transaction_id}</td>
+        <td>${r.merchant}</td>
+        <td>$${parseFloat(r.amount).toFixed(2)}</td>
+        <td>${r.fraud_probability}%</td>
+        <td><span class="badge-tag ${r.is_fraud ? 'badge-critical' : 'badge-clean'}">${r.decision}</span></td>
+      </tr>
+    `).join('');
+  } catch(e){}
+}
+
+// Card Sanctions
+async function blockCard(cardId) {
+  try {
+    await fetch(`${BACKEND_URL}/card/block`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ card_id: cardId })
+    });
+    blockedCardsSet.add(cardId);
+    renderBlockedCards();
+  } catch(e){}
+}
+
+async function unblockCard(cardId) {
+  try {
+    await fetch(`${BACKEND_URL}/card/unblock`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ card_id: cardId })
+    });
+    blockedCardsSet.delete(cardId);
+    renderBlockedCards();
+  } catch(e){}
+}
+
+function manualBlockCard() {
+  const val = document.getElementById('manualBlockCardInput').value.trim();
+  if (val) {
+    blockCard(val);
+    document.getElementById('manualBlockCardInput').value = '';
+  }
+}
+
+function renderBlockedCards() {
+  const tbody = document.getElementById('blockedCardsBody');
+  const badge = document.getElementById('blockedCountBadge');
+  badge.textContent = `${blockedCardsSet.size} BLOCKED`;
+  if (blockedCardsSet.size === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted)">No accounts currently blocked</td></tr>';
+    return;
+  }
+  tbody.innerHTML = Array.from(blockedCardsSet).map(c => `
+    <tr>
+      <td><strong>${c}</strong></td>
+      <td><span class="badge-tag badge-critical">BLOCKED</span></td>
+      <td><button class="btn-primary" style="padding:4px 10px;font-size:11px" onclick="unblockCard('${c}')">Unblock</button></td>
+    </tr>
+  `).join('');
+}
+
+// Export Forensic Dossier
+async function exportDossier() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/export/report`);
+    const data = await res.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CreditCard_Fraud_Forensic_Report_${Date.now()}.json`;
+    a.click();
+  } catch(e){
+    alert('Error exporting report');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

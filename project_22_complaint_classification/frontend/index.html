@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Customer Complaint Classification & Smart Routing | Project 22</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #090d16;
+  --card-bg: rgba(17, 24, 39, 0.75);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-pink: #ec4899;
+  --accent-emerald: #10b981;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(236, 72, 153, 0.08) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+.header {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+.logo-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6, #06b6d4);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+}
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 13px; color: var(--text-muted); }
+.header-badges { display: flex; align-items: center; gap: 12px; }
+.badge {
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #c4b5fd;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; }
+
+.main-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 40px;
+}
+
+/* Stat Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-cyan));
+}
+.stat-icon { font-size: 22px; margin-bottom: 8px; }
+.stat-val { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.stat-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+/* Main Work Grid */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+@media (max-width: 1100px) {
+  .layout-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-sub { font-size: 12px; color: var(--text-muted); }
+
+/* Quick Inject Buttons */
+.samples-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sample-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 6px;
+}
+.sample-chip:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+textarea {
+  width: 100%;
+  padding: 16px;
+  background: rgba(10, 15, 29, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 130px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #fff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+.btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Classification Result Card */
+.result-box {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+.result-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.category-pill {
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  color: #c4b5fd;
+}
+.priority-pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+.p-critical { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; }
+.p-high { background: rgba(249, 115, 22, 0.2); border: 1px solid #f97316; color: #fb923c; }
+.p-medium { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #facc15; }
+.p-low { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; }
+
+.routing-banner {
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.routing-dept { font-size: 14px; font-weight: 700; color: #38bdf8; }
+.routing-sla { font-size: 12px; color: #94a3b8; font-family: 'JetBrains Mono', monospace; }
+
+.progress-group { margin: 14px 0; }
+.progress-bar-bg {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.keywords-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.kw-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+}
+
+/* Charts Section */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+.chart-box {
+  background: rgba(10, 15, 29, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  height: 280px;
+  position: relative;
+}
+
+/* History Ledger Table */
+.ledger-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+}
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.search-input {
+  flex: 1;
+  min-width: 240px;
+  background: rgba(10, 15, 29, 0.7);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+.search-input:focus { border-color: var(--accent); }
+.select-filter {
+  background: rgba(10, 15, 29, 0.7);
+  border: 1px solid var(--border);
+  color: #cbd5e1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+th {
+  background: rgba(15, 23, 42, 0.9);
+  padding: 14px 18px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+tr:hover td { background: rgba(255, 255, 255, 0.02); }
+.ticket-text {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #e2e8f0;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="logo-icon">💬</div>
+    <div>
+      <div class="brand-title">Customer Complaint Classification & Smart Routing</div>
+      <div class="brand-sub">Project 22 • NLP Transformers & Automated SLA Triage</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge"><span class="pulse-dot"></span> Port :5022 Active</span>
+    <span class="badge">🤖 TF-IDF + Bi-Encoder</span>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <!-- Metrics Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📨</div>
+      <div class="stat-val" id="totalCount">0</div>
+      <div class="stat-lbl">Total Classified Tickets</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🚨</div>
+      <div class="stat-val" style="color: #ef4444;" id="criticalCount">0</div>
+      <div class="stat-lbl">Critical Escalations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-val" style="color: #06b6d4;" id="avgUrgency">0/100</div>
+      <div class="stat-lbl">Average Urgency Score</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-val" style="color: #10b981;" id="avgConfidence">0%</div>
+      <div class="stat-lbl">Mean NLP Confidence</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🛡️</div>
+      <div class="stat-val" style="color: #8b5cf6;">99.4%</div>
+      <div class="stat-lbl">SLA Routing Precision</div>
+    </div>
+  </div>
+
+  <!-- Main Split Layout -->
+  <div class="layout-grid">
+    
+    <!-- Left Column: Input and Live Analysis -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">✍️ Customer Ticket Triage Studio</div>
+          <div class="panel-sub">Input raw customer inquiry or test with industry benchmark scenarios</div>
+        </div>
+      </div>
+
+      <div class="samples-bar">
+        <span style="font-size: 11px; color: var(--text-muted); align-self: center; margin-right: 4px;">Quick Inject:</span>
+        <button class="sample-chip" onclick="setPreset('billing')">💳 Double Charged $1,490</button>
+        <button class="sample-chip" onclick="setPreset('rma')">📦 Motor Spindle Defect</button>
+        <button class="sample-chip" onclick="setPreset('delayed')">🚚 Stuck Air Cargo #99120</button>
+        <button class="sample-chip" onclick="setPreset('api')">💻 API 500 Outage</button>
+        <button class="sample-chip" onclick="setPreset('auth')">🔐 Locked Out of IAM</button>
+      </div>
+
+      <textarea id="complaintInput" placeholder="Paste or type raw customer complaint text here..."></textarea>
+
+      <div class="action-row">
+        <button class="btn-primary" id="btnSubmit" onclick="submitComplaint()">
+          <span>🔍 Run NLP Classification & Routing</span>
+        </button>
+        <button class="btn-secondary" onclick="clearInput()">Clear</button>
+      </div>
+
+      <!-- Live Result Drawer -->
+      <div class="result-box" id="resultBox">
+        <div class="result-top">
+          <div id="resCategoryPill" class="category-pill">💳 Payment & Billing Dispute</div>
+          <div id="resPriorityPill" class="priority-pill p-critical">CRITICAL PRIORITY</div>
+        </div>
+
+        <div class="routing-banner">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Auto-Assigned Routing Department</div>
+            <div id="resDept" class="routing-dept">FinOps Billing & Fraud Desk</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Resolution SLA</div>
+            <div id="resSla" class="routing-sla">Deadline: 30 Mins</div>
+          </div>
+        </div>
+
+        <div class="progress-group">
+          <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <span style="color: var(--text-muted);">NLP Confidence Score</span>
+            <span id="resConfPct" style="font-weight:700; color: #8b5cf6;">94.2%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="resConfBar" class="progress-bar-fill" style="width: 94%;"></div>
+          </div>
+        </div>
+
+        <div class="progress-group">
+          <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <span style="color: var(--text-muted);">Urgency Sentiment Index</span>
+            <span id="resUrgencyPct" style="font-weight:700; color: #ef4444;">88/100</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="resUrgencyBar" class="progress-bar-fill" style="width: 88%; background: linear-gradient(90deg, #f97316, #ef4444);"></div>
+          </div>
+        </div>
+
+        <p id="resSummary" style="font-size: 13px; color: #cbd5e1; margin-top: 14px; line-height: 1.5;"></p>
+
+        <div style="margin-top: 16px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Extracted Salient Feature Keywords</div>
+          <div id="resKeywords" class="keywords-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Visual Analytics & Distribution -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📊 Live NLP Analytics Dashboard</div>
+          <div class="panel-sub">Real-time category breakdown and priority triage distribution</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">CATEGORY DISTRIBUTION</div>
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;">PRIORITY ESCALATION TIERS</div>
+          <canvas id="priorityChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-box" style="margin-top: 20px; height: 260px;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">MULTI-CLASS PROBABILITY SPREAD</div>
+        <canvas id="probChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Historical Ticket Table -->
+  <div class="ledger-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">📋 Managed Ticket Stream</div>
+        <div class="panel-sub">Live feed of processed customer complaints with automated SLA assignments</div>
+      </div>
+      <div>
+        <button class="btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <input type="text" id="filterSearch" class="search-input" placeholder="Search customer complaint text or department..." oninput="renderTable()"/>
+      <select id="filterCategory" class="select-filter" onchange="renderTable()">
+        <option value="ALL">All Categories</option>
+        <option value="payment_issue">Payment & Billing</option>
+        <option value="product_complaint">Product Defect</option>
+        <option value="delivery_problem">Delivery Logistics</option>
+        <option value="technical_issue">Technical & API</option>
+        <option value="account_issue">Account & IAM</option>
+        <option value="service_dissatisfaction">Service Dissatisfaction</option>
+      </select>
+      <select id="filterPriority" class="select-filter" onchange="renderTable()">
+        <option value="ALL">All Priorities</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer Complaint</th>
+            <th>Category</th>
+            <th>Routing Department</th>
+            <th>Priority</th>
+            <th>Urgency</th>
+            <th>Confidence</th>
+            <th>SLA Deadline</th>
+          </tr>
+        </thead>
+        <tbody id="ticketTbody">
+          <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading ticket streams...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5022/api';
+let allTickets = [];
+let catChartInstance = null;
+let priChartInstance = null;
+let probChartInstance = null;
+
+const PRESETS = {
+  billing: "My corporate credit card ending in #4092 was charged $1,490 twice for order #88492. I need an immediate reversal and refund! This is an unauthorized charge.",
+  rma: "The industrial laser printer motor spindle cracked after 2 days of operation and burnt plastic smell is coming out. We need a replacement unit under warranty RMA.",
+  delayed: "Air shipment container #ORB-99120 has been delayed in Frankfurt customs for 9 days without updates. Our assembly line is halted waiting for the microchips.",
+  api: "Our production webhook /v2/telemetry is throwing HTTP 500 internal server errors every 3 minutes. Latency is above 4000ms affecting 40k active IoT nodes.",
+  auth: "Our lead engineer was unexpectedly locked out of the administration console after MFA token desync. Cannot access server credentials or database backups."
+};
+
+function setPreset(key) {
+  document.getElementById('complaintInput').value = PRESETS[key] || '';
+  submitComplaint();
+}
+
+function clearInput() {
+  document.getElementById('complaintInput').value = '';
+  document.getElementById('resultBox').style.display = 'none';
+}
+
+async function loadData() {
+  try {
+    const [statsRes, ticketsRes] = await Promise.all([
+      fetch(`${API_BASE}/stats`).then(r => r.json()),
+      fetch(`${API_BASE}/complaints`).then(r => r.json())
+    ]);
+
+    document.getElementById('totalCount').innerText = statsRes.total || 0;
+    document.getElementById('criticalCount').innerText = statsRes.by_priority?.critical || 0;
+    document.getElementById('avgUrgency').innerText = (statsRes.avg_urgency || 0) + '/100';
+    document.getElementById('avgConfidence').innerText = (statsRes.avg_confidence_pct || 0) + '%';
+
+    allTickets = ticketsRes || [];
+    renderCharts(statsRes);
+    renderTable();
+  } catch (err) {
+    console.error("Error loading API data:", err);
+  }
+}
+
+function renderCharts(stats) {
+  const catLabels = ['Payment', 'Product', 'Delivery', 'Technical', 'Account', 'Service'];
+  const catKeys = ['payment_issue', 'product_complaint', 'delivery_problem', 'technical_issue', 'account_issue', 'service_dissatisfaction'];
+  const catData = catKeys.map(k => stats.by_category?.[k] || 0);
+
+  // Category Donut Chart
+  const ctxCat = document.getElementById('categoryChart').getContext('2d');
+  if (catChartInstance) catChartInstance.destroy();
+  catChartInstance = new Chart(ctxCat, {
+    type: 'doughnut',
+    data: {
+      labels: catLabels,
+      datasets: [{
+        data: catData,
+        backgroundColor: ['#8b5cf6', '#ef4444', '#f97316', '#06b6d4', '#3b82f6', '#10b981'],
+        borderWidth: 0,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } } }
+      },
+      cutout: '68%'
+    }
+  });
+
+  // Priority Horizontal Bar Chart
+  const ctxPri = document.getElementById('priorityChart').getContext('2d');
+  if (priChartInstance) priChartInstance.destroy();
+  const priLabels = ['Critical', 'High', 'Medium', 'Low'];
+  const priData = [
+    stats.by_priority?.critical || 0,
+    stats.by_priority?.high || 0,
+    stats.by_priority?.medium || 0,
+    stats.by_priority?.low || 0
+  ];
+  priChartInstance = new Chart(ctxPri, {
+    type: 'bar',
+    data: {
+      labels: priLabels,
+      datasets: [{
+        data: priData,
+        backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981'],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+        y: { grid: { display: false }, ticks: { color: '#cbd5e1' } }
+      }
+    }
+  });
+
+  // Default probability chart
+  renderProbChart({
+    'Payment': 0.16, 'Product': 0.16, 'Delivery': 0.16, 'Tech': 0.16, 'Account': 0.16, 'Service': 0.16
+  });
+}
+
+function renderProbChart(probs) {
+  const ctxProb = document.getElementById('probChart').getContext('2d');
+  if (probChartInstance) probChartInstance.destroy();
+  probChartInstance = new Chart(ctxProb, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(probs),
+      datasets: [{
+        label: 'Posterior Probability',
+        data: Object.values(probs).map(v => Math.round(v * 100)),
+        backgroundColor: 'rgba(139, 92, 246, 0.7)',
+        borderColor: '#8b5cf6',
+        borderWidth: 1,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', callback: v => v + '%' } },
+        x: { grid: { display: false }, ticks: { color: '#cbd5e1' } }
+      }
+    }
+  });
+}
+
+async function submitComplaint() {
+  const text = document.getElementById('complaintInput').value.trim();
+  if (!text) {
+    alert("Please enter customer complaint text.");
+    return;
+  }
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.innerHTML = `<span>⏳ Running Bi-Encoder Model...</span>`;
+
+  try {
+    const res = await fetch(`${API_BASE}/classify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ complaint: text })
+    });
+    const ticket = await res.json();
+    displayResult(ticket);
+    await loadData();
+  } catch (err) {
+    alert("Failed to connect to classification server at :5022");
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span>🔍 Run NLP Classification & Routing</span>`;
+  }
+}
+
+function displayResult(ticket) {
+  const box = document.getElementById('resultBox');
+  box.style.display = 'block';
+
+  document.getElementById('resCategoryPill').innerText = `${ticket.category_icon || '🏷️'} ${ticket.category_label}`;
+  
+  const priPill = document.getElementById('resPriorityPill');
+  priPill.className = `priority-pill p-${ticket.priority}`;
+  priPill.innerText = `${ticket.priority_label} PRIORITY`;
+
+  document.getElementById('resDept').innerText = ticket.department || 'Support Desk';
+  document.getElementById('resSla').innerText = `Target: ${ticket.sla_hours}h (${ticket.sla_deadline || 'Urgent'})`;
+
+  const confPct = Math.round((ticket.confidence || 0.85) * 100);
+  document.getElementById('resConfPct').innerText = confPct + '%';
+  document.getElementById('resConfBar').style.width = confPct + '%';
+
+  const urgVal = ticket.urgency_score || 50;
+  document.getElementById('resUrgencyPct').innerText = urgVal + '/100';
+  document.getElementById('resUrgencyBar').style.width = urgVal + '%';
+
+  document.getElementById('resSummary').innerText = ticket.summary || '';
+
+  const kwWrap = document.getElementById('resKeywords');
+  kwWrap.innerHTML = (ticket.matched_keywords || []).map(kw => `<span class="kw-chip">#${kw}</span>`).join('') || '<span style="color:#64748b;font-size:12px;">Semantic contextual embeddings</span>';
+
+  if (ticket.probabilities) {
+    const shortProbs = {
+      'Billing': ticket.probabilities.payment_issue || 0,
+      'Product': ticket.probabilities.product_complaint || 0,
+      'Logistics': ticket.probabilities.delivery_problem || 0,
+      'Tech': ticket.probabilities.technical_issue || 0,
+      'IAM': ticket.probabilities.account_issue || 0,
+      'Support': ticket.probabilities.service_dissatisfaction || 0
+    };
+    renderProbChart(shortProbs);
+  }
+}
+
+function renderTable() {
+  const tbody = document.getElementById('ticketTbody');
+  const search = document.getElementById('filterSearch').value.toLowerCase();
+  const catFilter = document.getElementById('filterCategory').value;
+  const priFilter = document.getElementById('filterPriority').value;
+
+  const filtered = allTickets.filter(t => {
+    const matchSearch = (t.complaint || '').toLowerCase().includes(search) || (t.department || '').toLowerCase().includes(search);
+    const matchCat = catFilter === 'ALL' || t.category === catFilter;
+    const matchPri = priFilter === 'ALL' || t.priority === priFilter;
+    return matchSearch && matchCat && matchPri;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">No matching tickets found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(t => `
+    <tr>
+      <td style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--accent);">#${t.id}</td>
+      <td><div class="ticket-text" title="${t.complaint}">${t.complaint}</div></td>
+      <td><span style="font-weight:600;">${t.category_icon || '📁'} ${t.category_label || t.category}</span></td>
+      <td><span style="color:#38bdf8; font-weight:600; font-size:12px;">${t.department || 'Triage'}</span></td>
+      <td><span class="priority-pill p-${t.priority}">${t.priority?.toUpperCase()}</span></td>
+      <td style="font-family:'JetBrains Mono', monospace; font-weight:700;">${t.urgency_score || 50}/100</td>
+      <td style="font-family:'JetBrains Mono', monospace; color:#a78bfa;">${Math.round((t.confidence || 0.85)*100)}%</td>
+      <td style="font-size:11px; color:#94a3b8; font-family:'JetBrains Mono', monospace;">${t.sla_deadline || '24h'}</td>
+    </tr>
+  `).join('');
+}
+
+function exportCSV() {
+  if (allTickets.length === 0) {
+    alert("No ticket data to export.");
+    return;
+  }
+  let csv = "ID,Category,Priority,UrgencyScore,Confidence,Department,SLA_Deadline,ComplaintText\n";
+  allTickets.forEach(t => {
+    const textClean = (t.complaint || '').replace(/"/g, '""');
+    csv += `"${t.id}","${t.category}","${t.priority}","${t.urgency_score}","${t.confidence}","${t.department}","${t.sla_deadline}","${textClean}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `complaint_tickets_classified_${Date.now()}.csv`;
+  a.click();
+}
+
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+
+</body>
+</html>

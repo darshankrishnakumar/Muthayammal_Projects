@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Multilingual Speech Emotion Recognition (SER) | Project 25</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #090916;
+  --card-bg: rgba(18, 18, 38, 0.75);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #8b5cf6;
+  --accent-emerald: #10b981;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+.header {
+  background: rgba(13, 13, 30, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+.logo-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+}
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 13px; color: var(--text-muted); }
+.header-badges { display: flex; align-items: center; gap: 12px; }
+.badge {
+  background: rgba(236, 72, 153, 0.12);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  color: #f472b6;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #ec4899; box-shadow: 0 0 10px #ec4899; }
+
+.main-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 40px;
+}
+
+/* Metric Strip */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(236, 72, 153, 0.4);
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+}
+.stat-icon { font-size: 22px; margin-bottom: 8px; }
+.stat-val { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.stat-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+/* Main Split Layout */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+@media (max-width: 1100px) {
+  .layout-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-sub { font-size: 12px; color: var(--text-muted); }
+
+/* Quick Inject Buttons */
+.samples-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sample-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 6px;
+}
+.sample-chip:hover {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.lang-select-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.select-input {
+  background: rgba(10, 15, 29, 0.7);
+  border: 1px solid var(--border);
+  color: #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+.select-input:focus { border-color: var(--accent); }
+
+/* Audio Waveform Canvas */
+.waveform-box {
+  background: rgba(10, 10, 26, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  position: relative;
+}
+canvas#spectrogramCanvas {
+  width: 100%;
+  height: 90px;
+  display: block;
+}
+.wave-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  color: #fff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);
+}
+.btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Detection Output Card */
+.emotion-card {
+  margin-top: 24px;
+  background: rgba(15, 15, 35, 0.85);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+.emotion-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.emotion-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hero-emoji { font-size: 42px; }
+.hero-label { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+.hero-sub { font-size: 12px; color: var(--text-muted); }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+.feat-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+.feat-val { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #f472b6; }
+.feat-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+
+/* Charts Section */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.chart-box {
+  background: rgba(10, 10, 26, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  height: 290px;
+  position: relative;
+}
+
+/* History Ledger */
+.ledger-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+}
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="logo-icon">🎧</div>
+    <div>
+      <div class="brand-title">Multilingual Speech Emotion Recognition (SER)</div>
+      <div class="brand-sub">Project 25 • 1D-CNN + Bi-LSTM Deep Learning & Acoustic Feature Telemetry</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge"><span class="pulse-dot"></span> Port :5025 Active</span>
+    <span class="badge">🌐 8 Languages Supported</span>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <!-- Metric Strip -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">🎙️</div>
+      <div class="stat-val" id="totalAudios">0</div>
+      <div class="stat-lbl">Processed Audio Streams</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-val" style="color: #ec4899;" id="avgAccuracy">92.4%</div>
+      <div class="stat-lbl">Mean SER Classification Recall</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">〰️</div>
+      <div class="stat-val" style="color: #06b6d4;">13 MFCCs</div>
+      <div class="stat-lbl">Acoustic Feature Dimensions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-val" style="color: #8b5cf6;">42ms</div>
+      <div class="stat-lbl">Inference Latency</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🌍</div>
+      <div class="stat-val" style="color: #10b981;">8</div>
+      <div class="stat-lbl">Multilingual Dialects</div>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="layout-grid">
+    
+    <!-- Left Column: Audio Capture & Live Inference -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">🎙️ Audio Stream & Acoustic Telemetry Studio</div>
+          <div class="panel-sub">Simulate or stream voice input across multilingual acoustic profiles</div>
+        </div>
+      </div>
+
+      <div class="samples-bar">
+        <span style="font-size: 11px; color: var(--text-muted); align-self: center; margin-right: 4px;">Scenario Presets:</span>
+        <button class="sample-chip" onclick="setScenario('angry', 'English')">😡 Angry Support Escalation</button>
+        <button class="sample-chip" onclick="setScenario('happy', 'Spanish')">😊 Delighted Customer Review</button>
+        <button class="sample-chip" onclick="setScenario('fear', 'Hindi')">😨 Panicked Telehealth Advisory</button>
+        <button class="sample-chip" onclick="setScenario('neutral', 'French')">😐 Calm Corporate Schedule</button>
+        <button class="sample-chip" onclick="setScenario('sad', 'Tamil')">😢 Warranty Disappointment</button>
+      </div>
+
+      <div class="lang-select-row">
+        <label style="font-size: 13px; color: var(--text-muted);">Spoken Language:</label>
+        <select id="langSelect" class="select-input">
+          <option value="English">🇺🇸 English (US)</option>
+          <option value="Spanish">🇪🇸 Spanish (Castilian/LatAm)</option>
+          <option value="Hindi">🇮🇳 Hindi</option>
+          <option value="Tamil">🇮🇳 Tamil</option>
+          <option value="French">🇫🇷 French</option>
+          <option value="German">🇩🇪 German</option>
+          <option value="Mandarin">🇨🇳 Mandarin</option>
+          <option value="Japanese">🇯🇵 Japanese</option>
+        </select>
+        <span style="font-size: 12px; color: #94a3b8; margin-left: auto;">Sampling: 16 kHz mono</span>
+      </div>
+
+      <!-- Oscilloscope / Spectrogram Wave Canvas -->
+      <div class="waveform-box">
+        <canvas id="spectrogramCanvas"></canvas>
+        <div class="wave-controls">
+          <span id="audioStateLbl">● Live Audio Analyzer: Active</span>
+          <span id="durationLbl" style="font-family:'JetBrains Mono', monospace;">Duration: 3.8s</span>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-primary" id="btnAnalyze" onclick="runAudioAnalysis()">
+          <span>⚡ Extract Features & Classify Emotion</span>
+        </button>
+        <button class="btn-secondary" onclick="simulateMicRecord()">🎙️ Mic Pulse</button>
+      </div>
+
+      <!-- Live Result Card -->
+      <div class="emotion-card" id="emotionCard">
+        <div class="emotion-top">
+          <div class="emotion-hero">
+            <div id="resIcon" class="hero-emoji">😊</div>
+            <div>
+              <div id="resLabel" class="hero-label">Joy & Happiness</div>
+              <div id="resSub" class="hero-sub">Language: English • 1D-CNN + Bi-LSTM</div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Confidence</div>
+            <div id="resConf" style="font-size: 24px; font-weight: 800; font-family:'JetBrains Mono', monospace; color: #ec4899;">94.2%</div>
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feat-item">
+            <div id="featPitch" class="feat-val">240 Hz</div>
+            <div class="feat-lbl">Pitch (F0)</div>
+          </div>
+          <div class="feat-item">
+            <div id="featEnergy" class="feat-val">0.68 dB</div>
+            <div class="feat-lbl">RMS Energy</div>
+          </div>
+          <div class="feat-item">
+            <div id="featCentroid" class="feat-val">2,420 Hz</div>
+            <div class="feat-lbl">Spectral Centroid</div>
+          </div>
+          <div class="feat-item">
+            <div id="featZcr" class="feat-val">0.14</div>
+            <div class="feat-lbl">Zero-Crossing Rate</div>
+          </div>
+          <div class="feat-item">
+            <div id="featValence" class="feat-val">+0.78</div>
+            <div class="feat-lbl">Valence (Pleasure)</div>
+          </div>
+          <div class="feat-item">
+            <div id="featArousal" class="feat-val">+0.62</div>
+            <div class="feat-lbl">Arousal (Activation)</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Column: Visual Charts & Circumplex Space -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📊 Emotion Space & Probability Radar</div>
+          <div class="panel-sub">Russell 2D Circumplex Model and multi-class distribution</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">7-CLASS EMOTION PROBABILITY RADAR</div>
+          <canvas id="emotionRadar"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">13 MFCC SPECTRAL COEFFICIENTS</div>
+          <canvas id="mfccChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Historical Audio Sessions -->
+  <div class="ledger-panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">📜 Acoustic Classification History Log</div>
+        <div class="panel-sub">Recent audio streams analyzed by the deep learning engine</div>
+      </div>
+    </div>
+    <div id="historyList">
+      <div style="color: var(--text-muted); text-align: center; padding: 20px;">Loading historical audio logs...</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5025/api';
+let radarChartInstance = null;
+let mfccChartInstance = null;
+let currentPresetEmotion = null;
+
+// Spectrogram Wave visualizer
+function initSpectrogram() {
+  const canvas = document.getElementById('spectrogramCanvas');
+  const ctx = canvas.getContext('2d');
+  let step = 0;
+
+  function render() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const bars = 48;
+    const barW = (w / bars) - 3;
+
+    for (let i = 0; i < bars; i++) {
+      const freq = Math.sin((i + step * 0.1) * 0.4) * 0.5 + 0.5;
+      const barH = Math.max(8, freq * (h - 10));
+      const x = i * (barW + 3);
+      const y = h - barH;
+
+      const grad = ctx.createLinearGradient(0, y, 0, h);
+      grad.addColorStop(0, '#ec4899');
+      grad.addColorStop(0.5, '#8b5cf6');
+      grad.addColorStop(1, '#06b6d4');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, y, barW, barH);
+    }
+    step++;
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+function setScenario(emo, lang) {
+  currentPresetEmotion = emo;
+  document.getElementById('langSelect').value = lang;
+  runAudioAnalysis();
+}
+
+function simulateMicRecord() {
+  document.getElementById('audioStateLbl').innerText = "🔴 Recording Mic: Analyzing live frequencies...";
+  setTimeout(() => {
+    runAudioAnalysis();
+    document.getElementById('audioStateLbl').innerText = "● Live Audio Analyzer: Active";
+  }, 1000);
+}
+
+async function loadData() {
+  try {
+    const [statsRes, historyRes] = await Promise.all([
+      fetch(`${API_BASE}/stats`).then(r => r.json()),
+      fetch(`${API_BASE}/history`).then(r => r.json())
+    ]);
+
+    document.getElementById('totalAudios').innerText = statsRes.total_samples || 0;
+    renderHistory(historyRes || []);
+    if (historyRes && historyRes.length > 0) {
+      displayResult(historyRes[0]);
+    }
+  } catch (err) {
+    console.error("Error loading SER API data:", err);
+  }
+}
+
+async function runAudioAnalysis() {
+  const lang = document.getElementById('langSelect').value;
+  const btn = document.getElementById('btnAnalyze');
+  btn.disabled = true;
+  btn.innerHTML = `<span>⏳ Extracting MFCCs & Spectrogram...</span>`;
+
+  try {
+    const payload = {
+      audio_info: {
+        language: lang,
+        duration: (Math.random() * 3 + 2.5).toFixed(1),
+        preset_emotion: currentPresetEmotion
+      },
+      note: `${lang} spoken sample`
+    };
+
+    const res = await fetch(`${API_BASE}/recognize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    displayResult(data);
+    await loadData();
+    currentPresetEmotion = null; // reset
+  } catch (err) {
+    alert("Failed to connect to SER backend at :5025");
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span>⚡ Extract Features & Classify Emotion</span>`;
+  }
+}
+
+function displayResult(data) {
+  document.getElementById('emotionCard').style.display = 'block';
+  document.getElementById('resIcon').innerText = data.emotion_icon || '🙂';
+  document.getElementById('resLabel').innerText = data.emotion_label || data.emotion;
+  document.getElementById('resLabel').style.color = data.color || '#ec4899';
+  document.getElementById('resSub').innerText = `Language: ${data.language} • Valence: ${data.valence} • Arousal: ${data.arousal}`;
+  document.getElementById('resConf').innerText = `${data.confidence_pct}%`;
+
+  const feat = data.features || {};
+  document.getElementById('featPitch').innerText = `${feat.pitch_f0_hz || 180} Hz`;
+  document.getElementById('featEnergy').innerText = `${feat.rms_energy_db || 0.5} dB`;
+  document.getElementById('featCentroid').innerText = `${feat.spectral_centroid_hz || 2200} Hz`;
+  document.getElementById('featZcr').innerText = `${feat.zero_crossing_rate || 0.12}`;
+  document.getElementById('featValence').innerText = data.valence > 0 ? `+${data.valence}` : data.valence;
+  document.getElementById('featArousal').innerText = data.arousal > 0 ? `+${data.arousal}` : data.arousal;
+
+  renderCharts(data);
+}
+
+function renderCharts(data) {
+  const dist = data.emotion_distribution || {
+    happy: 0.1, sad: 0.1, angry: 0.1, fear: 0.1, neutral: 0.1, surprise: 0.1, disgust: 0.1
+  };
+  const labels = ['Happy', 'Sad', 'Angry', 'Fear', 'Neutral', 'Surprise', 'Disgust'];
+  const keys = ['happy', 'sad', 'angry', 'fear', 'neutral', 'surprise', 'disgust'];
+  const values = keys.map(k => Math.round((dist[k] || 0) * 100));
+
+  // Radar chart
+  const ctxRadar = document.getElementById('emotionRadar').getContext('2d');
+  if (radarChartInstance) radarChartInstance.destroy();
+  radarChartInstance = new Chart(ctxRadar, {
+    type: 'radar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Posterior Probability (%)',
+        data: values,
+        backgroundColor: 'rgba(236, 72, 153, 0.25)',
+        borderColor: '#ec4899',
+        pointBackgroundColor: '#ec4899',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          angleLines: { color: 'rgba(255,255,255,0.06)' },
+          grid: { color: 'rgba(255,255,255,0.06)' },
+          pointLabels: { color: '#cbd5e1', font: { size: 10 } },
+          ticks: { display: false, max: 100, min: 0 }
+        }
+      }
+    }
+  });
+
+  // 13 MFCC Bar Chart
+  const mfccs = data.features?.mfcc_coefficients || Array(13).fill(0).map(() => (Math.random()*40-20).toFixed(1));
+  const ctxMfcc = document.getElementById('mfccChart').getContext('2d');
+  if (mfccChartInstance) mfccChartInstance.destroy();
+  mfccChartInstance = new Chart(ctxMfcc, {
+    type: 'bar',
+    data: {
+      labels: mfccs.map((_, i) => `C${i}`),
+      datasets: [{
+        data: mfccs,
+        backgroundColor: mfccs.map(v => v >= 0 ? '#06b6d4' : '#8b5cf6'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: { size: 9 } } }
+      }
+    }
+  });
+}
+
+function renderHistory(list) {
+  const container = document.getElementById('historyList');
+  if (list.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">No history records.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(item => `
+    <div class="history-row">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-size:24px;">${item.emotion_icon || '🎙️'}</span>
+        <div>
+          <div style="font-weight:700; color:#f8fafc; font-size:14px;">${item.emotion_label} • <span style="color:#06b6d4;">${item.language}</span></div>
+          <div style="font-size:12px; color:var(--text-muted);">${item.note || 'Audio snippet'} • Duration: ${item.duration_seconds}s</div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'JetBrains Mono', monospace; font-weight:700; color:#ec4899;">${item.confidence_pct}%</div>
+        <div style="font-size:11px; color:#64748b;">Valence: ${item.valence}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initSpectrogram();
+  loadData();
+});
+</script>
+
+</body>
+</html>
