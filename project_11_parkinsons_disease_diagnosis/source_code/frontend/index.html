@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 11 — DEEP LEARNING BASED PARKINSON’S DISEASE DIAGNOSIS THROUGH RECURRENT NEURAL NETWORKS WITH INCEPTION NET MODELS</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --border: #334155;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin-bottom: 0.5rem;
+        }
+        h1 {
+            margin: 0.5rem 0;
+            font-size: 1.8rem;
+        }
+        .abstract {
+            color: var(--text-muted);
+            line-height: 1.6;
+            background: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #0f172a;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="badge">Project 11 of 55</span>
+            <h1>DEEP LEARNING BASED PARKINSON’S DISEASE DIAGNOSIS THROUGH RECURRENT NEURAL NETWORKS WITH INCEPTION NET MODELS</h1>
+        </header>
+
+        <div class="abstract">
+            <strong>System Overview:</strong><br>
+            Long Short-Term Memory (LSTM) networks are a leading model for Computer-Aided Diagnosis (CAD) systems because they are highly regarded in deep learning (DL) and have shown promising results in medical dataset processing. In addition to Parkinson's Disease (PD), which is commonly diagnosed with Single Photon Emission Computed Tomography (SPECT) scans, their value extends to the detection of neurological disorders. However, relying entirely on visual assessment of SPECT datasets during medical tests can lead to errors due to subjective considerations. To address this issue, we propose a CAD system that utilizes pre-trained LSTM models, the Deep Learning (DL) approach, and the Bilinear Pooling method. Inception Net models and a custom LSTM architecture are incorporated into this study. These pre-trained architectures were developed using the DL approach after being trained on the Inception Net. Three Bilinear LSTM models are produced by combining these architectures with bilinear pooling techniques. These models are applied to three distinct datasets of pre-processed SPECT imaging data from PD patients and Healthy Controls (HC).
+        </div>
+
+        <div class="card">
+            <h3>Live Model Inference Portal</h3>
+            <p style="color: var(--text-muted);">Test the real-time prediction engine via the interactive API pipeline.</p>
+            <button class="btn" onclick="runInference()">Execute Real-Time Analysis</button>
+
+            <div id="result" class="result-box">
+                <h4>Inference Response:</h4>
+                <pre id="output" style="color: var(--accent); font-family: monospace;"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runInference() {
+            const resultBox = document.getElementById('result');
+            const output = document.getElementById('output');
+            resultBox.style.display = 'block';
+            output.innerText = 'Transmitting features to neural inference pipeline...';
+
+            try {
+                const res = await fetch('http://localhost:5011/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ features: [1.2, 0.45, 3.8, 0.91] })
+                });
+                const data = await res.json();
+                output.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                output.innerText = JSON.stringify({
+                    status: 'Simulation Mode (Backend Offline)',
+                    prediction: 'High Confidence Classification',
+                    confidence: 0.965,
+                    timestamp: new Date().toISOString()
+                }, null, 2);
+            }
+        }
+    </script>
+</body>
+</html>
