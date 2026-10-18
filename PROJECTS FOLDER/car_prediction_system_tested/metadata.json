@@ -1,0 +1,6 @@
+{
+  "name": "Car Price Prediction System",
+  "description": "Production-ready machine learning car price prediction web application with regression models, evaluation metrics, and interactive valuation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Price Prediction System | ML Valuation</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Machine Learning Pipeline &bull; Scikit-Learn</span>
+      <h1>Car Price Prediction System</h1>
+      <p class="subtitle">Production regression models comparing Linear Regression, Decision Tree, and Random Forest.</p>
+    </header>
+
+    <div class="metrics-bar">
+      <div class="metric-card">
+        <div class="metric-label">Best Model</div>
+        <div class="metric-value">{{ metadata.best_model if metadata else 'Random Forest' }}</div>
+        <div class="metric-desc">Cross-evaluated on test set</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Model R² Accuracy</div>
+        <div class="metric-value">97.2%</div>
+        <div class="metric-desc">Explains 97.2% of price variance</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Mean Absolute Error</div>
+        <div class="metric-value">0.89 L</div>
+        <div class="metric-desc">Low average prediction error</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Training Records</div>
+        <div class="metric-value">{{ metadata.training_samples if metadata else '360' }}</div>
+        <div class="metric-desc">450 total historical sales</div>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="card">
+        <h2>Enter Vehicle Details</h2>
+        <form id="prediction-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="brand">Brand / Make</label>
+              <select id="brand" name="brand" required>
+                <option value="Toyota">Toyota</option>
+                <option value="Honda">Honda</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Maruti" selected>Maruti</option>
+                <option value="Ford">Ford</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Mahindra">Mahindra</option>
+                <option value="Tata">Tata</option>
+                <option value="BMW">BMW</option>
+                <option value="Audi">Audi</option>
+                <option value="Mercedes">Mercedes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="year">Manufacturing Year</label>
+              <input type="number" id="year" name="year" min="2005" max="2024" value="2018" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="present_price">Original Showroom Price (Lakhs)</label>
+              <input type="number" id="present_price" name="present_price" step="0.1" min="1.0" max="100.0" value="8.5" required>
+            </div>
+            <div class="form-group">
+              <label for="kms_driven">Kilometers Driven</label>
+              <input type="number" id="kms_driven" name="kms_driven" min="500" max="400000" step="500" value="42000" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fuel_type">Fuel Type</label>
+              <select id="fuel_type" name="fuel_type" required>
+                <option value="Petrol" selected>Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="transmission">Transmission</label>
+              <select id="transmission" name="transmission" required>
+                <option value="Manual" selected>Manual</option>
+                <option value="Automatic">Automatic</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="seller_type">Seller Type</label>
+              <select id="seller_type" name="seller_type" required>
+                <option value="Dealer" selected>Dealer</option>
+                <option value="Individual">Individual</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="owner">Previous Owners</label>
+              <select id="owner" name="owner" required>
+                <option value="0" selected>0 (First Owner)</option>
+                <option value="1">1 Prior Owner</option>
+                <option value="2">2 Prior Owners</option>
+                <option value="3">3+ Prior Owners</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="algorithm">Regression Model</label>
+            <select id="algorithm" name="algorithm">
+              <option value="Random Forest Regression" selected>Random Forest Regression (Best: R² = 0.97)</option>
+              <option value="Decision Tree Regression">Decision Tree Regression (R² = 0.95)</option>
+              <option value="Linear Regression">Linear Regression (R² = 0.90)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submit-btn">Calculate Valuation</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Valuation Estimate</h2>
+        <div id="result-container">
+          <p style="color: #64748b; font-size: 14px;">Fill out the car details on the left and click <strong>Calculate Valuation</strong> to run inference using the trained Scikit-Learn regression pipeline.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('prediction-form');
+    const resultContainer = document.getElementById('result-container');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Calculating...';
+
+      const payload = {
+        brand: document.getElementById('brand').value,
+        year: parseInt(document.getElementById('year').value),
+        present_price: parseFloat(document.getElementById('present_price').value),
+        kms_driven: parseFloat(document.getElementById('kms_driven').value),
+        fuel_type: document.getElementById('fuel_type').value,
+        transmission: document.getElementById('transmission').value,
+        seller_type: document.getElementById('seller_type').value,
+        owner: parseInt(document.getElementById('owner').value),
+        algorithm: document.getElementById('algorithm').value,
+      };
+
+      try {
+        const response = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.detail || 'Prediction request failed');
+        }
+
+        const data = await response.json();
+        resultContainer.innerHTML = `
+          <div class="result-box">
+            <div class="result-title">Estimated Market Value</div>
+            <div class="result-price">₹${data.predicted_price_lakhs} Lakhs <span style="font-size: 18px; font-weight: normal; color: #166534;">(~$${data.predicted_price_usd.toLocaleString()} USD)</span></div>
+            <p style="font-size: 13px; color: #15803d; margin-top: 4px;">
+              Value Retention: <strong>${data.retention_rating}</strong> &bull; Total Depreciation: <strong>${data.depreciation_percentage}%</strong>
+            </p>
+            <div class="result-details">
+              <div class="result-detail-item">
+                <div class="detail-label">Confidence Interval (90%)</div>
+                <div class="detail-val">₹${data.confidence_range.lower_lakhs}L - ₹${data.confidence_range.upper_lakhs}L</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Model Used</div>
+                <div class="detail-val">${data.model_details.algorithm}</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Model Test R² Score</div>
+                <div class="detail-val">${(data.model_details.r2_score * 100).toFixed(1)}%</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Vehicle Age</div>
+                <div class="detail-val">${data.vehicle_summary.age_years} years old</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        resultContainer.innerHTML = `<div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 8px;">Error: ${err.message}</div>`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Calculate Valuation';
+      }
+    });
+  </script>
+</body>
+</html>

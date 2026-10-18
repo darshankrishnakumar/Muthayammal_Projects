@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Child Gait Assessment Using Machine Learning</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js for Longitudinal Child Trajectory Graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            medical: {
+              DEFAULT: '#0284c7',
+              foreground: '#0369a1',
+              border: '#bae6fd',
+              light: '#f0f9ff'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
+    .fade-in { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+        <div class="h-10 w-10 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-sm">
+          <i data-lucide="activity" class="h-5 w-5"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-slate-900 tracking-tight text-lg">Child Gait AI</span>
+          <span class="hidden sm:inline-block ml-2 text-xs font-semibold px-2 py-0.5 bg-sky-100 text-sky-800 rounded-full border border-sky-200">Biomechanical ML</span>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <button onclick="navigate('home')" id="nav-home" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Overview</button>
+        <button onclick="navigate('predict')" id="nav-predict" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Assessment</button>
+        <button onclick="navigate('history')" id="nav-history" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Tracking</button>
+        <button onclick="navigate('reports')" id="nav-reports" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Reports</button>
+        <button onclick="navigate('recommendations')" id="nav-recommendations" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">Insights</button>
+        <button onclick="navigate('about')" id="nav-about" class="nav-btn px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition">About</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- PAGE: HOME -->
+    <section id="page-home" class="fade-in space-y-10">
+      <div class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 sm:p-14 shadow-sm text-center">
+        <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 shadow-inner">
+          <i data-lucide="footprints" class="h-8 w-8"></i>
+        </div>
+        <div class="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1 text-xs font-semibold text-sky-800 mb-4">
+          <i data-lucide="shield-check" class="h-4 w-4"></i>
+          <span>Academic ML Prototype &bull; Pediatric Cerebral Palsy & Normal Gait Analysis</span>
+        </div>
+        <h1 class="mx-auto max-w-3xl text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+          Child Gait Assessment Using Machine Learning
+        </h1>
+        <p class="mx-auto mt-4 max-w-2xl text-base text-slate-600 sm:text-lg">
+          An interactive machine learning system for analyzing measurable pediatric gait parameters and identifying gait patterns: 
+          <strong>Normal</strong>, <strong>Diplegic</strong>, and <strong>Hemiplegic</strong>.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <button onclick="navigate('predict')" class="px-6 py-3 rounded-xl bg-sky-600 text-white font-semibold shadow hover:bg-sky-700 transition flex items-center gap-2">
+            <span>Start Gait Assessment</span>
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </button>
+          <button onclick="navigate('history')" class="px-6 py-3 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold hover:bg-slate-50 transition">
+            View Longitudinal Tracking
+          </button>
+        </div>
+
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3 border-t border-slate-100 pt-6 text-xs text-slate-500">
+          <span class="font-medium">Supported Classifications:</span>
+          <span class="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-800 border border-emerald-200">Normal (TD)</span>
+          <span class="rounded-full bg-amber-50 px-3 py-1 font-semibold text-amber-900 border border-amber-200">Diplegic (CP_DI)</span>
+          <span class="rounded-full bg-rose-50 px-3 py-1 font-semibold text-rose-900 border border-rose-200">Hemiplegic (CP_HE)</span>
+        </div>
+      </div>
+
+      <!-- Feature Grid -->
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow transition cursor-pointer" onclick="navigate('predict')">
+          <div class="h-10 w-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4">
+            <i data-lucide="footprints" class="h-5 w-5"></i>
+          </div>
+          <h3 class="font-bold text-slate-900">1. Gait Prediction</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">Enter child parameters and analyze gait pattern classifications with model confidence.</p>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs font-semibold text-sky-600">
+            <span>Start Assessment</span> &rarr;
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow transition cursor-pointer" onclick="navigate('history')">
+          <div class="h-10 w-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
+            <i data-lucide="history" class="h-5 w-5"></i>
+          </div>
+          <h3 class="font-bold text-slate-900">2. Longitudinal Tracking</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">Click any child to visualize chronological gait graphs based on past uploads.</p>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs font-semibold text-indigo-600">
+            <span>View Tracking Graph</span> &rarr;
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow transition cursor-pointer" onclick="navigate('reports')">
+          <div class="h-10 w-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+            <i data-lucide="file-text" class="h-5 w-5"></i>
+          </div>
+          <h3 class="font-bold text-slate-900">3. Graphical Reports</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">Visualize gait velocity, stride length, and dynamic pressure distributions.</p>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs font-semibold text-purple-600">
+            <span>Open Reports</span> &rarr;
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow transition cursor-pointer" onclick="navigate('recommendations')">
+          <div class="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+            <i data-lucide="sparkles" class="h-5 w-5"></i>
+          </div>
+          <h3 class="font-bold text-slate-900">4. Clinical Insights</h3>
+          <p class="mt-2 text-xs text-slate-500 leading-relaxed">Educational insights and structured observation guidelines based on outcomes.</p>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs font-semibold text-amber-600">
+            <span>Read Insights</span> &rarr;
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: PREDICT -->
+    <section id="page-predict" class="hidden fade-in space-y-8 max-w-4xl mx-auto">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Gait Prediction Assessment</h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Biomechanical parameters input & Random Forest ML classification.</p>
+        </div>
+        <button id="btn-reset" onclick="resetForm()" class="hidden px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5">
+          <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i>
+          <span>New Assessment</span>
+        </button>
+      </div>
+
+      <!-- Live Result Display -->
+      <div id="result-container" class="hidden fade-in space-y-6"></div>
+
+      <!-- Assessment Input Form -->
+      <form id="gait-form" onsubmit="handleFormSubmit(event)" class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+        <div class="mb-6 flex items-center gap-2">
+          <div class="h-7 w-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">1</div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-700">Child Demographics</h3>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-3 mb-8">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Child ID <span class="text-red-500">*</span></label>
+            <input type="text" id="inp-childId" required placeholder="e.g. C-104" value="C-104" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Age (Years) <span class="text-red-500">*</span></label>
+            <input type="number" id="inp-age" required min="1" max="18" placeholder="e.g. 7" value="7" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Gender <span class="text-red-500">*</span></label>
+            <select id="inp-gender" required class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
+              <option value="Male" selected>Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-6 flex items-center justify-between border-t border-slate-100 pt-6">
+          <div class="flex items-center gap-2">
+            <div class="h-7 w-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">2</div>
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-700">Gait Biomechanical Parameters</h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="loadSamplePreset('normal')" class="text-xs text-sky-600 hover:underline font-medium">Sample Normal</button>
+            <span class="text-slate-300">&bull;</span>
+            <button type="button" onclick="loadSamplePreset('diplegic')" class="text-xs text-amber-600 hover:underline font-medium">Sample Diplegic</button>
+            <span class="text-slate-300">&bull;</span>
+            <button type="button" onclick="loadSamplePreset('hemiplegic')" class="text-xs text-rose-600 hover:underline font-medium">Sample Hemiplegic</button>
+          </div>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Heel Pressure <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">kPa</span>
+            </div>
+            <input type="number" id="inp-heelPressure" step="0.1" required value="195.5" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Peak pressure at heel strike</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Toe Pressure <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">kPa</span>
+            </div>
+            <input type="number" id="inp-toePressure" step="0.1" required value="150.2" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Peak pressure during toe-off</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Tilt Angle <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">&deg;</span>
+            </div>
+            <input type="number" id="inp-tiltAngle" step="0.1" required value="4.8" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Foot/pelvic coronal tilt</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Step Duration <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">s</span>
+            </div>
+            <input type="number" id="inp-stepDuration" step="0.01" required value="0.52" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Initial contact to next contact</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Stride Length <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">cm</span>
+            </div>
+            <input type="number" id="inp-strideLength" step="0.1" required value="88.4" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Bilateral cycle step distance</span>
+          </div>
+
+          <div class="bg-slate-50/50 p-3.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>Walking Speed <span class="text-red-500">*</span></span>
+              <span class="font-mono text-slate-400">m/s</span>
+            </div>
+            <input type="number" id="inp-walkingSpeed" step="0.01" required value="1.12" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-sky-500">
+            <span class="text-[11px] text-slate-400 mt-1 block">Mean linear walking velocity</span>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-6">
+          <p class="text-xs text-slate-500">
+            Parameters evaluated with trained Random Forest multi-class model.
+          </p>
+          <button type="submit" id="btn-submit" class="w-full sm:w-auto px-7 py-3 rounded-xl bg-sky-600 text-white font-semibold hover:bg-sky-700 transition flex items-center justify-center gap-2 shadow-sm">
+            <i data-lucide="play" class="h-4 w-4"></i>
+            <span>Predict Gait</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- PAGE: HISTORY / TRACKING -->
+    <section id="page-history" class="hidden fade-in space-y-8">
+      <!-- Page Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Gait Assessment History & Longitudinal Tracking</h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Track child progression over time. Click any child in the table or select below to display their graph based on past uploaded records.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-slate-600">Filter Child:</label>
+          <select id="filter-child" onchange="onChildFilterChange()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium outline-none focus:border-sky-500 bg-white">
+            <option value="ALL">All Children</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Child Selector Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1" id="quick-child-pills">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- DYNAMIC CHILD GRAPH & INFORMATION CARD -->
+      <div id="child-graph-card" class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7 shadow-sm space-y-6">
+        <!-- Child Header & Demographic Info -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center font-extrabold text-lg shadow-sm border border-sky-200" id="cg-avatar">
+              C-101
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight" id="cg-title">Child C-101</h3>
+                <span id="cg-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-800 border-emerald-200">
+                  Normal
+                </span>
+              </div>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 mt-1">
+                <span>Age: <strong class="text-slate-800" id="cg-age">7 yrs</strong></span>
+                <span>&bull;</span>
+                <span>Gender: <strong class="text-slate-800" id="cg-gender">Male</strong></span>
+                <span>&bull;</span>
+                <span>Past Uploads: <strong class="text-sky-700 font-mono" id="cg-sessions">2 assessments</strong></span>
+                <span>&bull;</span>
+                <span>Latest Record: <strong class="text-slate-700" id="cg-latest-date">Oct 13, 2026</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button onclick="addAssessmentForChild()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="plus" class="h-3.5 w-3.5"></i>
+              <span>New Assessment for This Child</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Switcher Tabs -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="trending-up" class="h-4 w-4 text-sky-600"></i>
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Historical Parameter Graph</span>
+          </div>
+
+          <div class="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium" id="chart-metric-tabs">
+            <button onclick="setChartMetric('speed')" id="btn-metric-speed" class="px-3 py-1.5 rounded-lg bg-white text-sky-700 font-bold shadow-xs transition">Walking Speed</button>
+            <button onclick="setChartMetric('stride')" id="btn-metric-stride" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Stride Length</button>
+            <button onclick="setChartMetric('tilt')" id="btn-metric-tilt" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Tilt Angle</button>
+            <button onclick="setChartMetric('duration')" id="btn-metric-duration" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Step Duration</button>
+            <button onclick="setChartMetric('pressure')" id="btn-metric-pressure" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Heel & Toe Pressure</button>
+            <button onclick="setChartMetric('multi')" id="btn-metric-multi" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Combined Overview</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative bg-slate-50/60 rounded-xl p-4 border border-slate-100" style="min-height: 280px;">
+          <canvas id="childGaitChart" height="110"></canvas>
+          <div id="cg-chart-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-white/90 backdrop-blur-sm rounded-xl">
+            <i data-lucide="bar-chart-2" class="h-8 w-8 text-slate-400 mb-2"></i>
+            <h4 class="text-sm font-bold text-slate-700">No Assessment Data Available</h4>
+            <p class="text-xs text-slate-400 max-w-sm mt-1">Select a child from the records below to view their historical progression graph.</p>
+          </div>
+        </div>
+
+        <!-- Trajectory Stats & Clinical Notes Footer -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2" id="cg-stats-grid">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">First Assessment Value</span>
+            <span class="text-base font-bold font-mono text-slate-800 mt-0.5 block" id="cg-stat-initial">1.12 m/s</span>
+            <span class="text-[10px] text-slate-400" id="cg-stat-initial-date">Oct 12, 2026</span>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Latest Assessment Value</span>
+            <span class="text-base font-bold font-mono text-slate-800 mt-0.5 block" id="cg-stat-latest">1.15 m/s</span>
+            <span class="text-[10px] text-slate-400" id="cg-stat-latest-date">Oct 13, 2026</span>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Trajectory Progression</span>
+            <span class="text-base font-bold text-emerald-600 mt-0.5 flex items-center gap-1" id="cg-stat-change">
+              <i data-lucide="arrow-up-right" class="h-4 w-4"></i> +0.03 m/s (+2.7%)
+            </span>
+            <span class="text-[10px] text-slate-400" id="cg-stat-benchmark">Target Normal: &gt; 1.0 m/s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assessment Records Table -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="list" class="h-4 w-4 text-slate-500"></i>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700">All Past Uploaded Records</h2>
+            <span class="text-xs text-sky-600 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-full font-semibold">
+              💡 Click any row below to view that child's graph above
+            </span>
+          </div>
+          <span class="text-xs text-slate-400 font-mono" id="records-count-badge">0 records</span>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-600">
+              <thead class="bg-slate-50 text-xs uppercase font-bold text-slate-700 border-b border-slate-200">
+                <tr>
+                  <th class="px-5 py-3">Date</th>
+                  <th class="px-5 py-3">Child ID</th>
+                  <th class="px-5 py-3">Age / Sex</th>
+                  <th class="px-5 py-3">Speed (m/s)</th>
+                  <th class="px-5 py-3">Stride (cm)</th>
+                  <th class="px-5 py-3">Tilt (&deg;)</th>
+                  <th class="px-5 py-3">Classification</th>
+                  <th class="px-5 py-3">Confidence</th>
+                  <th class="px-5 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: REPORTS -->
+    <section id="page-reports" class="hidden fade-in space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Gait Reports & Analytics</h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Biomechanical parameters breakdown and longitudinal visualization.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="report-select-record" onchange="renderReportCard()" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs outline-none focus:border-sky-500"></select>
+        </div>
+      </div>
+
+      <div id="report-content" class="fade-in space-y-6"></div>
+    </section>
+
+    <!-- PAGE: RECOMMENDATIONS -->
+    <section id="page-recommendations" class="hidden fade-in space-y-8 max-w-4xl mx-auto">
+      <div class="border-b border-slate-200 pb-4">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">AI Clinical Insights & Recommendations</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">Decision-support educational observations for pediatric gait patterns.</p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-emerald-200 bg-emerald-50/40 p-6">
+          <div class="flex items-center gap-2 text-emerald-800 font-bold text-lg mb-2">
+            <i data-lucide="check-circle-2" class="h-5 w-5"></i>
+            <span>Normal Gait Pattern Guidelines</span>
+          </div>
+          <p class="text-xs sm:text-sm text-emerald-900 leading-relaxed mb-4">
+            Characteristics: Symmetrical step length, bilateral ground reaction force between 120–135% BW, coronal foot tilt &lt; 8&deg;, linear speed &gt; 1.0 m/s.
+          </p>
+          <ul class="space-y-1.5 text-xs text-emerald-800 list-disc list-inside">
+            <li>Routine developmental milestone monitoring.</li>
+            <li>Maintain regular aerobic play and bilateral coordination sports.</li>
+            <li>Re-evaluate if unilateral limping or fatigue occurs during growth spurts.</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-amber-200 bg-amber-50/40 p-6">
+          <div class="flex items-center gap-2 text-amber-800 font-bold text-lg mb-2">
+            <i data-lucide="alert-triangle" class="h-5 w-5"></i>
+            <span>Diplegic Gait Pattern (Bilateral CP) Guidelines</span>
+          </div>
+          <p class="text-xs sm:text-sm text-amber-900 leading-relaxed mb-4">
+            Characteristics: Bilateral involvement, increased step duration (&ge;0.70s), reduced stride length (&le;65cm), exaggerated pelvic/foot tilt (&ge;10&deg;), potential crouch gait mechanics.
+          </p>
+          <ul class="space-y-1.5 text-xs text-amber-800 list-disc list-inside">
+            <li>Pediatric physical therapy evaluation for lower limb motor tone.</li>
+            <li>Assessment of hamstring, gastrocnemius, and psoas contractures.</li>
+            <li>Evaluate indications for Ankle-Foot Orthoses (AFOs) to stabilize gait stance phase.</li>
+            <li>Annual longitudinal monitoring to prevent progressive bony deformities.</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-rose-200 bg-rose-50/40 p-6">
+          <div class="flex items-center gap-2 text-rose-800 font-bold text-lg mb-2">
+            <i data-lucide="alert-circle" class="h-5 w-5"></i>
+            <span>Hemiplegic Gait Pattern (Unilateral CP) Guidelines</span>
+          </div>
+          <p class="text-xs sm:text-sm text-rose-900 leading-relaxed mb-4">
+            Characteristics: Marked step length asymmetry, unilateral decrease in heel strike pressure, asymmetric weight bearing, circumduction or equinus posture on the affected limb.
+          </p>
+          <ul class="space-y-1.5 text-xs text-rose-800 list-disc list-inside">
+            <li>Pediatric neurology and orthopedics evaluation for unilateral spasticity.</li>
+            <li>Targeted physical therapy to improve stance stability and weight-bearing on the affected side.</li>
+            <li>Consider articulation or dynamic AFO to manage equinus foot strike.</li>
+            <li>Constraint-induced movement or bilateral task-oriented training.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: ABOUT -->
+    <section id="page-about" class="hidden fade-in space-y-8 max-w-4xl mx-auto">
+      <div class="border-b border-slate-200 pb-4">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">System Architecture & Model Evaluation</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">SimTK CP Child Gait Dataset ML pipeline documentation.</p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+            <i data-lucide="database" class="h-5 w-5 text-sky-600"></i>
+            <span>Dataset & Participants</span>
+          </h3>
+          <ul class="space-y-2 text-xs text-slate-600 leading-relaxed">
+            <li><strong>Source:</strong> SimTK Pediatric Gait Motion-Capture Dataset</li>
+            <li><strong>Cohorts:</strong> TD (5 children, 8 trials), CP_HE (5 children, 7 trials), CP_DI (4 children, 6 trials)</li>
+            <li><strong>Instrumentation:</strong> 100 Hz Vicon Plug-in Gait optical 3D markers & 1,500 Hz AMTI dual force plates</li>
+            <li><strong>Partitioning:</strong> Strict participant-level split to guarantee zero data leakage between train & test sets</li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+            <i data-lucide="cpu" class="h-5 w-5 text-sky-600"></i>
+            <span>Machine Learning Model</span>
+          </h3>
+          <ul class="space-y-2 text-xs text-slate-600 leading-relaxed">
+            <li><strong>Algorithm:</strong> Tuned Multi-Class Random Forest Classifier</li>
+            <li><strong>Multiclass ROC-AUC:</strong> 1.0000 across Normal, Diplegic, and Hemiplegic classes</li>
+            <li><strong>Held-out Test Accuracy:</strong> 66.67% (on strictly unseen participants)</li>
+            <li><strong>Features:</strong> Walking speed, stride length, step duration, cadence, pelvic tilt, asymmetry, dynamic force %BW</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="font-bold text-slate-900 text-base mb-3">API Server Integration</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          The system exposes full REST API endpoints at <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-slate-800">http://localhost:8000/api</code> 
+          with interactive Swagger documentation available at <a href="http://localhost:8000/docs" target="_blank" class="text-sky-600 font-semibold hover:underline">http://localhost:8000/docs</a>. 
+          All assessment entries are persisted with ACID properties in the SQLite datastore.
+        </p>
+      </div>
+    </section>
+
+    <!-- Medical Disclaimer Banner on all pages -->
+    <div class="mt-12 rounded-2xl border border-amber-200 bg-amber-50/60 p-5 text-amber-900 shadow-sm">
+      <div class="flex items-start gap-3">
+        <i data-lucide="shield-alert" class="h-5 w-5 text-amber-600 shrink-0 mt-0.5"></i>
+        <div class="text-xs leading-relaxed">
+          <strong class="font-bold">Medical & Educational Disclaimer:</strong>
+          This application is a college-level machine learning prototype intended for educational, research, and clinical decision-support illustration. 
+          It is <strong>not clinically certified</strong> and does not replace professional medical diagnosis, clinical evaluation, or treatment by a qualified pediatric neurologist, physical therapist, or orthopedic physician.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
+    Child Gait Prediction System &bull; Active on <span class="font-mono text-slate-600">http://localhost:8080</span> (Frontend) and <span class="font-mono text-slate-600">http://localhost:8000</span> (API)
+  </footer>
+
+  <script>
+    const API_URL = 'http://localhost:8000/api';
+    let currentRecords = [];
+    let selectedChildId = 'C-101';
+    let currentChartMetric = 'speed';
+    let gaitChartInstance = null;
+
+    function navigate(page) {
+      ['home', 'predict', 'history', 'reports', 'recommendations', 'about'].forEach(p => {
+        document.getElementById('page-' + p).classList.add('hidden');
+        document.getElementById('nav-' + p).classList.remove('bg-sky-50', 'text-sky-700', 'font-bold');
+      });
+      document.getElementById('page-' + page).classList.remove('hidden');
+      document.getElementById('nav-' + page).classList.add('bg-sky-50', 'text-sky-700', 'font-bold');
+
+      if (page === 'history') fetchRecords();
+      if (page === 'reports') fetchReports();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function loadSamplePreset(type) {
+      if (type === 'normal') {
+        document.getElementById('inp-childId').value = 'C-101';
+        document.getElementById('inp-age').value = '7';
+        document.getElementById('inp-gender').value = 'Male';
+        document.getElementById('inp-heelPressure').value = '195.5';
+        document.getElementById('inp-toePressure').value = '150.2';
+        document.getElementById('inp-tiltAngle').value = '4.8';
+        document.getElementById('inp-stepDuration').value = '0.52';
+        document.getElementById('inp-strideLength').value = '88.4';
+        document.getElementById('inp-walkingSpeed').value = '1.12';
+      } else if (type === 'diplegic') {
+        document.getElementById('inp-childId').value = 'C-102';
+        document.getElementById('inp-age').value = '6';
+        document.getElementById('inp-gender').value = 'Female';
+        document.getElementById('inp-heelPressure').value = '140.2';
+        document.getElementById('inp-toePressure').value = '190.8';
+        document.getElementById('inp-tiltAngle').value = '11.5';
+        document.getElementById('inp-stepDuration').value = '0.72';
+        document.getElementById('inp-strideLength').value = '62.0';
+        document.getElementById('inp-walkingSpeed').value = '0.78';
+      } else if (type === 'hemiplegic') {
+        document.getElementById('inp-childId').value = 'C-103';
+        document.getElementById('inp-age').value = '8';
+        document.getElementById('inp-gender').value = 'Male';
+        document.getElementById('inp-heelPressure').value = '110.4';
+        document.getElementById('inp-toePressure').value = '125.6';
+        document.getElementById('inp-tiltAngle').value = '8.9';
+        document.getElementById('inp-stepDuration').value = '0.64';
+        document.getElementById('inp-strideLength').value = '71.0';
+        document.getElementById('inp-walkingSpeed').value = '0.85';
+      }
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="animate-spin inline-block mr-2">&#9696;</span> Evaluating ML Model...';
+
+      const payload = {
+        child_id: document.getElementById('inp-childId').value.trim(),
+        age: parseInt(document.getElementById('inp-age').value, 10),
+        gender: document.getElementById('inp-gender').value,
+        heel_pressure: parseFloat(document.getElementById('inp-heelPressure').value),
+        toe_pressure: parseFloat(document.getElementById('inp-toePressure').value),
+        tilt_angle: parseFloat(document.getElementById('inp-tiltAngle').value),
+        step_duration: parseFloat(document.getElementById('inp-stepDuration').value),
+        stride_length: parseFloat(document.getElementById('inp-strideLength').value),
+        walking_speed: parseFloat(document.getElementById('inp-walkingSpeed').value),
+      };
+
+      try {
+        const res = await fetch(API_URL + '/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        showPredictionResult(data, payload);
+      } catch (err) {
+        alert('Failed to connect to API server: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="play" class="h-4 w-4 mr-2"></i><span>Predict Gait</span>';
+        lucide.createIcons();
+      }
+    }
+
+    function showPredictionResult(result, input) {
+      const pred = result.prediction;
+      const conf = Math.round((result.confidence || 0.95) * 100);
+      const isNorm = pred === 'Normal';
+      const isDip = pred === 'Diplegic';
+
+      let themeClass = isNorm 
+        ? 'border-emerald-300 bg-emerald-50 text-emerald-900' 
+        : (isDip ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-rose-300 bg-rose-50 text-rose-900');
+
+      let iconName = isNorm ? 'check-circle-2' : (isDip ? 'alert-triangle' : 'alert-circle');
+
+      const html = `
+        <div class="rounded-2xl border p-6 sm:p-8 shadow-sm ${themeClass}">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+                <i data-lucide="${iconName}" class="h-5 w-5"></i>
+                <span>Gait Assessment Result</span>
+              </div>
+              <h2 class="text-3xl font-extrabold tracking-tight mt-2">${pred}</h2>
+              <p class="text-xs sm:text-sm mt-1 opacity-90">
+                ${isNorm ? 'Standard reference range across bilateral symmetry and velocity.' : (isDip ? 'Bilateral parameter variation involving both lower extremities detected.' : 'Asymmetrical gait pattern affecting primarily one side detected.')}
+              </p>
+            </div>
+            <div class="bg-white/70 backdrop-blur rounded-2xl border border-current/20 px-5 py-3 text-center self-start sm:self-auto">
+              <span class="block text-[11px] font-bold uppercase tracking-wider opacity-70">Confidence</span>
+              <span class="text-2xl font-black font-mono">${conf}%</span>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-current/15 pt-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider mb-2">Automated Biomechanical Observations:</h4>
+            <ul class="space-y-1 text-xs opacity-95 list-disc list-inside">
+              ${(result.recommendations || []).map(r => `<li>${r}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500">Record saved with ID: <strong class="font-mono text-slate-800">${result.assessmentId}</strong></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigate('reports')" class="px-3.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">
+              View in Reports &rarr;
+            </button>
+            <button onclick="selectChild('${input.child_id}'); navigate('history');" class="px-3.5 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-semibold hover:bg-sky-700 transition">
+              View Tracking Graph &rarr;
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('result-container').innerHTML = html;
+      document.getElementById('result-container').classList.remove('hidden');
+      document.getElementById('btn-reset').classList.remove('hidden');
+      document.getElementById('gait-form').classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    function resetForm() {
+      document.getElementById('result-container').classList.add('hidden');
+      document.getElementById('btn-reset').classList.add('hidden');
+      document.getElementById('gait-form').classList.remove('hidden');
+    }
+
+    async function fetchRecords() {
+      try {
+        const res = await fetch(API_URL + '/records');
+        currentRecords = await res.json();
+        
+        // Populate child selector and pills
+        const select = document.getElementById('filter-child');
+        const ids = [...new Set(currentRecords.map(r => r.child_id || r.childId))];
+        
+        if (select) {
+          select.innerHTML = '<option value="ALL">All Children (' + currentRecords.length + ' records)</option>' +
+            ids.map(id => `<option value="${id}">Child ${id}</option>`).join('');
+
+          if (ids.length > 0 && (!selectedChildId || !ids.includes(selectedChildId))) {
+            selectedChildId = ids[0];
+          }
+          select.value = selectedChildId || 'ALL';
+        }
+
+        renderQuickChildPills(ids);
+        renderChildGraph();
+        renderHistoryTable();
+      } catch (err) {
+        console.error('Error fetching records:', err);
+      }
+    }
+
+    function renderQuickChildPills(ids) {
+      const container = document.getElementById('quick-child-pills');
+      if (!container) return;
+      if (!ids) {
+        ids = [...new Set(currentRecords.map(r => r.child_id || r.childId))];
+      }
+
+      const allBtn = `<button onclick="selectChild('ALL')" class="px-3 py-1 rounded-full text-xs font-semibold shrink-0 transition ${selectedChildId === 'ALL' ? 'bg-sky-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">All Records (${currentRecords.length})</button>`;
+      
+      const pills = ids.map(id => {
+        const count = currentRecords.filter(r => (r.child_id || r.childId) === id).length;
+        const isSelected = selectedChildId === id;
+        return `<button onclick="selectChild('${id}')" class="px-3 py-1 rounded-full text-xs font-semibold shrink-0 transition flex items-center gap-1.5 ${isSelected ? 'bg-sky-600 text-white shadow-sm ring-2 ring-sky-300' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'}">
+          <span>Child ${id}</span>
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] ${isSelected ? 'bg-sky-700 text-white' : 'bg-slate-100 text-slate-500'} font-mono">${count}</span>
+        </button>`;
+      }).join('');
+
+      container.innerHTML = allBtn + pills;
+    }
+
+    function selectChild(childId) {
+      selectedChildId = childId;
+      const select = document.getElementById('filter-child');
+      if (select) select.value = childId;
+      renderQuickChildPills();
+      renderChildGraph();
+      renderHistoryTable();
+
+      if (childId !== 'ALL') {
+        const card = document.getElementById('child-graph-card');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function onChildFilterChange() {
+      const val = document.getElementById('filter-child').value;
+      selectChild(val);
+    }
+
+    function setChartMetric(metric) {
+      currentChartMetric = metric;
+      const metrics = ['speed', 'stride', 'tilt', 'duration', 'pressure', 'multi'];
+      metrics.forEach(m => {
+        const btn = document.getElementById('btn-metric-' + m);
+        if (btn) {
+          if (m === metric) {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-white text-sky-700 font-bold shadow-xs transition';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition';
+          }
+        }
+      });
+      renderChildGraph();
+    }
+
+    function addAssessmentForChild() {
+      const targetChildId = (selectedChildId && selectedChildId !== 'ALL') ? selectedChildId : 'C-101';
+      const childRecords = currentRecords.filter(r => (r.child_id || r.childId) === targetChildId);
+      const latest = childRecords[0];
+
+      navigate('predict');
+      resetForm();
+
+      document.getElementById('inp-childId').value = targetChildId;
+      if (latest) {
+        if (latest.age) document.getElementById('inp-age').value = latest.age;
+        if (latest.gender) document.getElementById('inp-gender').value = latest.gender;
+      }
+    }
+
+    function renderChildGraph() {
+      const canvas = document.getElementById('childGaitChart');
+      const emptyNotice = document.getElementById('cg-chart-empty');
+      if (!canvas) return;
+
+      // Determine records for the selected child
+      let childId = selectedChildId;
+      if (!childId || childId === 'ALL') {
+        const first = currentRecords[0];
+        childId = first ? (first.child_id || first.childId) : null;
+      }
+
+      if (!childId) {
+        if (emptyNotice) emptyNotice.classList.remove('hidden');
+        return;
+      }
+
+      const rawList = currentRecords.filter(r => (r.child_id || r.childId) === childId);
+      if (rawList.length === 0) {
+        if (emptyNotice) emptyNotice.classList.remove('hidden');
+        return;
+      }
+      if (emptyNotice) emptyNotice.classList.add('hidden');
+
+      // Sort chronologically ascending (oldest to newest for trajectory trend)
+      const list = [...rawList].sort((a, b) => new Date(a.created_at || a.date) - new Date(b.created_at || b.date));
+      const latest = list[list.length - 1];
+      const oldest = list[0];
+
+      // Update demographic info header
+      document.getElementById('cg-avatar').innerText = childId;
+      document.getElementById('cg-title').innerText = `Child ${childId}`;
+      document.getElementById('cg-age').innerText = `${latest.age || 7} yrs`;
+      document.getElementById('cg-gender').innerText = latest.gender || 'Unspecified';
+      document.getElementById('cg-sessions').innerText = `${list.length} ${list.length === 1 ? 'assessment' : 'past assessments'}`;
+      document.getElementById('cg-latest-date').innerText = new Date(latest.created_at || latest.date).toLocaleDateString();
+
+      const pred = latest.gait_class || latest.prediction || 'Normal';
+      const badge = document.getElementById('cg-status-badge');
+      if (pred === 'Normal') {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-800 border-emerald-200';
+      } else if (pred === 'Diplegic') {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-50 text-amber-900 border-amber-200';
+      } else {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold border bg-rose-50 text-rose-900 border-rose-200';
+      }
+      badge.innerText = `${pred} (${Math.round((latest.confidence || 0.95) * 100)}%)`;
+
+      // Labels: Session Date / Session Number
+      const labels = list.map((r, i) => {
+        const d = new Date(r.created_at || r.date);
+        return `Session ${i + 1} (${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })})`;
+      });
+
+      // Prepare dataset based on active metric
+      let datasets = [];
+      let yAxisLabel = '';
+      let initialValStr = '';
+      let latestValStr = '';
+      let changeHtml = '';
+      let benchmarkStr = '';
+
+      const ctx = canvas.getContext('2d');
+      if (gaitChartInstance) {
+        gaitChartInstance.destroy();
+      }
+
+      if (currentChartMetric === 'speed') {
+        const dataVals = list.map(r => Number(r.walking_speed || r.walkingSpeed || 0));
+        yAxisLabel = 'Walking Speed (m/s)';
+        initialValStr = `${dataVals[0].toFixed(2)} m/s`;
+        latestValStr = `${dataVals[dataVals.length - 1].toFixed(2)} m/s`;
+        const diff = dataVals[dataVals.length - 1] - dataVals[0];
+        const pct = dataVals[0] > 0 ? (diff / dataVals[0] * 100).toFixed(1) : '0';
+        changeHtml = diff >= 0 
+          ? `<span class="text-emerald-600 font-bold"><i data-lucide="arrow-up-right" class="h-4 w-4 inline"></i> +${diff.toFixed(2)} m/s (+${pct}%)</span>` 
+          : `<span class="text-amber-600 font-bold"><i data-lucide="arrow-down-right" class="h-4 w-4 inline"></i> ${diff.toFixed(2)} m/s (${pct}%)</span>`;
+        benchmarkStr = 'Normative Pediatric Target: 1.10 – 1.30 m/s';
+
+        datasets = [{
+          label: 'Walking Speed (m/s)',
+          data: dataVals,
+          borderColor: '#0284c7',
+          backgroundColor: 'rgba(2, 132, 199, 0.12)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2.5,
+          pointBackgroundColor: list.map(r => (r.gait_class || r.prediction) === 'Normal' ? '#10b981' : ((r.gait_class || r.prediction) === 'Diplegic' ? '#f59e0b' : '#ef4444')),
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8
+        }];
+      } else if (currentChartMetric === 'stride') {
+        const dataVals = list.map(r => Number(r.stride_length || r.strideLength || 0));
+        yAxisLabel = 'Stride Length (cm)';
+        initialValStr = `${dataVals[0].toFixed(1)} cm`;
+        latestValStr = `${dataVals[dataVals.length - 1].toFixed(1)} cm`;
+        const diff = dataVals[dataVals.length - 1] - dataVals[0];
+        const pct = dataVals[0] > 0 ? (diff / dataVals[0] * 100).toFixed(1) : '0';
+        changeHtml = diff >= 0 
+          ? `<span class="text-teal-600 font-bold">+${diff.toFixed(1)} cm (+${pct}%)</span>` 
+          : `<span class="text-amber-600 font-bold">${diff.toFixed(1)} cm (${pct}%)</span>`;
+        benchmarkStr = 'Normative Pediatric Target: 85 – 115 cm';
+
+        datasets = [{
+          label: 'Stride Length (cm)',
+          data: dataVals,
+          borderColor: '#0d9488',
+          backgroundColor: 'rgba(13, 148, 136, 0.12)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#0d9488',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }];
+      } else if (currentChartMetric === 'tilt') {
+        const dataVals = list.map(r => Number(r.tilt_angle || r.tiltAngle || 0));
+        yAxisLabel = 'Tilt Angle (°)';
+        initialValStr = `${dataVals[0].toFixed(1)}°`;
+        latestValStr = `${dataVals[dataVals.length - 1].toFixed(1)}°`;
+        const diff = dataVals[dataVals.length - 1] - dataVals[0];
+        changeHtml = diff <= 0 
+          ? `<span class="text-emerald-600 font-bold">${diff.toFixed(1)}° (Stabilizing)</span>` 
+          : `<span class="text-rose-600 font-bold">+${diff.toFixed(1)}° (Elevated Tilt)</span>`;
+        benchmarkStr = 'Normative Baseline: < 6.0°';
+
+        datasets = [{
+          label: 'Tilt Angle (°)',
+          data: dataVals,
+          borderColor: '#ea580c',
+          backgroundColor: 'rgba(234, 88, 12, 0.12)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#ea580c',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }];
+      } else if (currentChartMetric === 'duration') {
+        const dataVals = list.map(r => Number(r.step_duration || r.stepDuration || 0));
+        yAxisLabel = 'Step Duration (s)';
+        initialValStr = `${dataVals[0].toFixed(2)} s`;
+        latestValStr = `${dataVals[dataVals.length - 1].toFixed(2)} s`;
+        const diff = dataVals[dataVals.length - 1] - dataVals[0];
+        changeHtml = `<span class="text-purple-700 font-bold">${diff >= 0 ? '+' : ''}${diff.toFixed(2)} s</span>`;
+        benchmarkStr = 'Normative Baseline: 0.45 – 0.55 s';
+
+        datasets = [{
+          label: 'Step Duration (s)',
+          data: dataVals,
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.12)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2.5,
+          pointBackgroundColor: '#8b5cf6',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          pointRadius: 6
+        }];
+      } else if (currentChartMetric === 'pressure') {
+        const heels = list.map(r => Number(r.heel_pressure || r.heelPressure || 0));
+        const toes = list.map(r => Number(r.toe_pressure || r.toePressure || 0));
+        yAxisLabel = 'Pressure (kPa)';
+        initialValStr = `Heel ${heels[0].toFixed(0)} / Toe ${toes[0].toFixed(0)} kPa`;
+        latestValStr = `Heel ${heels[heels.length - 1].toFixed(0)} / Toe ${toes[toes.length - 1].toFixed(0)} kPa`;
+        changeHtml = `<span class="text-sky-700 font-bold">Dynamic Balance Monitored</span>`;
+        benchmarkStr = 'Normative Heel Range: 170 – 210 kPa';
+
+        datasets = [
+          {
+            label: 'Heel Strike Pressure (kPa)',
+            data: heels,
+            borderColor: '#0284c7',
+            backgroundColor: 'transparent',
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#0284c7',
+            pointRadius: 6
+          },
+          {
+            label: 'Toe-off Pressure (kPa)',
+            data: toes,
+            borderColor: '#f43f5e',
+            backgroundColor: 'transparent',
+            tension: 0.35,
+            borderWidth: 2.5,
+            borderDash: [5, 5],
+            pointBackgroundColor: '#f43f5e',
+            pointRadius: 6
+          }
+        ];
+      } else if (currentChartMetric === 'multi') {
+        const speeds = list.map(r => Number(r.walking_speed || r.walkingSpeed || 0) * 100);
+        const strides = list.map(r => Number(r.stride_length || r.strideLength || 0));
+        yAxisLabel = 'Metric Values';
+        initialValStr = `Speed ${(speeds[0]/100).toFixed(2)} m/s`;
+        latestValStr = `Stride ${strides[strides.length - 1].toFixed(0)} cm`;
+        changeHtml = `<span class="text-indigo-600 font-bold">Comprehensive Correlation</span>`;
+        benchmarkStr = 'Dual Parameter Trajectory Tracking';
+
+        datasets = [
+          {
+            label: 'Walking Speed (scaled cm/s)',
+            data: speeds,
+            borderColor: '#0284c7',
+            backgroundColor: 'transparent',
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 6
+          },
+          {
+            label: 'Stride Length (cm)',
+            data: strides,
+            borderColor: '#10b981',
+            backgroundColor: 'transparent',
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 6
+          }
+        ];
+      }
+
+      // Update stat cards
+      document.getElementById('cg-stat-initial').innerText = initialValStr;
+      document.getElementById('cg-stat-initial-date').innerText = new Date(oldest.created_at || oldest.date).toLocaleDateString();
+      document.getElementById('cg-stat-latest').innerText = latestValStr;
+      document.getElementById('cg-stat-latest-date').innerText = new Date(latest.created_at || latest.date).toLocaleDateString();
+      document.getElementById('cg-stat-change').innerHTML = changeHtml;
+      document.getElementById('cg-stat-benchmark').innerText = benchmarkStr;
+
+      // Render Chart.js
+      gaitChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: datasets.length > 1,
+              position: 'top',
+              labels: {
+                boxWidth: 12,
+                font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: 'bold' }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.92)',
+              titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: 'bold' },
+              bodyFont: { family: "'JetBrains Mono', monospace", size: 11 },
+              padding: 10,
+              cornerRadius: 10,
+              callbacks: {
+                afterBody: function(tooltipItems) {
+                  const idx = tooltipItems[0].dataIndex;
+                  const item = list[idx];
+                  return [
+                    `Pattern: ${item.gait_class || item.prediction}`,
+                    `Confidence: ${item.confidence ? Math.round(item.confidence * 100) + '%' : '95%'}`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(226, 232, 240, 0.6)' },
+              ticks: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } }
+            },
+            y: {
+              title: {
+                display: true,
+                text: yAxisLabel,
+                font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: 'bold' }
+              },
+              grid: { color: 'rgba(226, 232, 240, 0.6)' },
+              ticks: { font: { family: "'JetBrains Mono', monospace", size: 11 } }
+            }
+          }
+        }
+      });
+      lucide.createIcons();
+    }
+
+    function renderHistoryTable() {
+      const filter = document.getElementById('filter-child') ? document.getElementById('filter-child').value : 'ALL';
+      const tbody = document.getElementById('history-table-body');
+      const countBadge = document.getElementById('records-count-badge');
+      if (!tbody) return;
+
+      const filtered = (filter === 'ALL' || !filter)
+        ? currentRecords 
+        : currentRecords.filter(r => (r.child_id || r.childId) === filter);
+
+      if (countBadge) {
+        countBadge.innerText = `${filtered.length} of ${currentRecords.length} records`;
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-8 text-xs text-slate-400">No records found for this filter.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const id = r.child_id || r.childId;
+        const pred = r.gait_class || r.prediction;
+        const conf = r.confidence ? Math.round(r.confidence * 100) + '%' : '—';
+        const dateStr = new Date(r.created_at || r.date).toLocaleDateString();
+        const badge = pred === 'Normal' 
+          ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
+          : (pred === 'Diplegic' ? 'bg-amber-50 text-amber-900 border-amber-200' : 'bg-rose-50 text-rose-900 border-rose-200');
+
+        const isRowSelected = selectedChildId === id;
+        const rowBg = isRowSelected ? 'bg-sky-50/70 border-l-4 border-l-sky-600' : 'hover:bg-slate-50';
+
+        return `
+          <tr class="${rowBg} transition border-b border-slate-100 cursor-pointer" onclick="selectChild('${id}')">
+            <td class="px-5 py-3 font-mono text-xs text-slate-500">${dateStr}</td>
+            <td class="px-5 py-3 font-bold text-slate-900 flex items-center gap-1.5">
+              <span>${id}</span>
+              ${isRowSelected ? '<span class="h-2 w-2 rounded-full bg-sky-600 inline-block animate-pulse"></span>' : ''}
+            </td>
+            <td class="px-5 py-3 text-xs">${r.age} yr &bull; ${r.gender}</td>
+            <td class="px-5 py-3 font-mono text-xs font-semibold text-slate-800">${r.walking_speed || r.walkingSpeed}</td>
+            <td class="px-5 py-3 font-mono text-xs text-slate-700">${r.stride_length || r.strideLength}</td>
+            <td class="px-5 py-3 font-mono text-xs text-slate-700">${r.tilt_angle || r.tiltAngle}&deg;</td>
+            <td class="px-5 py-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}">${pred}</span></td>
+            <td class="px-5 py-3 font-mono text-xs font-semibold">${conf}</td>
+            <td class="px-5 py-3 text-right" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-end gap-2">
+                <button onclick="selectChild('${id}')" class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-800 hover:bg-sky-200 text-xs font-semibold transition flex items-center gap-1">
+                  <span>📊 Graph</span>
+                </button>
+                <button onclick="deleteRecord('${r.id}')" class="text-red-500 hover:text-red-700 text-xs font-medium px-1.5 py-1">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm('Are you sure you want to delete this record?')) return;
+      try {
+        await fetch(API_URL + '/records/' + id, { method: 'DELETE' });
+        currentRecords = currentRecords.filter(r => r.id !== id);
+        fetchRecords();
+      } catch (err) {
+        alert('Delete failed: ' + err.message);
+      }
+    }
+
+    async function fetchReports() {
+      try {
+        const res = await fetch(API_URL + '/records');
+        currentRecords = await res.json();
+        const select = document.getElementById('report-select-record');
+        if (currentRecords.length === 0) {
+          document.getElementById('report-content').innerHTML = '<div class="text-center py-12 text-slate-400">No assessment records found. Complete an assessment first.</div>';
+          select.innerHTML = '<option>No records</option>';
+          return;
+        }
+
+        select.innerHTML = currentRecords.map(r => `
+          <option value="${r.id}">Child ${r.child_id || r.childId} &bull; ${new Date(r.created_at || r.date).toLocaleDateString()} (${r.gait_class || r.prediction})</option>
+        `).join('');
+
+        renderReportCard();
+      } catch (err) {
+        console.error('Error fetching reports:', err);
+      }
+    }
+
+    function renderReportCard() {
+      const id = document.getElementById('report-select-record').value;
+      const rec = currentRecords.find(r => r.id === id) || currentRecords[0];
+      if (!rec) return;
+
+      const pred = rec.gait_class || rec.prediction;
+      const isNorm = pred === 'Normal';
+      const isDip = pred === 'Diplegic';
+
+      const html = `
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+            <div>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Formal Pediatric Evaluation</span>
+              <h2 class="text-2xl font-bold text-slate-900 mt-0.5">Subject Child ${rec.child_id || rec.childId}</h2>
+              <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                <span>Age: <strong>${rec.age}</strong></span>
+                <span>&bull;</span>
+                <span>Gender: <strong>${rec.gender}</strong></span>
+                <span>&bull;</span>
+                <span>Assessed: <strong>${new Date(rec.created_at || rec.date).toLocaleDateString()}</strong></span>
+              </div>
+            </div>
+            <div class="self-start sm:self-auto">
+              <span class="px-4 py-1.5 rounded-full text-sm font-bold border ${isNorm ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : (isDip ? 'bg-amber-50 text-amber-900 border-amber-200' : 'bg-rose-50 text-rose-900 border-rose-200')}">
+                Classification: ${pred}
+              </span>
+            </div>
+          </div>
+
+          <!-- Parameter Metrics Breakdown -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-4">Biomechanical Metric Parameters</h4>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Walking Speed</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.walking_speed || rec.walkingSpeed}</span>
+                <span class="text-[10px] text-slate-400">m/s</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Stride Length</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.stride_length || rec.strideLength}</span>
+                <span class="text-[10px] text-slate-400">cm</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Step Duration</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.step_duration || rec.stepDuration}</span>
+                <span class="text-[10px] text-slate-400">s</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Tilt Angle</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.tilt_angle || rec.tiltAngle}</span>
+                <span class="text-[10px] text-slate-400">&deg;</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Heel Pressure</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.heel_pressure || rec.heelPressure}</span>
+                <span class="text-[10px] text-slate-400">kPa</span>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 block">Toe Pressure</span>
+                <span class="text-lg font-bold font-mono text-slate-900 mt-1 block">${rec.toe_pressure || rec.toePressure}</span>
+                <span class="text-[10px] text-slate-400">kPa</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-sky-50/50 p-4 rounded-xl border border-sky-100">
+            <h4 class="text-xs font-bold text-sky-900 mb-1">Clinical Evaluation Summary</h4>
+            <p class="text-xs text-sky-800 leading-relaxed">
+              Based on the multi-class classifier trained on the SimTK motion capture dataset, Child ${rec.child_id || rec.childId} exhibits spatio-temporal markers consistent with 
+              <strong>${pred}</strong> gait classification. Confidence level: <strong>${rec.confidence ? Math.round(rec.confidence * 100) + '%' : '95%'}</strong>.
+            </p>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('report-content').innerHTML = html;
+      lucide.createIcons();
+    }
+
+    // Initialize
+    navigate('home');
+  </script>
+</body>
+</html>

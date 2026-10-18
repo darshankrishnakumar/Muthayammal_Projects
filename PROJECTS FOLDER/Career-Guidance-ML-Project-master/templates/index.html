@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Guidance AI - ML-Based Job Role Predictor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.4); }
+      50% { box-shadow: 0 0 45px rgba(147, 51, 234, 0.6); }
+    }
+    .glow-card {
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    input[type=range] {
+      accent-color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-compass text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            Career Guidance AI
+          </h1>
+          <p class="text-xs text-slate-400">ML-Driven Job Role Recommendation System</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <!-- Model Selection Dropdown -->
+        <div class="flex items-center bg-slate-900/90 border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs text-slate-300">
+          <i class="fa-solid fa-microchip text-indigo-400 mr-2"></i>
+          <span class="mr-2 font-medium">Model:</span>
+          <select id="modelSelector" class="bg-transparent font-semibold text-white focus:outline-none cursor-pointer">
+            <option value="XGBoost" class="bg-slate-900 text-white">XGBoost (Recommended)</option>
+            <option value="Random Forest" class="bg-slate-900 text-white">Random Forest</option>
+            <option value="Decision Tree" class="bg-slate-900 text-white">Decision Tree</option>
+          </select>
+        </div>
+
+        <div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-2"></span>
+          Engine Online
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- HERO & PRESETS BAR -->
+    <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white flex items-center">
+            <span>Student Career Assessment</span>
+            <span class="ml-3 text-xs uppercase px-2.5 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold tracking-wider">EE405 ML Engine</span>
+          </h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">
+            Input academic marks, programming proficiencies, and cognitive preferences to compute the optimal technology career path.
+          </p>
+        </div>
+
+        <!-- Candidate Name Input -->
+        <div class="flex items-center space-x-2">
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-3 text-slate-500 text-xs"></i>
+            <input type="text" id="candidateName" value="Alex Rivera" placeholder="Student Name"
+                   class="bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
+          </div>
+          <button onclick="randomizeCandidate()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium transition flex items-center" title="Generate Random Candidate Profile">
+            <i class="fa-solid fa-shuffle mr-1.5"></i> Random
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Preset Pills -->
+      <div class="mt-6 pt-5 border-t border-slate-800/80">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center">
+          <i class="fa-solid fa-bolt text-amber-400 mr-2"></i> Instant 1-Click Profile Presets:
+        </div>
+        <div class="flex flex-wrap gap-2" id="presetPillsContainer">
+          <!-- Dynamically populated or static fallback -->
+          <button onclick="loadPreset('fullstack_dev')" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium">
+            💻 Full-Stack Software Developer
+          </button>
+          <button onclick="loadPreset('cloud_devops')" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium">
+            ☁️ Cloud & Systems Architect
+          </button>
+          <button onclick="loadPreset('cyber_security')" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium">
+            🛡️ Cybersecurity & Network Analyst
+          </button>
+          <button onclick="loadPreset('database_admin')" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium">
+            🗄️ Database & Big Data Architect
+          </button>
+          <button onclick="loadPreset('ui_ux_designer')" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium">
+            🎨 UI/UX & Product Experience
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSPACE: FORM & PREDICTION RESULTS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- LEFT COLUMN: INPUT FORM (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        <form id="assessmentForm" onsubmit="event.preventDefault(); submitAssessment();" class="space-y-6">
+
+          <!-- TAB SWITCHER -->
+          <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto text-sm">
+            <button type="button" onclick="switchTab('academic')" id="tabBtn-academic" class="tab-btn px-4 py-2 rounded-lg font-medium transition bg-indigo-600 text-white flex items-center whitespace-nowrap">
+              <i class="fa-solid fa-graduation-cap mr-2"></i> Academics (9)
+            </button>
+            <button type="button" onclick="switchTab('technical')" id="tabBtn-technical" class="tab-btn px-4 py-2 rounded-lg font-medium transition bg-slate-800/80 hover:bg-slate-700 text-slate-400 flex items-center whitespace-nowrap">
+              <i class="fa-solid fa-code mr-2"></i> Tech & Skills (10)
+            </button>
+            <button type="button" onclick="switchTab('cognitive')" id="tabBtn-cognitive" class="tab-btn px-4 py-2 rounded-lg font-medium transition bg-slate-800/80 hover:bg-slate-700 text-slate-400 flex items-center whitespace-nowrap">
+              <i class="fa-solid fa-brain mr-2"></i> Work Style (10)
+            </button>
+            <button type="button" onclick="switchTab('career')" id="tabBtn-career" class="tab-btn px-4 py-2 rounded-lg font-medium transition bg-slate-800/80 hover:bg-slate-700 text-slate-400 flex items-center whitespace-nowrap">
+              <i class="fa-solid fa-bullseye mr-2"></i> Interests (9)
+            </button>
+          </div>
+
+          <!-- TAB 1: ACADEMIC MARKS -->
+          <div id="tabContent-academic" class="tab-pane space-y-4">
+            <div class="glass-panel rounded-2xl p-5 space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                <span class="text-sm font-semibold text-slate-200">Coursework Performance (%)</span>
+                <span class="text-xs text-slate-400">Scale: 60% – 100%</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Operating Systems</span>
+                    <span id="lbl_os" class="font-bold text-sky-400">85%</span>
+                  </div>
+                  <input type="range" id="feat_os" min="60" max="100" value="85" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_os').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Algorithms</span>
+                    <span id="lbl_algo" class="font-bold text-sky-400">88%</span>
+                  </div>
+                  <input type="range" id="feat_algo" min="60" max="100" value="88" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_algo').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Programming Concepts</span>
+                    <span id="lbl_prog" class="font-bold text-sky-400">92%</span>
+                  </div>
+                  <input type="range" id="feat_prog" min="60" max="100" value="92" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_prog').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Software Engineering</span>
+                    <span id="lbl_se" class="font-bold text-sky-400">86%</span>
+                  </div>
+                  <input type="range" id="feat_se" min="60" max="100" value="86" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_se').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Computer Networks</span>
+                    <span id="lbl_cn" class="font-bold text-sky-400">84%</span>
+                  </div>
+                  <input type="range" id="feat_cn" min="60" max="100" value="84" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_cn').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Electronics Subjects</span>
+                    <span id="lbl_el" class="font-bold text-sky-400">75%</span>
+                  </div>
+                  <input type="range" id="feat_el" min="60" max="100" value="75" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_el').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Computer Architecture</span>
+                    <span id="lbl_ca" class="font-bold text-sky-400">80%</span>
+                  </div>
+                  <input type="range" id="feat_ca" min="60" max="100" value="80" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_ca').textContent=this.value+'%'">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Mathematics</span>
+                    <span id="lbl_math" class="font-bold text-sky-400">85%</span>
+                  </div>
+                  <input type="range" id="feat_math" min="60" max="100" value="85" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_math').textContent=this.value+'%'">
+                </div>
+
+                <div class="sm:col-span-2">
+                  <div class="flex justify-between text-xs text-slate-300 mb-1">
+                    <span>Communication Skills</span>
+                    <span id="lbl_comm" class="font-bold text-sky-400">82%</span>
+                  </div>
+                  <input type="range" id="feat_comm" min="60" max="100" value="82" class="w-full h-1.5 bg-slate-800 rounded-lg"
+                         oninput="document.getElementById('lbl_comm').textContent=this.value+'%'">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: TECHNICAL & SKILLS EXPOSURE -->
+          <div id="tabContent-technical" class="tab-pane hidden space-y-4">
+            <div class="glass-panel rounded-2xl p-5 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Coding Skills Rating (1–9)</label>
+                  <select id="feat_coding_skills" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="9">9 - Expert Competitive Coder</option>
+                    <option value="8" selected>8 - Advanced Problem Solver</option>
+                    <option value="7">7 - Proficient Developer</option>
+                    <option value="6">6 - Solid Competence</option>
+                    <option value="5">5 - Intermediate</option>
+                    <option value="4">4 - Basic Programming</option>
+                    <option value="3">3 - Beginner</option>
+                    <option value="2">2 - Novice</option>
+                    <option value="1">1 - Minimal</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Hackathons Attended</label>
+                  <select id="feat_hackathons" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="0">0 Hackathons</option>
+                    <option value="1">1 Hackathon</option>
+                    <option value="2">2 Hackathons</option>
+                    <option value="3">3 Hackathons</option>
+                    <option value="4" selected>4 Hackathons</option>
+                    <option value="5">5 Hackathons</option>
+                    <option value="6">6+ Hackathons</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Primary Certifications</label>
+                  <select id="feat_certifications" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="full stack" selected>Full Stack</option>
+                    <option value="python">Python</option>
+                    <option value="machine learning">Machine Learning</option>
+                    <option value="information security">Information Security</option>
+                    <option value="app development">App Development</option>
+                    <option value="hadoop">Hadoop / Big Data</option>
+                    <option value="shell programming">Shell Programming</option>
+                    <option value="r programming">R Programming</option>
+                    <option value="distro making">Distro Making / Linux</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Workshops Attended</label>
+                  <select id="feat_workshops" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="web technologies" selected>Web Technologies</option>
+                    <option value="cloud computing">Cloud Computing</option>
+                    <option value="database security">Database Security</option>
+                    <option value="data science">Data Science</option>
+                    <option value="hacking">Ethical Hacking / Cyber</option>
+                    <option value="system designing">System Designing</option>
+                    <option value="game development">Game Development</option>
+                    <option value="testing">Software Testing / QA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Extra-Courses Undertaken?</label>
+                  <select id="feat_extra_courses" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Talent Tests Taken?</label>
+                  <select id="feat_talenttests" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Olympiads Participated?</label>
+                  <select id="feat_olympiads" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Reading & Writing Proficiency</label>
+                  <select id="feat_reading_writing" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="excellent" selected>Excellent</option>
+                    <option value="medium">Medium</option>
+                    <option value="poor">Basic / Poor</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: COGNITIVE & WORK STYLE -->
+          <div id="tabContent-cognitive" class="tab-pane hidden space-y-4">
+            <div class="glass-panel rounded-2xl p-5 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Hours Working Per Day</label>
+                  <input type="number" id="feat_hours" min="4" max="14" value="9" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Logical Quotient Rating (1–9)</label>
+                  <select id="feat_logical" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="9">9 - Exceptional Logic</option>
+                    <option value="8" selected>8 - Very High Logic</option>
+                    <option value="7">7 - High</option>
+                    <option value="6">6 - Above Average</option>
+                    <option value="5">5 - Moderate</option>
+                    <option value="4">4 - Basic</option>
+                    <option value="3">3 - Low</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Public Speaking Points (1–9)</label>
+                  <select id="feat_public_speaking" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="9">9 - Confident Orator</option>
+                    <option value="8">8 - Excellent Speaker</option>
+                    <option value="7">7 - Articulate Presenter</option>
+                    <option value="6" selected>6 - Comfortable Communicator</option>
+                    <option value="5">5 - Moderate</option>
+                    <option value="3">3 - Hesitant</option>
+                    <option value="1">1 - Stage Fear</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Memory Capability Score</label>
+                  <select id="feat_memory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="excellent" selected>Excellent</option>
+                    <option value="medium">Medium</option>
+                    <option value="poor">Modest</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Can Work Long Hours Before System?</label>
+                  <select id="feat_long_hours" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Self-Learning Capability?</label>
+                  <select id="feat_self_learning" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes (Autodidact)</option>
+                    <option value="no">No (Guided Only)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Work Style</label>
+                  <select id="feat_worker_style" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="smart worker" selected>Smart Worker</option>
+                    <option value="hard worker">Hard Worker</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Teamwork Experience?</label>
+                  <select id="feat_teams" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes (Collaborative)</option>
+                    <option value="no">No (Solo Worker)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Personality Orientation</label>
+                  <select id="feat_introvert" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="no" selected>Ambivert / Extrovert</option>
+                    <option value="yes">Introvert</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Behaviour Temperament</label>
+                  <select id="feat_behaviour" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="gentle" selected>Gentle / Adaptable</option>
+                    <option value="stubborn">Tuff / Persistent</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: CAREER INTERESTS & ASPIRATIONS -->
+          <div id="tabContent-career" class="tab-pane hidden space-y-4">
+            <div class="glass-panel rounded-2xl p-5 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Interested Subjects</label>
+                  <select id="feat_interested_subj" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="programming" selected>Programming & Algorithms</option>
+                    <option value="cloud computing">Cloud Computing</option>
+                    <option value="data engineering">Data Engineering</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="hacking">Security & Hacking</option>
+                    <option value="networks">Computer Networks</option>
+                    <option value="Computer Architecture">Computer Architecture</option>
+                    <option value="parallel computing">Parallel Computing</option>
+                    <option value="IOT">Internet of Things (IoT)</option>
+                    <option value="Management">Management</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Interested Career Area</label>
+                  <select id="feat_interested_area" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="developer" selected>Developer / Engineering</option>
+                    <option value="cloud computing">Cloud Computing</option>
+                    <option value="security">Cybersecurity & Forensics</option>
+                    <option value="system developer">System Development</option>
+                    <option value="Business process analyst">Business Process Analyst</option>
+                    <option value="testing">QA & Testing Automation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Job or Higher Studies?</label>
+                  <select id="feat_job_higher" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="job" selected>Direct Industry Job</option>
+                    <option value="higherstudies">Higher Studies (MS / PhD)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Target Company Culture</label>
+                  <select id="feat_company_type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="product development" selected>Product Development</option>
+                    <option value="Product based">Product Based Giant</option>
+                    <option value="Cloud Services">Cloud Services</option>
+                    <option value="SAaS services">SaaS Services</option>
+                    <option value="Web Services">Web Services</option>
+                    <option value="Finance">FinTech / Finance</option>
+                    <option value="Service Based">Service Based</option>
+                    <option value="Testing and Maintainance Services">Testing & Maintenance</option>
+                    <option value="BPA">Business Process Advisory</option>
+                    <option value="Sales and Marketing">Sales & Tech Solutions</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Career Track Orientation</label>
+                  <select id="feat_track" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="Technical" selected>Technical Engineering</option>
+                    <option value="Management">Management / Leadership</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Primary Motivation</label>
+                  <select id="feat_salary_work" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="work" selected>Impact & Work Satisfaction</option>
+                    <option value="salary">Maximum Compensation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Type of Books Preferred</label>
+                  <select id="feat_books" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="Science fiction" selected>Science Fiction</option>
+                    <option value="Science">Science & Technology</option>
+                    <option value="Self help">Self-Help & Personal Growth</option>
+                    <option value="Math">Math & Logic Puzzles</option>
+                    <option value="Action and Adventure">Action & Adventure</option>
+                    <option value="Mystery">Mystery & Thriller</option>
+                    <option value="Biographies">Biographies & History</option>
+                    <option value="Art">Design & Art</option>
+                    <option value="Travel">Travel & Culture</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-300 mb-1">Consulted Seniors/Mentors?</label>
+                  <select id="feat_seniors" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <option value="yes" selected>Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTON BAR -->
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <button type="submit" id="btnSubmit"
+                    class="w-full sm:flex-1 py-3.5 px-6 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Predict Career Guidance</span>
+            </button>
+            <button type="button" onclick="resetForm()"
+                    class="w-full sm:w-auto py-3.5 px-5 rounded-xl font-medium text-slate-300 bg-slate-900 border border-slate-700 hover:bg-slate-800 transition flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+              <span>Reset</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT COLUMN: RESULTS SHOWCASE & BLUEPRINT (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- PREDICTION RESULT CARD -->
+        <div id="resultsCard" class="glass-panel rounded-2xl p-6 glow-card relative overflow-hidden transition-all duration-300">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">ML Prediction Result</span>
+            </div>
+            <span id="resInferenceTime" class="text-xs font-mono text-indigo-400 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded-md">12ms</span>
+          </div>
+
+          <!-- Suggested Job Role Title Banner -->
+          <div class="mt-5 text-center p-5 rounded-xl bg-gradient-to-b from-indigo-900/40 to-slate-900/60 border border-indigo-500/20">
+            <span class="text-xs uppercase font-bold tracking-widest text-indigo-400">Recommended Job Role</span>
+            <h3 id="resJobRole" class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-300 mt-1">
+              Software Developer
+            </h3>
+            <p id="resStudentTag" class="text-xs text-slate-400 mt-1">Evaluated for Candidate: <span class="text-slate-200 font-semibold" id="resCandidate">Alex Rivera</span></p>
+
+            <!-- Confidence Meter -->
+            <div class="mt-4 max-w-xs mx-auto">
+              <div class="flex justify-between text-xs text-slate-400 mb-1">
+                <span>Model Match Confidence</span>
+                <span id="resConfidenceVal" class="font-bold text-emerald-400">86.5%</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                <div id="resConfidenceBar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-700" style="width: 86.5%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Role Description -->
+          <div class="mt-5 text-xs text-slate-300 leading-relaxed bg-slate-900/70 p-3.5 rounded-xl border border-slate-800/80" id="resDescription">
+            Constructs robust applications, implements product features, and debugs complex user-facing and backend systems.
+          </div>
+
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3 mt-4">
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/70">
+              <span class="text-[11px] text-slate-400 block font-medium">Expected Salary</span>
+              <span id="resSalary" class="text-xs font-bold text-emerald-400 block mt-0.5">$80,000 - $140,000 / yr</span>
+            </div>
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/70">
+              <span class="text-[11px] text-slate-400 block font-medium">Industry Growth</span>
+              <span id="resGrowth" class="text-xs font-bold text-sky-400 block mt-0.5">Very High (25%)</span>
+            </div>
+          </div>
+
+          <!-- Required Skills Pills -->
+          <div class="mt-4">
+            <span class="text-xs font-semibold text-slate-400 block mb-2">Essential Technology Stack:</span>
+            <div class="flex flex-wrap gap-1.5" id="resSkillsContainer">
+              <span class="px-2.5 py-1 rounded-md bg-indigo-950/80 border border-indigo-800/40 text-[11px] text-indigo-300 font-medium">Python</span>
+              <span class="px-2.5 py-1 rounded-md bg-indigo-950/80 border border-indigo-800/40 text-[11px] text-indigo-300 font-medium">JavaScript</span>
+              <span class="px-2.5 py-1 rounded-md bg-indigo-950/80 border border-indigo-800/40 text-[11px] text-indigo-300 font-medium">React</span>
+              <span class="px-2.5 py-1 rounded-md bg-indigo-950/80 border border-indigo-800/40 text-[11px] text-indigo-300 font-medium">SQL</span>
+            </div>
+          </div>
+
+          <!-- Alternative Career Pathways -->
+          <div class="mt-5 pt-4 border-t border-slate-800/80">
+            <span class="text-xs font-semibold text-slate-400 block mb-2">Alternative Compatible Roles:</span>
+            <div class="space-y-2" id="resAlternativesContainer">
+              <div class="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-900/50 border border-slate-800">
+                <span class="font-medium text-slate-200">Software Systems Engineer</span>
+                <span class="font-bold text-slate-400">72.4%</span>
+              </div>
+              <div class="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-900/50 border border-slate-800">
+                <span class="font-medium text-slate-200">Web Developer</span>
+                <span class="font-bold text-slate-400">65.8%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RECENT ASSESSMENT AUDIT LOG TABLE -->
+    <div class="glass-panel rounded-2xl p-6 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center">
+            <i class="fa-solid fa-database text-purple-400 mr-2"></i> Assessment Audit History
+          </h3>
+          <p class="text-xs text-slate-400">Persisted diagnostic records stored in SQLite database.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="refreshHistory()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Refresh
+          </button>
+          <button onclick="clearHistory()" class="px-3 py-1.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-800/50 text-rose-300 rounded-lg text-xs font-medium transition flex items-center">
+            <i class="fa-solid fa-trash-can mr-1.5"></i> Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="text-[11px] uppercase bg-slate-900/80 text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="px-4 py-3">Timestamp</th>
+              <th class="px-4 py-3">Student Name</th>
+              <th class="px-4 py-3">Suggested Role</th>
+              <th class="px-4 py-3">Confidence</th>
+              <th class="px-4 py-3">Academic Avg</th>
+              <th class="px-4 py-3">Model</th>
+              <th class="px-4 py-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-slate-800/60">
+            <tr>
+              <td colspan="7" class="px-4 py-6 text-center text-slate-500">
+                No recent assessments recorded yet. Run a prediction above!
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="glass-panel border-t border-slate-800 mt-auto py-4">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>Career Guidance Machine Learning System &bull; EE405 Pattern Recognition & ML Course Project</div>
+      <div class="font-mono text-slate-400">Local Server: http://127.0.0.1:5055</div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    let currentPresets = {};
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        btn.classList.add('bg-slate-800/80', 'text-slate-400');
+      });
+
+      const pane = document.getElementById(`tabContent-${tabId}`);
+      if (pane) pane.classList.remove('hidden');
+
+      const btn = document.getElementById(`tabBtn-${tabId}`);
+      if (btn) {
+        btn.classList.remove('bg-slate-800/80', 'text-slate-400');
+        btn.classList.add('bg-indigo-600', 'text-white');
+      }
+    }
+
+    async function fetchPresets() {
+      try {
+        const res = await fetch('/api/presets');
+        const data = await res.json();
+        if (data.status === 'success') {
+          const container = document.getElementById('presetPillsContainer');
+          container.innerHTML = '';
+          data.presets.forEach(p => {
+            currentPresets[p.id] = p.data;
+            const btn = document.createElement('button');
+            btn.className = "px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 text-xs text-slate-200 transition font-medium";
+            btn.innerHTML = `${p.label}`;
+            btn.onclick = () => loadPreset(p.id);
+            container.appendChild(btn);
+          });
+        }
+      } catch (err) {
+        console.warn("Could not load presets dynamically:", err);
+      }
+    }
+
+    function loadPreset(presetId) {
+      const data = currentPresets[presetId];
+      if (!data) return;
+
+      // Fill values
+      setSliderVal('feat_os', 'lbl_os', data['Acedamic percentage in Operating Systems'] || 80);
+      setSliderVal('feat_algo', 'lbl_algo', data['percentage in Algorithms'] || 80);
+      setSliderVal('feat_prog', 'lbl_prog', data['Percentage in Programming Concepts'] || 80);
+      setSliderVal('feat_se', 'lbl_se', data['Percentage in Software Engineering'] || 80);
+      setSliderVal('feat_cn', 'lbl_cn', data['Percentage in Computer Networks'] || 80);
+      setSliderVal('feat_el', 'lbl_el', data['Percentage in Electronics Subjects'] || 70);
+      setSliderVal('feat_ca', 'lbl_ca', data['Percentage in Computer Architecture'] || 75);
+      setSliderVal('feat_math', 'lbl_math', data['Percentage in Mathematics'] || 80);
+      setSliderVal('feat_comm', 'lbl_comm', data['Percentage in Communication skills'] || 80);
+
+      setSelectVal('feat_coding_skills', data['coding skills rating']);
+      setSelectVal('feat_hackathons', data['hackathons']);
+      setSelectVal('feat_certifications', data['certifications']);
+      setSelectVal('feat_workshops', data['workshops']);
+      setSelectVal('feat_extra_courses', data['Extra-courses did']);
+      setSelectVal('feat_talenttests', data['talenttests taken?']);
+      setSelectVal('feat_olympiads', data['olympiads']);
+      setSelectVal('feat_reading_writing', data['reading and writing skills']);
+
+      document.getElementById('feat_hours').value = data['Hours working per day'] || 8;
+      setSelectVal('feat_logical', data['Logical quotient rating']);
+      setSelectVal('feat_public_speaking', data['public speaking points']);
+      setSelectVal('feat_memory', data['memory capability score']);
+      setSelectVal('feat_long_hours', data['can work long time before system?']);
+      setSelectVal('feat_self_learning', data['self-learning capability?']);
+      setSelectVal('feat_worker_style', data['hard/smart worker']);
+      setSelectVal('feat_teams', data['worked in teams ever?']);
+      setSelectVal('feat_introvert', data['Introvert']);
+      setSelectVal('feat_behaviour', data['Gentle or Tuff behaviour?']);
+
+      setSelectVal('feat_interested_subj', data['Interested subjects']);
+      setSelectVal('feat_interested_area', data['interested career area ']);
+      setSelectVal('feat_job_higher', data['Job/Higher Studies?']);
+      setSelectVal('feat_company_type', data['Type of company want to settle in?']);
+      setSelectVal('feat_track', data['Management or Technical']);
+      setSelectVal('feat_salary_work', data['Salary/work']);
+      setSelectVal('feat_books', data['Interested Type of Books']);
+      setSelectVal('feat_seniors', data['Taken inputs from seniors or elders']);
+
+      // Automatically run prediction
+      submitAssessment();
+    }
+
+    function setSliderVal(id, lblId, val) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = val;
+        const lbl = document.getElementById(lblId);
+        if (lbl) lbl.textContent = val + '%';
+      }
+    }
+
+    function setSelectVal(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined) {
+        el.value = val;
+      }
+    }
+
+    function collectProfileData() {
+      return {
+        "Acedamic percentage in Operating Systems": parseInt(document.getElementById('feat_os').value),
+        "percentage in Algorithms": parseInt(document.getElementById('feat_algo').value),
+        "Percentage in Programming Concepts": parseInt(document.getElementById('feat_prog').value),
+        "Percentage in Software Engineering": parseInt(document.getElementById('feat_se').value),
+        "Percentage in Computer Networks": parseInt(document.getElementById('feat_cn').value),
+        "Percentage in Electronics Subjects": parseInt(document.getElementById('feat_el').value),
+        "Percentage in Computer Architecture": parseInt(document.getElementById('feat_ca').value),
+        "Percentage in Mathematics": parseInt(document.getElementById('feat_math').value),
+        "Percentage in Communication skills": parseInt(document.getElementById('feat_comm').value),
+        "Hours working per day": parseInt(document.getElementById('feat_hours').value),
+        "Logical quotient rating": parseInt(document.getElementById('feat_logical').value),
+        "hackathons": parseInt(document.getElementById('feat_hackathons').value),
+        "coding skills rating": parseInt(document.getElementById('feat_coding_skills').value),
+        "public speaking points": parseInt(document.getElementById('feat_public_speaking').value),
+        "can work long time before system?": document.getElementById('feat_long_hours').value,
+        "self-learning capability?": document.getElementById('feat_self_learning').value,
+        "Extra-courses did": document.getElementById('feat_extra_courses').value,
+        "certifications": document.getElementById('feat_certifications').value,
+        "workshops": document.getElementById('feat_workshops').value,
+        "talenttests taken?": document.getElementById('feat_talenttests').value,
+        "olympiads": document.getElementById('feat_olympiads').value,
+        "reading and writing skills": document.getElementById('feat_reading_writing').value,
+        "memory capability score": document.getElementById('feat_memory').value,
+        "Interested subjects": document.getElementById('feat_interested_subj').value,
+        "interested career area ": document.getElementById('feat_interested_area').value,
+        "Job/Higher Studies?": document.getElementById('feat_job_higher').value,
+        "Type of company want to settle in?": document.getElementById('feat_company_type').value,
+        "Taken inputs from seniors or elders": document.getElementById('feat_seniors').value,
+        "interested in games": "yes",
+        "Interested Type of Books": document.getElementById('feat_books').value,
+        "Salary Range Expected": "salary",
+        "In a Realtionship?": "no",
+        "Gentle or Tuff behaviour?": document.getElementById('feat_behaviour').value,
+        "Management or Technical": document.getElementById('feat_track').value,
+        "Salary/work": document.getElementById('feat_salary_work').value,
+        "hard/smart worker": document.getElementById('feat_worker_style').value,
+        "worked in teams ever?": document.getElementById('feat_teams').value,
+        "Introvert": document.getElementById('feat_introvert').value
+      };
+    }
+
+    async function submitAssessment() {
+      const btn = document.getElementById('btnSubmit');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Analyzing Profile...`;
+      btn.disabled = true;
+
+      try {
+        const payload = {
+          student_name: document.getElementById('candidateName').value.trim() || 'Candidate',
+          model_name: document.getElementById('modelSelector').value,
+          profile: collectProfileData()
+        };
+
+        const res = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.status === 'success') {
+          displayResults(data);
+          refreshHistory();
+        } else {
+          alert('Error predicting career: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Network or server error while running model prediction.');
+      } finally {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }
+    }
+
+    function displayResults(data) {
+      document.getElementById('resJobRole').textContent = data.suggested_role;
+      document.getElementById('resCandidate').textContent = data.student_name;
+      document.getElementById('resConfidenceVal').textContent = data.confidence + '%';
+      document.getElementById('resConfidenceBar').style.width = data.confidence + '%';
+      document.getElementById('resInferenceTime').textContent = data.inference_time_ms + ' ms';
+
+      const ins = data.insights || {};
+      document.getElementById('resDescription').textContent = ins.description || 'Recommended career role based on student profile attributes.';
+      document.getElementById('resSalary').textContent = ins.salary_range || 'Industry standard';
+      document.getElementById('resGrowth').textContent = ins.growth || 'High Growth';
+
+      // Skills
+      const skillsContainer = document.getElementById('resSkillsContainer');
+      skillsContainer.innerHTML = '';
+      (ins.skills || ['Python', 'SQL', 'Algorithms', 'System Design']).forEach(sk => {
+        const pill = document.createElement('span');
+        pill.className = "px-2.5 py-1 rounded-md bg-indigo-950/80 border border-indigo-800/40 text-[11px] text-indigo-300 font-medium";
+        pill.textContent = sk;
+        skillsContainer.appendChild(pill);
+      });
+
+      // Alternatives
+      const altContainer = document.getElementById('resAlternativesContainer');
+      altContainer.innerHTML = '';
+      (data.alternatives || []).forEach(alt => {
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between text-xs p-2 rounded-lg bg-slate-900/50 border border-slate-800";
+        div.innerHTML = `<span class="font-medium text-slate-200">${alt.role}</span><span class="font-bold text-slate-400">${alt.confidence}%</span>`;
+        altContainer.appendChild(div);
+      });
+
+      // Scroll slightly into view on mobile
+      if (window.innerWidth < 1024) {
+        document.getElementById('resultsCard').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    async function refreshHistory() {
+      try {
+        const res = await fetch('/api/history');
+        const data = await res.json();
+        const tbody = document.getElementById('historyTableBody');
+        tbody.innerHTML = '';
+
+        if (!data.records || data.records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-500">No assessments recorded yet. Run a prediction above!</td></tr>`;
+          return;
+        }
+
+        data.records.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-900/40 transition";
+          tr.innerHTML = `
+            <td class="px-4 py-3 font-mono text-[11px] text-slate-400">${r.timestamp}</td>
+            <td class="px-4 py-3 font-medium text-white">${r.student_name}</td>
+            <td class="px-4 py-3 text-sky-400 font-semibold">${r.suggested_role}</td>
+            <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-semibold text-[11px]">${r.confidence}%</span></td>
+            <td class="px-4 py-3 font-mono text-slate-300">${r.academic_avg}%</td>
+            <td class="px-4 py-3 text-slate-400 text-[11px]">${r.model_used}</td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="deleteRecord(${r.id})" class="text-rose-400 hover:text-rose-300 p-1" title="Delete Record">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Failed to load history:", err);
+      }
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm('Delete this assessment record?')) return;
+      try {
+        await fetch(`/api/history/${id}`, { method: 'DELETE' });
+        refreshHistory();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function clearHistory() {
+      if (!confirm('Clear all assessment records from database?')) return;
+      try {
+        await fetch('/api/clear-history', { method: 'POST' });
+        refreshHistory();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function randomizeCandidate() {
+      const names = ["Jordan Lee", "Elena Rostova", "Devon Vance", "Sarah Chen", "Carlos Mendez", "Priya Sharma", "Liam Walker"];
+      document.getElementById('candidateName').value = names[Math.floor(Math.random() * names.length)];
+
+      const keys = Object.keys(currentPresets);
+      if (keys.length > 0) {
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        loadPreset(randomKey);
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('assessmentForm').reset();
+      switchTab('academic');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchPresets().then(() => {
+        // Initial auto-prediction on first load
+        loadPreset('fullstack_dev');
+      });
+      refreshHistory();
+    });
+  </script>
+</body>
+</html>

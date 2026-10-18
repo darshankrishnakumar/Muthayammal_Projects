@@ -1,0 +1,15 @@
+FINAL TUNED RANDOM FOREST CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    Diplegic       0.00      0.00      0.00         1
+  Hemiplegic       1.00      1.00      1.00         1
+      Normal       0.50      1.00      0.67         1
+
+    accuracy                           0.67         3
+   macro avg       0.50      0.67      0.56         3
+weighted avg       0.50      0.67      0.56         3
+
+Macro OvR ROC-AUC: 1.0000
+  - Diplegic ROC-AUC: 1.0000
+  - Hemiplegic ROC-AUC: 1.0000
+  - Normal ROC-AUC: 1.0000

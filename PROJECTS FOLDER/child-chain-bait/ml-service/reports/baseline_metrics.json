@@ -1,0 +1,38 @@
+{
+  "model": "Random Forest Baseline",
+  "n_estimators": 100,
+  "random_state": 42,
+  "training_time_seconds": 0.0322,
+  "test_accuracy": 0.6666666666666666,
+  "test_precision_macro": 0.5,
+  "test_recall_macro": 0.6666666666666666,
+  "test_f1_macro": 0.5555555555555555,
+  "roc_auc_macro_ovr": 0.5,
+  "roc_auc_per_class": {
+    "Diplegic": 0.0,
+    "Hemiplegic": 0.5,
+    "Normal": 1.0
+  },
+  "confusion_matrix": [
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "classes": [
+    "Diplegic",
+    "Hemiplegic",
+    "Normal"
+  ]
+}

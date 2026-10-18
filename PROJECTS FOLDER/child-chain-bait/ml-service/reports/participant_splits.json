@@ -1,0 +1,34 @@
+{
+  "training_participants": [
+    "TD1",
+    "TD2",
+    "TD3",
+    "HECP1",
+    "HECP2",
+    "HECP3",
+    "DICP1",
+    "DICP2"
+  ],
+  "validation_participants": [
+    "TD4",
+    "HECP4",
+    "DICP3"
+  ],
+  "held_out_test_participants": [
+    "TD5",
+    "HECP5",
+    "DICP4"
+  ],
+  "train_trials_count": 11,
+  "val_trials_count": 7,
+  "test_trials_count": 3,
+  "features": [
+    "walking_speed",
+    "stride_length",
+    "step_duration",
+    "cadence",
+    "pelvic_tilt",
+    "step_asymmetry",
+    "peak_vertical_force_bw"
+  ]
+}

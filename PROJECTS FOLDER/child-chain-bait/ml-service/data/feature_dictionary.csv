@@ -1,0 +1,8 @@
+feature_name,source,calculation,unit,description
+walking_speed,SACR/Pelvis 3D trajectory,Forward linear displacement divided by duration,m/s,Mean progression velocity across the calibrated gait cycle
+stride_length,RHEE/LHEE 3D marker coordinates,Euclidean horizontal distance between consecutive ipsilateral heel strikes,cm,Distance traveled in one full bilateral gait cycle
+step_duration,RHEE/LHEE vertical minima timing,Time elapsed between initial heel strike and contralateral heel contact,s,Temporal step duration per lower extremity
+cadence,Step duration derived,60 / step_duration,steps/min,Step frequency / walking cadence
+pelvic_tilt,SACR and RASI/LASI vectors,Sagittal angle of the pelvis plane relative to horizontal,degrees,Mean sagittal pelvic inclination during gait
+step_asymmetry,R and L step lengths,|Left_step - Right_step| / (0.5 * (Left_step + Right_step)),ratio (dimensionless),Bilateral step length discrepancy; primary differentiator for unilateral Hemiplegic CP
+peak_vertical_force_bw,"AMTI Force Plates (FZ1, FZ2)",Max absolute vertical ground reaction force / body weight * 100,%BW,Peak dynamic vertical ground reaction force as percentage of body weight

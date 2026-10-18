@@ -1,0 +1,15 @@
+BASELINE RANDOM FOREST CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+    Diplegic       0.00      0.00      0.00         1
+  Hemiplegic       0.50      1.00      0.67         1
+      Normal       1.00      1.00      1.00         1
+
+    accuracy                           0.67         3
+   macro avg       0.50      0.67      0.56         3
+weighted avg       0.50      0.67      0.56         3
+
+Macro OvR ROC-AUC: 0.5000
+  - Diplegic AUC: 0.0000
+  - Hemiplegic AUC: 0.5000
+  - Normal AUC: 1.0000

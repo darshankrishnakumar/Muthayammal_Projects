@@ -1,0 +1,451 @@
+Car_Name,Year,Selling_Price,Present_Price,Kms_Driven,Fuel_Type,Seller_Type,Transmission,Owner
+Hyundai i20,2015,4.17,10.11,116732.0,Petrol,Dealer,Automatic,1
+Toyota Innova Crysta,2017,13.29,25.25,47392.0,Petrol,Dealer,Manual,1
+Honda Amaze,2016,3.55,7.82,97913.0,Petrol,Dealer,Manual,1
+Maruti Ertiga,2013,3.6,11.34,136260.0,Petrol,Dealer,Automatic,3
+Mahindra XUV500,2021,15.58,18.93,30679.0,Diesel,Dealer,Automatic,0
+Maruti Dzire,2009,2.36,9.02,133609.0,Petrol,Dealer,Manual,0
+Honda Civic,2021,19.97,24.01,47459.0,Petrol,Individual,Automatic,0
+Maruti Dzire,2010,1.77,7.5,150841.0,CNG,Dealer,Manual,1
+Honda City,2012,5.28,15.59,94962.0,Diesel,Individual,Manual,0
+Honda Amaze,2015,3.58,7.34,125370.0,Diesel,Dealer,Manual,0
+Toyota Innova Crysta,2018,12.84,24.71,84720.0,Petrol,Individual,Manual,1
+Hyundai Creta,2018,9.15,15.56,68234.0,Diesel,Dealer,Automatic,1
+Ford EcoSport,2014,3.51,10.56,,Diesel,Individual,Automatic,0
+Hyundai Verna,2014,4.15,12.24,156180.0,Petrol,Individual,Manual,0
+Ford EcoSport,2020,7.96,10.67,55521.0,Petrol,Dealer,Automatic,0
+Maruti Ciaz,2019,9.73,12.25,22036.0,Diesel,Dealer,Automatic,0
+Maruti Ertiga,2021,8.25,10.64,30292.0,CNG,Individual,Manual,0
+Ford Endeavour,2016,16.56,33.18,77020.0,Diesel,Dealer,Automatic,0
+Maruti Baleno,2020,5.35,7.77,34915.0,CNG,Dealer,Manual,1
+Hyundai i20,2014,3.74,9.47,110126.0,Diesel,Dealer,Automatic,2
+Maruti Ciaz,2015,4.97,9.85,74835.0,Diesel,Dealer,Manual,0
+Volkswagen Polo,2017,4.02,8.17,95631.0,Petrol,Dealer,Manual,0
+Maruti Wagon R,2020,5.45,7.0,42505.0,Petrol,Dealer,Manual,0
+Honda Amaze,2011,2.7,9.47,189148.0,Diesel,Dealer,Manual,2
+Maruti Ciaz,2020,9.94,11.96,52244.0,Petrol,Dealer,Automatic,0
+Maruti Ertiga,2008,2.17,10.04,196264.0,CNG,Dealer,Manual,0
+Toyota Innova Crysta,2015,13.21,25.55,117742.0,Diesel,Dealer,Automatic,0
+Volkswagen Polo,2014,2.77,8.38,161964.0,Petrol,Dealer,Manual,1
+Volkswagen Polo,2017,5.15,9.12,56485.0,Diesel,Dealer,Manual,0
+Honda Civic,2021,19.7,25.29,45080.0,Diesel,Individual,Manual,1
+Maruti Wagon R,2014,2.19,6.0,141972.0,Petrol,Dealer,Manual,1
+Honda CR-V,2017,13.09,26.15,93032.0,Petrol,Individual,Automatic,1
+BMW 3 Series,2015,17.43,45.12,130080.0,Diesel,Individual,Automatic,1
+Toyota Innova Crysta,2019,16.9,24.8,67749.0,Petrol,Dealer,Manual,0
+Toyota Urban Cruiser,2017,5.61,9.31,69390.0,Petrol,Dealer,Automatic,0
+Honda Amaze,2019,5.53,8.0,48519.0,Petrol,Dealer,Manual,0
+Toyota Urban Cruiser,2010,2.62,11.08,172937.0,Petrol,Individual,Manual,1
+Toyota Innova Crysta,2019,17.22,21.89,50894.0,Petrol,Dealer,Automatic,0
+Honda Civic,2016,13.21,23.58,105420.0,Diesel,Dealer,Manual,0
+Honda Civic,2015,12.76,23.89,62978.0,Diesel,Dealer,Manual,0
+Tata Nexon,2013,3.67,10.41,124167.0,Diesel,Dealer,Manual,1
+Hyundai Verna,2016,6.89,15.36,102413.0,Diesel,Dealer,Manual,1
+Hyundai Grand i10,2015,2.57,6.98,103552.0,Petrol,Dealer,Manual,2
+Toyota Fortuner,2013,13.96,32.81,84544.0,Diesel,Dealer,Automatic,0
+Tata Nexon,2019,5.99,9.89,45077.0,Diesel,Individual,Manual,1
+Honda Amaze,2014,2.17,,128616.0,Petrol,Individual,Manual,3
+Mercedes-Benz C-Class,2019,29.77,52.51,66749.0,Petrol,Individual,Automatic,1
+Maruti Brezza,2015,4.36,11.53,93170.0,Petrol,Individual,Manual,1
+Hyundai Verna,2017,5.53,13.53,73496.0,Petrol,Individual,Manual,1
+Mahindra XUV500,2011,5.04,17.17,87284.0,Diesel,Individual,Manual,0
+Volkswagen Vento,2012,3.71,13.07,148601.0,Diesel,Individual,Manual,0
+BMW 3 Series,2011,12.67,56.04,140561.0,Diesel,Individual,Manual,2
+Maruti Swift,2015,2.76,6.32,115763.0,CNG,Individual,Automatic,0
+Hyundai i20,2008,1.87,8.73,126463.0,Diesel,Dealer,Manual,1
+Ford EcoSport,2014,4.24,11.8,90471.0,Petrol,Individual,Automatic,1
+Toyota Corolla Altis,2021,17.31,18.95,35834.0,Diesel,Dealer,Manual,1
+Hyundai Creta,2010,3.65,14.48,217197.0,Diesel,Dealer,Manual,0
+Maruti Swift,2016,3.05,6.96,88459.0,CNG,Individual,Manual,0
+Toyota Fortuner,2020,31.99,42.17,65902.0,Petrol,Dealer,Manual,1
+Maruti Ertiga,2010,2.08,9.55,146911.0,CNG,Dealer,Manual,2
+Honda City,2019,8.25,14.05,53123.0,Petrol,Individual,Manual,1
+Volkswagen Polo,2023,8.01,9.3,12355.0,Petrol,Dealer,Manual,0
+Maruti Swift,2017,3.53,6.66,83646.0,CNG,Dealer,Manual,1
+Toyota Urban Cruiser,2018,6.51,11.04,98321.0,Petrol,Individual,Manual,0
+Maruti Dzire,2009,2.13,8.62,183917.0,Petrol,Dealer,Automatic,1
+Volkswagen Polo,2017,4.84,8.82,75213.0,Diesel,Dealer,Manual,0
+Honda CR-V,2017,18.26,33.65,100302.0,Petrol,Dealer,Manual,0
+Honda CR-V,2015,13.77,31.41,84284.0,Petrol,Dealer,Automatic,1
+Maruti Ciaz,2016,6.3,11.56,65755.0,Diesel,Dealer,Automatic,0
+Maruti Wagon R,2016,2.68,5.64,92051.0,Petrol,Dealer,Manual,1
+Hyundai Grand i10,2011,1.63,7.48,198180.0,CNG,Individual,Manual,0
+Hyundai Creta,2013,5.59,14.93,117391.0,Diesel,Dealer,Manual,0
+Mahindra XUV500,2014,6.8,18.39,165963.0,Diesel,Dealer,Manual,1
+Honda City,2014,5.07,13.12,100722.0,Diesel,Dealer,Manual,1
+Tata Nexon,2018,6.52,11.64,69302.0,Diesel,Dealer,Manual,0
+Mahindra Thar,2012,4.6,13.99,127843.0,Diesel,Dealer,Manual,1
+Hyundai i20,2014,2.83,7.67,80504.0,Petrol,Dealer,Manual,0
+Honda Amaze,2020,5.18,7.24,48234.0,Petrol,Dealer,Manual,1
+Ford EcoSport,2019,6.23,11.62,49110.0,,Individual,Manual,0
+Honda Amaze,2014,3.66,9.12,83017.0,Petrol,Dealer,Automatic,0
+Maruti Swift,2017,3.74,6.81,85287.0,Petrol,Dealer,Automatic,0
+Maruti Brezza,2012,2.38,8.76,195947.0,Petrol,Dealer,Manual,2
+Maruti Wagon R,2017,3.07,6.18,77831.0,Petrol,Individual,Manual,0
+Ford EcoSport,2018,6.75,12.04,52219.0,Petrol,Dealer,Manual,0
+Honda CR-V,2019,20.41,27.18,44336.0,Diesel,Dealer,Automatic,0
+Mercedes-Benz C-Class,2020,35.79,51.87,47206.0,Petrol,Dealer,Automatic,0
+Hyundai Grand i10,2016,2.05,6.08,124916.0,CNG,Individual,Manual,0
+Honda CR-V,2021,27.29,31.35,31734.0,Diesel,Dealer,Automatic,1
+Tata Harrier,2019,9.88,16.68,53179.0,Diesel,Dealer,Manual,1
+Maruti Ertiga,2020,7.33,10.71,56215.0,Petrol,Individual,Automatic,0
+Mahindra XUV500,2018,11.7,18.43,78689.0,Diesel,Dealer,Manual,0
+Mahindra XUV500,2020,12.7,17.67,45702.0,Diesel,Dealer,Manual,0
+BMW 3 Series,2017,17.89,40.79,104490.0,Petrol,Individual,Manual,1
+Maruti Ertiga,2012,3.13,11.57,157491.0,Petrol,Individual,Manual,1
+Tata Nexon,2012,3.93,12.32,174879.0,Diesel,Dealer,Manual,0
+Maruti Ertiga,2015,5.31,12.4,58314.0,Petrol,Dealer,Manual,0
+Honda City,2015,6.77,15.29,98331.0,Petrol,Dealer,Automatic,0
+Mahindra Thar,2015,7.37,17.08,101598.0,Petrol,Dealer,Manual,0
+Mahindra XUV500,2021,12.1,15.23,45061.0,Diesel,Dealer,Manual,0
+Toyota Innova Crysta,2020,16.79,21.38,34700.0,Diesel,Dealer,Automatic,1
+Honda CR-V,2016,13.63,30.34,93965.0,Petrol,Dealer,Automatic,1
+Mahindra Thar,2021,12.79,14.43,22757.0,Petrol,Dealer,Automatic,0
+Maruti Brezza,2017,4.6,8.64,66592.0,Petrol,Dealer,Automatic,1
+Maruti Ciaz,2013,3.44,11.51,99378.0,Petrol,Individual,Manual,2
+Hyundai Creta,2015,7.48,16.44,82569.0,Diesel,Dealer,Automatic,0
+Mercedes-Benz C-Class,2009,9.8,48.18,188330.0,Diesel,Individual,Automatic,1
+Honda Civic,2015,11.9,22.69,78311.0,Diesel,Dealer,Manual,0
+Maruti Brezza,2021,8.96,11.09,24594.0,Petrol,Individual,Manual,0
+Volkswagen Vento,2009,2.14,11.13,171379.0,Petrol,Dealer,Manual,3
+Volkswagen Vento,2016,4.68,10.75,76585.0,Diesel,Dealer,Manual,1
+BMW 3 Series,2019,32.14,43.75,36774.0,Diesel,Dealer,Automatic,0
+Mahindra XUV500,2020,12.16,16.75,38668.0,Diesel,Dealer,Manual,0
+Hyundai Verna,2017,5.14,12.62,68909.0,Petrol,Individual,Manual,1
+Toyota Corolla Altis,2016,9.49,19.81,119159.0,Petrol,Dealer,Manual,1
+Maruti Brezza,2010,2.46,10.2,178948.0,Petrol,Dealer,Automatic,2
+Toyota Urban Cruiser,2016,5.11,11.64,90846.0,Petrol,Individual,Manual,0
+Maruti Brezza,2017,5.13,9.75,54397.0,CNG,Dealer,Manual,1
+Hyundai Creta,2018,9.67,17.14,81743.0,Petrol,Dealer,Manual,0
+Maruti Ciaz,2022,11.86,12.55,16857.0,Petrol,Dealer,Manual,0
+Maruti Wagon R,2020,3.56,5.29,55340.0,Petrol,Individual,Manual,0
+Honda CR-V,2019,26.36,33.48,42333.0,Diesel,Dealer,Automatic,0
+Hyundai i20,2015,3.09,9.46,70356.0,Petrol,Individual,Manual,1
+Maruti Baleno,2020,6.08,8.81,39953.0,Petrol,Individual,Manual,0
+Tata Harrier,2018,9.77,18.21,72512.0,Diesel,Individual,Manual,0
+Toyota Fortuner,2015,19.16,41.11,80839.0,Petrol,Dealer,Automatic,0
+Toyota Urban Cruiser,2010,1.98,9.24,212784.0,Petrol,Dealer,Automatic,3
+Toyota Fortuner,2019,22.72,33.06,65339.0,Diesel,Dealer,Manual,0
+Hyundai Grand i10,2021,5.4,6.99,29559.0,CNG,Dealer,Automatic,0
+BMW 3 Series,2018,24.86,46.01,43256.0,Diesel,Individual,Automatic,0
+Maruti Wagon R,2019,4.08,5.68,56858.0,Petrol,Dealer,Automatic,1
+BMW 3 Series,2014,16.04,42.54,152704.0,Petrol,Dealer,Automatic,1
+Maruti Wagon R,2015,2.55,5.75,117392.0,Petrol,Dealer,Manual,0
+Toyota Fortuner,2019,27.88,38.1,62654.0,Petrol,Dealer,Automatic,0
+Ford Endeavour,2014,13.18,39.85,146433.0,Diesel,Individual,Automatic,2
+Honda CR-V,2018,19.01,31.87,72159.0,Diesel,Individual,Manual,0
+Toyota Corolla Altis,2019,10.56,16.54,46632.0,Petrol,Individual,Manual,0
+Mahindra Thar,2008,2.71,14.01,200960.0,Diesel,Dealer,Manual,1
+Maruti Swift,2018,3.31,6.37,85785.0,CNG,Dealer,Manual,2
+Toyota Glanza,2011,2.55,9.82,170550.0,Petrol,Individual,Automatic,1
+Hyundai Grand i10,2015,2.85,6.93,68540.0,CNG,Dealer,Automatic,0
+Hyundai i20,2016,3.83,9.59,96692.0,Petrol,Individual,Manual,0
+Hyundai Verna,2013,5.46,15.08,151283.0,Diesel,Dealer,Manual,0
+Toyota Corolla Altis,2016,11.75,21.53,80084.0,Petrol,Dealer,Manual,0
+Ford EcoSport,2020,6.57,9.61,36042.0,Petrol,Dealer,Manual,0
+Toyota Fortuner,2021,29.68,34.26,47991.0,Diesel,Individual,Automatic,0
+Toyota Fortuner,2012,11.0,32.35,189697.0,Petrol,Dealer,Automatic,0
+Maruti Ciaz,2018,6.67,10.72,49124.0,Diesel,Dealer,Manual,1
+Toyota Innova Crysta,2014,9.0,23.31,70180.0,Petrol,Dealer,Manual,1
+Maruti Swift,2018,4.82,8.17,83991.0,Diesel,Dealer,Automatic,2
+Hyundai Grand i10,2012,1.92,6.66,153385.0,CNG,Dealer,Manual,1
+Hyundai Creta,2011,4.02,14.83,93989.0,Diesel,Dealer,Manual,1
+Mahindra XUV500,2019,8.92,15.52,43914.0,Diesel,Individual,Automatic,1
+Hyundai i20,2010,1.77,8.93,189307.0,Petrol,Individual,Manual,2
+Hyundai Verna,2011,3.98,15.53,154078.0,Petrol,Dealer,Manual,2
+Volkswagen Polo,2011,1.82,7.83,114753.0,Petrol,Individual,Manual,1
+Mahindra XUV500,2017,9.78,18.43,57753.0,Diesel,Individual,Automatic,0
+Maruti Baleno,2014,3.09,8.39,152808.0,CNG,Dealer,Manual,1
+Volkswagen Polo,2022,6.54,7.77,21797.0,Petrol,Individual,Manual,0
+Ford Endeavour,2020,25.54,40.1,46443.0,Diesel,Individual,Automatic,0
+Honda CR-V,2017,17.63,32.38,59758.0,Petrol,Dealer,Automatic,2
+Ford Endeavour,2013,13.56,39.57,128453.0,Diesel,Dealer,Automatic,1
+Hyundai Verna,2017,5.69,12.25,67164.0,Petrol,Individual,Automatic,2
+Hyundai Creta,2016,6.19,14.25,61675.0,Petrol,Dealer,Manual,0
+Tata Harrier,2014,6.93,19.53,131866.0,Diesel,Dealer,Manual,1
+Hyundai Venue,2016,5.83,11.72,119159.0,Diesel,Dealer,Automatic,0
+Tata Harrier,2010,4.54,19.0,219675.0,Diesel,Dealer,Manual,0
+Toyota Innova Crysta,2012,8.27,27.4,192814.0,Petrol,Dealer,Manual,1
+Maruti Ertiga,2017,4.56,9.96,56429.0,CNG,Dealer,Manual,2
+Maruti Baleno,2011,1.97,8.97,141965.0,CNG,Individual,Manual,3
+Honda Amaze,2018,5.11,8.38,76369.0,Petrol,Dealer,Manual,1
+BMW 3 Series,2018,22.78,43.9,85746.0,Diesel,Dealer,Automatic,2
+Toyota Glanza,2010,2.46,9.94,150877.0,Petrol,Dealer,Manual,2
+Honda Amaze,2015,3.12,7.91,120062.0,Petrol,Individual,Manual,1
+Honda City,2012,4.61,14.4,79140.0,Diesel,Dealer,Manual,1
+Ford EcoSport,2016,4.81,9.63,91084.0,Diesel,Dealer,Manual,0
+Maruti Wagon R,2019,3.75,6.27,49615.0,CNG,Dealer,Manual,0
+Ford Endeavour,2018,22.89,39.09,84573.0,Diesel,Dealer,Manual,0
+Ford EcoSport,2021,7.33,10.03,15273.0,Petrol,Dealer,Manual,1
+Hyundai i20,2016,4.35,8.27,94995.0,Diesel,Dealer,Automatic,0
+Hyundai Venue,2018,5.06,9.44,67351.0,Diesel,Dealer,Manual,2
+Maruti Baleno,2016,3.91,9.34,96242.0,Petrol,Individual,Manual,1
+Mahindra XUV500,2020,11.29,15.68,28620.0,Diesel,Individual,Manual,0
+Toyota Urban Cruiser,2014,5.28,11.97,93257.0,Petrol,Dealer,Automatic,1
+Hyundai i20,2016,4.74,9.06,71265.0,Diesel,Dealer,Automatic,0
+Honda City,2017,7.15,14.68,80654.0,Diesel,Dealer,Manual,2
+Maruti Baleno,2012,2.49,9.03,136054.0,CNG,Individual,Manual,0
+Maruti Swift,2011,2.17,7.84,156775.0,CNG,Dealer,Manual,0
+Honda City,2015,5.92,12.93,91925.0,Diesel,Dealer,Manual,0
+Mahindra XUV500,2016,8.41,19.33,92894.0,Diesel,Dealer,Manual,2
+Ford EcoSport,2017,5.59,10.73,91505.0,Diesel,Dealer,Manual,0
+Hyundai i20,2018,3.82,7.96,70378.0,Diesel,Individual,Manual,1
+Toyota Glanza,2019,5.74,9.8,40097.0,CNG,Individual,Manual,0
+Toyota Urban Cruiser,2019,7.0,11.04,64021.0,Petrol,Dealer,Manual,1
+Toyota Corolla Altis,2018,8.81,15.97,54438.0,Petrol,Dealer,Manual,1
+Honda City,2014,5.06,13.71,112191.0,Diesel,Individual,Manual,3
+Volkswagen Vento,2019,6.27,10.9,77285.0,Petrol,Dealer,Manual,1
+Toyota Glanza,2019,5.91,9.41,47835.0,CNG,Dealer,Manual,0
+Maruti Swift,2022,7.74,7.65,28679.0,Diesel,Dealer,Manual,0
+Toyota Corolla Altis,2013,6.99,18.83,114609.0,Petrol,Dealer,Automatic,0
+Mahindra XUV500,2021,13.48,17.48,38065.0,Diesel,Dealer,Manual,0
+BMW 3 Series,2017,24.99,43.9,83201.0,Diesel,Dealer,Automatic,0
+Mahindra Thar,2010,4.36,17.47,102462.0,Petrol,Dealer,Manual,0
+Audi A4,2018,25.21,40.56,61837.0,Petrol,Dealer,Automatic,0
+Maruti Ciaz,2012,3.63,12.35,130041.0,Diesel,Dealer,Manual,2
+Ford EcoSport,2018,4.96,8.86,62514.0,Petrol,Dealer,Manual,0
+Honda CR-V,2016,14.88,27.31,51902.0,Diesel,Dealer,Automatic,1
+Honda Amaze,2011,2.32,8.35,114396.0,Petrol,Dealer,Manual,1
+Hyundai Verna,2016,5.92,15.04,125941.0,Petrol,Dealer,Manual,1
+Maruti Baleno,2009,2.1,9.6,174352.0,Petrol,Individual,Manual,1
+Audi A4,2010,12.47,47.58,117364.0,Petrol,Individual,Automatic,0
+BMW 3 Series,2018,26.73,41.64,41835.0,Diesel,Dealer,Automatic,1
+Honda City,2017,6.57,12.74,61381.0,Diesel,Individual,Manual,0
+Mercedes-Benz C-Class,2011,20.09,61.94,128602.0,Diesel,Dealer,Automatic,0
+Honda CR-V,2017,17.36,32.79,86649.0,Petrol,Individual,Automatic,0
+Maruti Swift,2022,7.64,7.55,28212.0,Petrol,Dealer,Automatic,0
+Mahindra XUV500,2015,6.97,19.6,75969.0,Diesel,Dealer,Manual,2
+Hyundai Venue,2014,3.41,9.24,89309.0,Diesel,Dealer,Manual,2
+Maruti Brezza,2019,7.43,11.61,45107.0,Petrol,Individual,Manual,1
+Hyundai i20,2017,3.66,7.89,85335.0,Diesel,Individual,Automatic,1
+Hyundai Grand i10,2019,4.75,7.17,60604.0,CNG,Dealer,Manual,0
+Toyota Urban Cruiser,2020,8.55,11.45,54708.0,Petrol,Dealer,Automatic,0
+Mahindra XUV500,2023,15.19,14.96,7710.0,Diesel,Dealer,Manual,0
+Hyundai Creta,2017,7.97,14.0,72779.0,Diesel,Dealer,Manual,0
+Mahindra Thar,2018,7.03,13.59,86486.0,Diesel,Dealer,Manual,1
+Honda CR-V,2023,33.59,28.81,13982.0,Diesel,Dealer,Automatic,0
+Mercedes-Benz C-Class,2015,23.54,57.17,55632.0,Petrol,Individual,Automatic,1
+Toyota Innova Crysta,2016,13.82,24.75,68380.0,Diesel,Dealer,Manual,1
+Maruti Wagon R,2019,3.52,5.77,68036.0,CNG,Dealer,Manual,1
+Honda CR-V,2018,22.38,32.93,64224.0,Diesel,Dealer,Automatic,0
+Ford EcoSport,2013,4.06,10.87,144709.0,Diesel,Dealer,Manual,0
+Maruti Ciaz,2015,5.9,12.18,103513.0,Petrol,Dealer,Manual,0
+Hyundai Verna,2009,2.1,11.63,217983.0,Petrol,Dealer,Manual,1
+Volkswagen Vento,2015,5.22,13.5,133764.0,Petrol,Dealer,Manual,0
+Honda Civic,2011,6.19,23.67,157392.0,Petrol,Individual,Automatic,1
+Tata Harrier,2012,5.92,20.35,154450.0,Diesel,Dealer,Automatic,2
+Ford EcoSport,2014,3.61,9.75,145809.0,Diesel,Dealer,Manual,0
+Tata Harrier,2010,5.94,21.3,103423.0,Diesel,Dealer,Manual,0
+Honda Civic,2017,13.04,25.36,76477.0,Diesel,Individual,Manual,0
+Volkswagen Vento,2017,5.41,10.86,86947.0,Petrol,Dealer,Manual,0
+Volkswagen Vento,2012,3.54,10.96,112107.0,Diesel,Dealer,Automatic,2
+Maruti Swift,2018,4.04,6.28,76085.0,Diesel,Dealer,Manual,0
+Toyota Glanza,2021,7.29,9.58,27248.0,CNG,Dealer,Manual,0
+Tata Harrier,2016,9.01,20.69,85835.0,Diesel,Dealer,Manual,1
+Mercedes-Benz C-Class,2016,19.03,48.59,117744.0,Petrol,Individual,Automatic,0
+Toyota Innova Crysta,2010,6.5,23.37,211659.0,Diesel,Dealer,Manual,2
+Mercedes-Benz C-Class,2015,21.57,58.57,141688.0,Petrol,Dealer,Automatic,1
+Volkswagen Vento,2017,6.94,13.21,74285.0,Diesel,Dealer,Manual,1
+Tata Nexon,2014,3.94,11.88,149879.0,Petrol,Dealer,Manual,1
+BMW 3 Series,2012,12.21,47.44,150573.0,Petrol,Individual,Automatic,3
+Maruti Dzire,2017,5.19,8.3,58519.0,Diesel,Dealer,Automatic,1
+Maruti Dzire,2016,3.87,8.52,121070.0,Petrol,Dealer,Manual,1
+Mahindra XUV500,2016,8.73,18.38,85218.0,Diesel,Dealer,Manual,0
+BMW 3 Series,2019,31.1,45.78,47022.0,Petrol,Dealer,Automatic,0
+Maruti Brezza,2015,4.51,10.05,129740.0,CNG,Dealer,Manual,0
+Volkswagen Vento,2022,11.45,12.57,10377.0,Diesel,Individual,Automatic,0
+Honda Civic,2013,9.54,24.59,96944.0,Diesel,Dealer,Manual,1
+Toyota Urban Cruiser,2014,3.16,9.94,78130.0,Petrol,Individual,Manual,2
+Volkswagen Vento,2019,9.09,12.69,48076.0,Diesel,Dealer,Automatic,0
+Tata Harrier,2016,9.93,21.05,96623.0,Diesel,Dealer,Manual,0
+Maruti Ciaz,2018,7.26,12.46,54945.0,Diesel,Individual,Manual,1
+Maruti Dzire,2008,1.76,9.15,221083.0,CNG,Dealer,Manual,0
+Maruti Brezza,2018,6.11,10.35,37786.0,CNG,Dealer,Manual,0
+Honda Amaze,2018,4.5,7.15,92897.0,Petrol,Dealer,Manual,0
+Maruti Baleno,2011,1.87,7.77,184381.0,Petrol,Individual,Manual,1
+Honda CR-V,2010,7.79,33.35,174797.0,Petrol,Individual,Manual,1
+Maruti Dzire,2016,3.63,7.77,86190.0,CNG,Dealer,Manual,0
+Hyundai Verna,2017,7.93,14.35,81204.0,Petrol,Dealer,Automatic,0
+Hyundai Grand i10,2016,2.99,7.0,131833.0,CNG,Dealer,Manual,0
+Hyundai i20,2014,2.64,8.42,111423.0,Petrol,Dealer,Manual,1
+BMW 3 Series,2013,17.17,48.64,82967.0,Diesel,Dealer,Automatic,1
+Volkswagen Polo,2021,6.55,8.83,18920.0,Petrol,Dealer,Manual,1
+Hyundai i20,2016,4.0,9.4,125487.0,Petrol,Dealer,Manual,0
+Toyota Glanza,2020,6.09,9.2,54490.0,Petrol,Individual,Manual,0
+Maruti Dzire,2017,3.72,6.79,65953.0,Diesel,Individual,Automatic,0
+Volkswagen Vento,2016,5.76,11.53,72320.0,Diesel,Dealer,Automatic,0
+Honda City,2021,10.8,14.97,45204.0,Petrol,Dealer,Manual,1
+Honda CR-V,2017,18.83,33.76,94902.0,Petrol,Dealer,Automatic,0
+Toyota Glanza,2014,2.94,8.56,112151.0,Petrol,Individual,Manual,2
+Maruti Baleno,2018,3.92,8.3,73620.0,CNG,Individual,Manual,1
+Mahindra XUV500,2019,11.94,19.2,67152.0,Diesel,Dealer,Manual,0
+Maruti Wagon R,2018,3.65,6.62,60959.0,CNG,Dealer,Manual,0
+Maruti Swift,2012,2.13,6.18,146685.0,Diesel,Dealer,Manual,1
+Mercedes-Benz C-Class,2018,32.03,55.6,71145.0,Petrol,Dealer,Automatic,0
+Mahindra XUV500,2016,9.35,19.8,78172.0,Diesel,Dealer,Manual,0
+BMW 3 Series,2014,18.09,54.68,79985.0,Petrol,Individual,Automatic,2
+Mahindra XUV500,2022,13.14,16.02,23602.0,Diesel,Dealer,Manual,0
+Toyota Innova Crysta,2012,8.02,24.06,145694.0,Diesel,Dealer,Manual,1
+BMW 3 Series,2013,15.37,41.41,101005.0,Diesel,Dealer,Automatic,1
+Toyota Innova Crysta,2017,15.94,23.56,79816.0,Diesel,Dealer,Automatic,0
+Honda CR-V,2009,7.28,29.86,179577.0,Petrol,Dealer,Manual,0
+Toyota Innova Crysta,2019,13.81,20.76,73847.0,Diesel,Individual,Automatic,0
+Honda CR-V,2022,33.03,29.94,20678.0,Diesel,Dealer,Automatic,0
+Volkswagen Vento,2018,5.99,11.6,83188.0,Diesel,Individual,Manual,0
+Maruti Dzire,2019,5.54,8.64,66637.0,Diesel,Individual,Automatic,1
+Toyota Urban Cruiser,2016,4.83,11.0,110899.0,Petrol,Individual,Manual,0
+Mercedes-Benz C-Class,2014,14.54,51.28,137927.0,Petrol,Individual,Automatic,3
+Ford Endeavour,2018,24.14,39.27,60484.0,Diesel,Dealer,Automatic,1
+Ford EcoSport,2017,6.37,11.45,98457.0,Diesel,Dealer,Automatic,0
+Toyota Innova Crysta,2015,7.91,20.31,91788.0,Petrol,Individual,Automatic,2
+Honda City,2016,6.48,13.26,68809.0,Petrol,Individual,Automatic,0
+Honda CR-V,2015,11.26,28.09,86187.0,Diesel,Individual,Automatic,2
+Mercedes-Benz C-Class,2015,22.34,53.34,81702.0,Petrol,Dealer,Automatic,1
+Audi A4,2012,15.55,53.29,149270.0,Diesel,Dealer,Automatic,1
+Mahindra Thar,2014,5.87,16.1,145211.0,Petrol,Dealer,Automatic,2
+Maruti Ciaz,2014,4.28,10.95,97260.0,Diesel,Dealer,Manual,1
+Honda Amaze,2008,1.91,8.42,123522.0,Diesel,Dealer,Manual,0
+Honda CR-V,2014,13.56,32.46,97099.0,Diesel,Dealer,Automatic,1
+Volkswagen Polo,2019,6.69,10.3,53390.0,Diesel,Individual,Automatic,0
+Ford Endeavour,2016,14.64,34.18,104166.0,Diesel,Dealer,Manual,1
+Ford EcoSport,2021,9.41,11.23,30063.0,Diesel,Dealer,Automatic,0
+BMW 3 Series,2021,40.86,48.38,25476.0,Diesel,Dealer,Automatic,0
+Toyota Glanza,2018,4.69,8.37,84414.0,CNG,Dealer,Manual,1
+Honda Amaze,2013,2.99,8.87,133457.0,Petrol,Dealer,Manual,1
+Honda City,2017,7.81,13.71,94893.0,Diesel,Dealer,Manual,0
+Hyundai i20,2012,2.58,8.86,105273.0,Petrol,Dealer,Automatic,1
+Honda City,2016,6.51,13.75,93840.0,Petrol,Dealer,Manual,1
+Audi A4,2018,26.52,44.4,84399.0,Diesel,Individual,Automatic,0
+Toyota Corolla Altis,2018,12.4,20.69,53395.0,Petrol,Dealer,Manual,0
+Honda City,2008,2.89,13.27,208441.0,Diesel,Dealer,Manual,1
+Honda Amaze,2010,1.96,7.64,137429.0,Diesel,Dealer,Automatic,3
+Hyundai Venue,2021,9.1,11.51,50451.0,Diesel,Dealer,Manual,0
+Maruti Swift,2013,2.25,6.46,140585.0,CNG,Dealer,Manual,1
+Hyundai Grand i10,2015,2.6,7.04,87244.0,CNG,Dealer,Manual,1
+Maruti Baleno,2018,4.1,7.28,44508.0,Petrol,Individual,Manual,0
+Toyota Corolla Altis,2016,9.84,19.91,65696.0,Petrol,Dealer,Manual,0
+Mercedes-Benz C-Class,2010,11.84,47.9,156377.0,Petrol,Dealer,Manual,0
+Maruti Swift,2021,6.84,8.49,40456.0,CNG,Dealer,Manual,0
+Toyota Corolla Altis,2011,4.3,19.56,208541.0,Diesel,Individual,Manual,3
+Audi A4,2016,21.86,54.65,110101.0,Diesel,Individual,Automatic,1
+Ford EcoSport,2017,5.37,9.38,84568.0,Petrol,Dealer,Automatic,0
+Maruti Brezza,2020,5.72,9.31,47358.0,CNG,Individual,Manual,0
+Audi A4,2015,15.92,40.05,97971.0,Petrol,Dealer,Automatic,2
+Maruti Wagon R,2023,4.35,5.31,7128.0,CNG,Individual,Manual,0
+Mercedes-Benz C-Class,2021,46.49,55.1,27219.0,Petrol,Dealer,Automatic,0
+Maruti Brezza,2014,3.63,9.19,152712.0,Petrol,Dealer,Automatic,0
+Hyundai Verna,2013,5.33,15.4,105494.0,Diesel,Dealer,Manual,1
+Maruti Ciaz,2018,5.97,10.19,60119.0,Petrol,Individual,Manual,0
+Hyundai i20,2013,3.35,9.08,99861.0,Diesel,Dealer,Automatic,0
+Honda Amaze,2021,7.17,8.4,34237.0,Diesel,Dealer,Manual,1
+Mahindra Thar,2017,7.48,13.34,95287.0,Diesel,Dealer,Automatic,0
+Toyota Glanza,2018,4.07,7.2,61116.0,CNG,Individual,Automatic,0
+Toyota Glanza,2014,2.67,7.85,73529.0,Petrol,Individual,Manual,1
+Maruti Ertiga,2014,3.91,10.65,131813.0,Petrol,Dealer,Manual,2
+Honda Civic,2022,24.32,23.86,29772.0,Diesel,Dealer,Manual,0
+Maruti Ciaz,2018,5.65,9.78,86996.0,Petrol,Dealer,Manual,1
+Honda CR-V,2014,10.95,32.2,138477.0,Petrol,Dealer,Automatic,3
+Maruti Wagon R,2019,3.83,6.64,71225.0,Petrol,Individual,Manual,1
+Maruti Swift,2014,2.69,8.04,81076.0,Diesel,Individual,Manual,2
+Mahindra Thar,2018,8.41,15.35,81186.0,Diesel,Dealer,Manual,1
+Toyota Corolla Altis,2015,6.78,15.9,130657.0,Petrol,Dealer,Manual,1
+Honda Amaze,2016,4.72,9.66,68816.0,Diesel,Individual,Automatic,1
+Toyota Corolla Altis,2017,8.84,18.18,51712.0,Diesel,Individual,Manual,1
+Maruti Wagon R,2014,2.4,6.49,121805.0,Petrol,Dealer,Manual,1
+Toyota Fortuner,2017,18.85,36.1,91734.0,Petrol,Individual,Automatic,0
+Mahindra XUV500,2018,9.13,16.26,47760.0,Diesel,Dealer,Manual,1
+Honda Amaze,2013,2.41,8.16,149871.0,Petrol,Dealer,Manual,3
+Toyota Innova Crysta,2010,5.44,23.79,128167.0,Petrol,Individual,Manual,1
+Maruti Wagon R,2015,2.38,5.76,70894.0,Petrol,Dealer,Manual,2
+Hyundai Creta,2017,6.95,13.44,53344.0,Diesel,Dealer,Manual,1
+Toyota Corolla Altis,2017,10.84,17.39,55901.0,Diesel,Dealer,Manual,0
+Hyundai i20,2017,4.9,9.87,107569.0,Diesel,Dealer,Manual,1
+Toyota Glanza,2015,2.43,7.24,108581.0,CNG,Individual,Manual,1
+Toyota Innova Crysta,2013,7.86,24.98,169401.0,Diesel,Individual,Manual,1
+Mahindra Thar,2014,5.29,14.73,135189.0,Petrol,Dealer,Manual,0
+Maruti Baleno,2018,4.74,7.36,54556.0,CNG,Dealer,Automatic,0
+Toyota Urban Cruiser,2014,4.12,10.06,84152.0,Petrol,Dealer,Manual,0
+Maruti Dzire,2021,7.48,8.83,35735.0,Petrol,Dealer,Manual,0
+Honda Amaze,2016,3.76,7.21,83489.0,Petrol,Dealer,Manual,0
+Toyota Innova Crysta,2020,17.83,24.93,67052.0,Petrol,Dealer,Manual,0
+Hyundai Venue,2016,4.43,11.05,121016.0,Diesel,Dealer,Manual,1
+Mahindra Thar,2010,3.37,15.01,216076.0,Diesel,Dealer,Manual,1
+Hyundai Venue,2012,2.49,9.37,94326.0,Diesel,Individual,Manual,1
+Mercedes-Benz C-Class,2012,14.02,50.06,117957.0,Petrol,Dealer,Automatic,1
+Audi A4,2019,30.11,51.76,43123.0,Diesel,Dealer,Manual,1
+Tata Harrier,2011,4.18,18.16,148741.0,Diesel,Individual,Manual,2
+Toyota Urban Cruiser,2019,8.77,11.85,49249.0,Petrol,Dealer,Automatic,0
+Hyundai Creta,2013,5.62,13.65,93923.0,Diesel,Dealer,Automatic,0
+Tata Harrier,2013,7.08,21.21,97013.0,Diesel,Dealer,Manual,1
+Toyota Corolla Altis,2014,5.75,16.1,101508.0,Diesel,Individual,Manual,1
+Maruti Baleno,2015,3.7,8.3,112242.0,CNG,Dealer,Manual,0
+Maruti Ciaz,2020,8.64,11.43,48429.0,Diesel,Dealer,Manual,0
+Toyota Fortuner,2018,23.93,34.51,62499.0,Diesel,Dealer,Automatic,0
+Hyundai i20,2019,4.64,7.58,66484.0,Diesel,Individual,Manual,0
+Maruti Swift,2018,4.1,7.39,88957.0,CNG,Dealer,Manual,1
+BMW 3 Series,2016,21.35,43.39,117107.0,Diesel,Dealer,Automatic,1
+Maruti Brezza,2020,7.41,9.23,29032.0,Petrol,Dealer,Manual,0
+Volkswagen Polo,2017,4.04,7.87,71180.0,Diesel,Individual,Manual,0
+Mahindra Thar,2013,4.41,14.32,112946.0,Petrol,Dealer,Manual,1
+Honda Civic,2018,12.71,18.51,52709.0,Diesel,Dealer,Manual,1
+Hyundai Grand i10,2016,2.11,5.72,118172.0,CNG,Individual,Manual,1
+Mahindra Thar,2012,4.55,15.89,147407.0,Diesel,Dealer,Manual,2
+Hyundai i20,2020,6.62,9.56,53418.0,Petrol,Dealer,Manual,0
+Honda CR-V,2016,16.45,32.22,72356.0,Petrol,Dealer,Automatic,0
+Toyota Glanza,2020,6.42,8.62,35876.0,Petrol,Dealer,Manual,0
+Tata Harrier,2019,11.2,17.42,66647.0,Diesel,Dealer,Manual,0
+Honda Amaze,2013,3.11,8.92,91023.0,Petrol,Dealer,Manual,2
+BMW 3 Series,2018,28.15,43.46,42025.0,Petrol,Dealer,Automatic,0
+Hyundai Verna,2009,3.3,15.46,135168.0,Diesel,Dealer,Manual,2
+Toyota Corolla Altis,2020,15.26,17.74,58088.0,Diesel,Dealer,Automatic,0
+Tata Harrier,2023,16.97,17.75,15576.0,Diesel,Individual,Automatic,0
+Audi A4,2010,10.49,45.93,114193.0,Petrol,Individual,Automatic,1
+BMW 3 Series,2017,22.07,44.15,53016.0,Petrol,Individual,Automatic,1
+Volkswagen Vento,2017,6.12,12.29,89597.0,Petrol,Dealer,Manual,1
+Hyundai Grand i10,2016,2.73,7.12,86523.0,Petrol,Individual,Manual,0
+Toyota Innova Crysta,2016,12.01,21.43,130812.0,Diesel,Dealer,Automatic,0
+Ford EcoSport,2018,5.89,11.14,71961.0,Diesel,Individual,Manual,0
+Maruti Swift,2012,2.24,7.63,151539.0,Diesel,Dealer,Manual,2
+Toyota Glanza,2013,1.95,7.25,161901.0,CNG,Individual,Manual,3
+Hyundai Verna,2016,5.86,13.71,86142.0,Diesel,Dealer,Manual,1
+Audi A4,2017,23.97,45.07,51905.0,Diesel,Dealer,Automatic,1
+Ford EcoSport,2020,7.32,11.08,38751.0,Diesel,Dealer,Manual,1
+BMW 3 Series,2009,11.47,54.63,188887.0,Diesel,Individual,Automatic,1
+Honda City,2010,4.3,16.39,199909.0,Petrol,Dealer,Automatic,0
+Volkswagen Vento,2016,4.16,11.13,61989.0,Petrol,Individual,Manual,2
+Tata Harrier,2016,8.22,17.46,107461.0,Diesel,Dealer,Automatic,0
+Toyota Urban Cruiser,2015,4.95,11.59,71042.0,Petrol,Dealer,Manual,1
+Volkswagen Vento,2012,2.7,10.4,139195.0,Diesel,Individual,Automatic,1
+Hyundai Verna,2016,5.23,12.17,100450.0,Diesel,Dealer,Manual,0
+Maruti Baleno,2019,4.61,7.27,62531.0,Petrol,Dealer,Manual,1
+Ford EcoSport,2019,6.38,9.9,57816.0,Petrol,Dealer,Manual,0
+Mahindra Thar,2016,6.48,14.97,121109.0,Petrol,Dealer,Manual,0
+BMW 3 Series,2018,27.29,42.48,62127.0,Petrol,Dealer,Automatic,0
+Hyundai Verna,2017,6.51,13.19,91768.0,Diesel,Dealer,Manual,0
+Hyundai Verna,2013,4.95,15.22,99760.0,Petrol,Dealer,Manual,1
+Audi A4,2011,14.23,48.17,187223.0,Diesel,Dealer,Automatic,0
+Ford EcoSport,2020,7.14,9.68,40150.0,Diesel,Individual,Automatic,0
+Maruti Ciaz,2015,4.36,9.51,97694.0,Diesel,Dealer,Manual,0
+Volkswagen Vento,2016,5.94,13.06,53385.0,Diesel,Dealer,Manual,1
+Mercedes-Benz C-Class,2015,21.05,59.48,77533.0,Petrol,Dealer,Manual,1
+Maruti Wagon R,2016,2.87,5.32,48093.0,Petrol,Individual,Automatic,0
+Toyota Corolla Altis,2016,8.98,17.2,56723.0,Petrol,Dealer,Manual,0
+Maruti Ciaz,2015,5.33,12.04,92082.0,Diesel,Individual,Automatic,1
+Maruti Ertiga,2017,7.32,12.86,73891.0,Petrol,Individual,Automatic,0
+Mahindra Thar,2009,3.54,17.31,194581.0,Petrol,Dealer,Manual,1
+Toyota Glanza,2019,6.96,9.85,70372.0,Petrol,Dealer,Manual,0
+Maruti Baleno,2018,5.21,9.06,72605.0,CNG,Dealer,Manual,0
+Maruti Brezza,2019,8.0,11.66,46560.0,CNG,Dealer,Automatic,0
+Ford Endeavour,2017,13.84,31.44,110414.0,Diesel,Dealer,Automatic,1
+Mahindra XUV500,2018,11.26,18.62,68461.0,Diesel,Dealer,Manual,1
+Honda CR-V,2020,23.02,28.28,48755.0,Diesel,Dealer,Automatic,0
+Hyundai Venue,2019,5.78,9.23,58968.0,Petrol,Dealer,Manual,0
+Hyundai Venue,2016,4.13,9.38,68950.0,Petrol,Dealer,Manual,1
+Volkswagen Vento,2021,10.22,13.3,39960.0,Petrol,Dealer,Manual,0
+Mercedes-Benz C-Class,2019,41.71,59.02,34049.0,Petrol,Dealer,Manual,0
+Honda Amaze,2010,2.46,8.64,191457.0,Diesel,Dealer,Automatic,0
+Toyota Fortuner,2017,19.65,35.63,98574.0,Diesel,Dealer,Automatic,1
+Toyota Fortuner,2016,15.96,34.76,102636.0,Petrol,Dealer,Automatic,1
+BMW 3 Series,2016,24.66,46.03,79186.0,Diesel,Dealer,Automatic,0
+Hyundai Creta,2016,7.02,17.32,77930.0,Petrol,Individual,Manual,0
+Mahindra Thar,2014,7.02,17.17,81630.0,Diesel,Dealer,Automatic,1
