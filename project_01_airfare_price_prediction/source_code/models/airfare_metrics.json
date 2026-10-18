@@ -1,0 +1,50 @@
+{
+  "project_id": "PROJECT-001",
+  "title": "A Holistic Approach on Airfare Price Prediction Using LSTM Machine Learning Techniques",
+  "dataset": "Kaggle Real Indian Domestic Airfare Dataset (10,683 records)",
+  "models": {
+    "LSTM_Neural_Network": {
+      "architecture": "Bidirectional LSTM (2 Layers, Hidden Dim 64, SmoothL1Loss)",
+      "r2_score": 0.7566,
+      "mae_inr": 1362.47,
+      "rmse_inr": 2290.82,
+      "epochs": 25
+    },
+    "Random_Forest_Benchmark": {
+      "architecture": "Ensemble Random Forest (100 Trees, Max Depth 15)",
+      "r2_score": 0.8321,
+      "mae_inr": 1136.58,
+      "rmse_inr": 1902.7
+    }
+  },
+  "categories": {
+    "airlines": [
+      "Air Asia",
+      "Air India",
+      "GoAir",
+      "IndiGo",
+      "Jet Airways",
+      "Jet Airways Business",
+      "Multiple carriers",
+      "Multiple carriers Premium economy",
+      "SpiceJet",
+      "Trujet",
+      "Vistara",
+      "Vistara Premium economy"
+    ],
+    "sources": [
+      "Banglore",
+      "Chennai",
+      "Delhi",
+      "Kolkata",
+      "Mumbai"
+    ],
+    "destinations": [
+      "Banglore",
+      "Cochin",
+      "Delhi",
+      "Hyderabad",
+      "Kolkata"
+    ]
+  }
+}
