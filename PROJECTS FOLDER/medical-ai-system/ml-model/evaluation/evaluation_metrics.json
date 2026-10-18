@@ -1,0 +1,87 @@
+{
+  "overall_accuracy": 0.7702,
+  "macro_f1": 0.2752,
+  "macro_precision": 0.2679,
+  "macro_recall_sensitivity": 0.3086,
+  "macro_specificity": 0.8745,
+  "total_test_samples": 49712,
+  "per_class_metrics": {
+    "N": {
+      "name": "Normal Sinus Rhythm",
+      "support": 44259,
+      "precision": 0.9377,
+      "recall_sensitivity": 0.8136,
+      "specificity": 0.5615,
+      "f1_score": 0.8713
+    },
+    "S": {
+      "name": "Supraventricular Ectopic Beat",
+      "support": 1837,
+      "precision": 0.0508,
+      "recall_sensitivity": 0.031,
+      "specificity": 0.9777,
+      "f1_score": 0.0385
+    },
+    "V": {
+      "name": "Ventricular Ectopic Beat",
+      "support": 3221,
+      "precision": 0.3502,
+      "recall_sensitivity": 0.688,
+      "specificity": 0.9116,
+      "f1_score": 0.4641
+    },
+    "F": {
+      "name": "Fusion Beat",
+      "support": 388,
+      "precision": 0.001,
+      "recall_sensitivity": 0.0103,
+      "specificity": 0.9219,
+      "f1_score": 0.0019
+    },
+    "Q": {
+      "name": "Unknown / Unclassified Beat",
+      "support": 7,
+      "precision": 0.0,
+      "recall_sensitivity": 0.0,
+      "specificity": 0.9999,
+      "f1_score": 0.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      36009,
+      1046,
+      4001,
+      3199,
+      4
+    ],
+    [
+      1683,
+      57,
+      57,
+      40,
+      0
+    ],
+    [
+      372,
+      19,
+      2216,
+      614,
+      0
+    ],
+    [
+      336,
+      1,
+      47,
+      4,
+      0
+    ],
+    [
+      0,
+      0,
+      7,
+      0,
+      0
+    ]
+  ]
+}

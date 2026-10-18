@@ -1,0 +1,246 @@
+{
+  "accuracy": 0.315,
+  "macro_f1": 0.3144190977267636,
+  "classes": [
+    "Chudidhar",
+    "Dresses",
+    "Ethnic wear",
+    "Formal wear",
+    "Jeans",
+    "Kurtis",
+    "Party wear",
+    "Sarees",
+    "Shirts",
+    "T-shirts",
+    "Trousers"
+  ],
+  "confusion_matrix": [
+    [
+      4,
+      0,
+      5,
+      0,
+      0,
+      1,
+      0,
+      3,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      4,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      7,
+      0,
+      0,
+      2,
+      0,
+      4,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      4
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      4,
+      3,
+      0,
+      0,
+      6,
+      2,
+      0
+    ],
+    [
+      3,
+      0,
+      3,
+      0,
+      3,
+      8,
+      0,
+      5,
+      6,
+      6,
+      0
+    ],
+    [
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      3,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      3,
+      0,
+      0,
+      5,
+      0,
+      3,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      4,
+      2,
+      4,
+      4,
+      0,
+      14,
+      4,
+      8
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      5,
+      2,
+      0,
+      0,
+      6,
+      5,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7
+    ]
+  ],
+  "train_samples": 800,
+  "test_samples": 200,
+  "classification_report": {
+    "Chudidhar": {
+      "precision": 0.23529411764705882,
+      "recall": 0.3076923076923077,
+      "f1-score": 0.26666666666666666,
+      "support": 13.0
+    },
+    "Dresses": {
+      "precision": 0.35714285714285715,
+      "recall": 0.45454545454545453,
+      "f1-score": 0.4,
+      "support": 11.0
+    },
+    "Ethnic wear": {
+      "precision": 0.3888888888888889,
+      "recall": 0.3888888888888889,
+      "f1-score": 0.3888888888888889,
+      "support": 18.0
+    },
+    "Formal wear": {
+      "precision": 0.2727272727272727,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.3,
+      "support": 9.0
+    },
+    "Jeans": {
+      "precision": 0.2857142857142857,
+      "recall": 0.26666666666666666,
+      "f1-score": 0.27586206896551724,
+      "support": 15.0
+    },
+    "Kurtis": {
+      "precision": 0.32,
+      "recall": 0.23529411764705882,
+      "f1-score": 0.2711864406779661,
+      "support": 34.0
+    },
+    "Party wear": {
+      "precision": 0.3333333333333333,
+      "recall": 0.23076923076923078,
+      "f1-score": 0.2727272727272727,
+      "support": 13.0
+    },
+    "Sarees": {
+      "precision": 0.2,
+      "recall": 0.1875,
+      "f1-score": 0.1935483870967742,
+      "support": 16.0
+    },
+    "Shirts": {
+      "precision": 0.34146341463414637,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.3373493975903614,
+      "support": 42.0
+    },
+    "T-shirts": {
+      "precision": 0.29411764705882354,
+      "recall": 0.2777777777777778,
+      "f1-score": 0.2857142857142857,
+      "support": 18.0
+    },
+    "Trousers": {
+      "precision": 0.3684210526315789,
+      "recall": 0.6363636363636364,
+      "f1-score": 0.4666666666666667,
+      "support": 11.0
+    },
+    "accuracy": 0.315,
+    "macro avg": {
+      "precision": 0.3088275336162041,
+      "recall": 0.33201497700160804,
+      "f1-score": 0.3144190977267636,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.31414600336108306,
+      "recall": 0.315,
+      "f1-score": 0.3100601529909443,
+      "support": 200.0
+    }
+  },
+  "data_provenance": "Synthetic academic demonstration data. Model illustrates predictive workflow."
+}

@@ -1,0 +1,19 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Datasets & Checkpoints
+dataset/mit-bih/*
+!dataset/mit-bih/.gitkeep
+saved-model/*
+!saved-model/.gitkeep
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/

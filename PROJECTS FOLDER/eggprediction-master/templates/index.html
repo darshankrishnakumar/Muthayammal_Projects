@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Egg Sex Prediction AI | Neural Network & Morphology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top right, #1e1b4b, #0f172a, #030712);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-hover:hover {
+      background: rgba(51, 65, 85, 0.85);
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-2px);
+      transition: all 0.25s ease;
+    }
+    .badge-female {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.4));
+      border: 1px solid #ec4899;
+      color: #f472b6;
+    }
+    .badge-male {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.4));
+      border: 1px solid #3b82f6;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="glass-card rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 border-b border-indigo-500/20">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white text-2xl font-bold">
+          <i class="fa-solid fa-egg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-amber-200 via-pink-200 to-indigo-200 bg-clip-text text-transparent">
+              Egg Sex Prediction AI
+            </h1>
+            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              Online
+            </span>
+          </div>
+          <p class="text-slate-400 text-sm mt-0.5">
+            Non-invasive chick sex determination using Egg Shape Morphology (Shape Index) & Neural Network Machine Learning
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-3">
+        <button id="submitAllBtn" onclick="submitAll()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 flex items-center gap-2 transition-all transform active:scale-95">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Submit All (Batch Evaluation)</span>
+        </button>
+        <button onclick="document.getElementById('fileInput').click()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-sm border border-slate-700 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-cloud-arrow-up text-indigo-400"></i>
+          <span>Upload Image</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Grid: Upload & Predict (Left) vs Results (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Panel: Input & Samples (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Upload Card -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-camera text-indigo-400"></i>
+              <span>Input Egg Image</span>
+            </h2>
+            <span class="text-xs text-slate-400">PNG, JPG, JPEG</span>
+          </div>
+
+          <!-- Dropzone -->
+          <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-indigo-500/50 rounded-xl p-6 text-center cursor-pointer transition-all bg-slate-900/40 hover:bg-slate-900/80 group">
+            <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+            <div id="uploadPrompt" class="space-y-3">
+              <div class="w-12 h-12 mx-auto rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+              </div>
+              <div class="text-sm">
+                <span class="font-medium text-indigo-400">Click to upload</span> or drag and drop
+              </div>
+              <p class="text-xs text-slate-500">Egg side-profile photo with good contrast</p>
+            </div>
+
+            <!-- Preview Image (Initially Hidden) -->
+            <div id="imagePreviewContainer" class="hidden space-y-3">
+              <img id="imagePreview" src="" alt="Selected Egg" class="max-h-56 mx-auto rounded-lg object-contain shadow-md border border-slate-700">
+              <p id="fileNameDisplay" class="text-xs text-slate-400 font-mono"></p>
+            </div>
+          </div>
+
+          <!-- Run Predict Button -->
+          <button id="predictBtn" onclick="runPrediction()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Predict Chick Sex</span>
+          </button>
+        </div>
+
+        <!-- Preloaded Sample Eggs Card -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-boxes-stacked text-amber-400"></i>
+              <span>Test Sample Eggs</span>
+            </h2>
+            <span class="text-xs text-slate-400">Click to test instantly</span>
+          </div>
+
+          <div id="samplesList" class="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+            <div class="text-xs text-slate-500 col-span-2 text-center py-4">Loading sample eggs...</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Panel: Results & Diagnostics (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Initial Placeholder State -->
+        <div id="emptyResultPlaceholder" class="glass-card rounded-2xl p-12 text-center space-y-4 shadow-xl border border-dashed border-slate-700">
+          <div class="w-20 h-20 mx-auto rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-3xl">
+            <i class="fa-solid fa-microscope"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-200">No Egg Analyzed Yet</h3>
+          <p class="text-slate-400 text-sm max-w-md mx-auto">
+            Select one of the sample eggs on the left, upload an egg image, or click <strong class="text-indigo-400 font-medium">"Submit All"</strong> to evaluate the entire dataset.
+          </p>
+        </div>
+
+        <!-- Live Prediction Card (Initially Hidden) -->
+        <div id="predictionResultCard" class="hidden glass-card rounded-2xl p-6 shadow-2xl space-y-6">
+          
+          <!-- Top Verdict Header -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-700/60 gap-4">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Predicted Chick Sex</span>
+              <div class="flex items-center gap-3 mt-1">
+                <span id="verdictSymbol" class="text-3xl font-black">♀</span>
+                <h3 id="verdictTitle" class="text-2xl md:text-3xl font-extrabold tracking-tight">Female (Hen)</h3>
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Confidence</span>
+              <div id="confidenceVal" class="text-2xl font-bold text-emerald-400 mt-1">89.4%</div>
+            </div>
+          </div>
+
+          <!-- Probability Meters -->
+          <div class="space-y-3">
+            <div class="flex justify-between text-xs font-semibold">
+              <span class="text-pink-400 flex items-center gap-1"><i class="fa-solid fa-venus"></i> Female Probability: <span id="femaleProbText">89.4%</span></span>
+              <span class="text-blue-400 flex items-center gap-1">Male Probability: <span id="maleProbText">10.6%</span> <i class="fa-solid fa-mars"></i></span>
+            </div>
+            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
+              <div id="femaleProbBar" class="bg-gradient-to-r from-pink-500 to-rose-400 h-full transition-all duration-500" style="width: 89.4%;"></div>
+              <div id="maleProbBar" class="bg-gradient-to-r from-sky-400 to-blue-600 h-full transition-all duration-500" style="width: 10.6%;"></div>
+            </div>
+          </div>
+
+          <!-- Visual Contour & Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Annotated Contour Preview -->
+            <div class="space-y-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-draw-polygon text-indigo-400"></i>
+                <span>Morphology & Contour Fit</span>
+              </span>
+              <div class="rounded-xl overflow-hidden border border-slate-700 bg-slate-900/60 p-2 flex items-center justify-center">
+                <img id="annotatedPreviewImg" src="" alt="Contour Analysis" class="max-h-48 rounded object-contain">
+              </div>
+            </div>
+
+            <!-- Shape Features Table -->
+            <div class="space-y-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-ruler-combined text-amber-400"></i>
+                <span>Geometric Measurements</span>
+              </span>
+              
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700">
+                  <div class="text-slate-400">Shape Index (SI)</div>
+                  <div id="metricSI" class="text-sm font-bold text-slate-100 mt-0.5">80.4%</div>
+                  <div class="text-[10px] text-slate-500">&gt;74% = Female Round</div>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700">
+                  <div class="text-slate-400">Elongation</div>
+                  <div id="metricElongation" class="text-sm font-bold text-slate-100 mt-0.5">1.24</div>
+                  <div class="text-[10px] text-slate-500">Major / Minor Axis</div>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700">
+                  <div class="text-slate-400">Apex Sharpness</div>
+                  <div id="metricApex" class="text-sm font-bold text-slate-100 mt-0.5">0.03</div>
+                  <div class="text-[10px] text-slate-500">Pole Taper Ratio</div>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700">
+                  <div class="text-slate-400">Asymmetry Index</div>
+                  <div id="metricAsym" class="text-sm font-bold text-slate-100 mt-0.5">1.03</div>
+                  <div class="text-[10px] text-slate-500">Pole Balance</div>
+                </div>
+              </div>
+
+              <!-- Recommendation Note -->
+              <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-xs text-indigo-300">
+                <div class="font-semibold flex items-center gap-1.5 mb-1 text-indigo-200">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Hatchery Recommendation</span>
+                </div>
+                <p id="recommendationText" class="leading-relaxed"></p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Evaluation / Submit All Results Card (Initially Hidden) -->
+        <div id="evaluationCard" class="hidden glass-card rounded-2xl p-6 shadow-2xl space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-700">
+            <div>
+              <h3 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-purple-400"></i>
+                <span>Dataset Evaluation Report</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Full batch evaluation matching main.m test/cross-validation protocol</p>
+            </div>
+            <span id="evaluationAccuracyBadge" class="px-3 py-1 rounded-full text-sm font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              100% Accuracy
+            </span>
+          </div>
+
+          <!-- Evaluation Stats Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+              <div class="text-xs text-slate-400">Total Eggs</div>
+              <div id="statTotal" class="text-xl font-black text-slate-100 mt-1">10</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+              <div class="text-xs text-slate-400">Correct Predictions</div>
+              <div id="statCorrect" class="text-xl font-black text-emerald-400 mt-1">10</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+              <div class="text-xs text-slate-400">Precision</div>
+              <div id="statPrecision" class="text-xl font-black text-indigo-400 mt-1">100%</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+              <div class="text-xs text-slate-400">Recall</div>
+              <div id="statRecall" class="text-xl font-black text-pink-400 mt-1">100%</div>
+            </div>
+          </div>
+
+          <!-- Evaluation Table -->
+          <div class="overflow-x-auto max-h-72 overflow-y-auto rounded-xl border border-slate-700">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-800/90 text-slate-400 uppercase font-semibold sticky top-0">
+                <tr>
+                  <th class="p-3">Egg</th>
+                  <th class="p-3">Ground Truth</th>
+                  <th class="p-3">Prediction</th>
+                  <th class="p-3">Shape Index</th>
+                  <th class="p-3">Confidence</th>
+                  <th class="p-3">Result</th>
+                </tr>
+              </thead>
+              <tbody id="evaluationTableBody" class="divide-y divide-slate-800">
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Database Audit Log Card -->
+    <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-700/60">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <span>Database Audit Log</span>
+              <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                SQLite Active
+              </span>
+            </h3>
+            <p class="text-xs text-slate-400">Persistent storage at <code class="text-slate-300 font-mono">egg_history.db</code></p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="loadHistory()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-700 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+            <span>Refresh</span>
+          </button>
+          <button onclick="clearHistory()" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-medium border border-rose-500/30 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Clear Log</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Summary Strip -->
+      <div id="dbStatsStrip" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/60">
+          <span class="text-slate-400">Total Saved Inferences</span>
+          <div id="dbTotalCount" class="text-base font-bold text-slate-100 mt-0.5">0</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/60">
+          <span class="text-slate-400">Female Chick (Hen)</span>
+          <div id="dbFemaleCount" class="text-base font-bold text-pink-400 mt-0.5">0</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/60">
+          <span class="text-slate-400">Male Chick (Rooster)</span>
+          <div id="dbMaleCount" class="text-base font-bold text-blue-400 mt-0.5">0</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/60">
+          <span class="text-slate-400">Avg Confidence</span>
+          <div id="dbAvgConfidence" class="text-base font-bold text-emerald-400 mt-0.5">0.0%</div>
+        </div>
+      </div>
+
+      <!-- Database Table -->
+      <div class="overflow-x-auto max-h-64 overflow-y-auto rounded-xl border border-slate-700">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-800/90 text-slate-400 uppercase font-semibold sticky top-0">
+            <tr>
+              <th class="p-2.5">ID</th>
+              <th class="p-2.5">Timestamp</th>
+              <th class="p-2.5">Specimen</th>
+              <th class="p-2.5">Predicted Sex</th>
+              <th class="p-2.5">Shape Index</th>
+              <th class="p-2.5">Confidence</th>
+              <th class="p-2.5">Source</th>
+            </tr>
+          </thead>
+          <tbody id="dbHistoryTableBody" class="divide-y divide-slate-800">
+            <tr><td colspan="7" class="p-4 text-center text-slate-500">No predictions logged yet. Run a prediction to see records.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Algorithm Reference Footer -->
+    <footer class="glass-card rounded-2xl p-4 text-center text-xs text-slate-400 border border-slate-800">
+      <div class="flex flex-wrap items-center justify-center gap-6">
+        <span><i class="fa-solid fa-brain text-indigo-400 mr-1.5"></i> Neural Network: 4096 &rarr; 30 &rarr; 1 (Sigmoid)</span>
+        <span><i class="fa-solid fa-shapes text-amber-400 mr-1.5"></i> Morphological Shape Index: SI = (B / L) &times; 100</span>
+        <span><i class="fa-solid fa-code text-emerald-400 mr-1.5"></i> MATLAB/Octave original code converted to live interactive Python Flask</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    let currentSelectedSample = null;
+    let currentSelectedFile = null;
+
+    // Load samples on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSamples();
+    });
+
+    async function loadSamples() {
+      try {
+        const res = await fetch('/api/samples');
+        const data = await res.json();
+        const container = document.getElementById('samplesList');
+        
+        if (!data.samples || data.samples.length === 0) {
+          container.innerHTML = '<div class="text-xs text-slate-500 col-span-2 text-center py-4">No samples found</div>';
+          return;
+        }
+
+        container.innerHTML = data.samples.map(s => {
+          const isFemale = s.expected_sex === 'Female';
+          const badgeClass = isFemale ? 'badge-female' : 'badge-male';
+          const icon = isFemale ? 'fa-venus' : 'fa-mars';
+          return `
+            <div onclick="selectSample('${s.id}', '${s.url}')" class="glass-card glass-hover rounded-xl p-2.5 cursor-pointer flex items-center gap-2.5 transition-all">
+              <img src="${s.url}" class="w-12 h-12 object-contain rounded-lg bg-slate-900 border border-slate-700/60">
+              <div class="min-w-0 flex-1">
+                <div class="text-xs font-semibold text-slate-200 truncate">${s.title}</div>
+                <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold mt-1 ${badgeClass}">
+                  <i class="fa-solid ${icon} mr-0.5"></i> ${s.expected_sex}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function selectSample(sampleId, url) {
+      currentSelectedSample = sampleId;
+      currentSelectedFile = null;
+
+      document.getElementById('imagePreview').src = url;
+      document.getElementById('imagePreviewContainer').classList.remove('hidden');
+      document.getElementById('uploadPrompt').classList.add('hidden');
+      document.getElementById('fileNameDisplay').textContent = sampleId;
+
+      // Automatically run prediction
+      runPrediction();
+    }
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      currentSelectedFile = file;
+      currentSelectedSample = null;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('imagePreview').src = e.target.result;
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+        document.getElementById('uploadPrompt').classList.add('hidden');
+        document.getElementById('fileNameDisplay').textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function runPrediction() {
+      const btn = document.getElementById('predictBtn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Neural Network...';
+
+      const formData = new FormData();
+      if (currentSelectedSample) {
+        formData.append('sample_id', currentSelectedSample);
+      } else if (currentSelectedFile) {
+        formData.append('file', currentSelectedFile);
+      } else {
+        alert('Please choose a sample or upload an egg photo first!');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/predict', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          renderPrediction(data.result);
+        } else {
+          alert('Prediction failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Request failed: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+
+    function renderPrediction(result) {
+      document.getElementById('emptyResultPlaceholder').classList.add('hidden');
+      const card = document.getElementById('predictionResultCard');
+      card.classList.remove('hidden');
+
+      const isFemale = result.code === 'FEMALE';
+      const verdictTitle = document.getElementById('verdictTitle');
+      const verdictSymbol = document.getElementById('verdictSymbol');
+
+      verdictTitle.textContent = result.prediction;
+      verdictSymbol.textContent = result.symbol;
+
+      if (isFemale) {
+        verdictTitle.className = 'text-2xl md:text-3xl font-extrabold tracking-tight text-pink-400';
+        verdictSymbol.className = 'text-3xl font-black text-pink-400';
+      } else {
+        verdictTitle.className = 'text-2xl md:text-3xl font-extrabold tracking-tight text-blue-400';
+        verdictSymbol.className = 'text-3xl font-black text-blue-400';
+      }
+
+      document.getElementById('confidenceVal').textContent = result.confidence_pct + '%';
+      document.getElementById('femaleProbText').textContent = result.female_probability + '%';
+      document.getElementById('maleProbText').textContent = result.male_probability + '%';
+      document.getElementById('femaleProbBar').style.width = result.female_probability + '%';
+      document.getElementById('maleProbBar').style.width = result.male_probability + '%';
+
+      document.getElementById('annotatedPreviewImg').src = result.annotated_preview;
+
+      document.getElementById('metricSI').textContent = result.morphology.shape_index + '%';
+      document.getElementById('metricElongation').textContent = result.morphology.elongation;
+      document.getElementById('metricApex').textContent = result.morphology.apex_sharpness;
+      document.getElementById('metricAsym').textContent = result.morphology.asymmetry_index;
+
+      document.getElementById('recommendationText').textContent = result.recommendation;
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      loadHistory();
+    }
+
+    async function submitAll() {
+      const btn = document.getElementById('submitAllBtn');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Evaluating All...';
+
+      try {
+        const res = await fetch('/api/submit_all', { method: 'POST' });
+        const data = await res.json();
+
+        if (data.success) {
+          renderEvaluation(data);
+        } else {
+          alert('Batch submission failed: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Batch submission error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+
+    function renderEvaluation(data) {
+      const bCard = document.getElementById('evaluationCard');
+      bCard.classList.remove('hidden');
+
+      document.getElementById('evaluationAccuracyBadge').textContent = `${data.accuracy_pct}% Accuracy`;
+      document.getElementById('statTotal').textContent = data.total_samples;
+      document.getElementById('statCorrect').textContent = data.correct_predictions;
+      document.getElementById('statPrecision').textContent = `${data.precision_pct}%`;
+      document.getElementById('statRecall').textContent = `${data.recall_pct}%`;
+
+      const tbody = document.getElementById('evaluationTableBody');
+      tbody.innerHTML = data.evaluations.map(e => {
+        const matchClass = e.is_correct ? 'text-emerald-400' : 'text-rose-400';
+        const matchIcon = e.is_correct ? 'fa-check' : 'fa-xmark';
+        const truthBadge = e.ground_truth === 'Female' ? 'badge-female' : 'badge-male';
+        const predBadge = e.prediction.includes('Female') ? 'badge-female' : 'badge-male';
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition-colors">
+            <td class="p-3 flex items-center gap-2">
+              <img src="${e.thumbnail_url}" class="w-8 h-8 rounded object-contain bg-slate-900 border border-slate-700">
+              <span class="font-mono text-xs text-slate-300">${e.filename}</span>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${truthBadge}">${e.ground_truth}</span>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${predBadge}">${e.prediction}</span>
+            </td>
+            <td class="p-3 font-semibold text-slate-200">${e.shape_index}%</td>
+            <td class="p-3 text-slate-300">${e.confidence_pct}%</td>
+            <td class="p-3 font-bold ${matchClass}">
+              <i class="fa-solid ${matchIcon} mr-1"></i> ${e.is_correct ? 'CORRECT' : 'MISMATCH'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      bCard.scrollIntoView({ behavior: 'smooth' });
+      loadHistory();
+    }
+
+    // Database History Functions
+    async function loadHistory() {
+      try {
+        const [histRes, statsRes] = await Promise.all([
+          fetch('/api/history?limit=30'),
+          fetch('/api/stats')
+        ]);
+        const histData = await histRes.json();
+        const statsData = await statsRes.json();
+
+        if (statsData.success && statsData.stats) {
+          const s = statsData.stats;
+          document.getElementById('dbTotalCount').textContent = s.total_records;
+          document.getElementById('dbFemaleCount').textContent = s.female_count;
+          document.getElementById('dbMaleCount').textContent = s.male_count;
+          document.getElementById('dbAvgConfidence').textContent = s.avg_confidence + '%';
+        }
+
+        const tbody = document.getElementById('dbHistoryTableBody');
+        if (!histData.records || histData.records.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-500">No predictions logged yet. Run a prediction to see records.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = histData.records.map(r => {
+          const isFemale = r.predicted_sex.includes('Female');
+          const badgeClass = isFemale ? 'badge-female' : 'badge-male';
+          return `
+            <tr class="hover:bg-slate-800/40 transition-colors">
+              <td class="p-2.5 font-mono text-slate-400">#${r.id}</td>
+              <td class="p-2.5 text-slate-400">${r.timestamp}</td>
+              <td class="p-2.5 font-medium text-slate-200">${r.specimen_name}</td>
+              <td class="p-2.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${badgeClass}">
+                  ${r.predicted_sex}
+                </span>
+              </td>
+              <td class="p-2.5 font-semibold text-slate-300">${r.shape_index}%</td>
+              <td class="p-2.5 text-slate-300">${r.confidence}%</td>
+              <td class="p-2.5">
+                <span class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-mono">
+                  ${r.source}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error('Failed to load database history:', err);
+      }
+    }
+
+    async function clearHistory() {
+      if (!confirm('Are you sure you want to clear the database history?')) return;
+      try {
+        await fetch('/api/history/clear', { method: 'POST' });
+        loadHistory();
+      } catch (err) {
+        alert('Failed to clear history: ' + err.message);
+      }
+    }
+
+    // Call loadHistory on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadHistory();
+    });
+  </script>
+</body>
+</html>

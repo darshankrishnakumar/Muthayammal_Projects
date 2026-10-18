@@ -1,0 +1,1001 @@
+sample_id,body_shape,skin_tone,undertone,preferred_style,preferred_occasion,preferred_colour,budget_max,preferred_clothing_category,data_provenance
+SMPL_00000,Rectangle / Hourglass,Fair,Neutral,Bohemian,Office,Grey,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00001,Inverted Triangle,Dark,Warm,Ethnic,College,Beige,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00002,Inverted Triangle,Wheatish,Warm,Classic,Traditional,White,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00003,Inverted Triangle,Wheatish,Neutral,Chic,Office,Pastel,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00004,Rectangle,Wheatish,Warm,Bohemian,Office,Grey,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00005,Rectangle / Hourglass,Fair,Warm,Bohemian,Traditional,Teal,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00006,Rectangle,Medium,Warm,Bohemian,Party,Pink,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00007,Rectangle,Dark,Cool,Modern,Traditional,Emerald,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00008,Rectangle / Hourglass,Medium,Warm,Ethnic,Wedding,Pastel,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00009,Inverted Triangle,Dusky,Neutral,Bohemian,Casual,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00010,Hourglass,Dusky,Neutral,Streetwear,Casual,Black,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00011,Triangle (Pear),Wheatish,Warm,Streetwear,Casual,Yellow,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00012,Hourglass,Dusky,Neutral,Streetwear,Wedding,Blue,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00013,Rectangle,Dusky,Neutral,Chic,Party,Red,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00014,Triangle (Pear),Medium,Warm,Minimalist,Wedding,Grey,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00015,Rectangle,Dusky,Neutral,Bohemian,Traditional,Maroon,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00016,Triangle (Pear),Wheatish,Neutral,Modern,Wedding,Blue,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00017,Rectangle / Hourglass,Dark,Warm,Modern,Casual,Peach,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00018,Triangle (Pear),Wheatish,Warm,Bohemian,College,Olive,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00019,Rectangle / Hourglass,Wheatish,Neutral,Streetwear,Office,Navy,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00020,Rectangle,Wheatish,Neutral,Minimalist,Party,Pink,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00021,Inverted Triangle,Fair,Neutral,Chic,Casual,Olive,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00022,Inverted Triangle,Medium,Cool,Classic,Wedding,Peach,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00023,Hourglass,Wheatish,Neutral,Bohemian,Wedding,Maroon,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00024,Triangle (Pear),Wheatish,Cool,Minimalist,Wedding,Peach,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00025,Hourglass,Medium,Neutral,Bohemian,Party,Navy,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00026,Rectangle / Hourglass,Dusky,Warm,Ethnic,College,Olive,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00027,Rectangle,Dusky,Neutral,Minimalist,Traditional,Beige,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00028,Triangle (Pear),Medium,Cool,Bohemian,Wedding,Grey,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00029,Rectangle / Hourglass,Dusky,Warm,Ethnic,Traditional,Red,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00030,Rectangle / Hourglass,Dark,Warm,Ethnic,Party,White,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00031,Rectangle / Hourglass,Medium,Warm,Chic,Casual,Beige,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00032,Rectangle / Hourglass,Fair,Neutral,Bohemian,Office,Olive,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00033,Triangle (Pear),Medium,Cool,Chic,Wedding,Pink,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00034,Inverted Triangle,Wheatish,Cool,Minimalist,College,White,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00035,Rectangle,Fair,Warm,Chic,Casual,Blue,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00036,Rectangle / Hourglass,Dark,Cool,Minimalist,Casual,Pink,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00037,Triangle (Pear),Dusky,Cool,Minimalist,Office,Peach,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00038,Hourglass,Fair,Cool,Minimalist,Casual,Grey,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00039,Inverted Triangle,Fair,Neutral,Modern,Casual,Navy,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00040,Rectangle,Medium,Warm,Ethnic,Wedding,Navy,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00041,Hourglass,Medium,Neutral,Bohemian,Office,Teal,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00042,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Office,Pink,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00043,Rectangle / Hourglass,Fair,Warm,Chic,Traditional,Black,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00044,Hourglass,Dusky,Neutral,Chic,Party,Olive,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00045,Rectangle,Dusky,Neutral,Modern,College,Blue,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00046,Triangle (Pear),Dusky,Cool,Modern,Party,Red,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00047,Hourglass,Dark,Neutral,Modern,College,Yellow,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00048,Hourglass,Dusky,Neutral,Ethnic,Wedding,Maroon,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00049,Hourglass,Fair,Neutral,Bohemian,Party,Maroon,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00050,Triangle (Pear),Fair,Warm,Modern,Casual,Grey,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00051,Rectangle,Dusky,Warm,Classic,Casual,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00052,Triangle (Pear),Wheatish,Cool,Minimalist,Wedding,Pink,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00053,Triangle (Pear),Medium,Warm,Bohemian,College,Blue,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00054,Hourglass,Fair,Neutral,Ethnic,Office,White,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00055,Rectangle,Fair,Cool,Chic,Wedding,Olive,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00056,Triangle (Pear),Wheatish,Warm,Classic,College,Blue,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00057,Triangle (Pear),Medium,Cool,Bohemian,College,Pastel,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00058,Hourglass,Dusky,Neutral,Modern,Party,Yellow,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00059,Rectangle / Hourglass,Wheatish,Warm,Minimalist,Casual,Pink,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00060,Rectangle,Medium,Neutral,Minimalist,Casual,Red,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00061,Rectangle,Wheatish,Neutral,Streetwear,Office,Pastel,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00062,Triangle (Pear),Wheatish,Warm,Streetwear,Party,Black,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00063,Hourglass,Dark,Warm,Minimalist,Party,Black,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00064,Rectangle,Fair,Neutral,Ethnic,Party,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00065,Hourglass,Dusky,Warm,Classic,Office,Peach,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00066,Inverted Triangle,Fair,Warm,Classic,Office,Teal,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00067,Triangle (Pear),Wheatish,Warm,Streetwear,Casual,Blue,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00068,Inverted Triangle,Medium,Neutral,Minimalist,Traditional,Pink,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00069,Inverted Triangle,Fair,Neutral,Streetwear,Casual,Teal,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00070,Rectangle / Hourglass,Wheatish,Warm,Modern,Casual,Navy,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00071,Rectangle,Medium,Cool,Chic,Party,Pastel,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00072,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Wedding,Blue,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00073,Rectangle / Hourglass,Dark,Cool,Ethnic,Wedding,Olive,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00074,Triangle (Pear),Medium,Neutral,Ethnic,Casual,Pink,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00075,Triangle (Pear),Medium,Neutral,Bohemian,College,Yellow,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00076,Rectangle,Dark,Neutral,Streetwear,Traditional,Maroon,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00077,Triangle (Pear),Wheatish,Cool,Modern,Wedding,Olive,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00078,Hourglass,Medium,Warm,Streetwear,Wedding,Blue,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00079,Rectangle / Hourglass,Fair,Warm,Chic,Office,Maroon,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00080,Rectangle / Hourglass,Dusky,Cool,Minimalist,Office,Black,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00081,Rectangle,Wheatish,Cool,Classic,Casual,Black,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00082,Inverted Triangle,Dusky,Cool,Chic,Party,Peach,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00083,Rectangle,Dusky,Warm,Modern,Office,Red,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00084,Triangle (Pear),Dusky,Cool,Streetwear,Wedding,Navy,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00085,Hourglass,Dark,Cool,Modern,Traditional,White,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00086,Triangle (Pear),Dark,Warm,Minimalist,Casual,Beige,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00087,Rectangle,Dusky,Warm,Minimalist,Party,Olive,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00088,Rectangle / Hourglass,Wheatish,Cool,Ethnic,Traditional,Maroon,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00089,Rectangle / Hourglass,Medium,Neutral,Classic,Party,Yellow,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00090,Hourglass,Wheatish,Warm,Modern,Office,Teal,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00091,Hourglass,Fair,Cool,Ethnic,Casual,Maroon,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00092,Triangle (Pear),Medium,Cool,Streetwear,Casual,Teal,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00093,Inverted Triangle,Dusky,Cool,Minimalist,Casual,Grey,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00094,Inverted Triangle,Wheatish,Neutral,Minimalist,Casual,Black,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00095,Hourglass,Fair,Cool,Chic,Traditional,Emerald,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00096,Inverted Triangle,Medium,Warm,Classic,Party,Navy,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00097,Triangle (Pear),Wheatish,Cool,Ethnic,Party,Maroon,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00098,Hourglass,Wheatish,Neutral,Streetwear,Party,Olive,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00099,Rectangle,Medium,Warm,Bohemian,Traditional,Teal,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00100,Inverted Triangle,Wheatish,Warm,Minimalist,Party,Pink,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00101,Inverted Triangle,Fair,Neutral,Ethnic,Office,Maroon,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00102,Hourglass,Medium,Neutral,Ethnic,Traditional,Teal,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00103,Triangle (Pear),Medium,Cool,Bohemian,Wedding,Yellow,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00104,Triangle (Pear),Wheatish,Warm,Minimalist,Traditional,Teal,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00105,Inverted Triangle,Fair,Cool,Modern,Wedding,Olive,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00106,Hourglass,Dusky,Cool,Modern,Office,Olive,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00107,Rectangle,Wheatish,Warm,Minimalist,Party,Red,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00108,Rectangle,Dark,Warm,Streetwear,Party,Red,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00109,Hourglass,Wheatish,Neutral,Streetwear,Casual,Blue,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00110,Rectangle / Hourglass,Dark,Cool,Classic,Party,Pastel,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00111,Rectangle / Hourglass,Dusky,Neutral,Streetwear,Casual,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00112,Triangle (Pear),Medium,Cool,Streetwear,Party,Blue,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00113,Rectangle / Hourglass,Wheatish,Cool,Ethnic,Traditional,Pastel,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00114,Rectangle / Hourglass,Wheatish,Warm,Streetwear,Office,Beige,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00115,Inverted Triangle,Dusky,Neutral,Minimalist,Casual,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00116,Rectangle / Hourglass,Fair,Warm,Chic,Office,Olive,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00117,Rectangle,Wheatish,Cool,Minimalist,Wedding,Red,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00118,Triangle (Pear),Dark,Neutral,Ethnic,Casual,Yellow,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00119,Triangle (Pear),Dusky,Neutral,Minimalist,Party,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00120,Triangle (Pear),Dusky,Warm,Classic,Traditional,Yellow,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00121,Rectangle,Dusky,Neutral,Modern,Wedding,Black,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00122,Rectangle / Hourglass,Fair,Warm,Ethnic,Casual,Peach,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00123,Rectangle / Hourglass,Dark,Neutral,Streetwear,Casual,Teal,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00124,Triangle (Pear),Dusky,Neutral,Bohemian,Office,Black,2500.0,Trousers,synthetic_academic_demonstration
+SMPL_00125,Triangle (Pear),Wheatish,Warm,Streetwear,College,Pastel,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00126,Rectangle / Hourglass,Wheatish,Warm,Minimalist,Traditional,White,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00127,Rectangle / Hourglass,Dusky,Neutral,Classic,Casual,Black,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00128,Triangle (Pear),Fair,Warm,Ethnic,Office,Pink,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00129,Rectangle / Hourglass,Dusky,Warm,Ethnic,Casual,Emerald,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00130,Triangle (Pear),Dusky,Cool,Modern,Traditional,Pink,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00131,Triangle (Pear),Wheatish,Warm,Minimalist,Traditional,Teal,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00132,Rectangle / Hourglass,Wheatish,Cool,Ethnic,Wedding,Teal,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00133,Triangle (Pear),Dark,Neutral,Modern,Casual,Grey,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00134,Rectangle,Fair,Neutral,Streetwear,College,Grey,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00135,Triangle (Pear),Fair,Cool,Minimalist,College,Blue,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00136,Inverted Triangle,Wheatish,Cool,Minimalist,Casual,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00137,Hourglass,Dusky,Cool,Streetwear,Party,Pink,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00138,Triangle (Pear),Medium,Neutral,Chic,Traditional,Beige,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00139,Rectangle,Dark,Cool,Minimalist,College,Pastel,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00140,Hourglass,Dusky,Neutral,Bohemian,Office,Olive,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00141,Rectangle / Hourglass,Dark,Cool,Ethnic,College,Teal,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00142,Rectangle / Hourglass,Dusky,Warm,Classic,Wedding,Beige,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00143,Inverted Triangle,Dark,Neutral,Streetwear,Office,Red,1500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00144,Triangle (Pear),Wheatish,Cool,Chic,College,Navy,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00145,Triangle (Pear),Wheatish,Cool,Minimalist,Office,Blue,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00146,Rectangle / Hourglass,Wheatish,Warm,Ethnic,Wedding,Yellow,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00147,Rectangle,Fair,Cool,Modern,Wedding,Grey,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00148,Rectangle / Hourglass,Dark,Cool,Bohemian,Wedding,Pink,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00149,Rectangle,Dusky,Neutral,Chic,Party,Navy,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00150,Triangle (Pear),Fair,Cool,Ethnic,Casual,Beige,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00151,Rectangle / Hourglass,Dusky,Warm,Streetwear,Office,Teal,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00152,Rectangle,Fair,Cool,Classic,Traditional,Yellow,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00153,Hourglass,Wheatish,Warm,Chic,Party,White,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00154,Rectangle / Hourglass,Wheatish,Neutral,Classic,Casual,Emerald,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00155,Inverted Triangle,Wheatish,Cool,Chic,Office,Red,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00156,Inverted Triangle,Dusky,Neutral,Classic,Party,Beige,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00157,Hourglass,Fair,Cool,Streetwear,Casual,White,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00158,Rectangle / Hourglass,Medium,Warm,Modern,Traditional,Pastel,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00159,Triangle (Pear),Fair,Warm,Bohemian,Office,Olive,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00160,Rectangle / Hourglass,Wheatish,Warm,Classic,Casual,Beige,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00161,Inverted Triangle,Dark,Cool,Modern,Traditional,Black,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00162,Rectangle / Hourglass,Medium,Cool,Chic,College,Yellow,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00163,Hourglass,Fair,Neutral,Streetwear,College,Teal,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00164,Inverted Triangle,Wheatish,Neutral,Ethnic,College,Blue,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00165,Rectangle / Hourglass,Wheatish,Neutral,Chic,College,Peach,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00166,Rectangle / Hourglass,Fair,Cool,Classic,College,White,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00167,Hourglass,Dusky,Warm,Ethnic,Casual,Navy,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00168,Inverted Triangle,Dusky,Neutral,Minimalist,Wedding,Blue,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00169,Inverted Triangle,Dusky,Cool,Chic,Wedding,Maroon,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00170,Triangle (Pear),Fair,Cool,Ethnic,College,Peach,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00171,Triangle (Pear),Dusky,Warm,Bohemian,Casual,Grey,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00172,Triangle (Pear),Wheatish,Warm,Ethnic,Traditional,Maroon,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00173,Inverted Triangle,Fair,Neutral,Classic,Office,Red,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00174,Hourglass,Dark,Cool,Streetwear,Office,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00175,Inverted Triangle,Fair,Warm,Bohemian,Party,Pastel,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00176,Inverted Triangle,Medium,Cool,Minimalist,Wedding,Beige,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00177,Rectangle,Dusky,Warm,Bohemian,Casual,Peach,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00178,Triangle (Pear),Fair,Warm,Classic,Wedding,Beige,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00179,Rectangle,Fair,Cool,Minimalist,Wedding,Pastel,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00180,Hourglass,Dusky,Warm,Minimalist,Traditional,Olive,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00181,Hourglass,Medium,Warm,Chic,College,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00182,Rectangle,Wheatish,Neutral,Classic,Casual,Black,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00183,Inverted Triangle,Medium,Warm,Modern,Traditional,Blue,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00184,Inverted Triangle,Dusky,Warm,Classic,Traditional,Emerald,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00185,Rectangle / Hourglass,Medium,Cool,Classic,College,Peach,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00186,Hourglass,Dark,Warm,Ethnic,College,Emerald,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00187,Rectangle / Hourglass,Dark,Neutral,Modern,College,Maroon,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00188,Triangle (Pear),Fair,Warm,Modern,Traditional,Navy,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00189,Inverted Triangle,Dark,Cool,Bohemian,Party,Beige,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00190,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Office,Pink,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00191,Rectangle,Dusky,Warm,Modern,Traditional,Maroon,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00192,Triangle (Pear),Dusky,Warm,Bohemian,College,Navy,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00193,Triangle (Pear),Dark,Neutral,Bohemian,Party,Navy,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00194,Rectangle / Hourglass,Medium,Cool,Bohemian,Casual,Beige,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00195,Rectangle,Medium,Cool,Bohemian,Office,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00196,Rectangle,Dusky,Cool,Modern,College,White,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00197,Rectangle,Fair,Cool,Chic,Party,Teal,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00198,Rectangle / Hourglass,Fair,Cool,Bohemian,College,Emerald,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00199,Rectangle,Wheatish,Neutral,Streetwear,Traditional,Black,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00200,Inverted Triangle,Fair,Cool,Classic,Party,White,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00201,Rectangle,Fair,Warm,Ethnic,Office,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00202,Rectangle / Hourglass,Fair,Cool,Minimalist,Office,Pink,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00203,Rectangle,Medium,Warm,Bohemian,Office,Black,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00204,Hourglass,Dark,Warm,Modern,College,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00205,Triangle (Pear),Dusky,Cool,Ethnic,Casual,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00206,Rectangle,Wheatish,Warm,Streetwear,Party,Peach,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00207,Triangle (Pear),Medium,Cool,Minimalist,Party,Maroon,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00208,Inverted Triangle,Fair,Cool,Streetwear,Traditional,Emerald,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00209,Hourglass,Dusky,Warm,Minimalist,Wedding,Emerald,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00210,Rectangle,Wheatish,Cool,Modern,Party,Emerald,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00211,Hourglass,Fair,Neutral,Classic,Party,Blue,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00212,Inverted Triangle,Medium,Neutral,Streetwear,Office,Black,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00213,Rectangle,Wheatish,Warm,Chic,Party,Black,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00214,Rectangle / Hourglass,Dusky,Neutral,Ethnic,Casual,Blue,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00215,Rectangle / Hourglass,Wheatish,Neutral,Classic,Office,Teal,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00216,Inverted Triangle,Fair,Warm,Bohemian,Wedding,Peach,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00217,Triangle (Pear),Dark,Warm,Streetwear,Traditional,Emerald,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00218,Triangle (Pear),Wheatish,Neutral,Modern,Traditional,Pink,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00219,Rectangle,Medium,Warm,Classic,Casual,Black,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00220,Rectangle,Fair,Warm,Minimalist,Casual,Emerald,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00221,Hourglass,Fair,Warm,Modern,Party,Emerald,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00222,Rectangle,Wheatish,Neutral,Bohemian,Party,Olive,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00223,Rectangle / Hourglass,Dusky,Warm,Bohemian,Casual,Black,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00224,Triangle (Pear),Dark,Neutral,Bohemian,Wedding,Grey,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00225,Inverted Triangle,Wheatish,Neutral,Classic,Wedding,Emerald,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00226,Hourglass,Dusky,Neutral,Chic,Casual,Emerald,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00227,Triangle (Pear),Fair,Cool,Ethnic,Casual,Teal,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00228,Rectangle,Wheatish,Warm,Bohemian,Traditional,Pink,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00229,Rectangle / Hourglass,Wheatish,Warm,Ethnic,Traditional,Emerald,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00230,Triangle (Pear),Wheatish,Neutral,Chic,Wedding,Grey,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00231,Rectangle,Fair,Warm,Bohemian,College,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00232,Hourglass,Medium,Cool,Chic,Traditional,Beige,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00233,Hourglass,Dusky,Cool,Streetwear,Traditional,Black,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00234,Triangle (Pear),Wheatish,Neutral,Streetwear,Office,Teal,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00235,Rectangle / Hourglass,Fair,Warm,Chic,Traditional,Black,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00236,Rectangle / Hourglass,Dusky,Neutral,Ethnic,Office,Yellow,2500.0,Trousers,synthetic_academic_demonstration
+SMPL_00237,Triangle (Pear),Fair,Warm,Bohemian,Party,Yellow,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00238,Rectangle / Hourglass,Dark,Cool,Classic,Casual,Olive,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00239,Hourglass,Wheatish,Neutral,Bohemian,Casual,Pink,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00240,Rectangle / Hourglass,Dusky,Cool,Minimalist,Traditional,Teal,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00241,Triangle (Pear),Wheatish,Cool,Ethnic,Traditional,Beige,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00242,Triangle (Pear),Dusky,Neutral,Chic,College,Blue,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00243,Rectangle / Hourglass,Medium,Warm,Chic,College,Pink,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00244,Hourglass,Dark,Neutral,Chic,Casual,Navy,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00245,Triangle (Pear),Medium,Neutral,Chic,Party,Maroon,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00246,Rectangle,Dark,Warm,Chic,Casual,Emerald,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00247,Rectangle / Hourglass,Dark,Warm,Minimalist,Wedding,Beige,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00248,Hourglass,Medium,Warm,Streetwear,Wedding,Navy,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00249,Inverted Triangle,Wheatish,Cool,Bohemian,Office,Blue,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00250,Rectangle / Hourglass,Dark,Neutral,Minimalist,Wedding,Pink,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00251,Hourglass,Dark,Warm,Streetwear,Traditional,Pink,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00252,Inverted Triangle,Fair,Warm,Modern,Party,Beige,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00253,Rectangle / Hourglass,Medium,Warm,Streetwear,Traditional,Navy,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00254,Triangle (Pear),Dusky,Warm,Chic,Wedding,Pink,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00255,Inverted Triangle,Fair,Cool,Streetwear,Traditional,Teal,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00256,Triangle (Pear),Wheatish,Neutral,Classic,Casual,White,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00257,Inverted Triangle,Dusky,Cool,Modern,College,White,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00258,Triangle (Pear),Dark,Neutral,Chic,Party,Peach,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00259,Rectangle / Hourglass,Dark,Cool,Classic,Party,Yellow,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00260,Triangle (Pear),Dusky,Neutral,Ethnic,Wedding,Black,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00261,Rectangle / Hourglass,Dark,Cool,Modern,College,Navy,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00262,Triangle (Pear),Medium,Warm,Streetwear,Casual,Grey,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00263,Rectangle / Hourglass,Medium,Warm,Classic,Casual,Black,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00264,Inverted Triangle,Fair,Cool,Modern,Wedding,Peach,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00265,Triangle (Pear),Dark,Cool,Ethnic,Traditional,Blue,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00266,Rectangle / Hourglass,Wheatish,Neutral,Minimalist,Party,Pastel,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00267,Triangle (Pear),Dusky,Neutral,Modern,Office,Yellow,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00268,Triangle (Pear),Dark,Cool,Modern,Traditional,Maroon,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00269,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Wedding,Emerald,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00270,Triangle (Pear),Medium,Neutral,Minimalist,Office,Pastel,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00271,Rectangle / Hourglass,Wheatish,Neutral,Chic,College,White,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00272,Hourglass,Fair,Warm,Ethnic,Casual,Beige,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00273,Inverted Triangle,Fair,Warm,Modern,Wedding,Red,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00274,Hourglass,Dusky,Cool,Classic,College,Grey,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00275,Hourglass,Dark,Warm,Bohemian,Office,White,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00276,Rectangle / Hourglass,Dark,Cool,Chic,Office,Yellow,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00277,Rectangle / Hourglass,Wheatish,Neutral,Chic,Wedding,Red,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00278,Rectangle / Hourglass,Dark,Cool,Bohemian,Traditional,Beige,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00279,Hourglass,Dark,Neutral,Streetwear,Wedding,Beige,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00280,Hourglass,Medium,Warm,Classic,Office,Yellow,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00281,Rectangle / Hourglass,Medium,Neutral,Modern,Office,Teal,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00282,Rectangle,Wheatish,Cool,Modern,Traditional,Beige,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00283,Rectangle / Hourglass,Wheatish,Neutral,Bohemian,Office,Olive,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00284,Hourglass,Dusky,Warm,Ethnic,Casual,Emerald,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00285,Hourglass,Dark,Warm,Ethnic,Casual,Teal,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00286,Rectangle,Dark,Cool,Classic,Party,Black,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00287,Inverted Triangle,Dusky,Warm,Minimalist,Traditional,Black,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00288,Triangle (Pear),Fair,Neutral,Classic,College,Peach,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00289,Rectangle,Wheatish,Warm,Streetwear,Traditional,Grey,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00290,Inverted Triangle,Fair,Neutral,Chic,Office,Maroon,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00291,Rectangle,Medium,Cool,Classic,Casual,Maroon,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00292,Rectangle,Fair,Warm,Minimalist,Office,Teal,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00293,Hourglass,Fair,Neutral,Ethnic,Office,Black,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00294,Rectangle,Wheatish,Cool,Ethnic,Traditional,Navy,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00295,Rectangle,Fair,Warm,Modern,Casual,Beige,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00296,Rectangle / Hourglass,Dark,Warm,Chic,Office,Maroon,15000.0,Trousers,synthetic_academic_demonstration
+SMPL_00297,Rectangle,Dark,Neutral,Modern,College,Red,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00298,Triangle (Pear),Dusky,Neutral,Classic,Casual,Pink,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00299,Rectangle,Fair,Neutral,Chic,Casual,Teal,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00300,Inverted Triangle,Wheatish,Warm,Chic,Wedding,Beige,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00301,Triangle (Pear),Wheatish,Warm,Ethnic,Office,Pastel,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00302,Triangle (Pear),Dusky,Neutral,Ethnic,Office,Blue,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00303,Rectangle,Fair,Cool,Bohemian,Party,Teal,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00304,Hourglass,Medium,Neutral,Chic,College,Pink,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00305,Hourglass,Dark,Neutral,Minimalist,Wedding,Beige,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00306,Inverted Triangle,Fair,Warm,Ethnic,Party,Maroon,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00307,Hourglass,Medium,Warm,Ethnic,Casual,Black,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00308,Inverted Triangle,Dark,Neutral,Ethnic,Traditional,Blue,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00309,Hourglass,Fair,Neutral,Minimalist,Casual,Black,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00310,Hourglass,Wheatish,Warm,Ethnic,Traditional,Maroon,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00311,Rectangle / Hourglass,Wheatish,Cool,Streetwear,Wedding,Teal,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00312,Rectangle / Hourglass,Wheatish,Cool,Ethnic,Traditional,Emerald,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00313,Inverted Triangle,Dusky,Neutral,Minimalist,Traditional,Black,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00314,Triangle (Pear),Fair,Neutral,Streetwear,Office,Peach,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00315,Hourglass,Wheatish,Cool,Minimalist,Wedding,Pastel,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00316,Rectangle / Hourglass,Medium,Cool,Ethnic,Office,White,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00317,Rectangle,Dark,Neutral,Chic,Party,Beige,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00318,Inverted Triangle,Medium,Warm,Classic,Traditional,Pink,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00319,Hourglass,Dark,Cool,Streetwear,Wedding,Navy,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00320,Inverted Triangle,Medium,Warm,Modern,Office,Emerald,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00321,Triangle (Pear),Wheatish,Cool,Streetwear,Casual,Pink,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00322,Triangle (Pear),Fair,Warm,Streetwear,Wedding,Yellow,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00323,Rectangle,Fair,Neutral,Streetwear,College,White,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00324,Inverted Triangle,Medium,Cool,Streetwear,Party,Pastel,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00325,Triangle (Pear),Dusky,Cool,Classic,Traditional,Pastel,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00326,Hourglass,Dusky,Cool,Classic,College,Beige,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00327,Inverted Triangle,Fair,Neutral,Chic,College,Pastel,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00328,Triangle (Pear),Dark,Cool,Modern,Party,Peach,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00329,Rectangle / Hourglass,Wheatish,Warm,Ethnic,Casual,Pink,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00330,Triangle (Pear),Dark,Neutral,Chic,Traditional,White,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00331,Triangle (Pear),Medium,Neutral,Ethnic,College,Peach,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00332,Hourglass,Medium,Cool,Chic,College,Pastel,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00333,Triangle (Pear),Medium,Neutral,Classic,Wedding,Olive,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00334,Rectangle / Hourglass,Dusky,Warm,Ethnic,Wedding,Teal,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00335,Rectangle / Hourglass,Dusky,Neutral,Modern,Wedding,Red,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00336,Inverted Triangle,Dusky,Neutral,Bohemian,College,Pink,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00337,Inverted Triangle,Dusky,Cool,Chic,Traditional,Red,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00338,Rectangle,Dusky,Cool,Classic,College,Blue,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00339,Hourglass,Wheatish,Warm,Bohemian,Party,Blue,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00340,Inverted Triangle,Fair,Cool,Bohemian,Party,Pastel,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00341,Hourglass,Dark,Cool,Bohemian,College,White,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00342,Rectangle,Medium,Cool,Classic,Wedding,Yellow,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00343,Inverted Triangle,Dusky,Cool,Chic,Party,Red,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00344,Rectangle / Hourglass,Wheatish,Cool,Bohemian,College,Navy,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00345,Inverted Triangle,Dusky,Cool,Minimalist,Wedding,Pink,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00346,Rectangle / Hourglass,Dark,Neutral,Modern,College,Teal,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00347,Rectangle / Hourglass,Dusky,Warm,Chic,Traditional,Navy,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00348,Rectangle / Hourglass,Dark,Warm,Modern,Wedding,Grey,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00349,Triangle (Pear),Wheatish,Warm,Modern,Office,Red,2500.0,Trousers,synthetic_academic_demonstration
+SMPL_00350,Triangle (Pear),Fair,Warm,Chic,Casual,Yellow,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00351,Rectangle,Dusky,Cool,Classic,College,Beige,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00352,Triangle (Pear),Medium,Warm,Modern,Traditional,Blue,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00353,Triangle (Pear),Wheatish,Warm,Classic,Casual,Maroon,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00354,Rectangle / Hourglass,Fair,Neutral,Chic,Wedding,Teal,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00355,Rectangle,Dusky,Warm,Chic,Wedding,Olive,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00356,Hourglass,Dark,Neutral,Classic,Office,Beige,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00357,Rectangle / Hourglass,Wheatish,Neutral,Streetwear,Party,Red,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00358,Rectangle / Hourglass,Medium,Cool,Streetwear,Office,Emerald,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00359,Rectangle,Dark,Warm,Ethnic,Casual,Emerald,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00360,Inverted Triangle,Dark,Neutral,Classic,Party,Grey,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00361,Hourglass,Medium,Cool,Modern,Party,Teal,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00362,Inverted Triangle,Wheatish,Warm,Chic,Traditional,Blue,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00363,Triangle (Pear),Dusky,Neutral,Minimalist,Casual,Black,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00364,Rectangle,Dark,Warm,Classic,Party,Beige,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00365,Inverted Triangle,Medium,Warm,Modern,Traditional,Teal,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00366,Rectangle / Hourglass,Wheatish,Neutral,Minimalist,Wedding,Yellow,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00367,Inverted Triangle,Medium,Cool,Ethnic,Traditional,Emerald,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00368,Rectangle / Hourglass,Dusky,Neutral,Classic,Party,Black,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00369,Rectangle,Fair,Warm,Minimalist,Party,Olive,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00370,Hourglass,Dusky,Warm,Bohemian,Wedding,Emerald,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00371,Hourglass,Fair,Cool,Classic,Party,Beige,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00372,Inverted Triangle,Dark,Cool,Streetwear,Office,Teal,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00373,Triangle (Pear),Wheatish,Neutral,Bohemian,College,Yellow,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00374,Rectangle,Dark,Cool,Ethnic,Party,Grey,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00375,Triangle (Pear),Medium,Neutral,Bohemian,Party,White,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00376,Triangle (Pear),Medium,Cool,Classic,Casual,Beige,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00377,Triangle (Pear),Fair,Neutral,Ethnic,Office,Blue,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00378,Hourglass,Dark,Warm,Classic,Office,Peach,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00379,Inverted Triangle,Fair,Warm,Modern,Office,Olive,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00380,Inverted Triangle,Wheatish,Neutral,Chic,Party,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00381,Rectangle,Medium,Warm,Streetwear,College,Blue,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00382,Inverted Triangle,Medium,Cool,Streetwear,Casual,Black,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00383,Inverted Triangle,Dark,Neutral,Streetwear,Office,Yellow,15000.0,Trousers,synthetic_academic_demonstration
+SMPL_00384,Hourglass,Medium,Warm,Classic,College,Grey,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00385,Triangle (Pear),Medium,Cool,Chic,Casual,Navy,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00386,Triangle (Pear),Dark,Cool,Ethnic,Traditional,Emerald,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00387,Rectangle,Fair,Warm,Streetwear,Party,Red,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00388,Hourglass,Wheatish,Cool,Chic,Wedding,Navy,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00389,Rectangle,Medium,Warm,Bohemian,Office,Pastel,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00390,Rectangle,Dusky,Cool,Bohemian,Office,Peach,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00391,Hourglass,Wheatish,Warm,Classic,Office,Olive,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00392,Inverted Triangle,Dusky,Warm,Streetwear,Wedding,Pink,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00393,Inverted Triangle,Medium,Neutral,Classic,College,Emerald,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00394,Rectangle / Hourglass,Dark,Cool,Modern,Casual,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00395,Rectangle,Fair,Neutral,Modern,Casual,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00396,Hourglass,Fair,Neutral,Bohemian,Office,Beige,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00397,Rectangle,Fair,Neutral,Ethnic,Wedding,Peach,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00398,Triangle (Pear),Dusky,Neutral,Chic,Traditional,Yellow,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00399,Rectangle / Hourglass,Wheatish,Warm,Streetwear,Traditional,Black,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00400,Triangle (Pear),Fair,Cool,Chic,Casual,White,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00401,Inverted Triangle,Fair,Neutral,Modern,College,Peach,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00402,Inverted Triangle,Wheatish,Neutral,Minimalist,Wedding,Pastel,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00403,Hourglass,Dusky,Neutral,Bohemian,Casual,Blue,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00404,Inverted Triangle,Fair,Warm,Ethnic,Casual,Beige,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00405,Rectangle,Dusky,Warm,Bohemian,Traditional,Olive,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00406,Inverted Triangle,Dark,Cool,Classic,Office,Emerald,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00407,Rectangle / Hourglass,Dark,Cool,Classic,Casual,Pink,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00408,Rectangle / Hourglass,Medium,Cool,Streetwear,Traditional,White,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00409,Triangle (Pear),Wheatish,Cool,Classic,Traditional,Grey,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00410,Triangle (Pear),Wheatish,Warm,Ethnic,Traditional,Beige,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00411,Triangle (Pear),Dark,Cool,Ethnic,College,Olive,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00412,Triangle (Pear),Medium,Cool,Modern,Traditional,Emerald,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00413,Hourglass,Wheatish,Neutral,Modern,Office,Yellow,15000.0,Trousers,synthetic_academic_demonstration
+SMPL_00414,Hourglass,Medium,Warm,Chic,Wedding,Red,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00415,Hourglass,Wheatish,Neutral,Chic,Traditional,Yellow,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00416,Inverted Triangle,Dark,Neutral,Chic,Traditional,Yellow,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00417,Rectangle,Medium,Cool,Minimalist,Party,Beige,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00418,Rectangle,Medium,Cool,Minimalist,Party,Teal,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00419,Rectangle,Dusky,Neutral,Streetwear,Casual,Navy,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00420,Inverted Triangle,Fair,Warm,Ethnic,Party,Navy,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00421,Rectangle / Hourglass,Medium,Cool,Modern,College,Emerald,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00422,Rectangle / Hourglass,Dusky,Neutral,Ethnic,Wedding,Teal,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00423,Hourglass,Dusky,Warm,Modern,Traditional,Navy,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00424,Hourglass,Dusky,Cool,Classic,College,Yellow,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00425,Hourglass,Dusky,Cool,Streetwear,Party,Teal,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00426,Rectangle,Medium,Cool,Streetwear,Traditional,Maroon,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00427,Triangle (Pear),Wheatish,Warm,Classic,Office,Yellow,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00428,Hourglass,Dusky,Warm,Ethnic,Casual,Peach,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00429,Triangle (Pear),Wheatish,Cool,Classic,College,Grey,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00430,Rectangle / Hourglass,Medium,Warm,Bohemian,Wedding,Olive,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00431,Hourglass,Medium,Cool,Classic,Party,Maroon,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00432,Triangle (Pear),Dusky,Neutral,Ethnic,Party,Pastel,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00433,Hourglass,Medium,Cool,Chic,College,Red,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00434,Hourglass,Dark,Cool,Streetwear,Casual,Navy,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00435,Triangle (Pear),Dark,Warm,Chic,College,Navy,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00436,Rectangle,Fair,Neutral,Streetwear,Party,Pink,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00437,Triangle (Pear),Medium,Cool,Minimalist,Casual,Grey,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00438,Rectangle / Hourglass,Wheatish,Cool,Bohemian,College,Red,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00439,Inverted Triangle,Dusky,Neutral,Chic,Party,White,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00440,Triangle (Pear),Medium,Cool,Bohemian,Wedding,Olive,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00441,Rectangle / Hourglass,Wheatish,Neutral,Bohemian,Casual,Peach,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00442,Triangle (Pear),Wheatish,Warm,Streetwear,Wedding,Red,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00443,Rectangle / Hourglass,Dusky,Neutral,Bohemian,Party,Red,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00444,Hourglass,Wheatish,Neutral,Bohemian,Casual,Teal,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00445,Hourglass,Wheatish,Neutral,Modern,Casual,Yellow,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00446,Rectangle,Dusky,Neutral,Classic,College,White,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00447,Triangle (Pear),Dark,Neutral,Bohemian,Party,Red,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00448,Inverted Triangle,Fair,Warm,Chic,Party,Emerald,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00449,Rectangle,Wheatish,Cool,Ethnic,Office,Peach,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00450,Rectangle,Wheatish,Warm,Modern,Office,Red,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00451,Inverted Triangle,Wheatish,Neutral,Classic,Wedding,Blue,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00452,Rectangle,Dusky,Warm,Minimalist,Casual,Maroon,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00453,Triangle (Pear),Dusky,Cool,Modern,Office,Emerald,15000.0,Trousers,synthetic_academic_demonstration
+SMPL_00454,Triangle (Pear),Dark,Neutral,Ethnic,Casual,Blue,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00455,Rectangle / Hourglass,Medium,Neutral,Bohemian,Traditional,Yellow,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00456,Rectangle,Fair,Cool,Bohemian,Traditional,Beige,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00457,Rectangle / Hourglass,Medium,Neutral,Modern,Traditional,Peach,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00458,Hourglass,Fair,Warm,Streetwear,Office,Beige,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00459,Rectangle,Medium,Neutral,Chic,Casual,Navy,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00460,Triangle (Pear),Dusky,Cool,Bohemian,Traditional,Yellow,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00461,Rectangle,Fair,Neutral,Ethnic,College,Peach,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00462,Rectangle / Hourglass,Dusky,Warm,Classic,Party,Peach,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00463,Inverted Triangle,Dusky,Neutral,Chic,Traditional,Navy,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00464,Triangle (Pear),Fair,Neutral,Modern,College,Blue,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00465,Rectangle,Dusky,Neutral,Ethnic,Traditional,Teal,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00466,Hourglass,Dark,Warm,Modern,Office,Navy,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00467,Triangle (Pear),Dusky,Neutral,Ethnic,College,Maroon,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00468,Hourglass,Wheatish,Cool,Classic,Traditional,Olive,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00469,Hourglass,Dark,Cool,Classic,College,Pastel,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00470,Inverted Triangle,Wheatish,Cool,Ethnic,Traditional,Emerald,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00471,Rectangle,Dark,Warm,Streetwear,Office,Teal,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00472,Rectangle / Hourglass,Wheatish,Neutral,Bohemian,Party,Grey,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00473,Triangle (Pear),Dusky,Neutral,Chic,Casual,Blue,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00474,Triangle (Pear),Fair,Neutral,Modern,College,Olive,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00475,Rectangle,Dusky,Cool,Chic,College,Red,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00476,Inverted Triangle,Wheatish,Neutral,Classic,Traditional,Pink,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00477,Rectangle,Dark,Neutral,Ethnic,College,Olive,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00478,Hourglass,Wheatish,Cool,Minimalist,College,Red,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00479,Rectangle,Wheatish,Cool,Bohemian,College,Peach,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00480,Rectangle,Dusky,Cool,Ethnic,College,Peach,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00481,Triangle (Pear),Dark,Neutral,Streetwear,Casual,Teal,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00482,Rectangle / Hourglass,Wheatish,Neutral,Minimalist,College,Teal,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00483,Rectangle / Hourglass,Wheatish,Warm,Bohemian,Wedding,Pink,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00484,Rectangle,Dark,Warm,Chic,College,Emerald,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00485,Triangle (Pear),Dusky,Neutral,Minimalist,Office,Black,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00486,Rectangle / Hourglass,Medium,Neutral,Ethnic,Party,Grey,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00487,Hourglass,Medium,Warm,Ethnic,Wedding,Peach,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00488,Triangle (Pear),Medium,Cool,Bohemian,Casual,White,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00489,Hourglass,Dark,Cool,Chic,Party,Blue,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00490,Rectangle,Fair,Neutral,Chic,Wedding,Peach,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00491,Hourglass,Dusky,Neutral,Classic,Office,Yellow,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00492,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Wedding,Peach,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00493,Hourglass,Fair,Warm,Minimalist,Office,Yellow,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00494,Triangle (Pear),Wheatish,Cool,Bohemian,Office,Black,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00495,Triangle (Pear),Wheatish,Warm,Modern,Traditional,Pastel,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00496,Hourglass,Medium,Cool,Modern,Office,Pastel,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00497,Hourglass,Wheatish,Neutral,Modern,Wedding,White,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00498,Rectangle,Wheatish,Warm,Minimalist,Office,Teal,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00499,Inverted Triangle,Wheatish,Neutral,Minimalist,Wedding,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00500,Hourglass,Wheatish,Warm,Bohemian,Traditional,Black,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00501,Hourglass,Wheatish,Neutral,Minimalist,Casual,Olive,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00502,Triangle (Pear),Dark,Warm,Modern,Office,Pastel,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00503,Rectangle,Dusky,Cool,Streetwear,College,Navy,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00504,Rectangle,Dark,Cool,Streetwear,Office,Red,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00505,Triangle (Pear),Dark,Cool,Minimalist,Party,Pink,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00506,Rectangle / Hourglass,Wheatish,Warm,Modern,College,Grey,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00507,Rectangle,Fair,Neutral,Minimalist,Office,Emerald,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00508,Rectangle / Hourglass,Dark,Warm,Bohemian,College,Navy,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00509,Hourglass,Fair,Cool,Streetwear,Casual,Beige,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00510,Rectangle / Hourglass,Dusky,Neutral,Streetwear,College,Grey,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00511,Triangle (Pear),Medium,Neutral,Bohemian,Party,Black,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00512,Inverted Triangle,Dark,Cool,Classic,Traditional,Grey,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00513,Triangle (Pear),Dark,Cool,Classic,College,Grey,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00514,Hourglass,Fair,Neutral,Chic,Casual,Navy,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00515,Triangle (Pear),Dusky,Warm,Ethnic,Casual,Emerald,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00516,Rectangle,Dark,Warm,Streetwear,Party,Beige,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00517,Rectangle,Dusky,Warm,Bohemian,Party,Yellow,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00518,Rectangle,Dark,Cool,Classic,Office,Yellow,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00519,Inverted Triangle,Dusky,Neutral,Minimalist,Office,Maroon,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00520,Inverted Triangle,Wheatish,Cool,Chic,Wedding,Grey,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00521,Rectangle,Dark,Cool,Bohemian,Party,Blue,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00522,Rectangle / Hourglass,Wheatish,Neutral,Ethnic,Party,Black,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00523,Hourglass,Wheatish,Warm,Chic,Party,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00524,Rectangle,Medium,Warm,Chic,Casual,Yellow,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00525,Inverted Triangle,Dark,Cool,Modern,Wedding,Emerald,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00526,Rectangle,Medium,Neutral,Bohemian,College,Navy,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00527,Hourglass,Medium,Warm,Streetwear,Traditional,Black,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00528,Rectangle,Dusky,Neutral,Modern,College,Pink,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00529,Inverted Triangle,Wheatish,Warm,Modern,Office,Pastel,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00530,Inverted Triangle,Dusky,Cool,Ethnic,Wedding,Red,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00531,Hourglass,Fair,Cool,Modern,Traditional,Yellow,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00532,Inverted Triangle,Fair,Neutral,Minimalist,College,Peach,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00533,Inverted Triangle,Wheatish,Warm,Modern,Party,Yellow,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00534,Rectangle,Dark,Neutral,Minimalist,College,Teal,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00535,Inverted Triangle,Fair,Warm,Minimalist,College,Navy,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00536,Rectangle,Dusky,Warm,Chic,Traditional,Red,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00537,Triangle (Pear),Wheatish,Neutral,Streetwear,Party,White,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00538,Inverted Triangle,Wheatish,Neutral,Modern,Party,Pink,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00539,Hourglass,Medium,Neutral,Classic,Office,Yellow,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00540,Triangle (Pear),Medium,Neutral,Modern,Wedding,Grey,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00541,Hourglass,Medium,Cool,Streetwear,Wedding,Yellow,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00542,Rectangle,Dark,Cool,Bohemian,Casual,Black,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00543,Inverted Triangle,Dusky,Neutral,Minimalist,College,Navy,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00544,Hourglass,Wheatish,Cool,Minimalist,Traditional,Pastel,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00545,Rectangle,Fair,Warm,Classic,Traditional,Red,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00546,Hourglass,Fair,Neutral,Classic,Wedding,Navy,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00547,Rectangle / Hourglass,Dark,Cool,Chic,Wedding,Emerald,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00548,Rectangle / Hourglass,Fair,Neutral,Classic,Wedding,Yellow,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00549,Rectangle,Fair,Neutral,Ethnic,Wedding,Peach,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00550,Hourglass,Wheatish,Cool,Ethnic,Traditional,Black,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00551,Rectangle / Hourglass,Medium,Neutral,Streetwear,Office,Emerald,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00552,Hourglass,Fair,Cool,Streetwear,Office,White,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00553,Rectangle / Hourglass,Fair,Warm,Modern,Party,Black,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00554,Rectangle,Wheatish,Neutral,Ethnic,Traditional,Peach,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00555,Rectangle,Medium,Warm,Chic,College,Grey,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00556,Rectangle / Hourglass,Fair,Neutral,Streetwear,Casual,Yellow,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00557,Rectangle / Hourglass,Wheatish,Cool,Minimalist,Traditional,Grey,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00558,Triangle (Pear),Dusky,Cool,Minimalist,College,Yellow,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00559,Triangle (Pear),Dusky,Warm,Chic,Party,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00560,Triangle (Pear),Dusky,Warm,Ethnic,Party,Red,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00561,Hourglass,Dark,Warm,Classic,College,Maroon,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00562,Triangle (Pear),Medium,Warm,Ethnic,Traditional,Teal,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00563,Hourglass,Medium,Warm,Classic,Wedding,Navy,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00564,Rectangle,Fair,Cool,Classic,Casual,Red,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00565,Rectangle / Hourglass,Wheatish,Cool,Modern,Casual,Red,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00566,Triangle (Pear),Fair,Neutral,Bohemian,Party,Pink,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00567,Inverted Triangle,Wheatish,Warm,Minimalist,College,Black,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00568,Triangle (Pear),Dark,Warm,Minimalist,Traditional,Emerald,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00569,Rectangle,Medium,Neutral,Bohemian,Office,Navy,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00570,Triangle (Pear),Dusky,Warm,Minimalist,Wedding,Black,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00571,Inverted Triangle,Fair,Warm,Classic,Party,Grey,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00572,Inverted Triangle,Wheatish,Neutral,Modern,Casual,Yellow,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00573,Rectangle / Hourglass,Dusky,Warm,Bohemian,College,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00574,Rectangle,Dusky,Neutral,Bohemian,Wedding,Black,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00575,Rectangle / Hourglass,Wheatish,Warm,Classic,Party,Blue,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00576,Hourglass,Dusky,Neutral,Ethnic,College,Olive,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00577,Inverted Triangle,Dusky,Cool,Modern,College,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00578,Rectangle,Fair,Cool,Ethnic,Traditional,Olive,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00579,Triangle (Pear),Medium,Neutral,Minimalist,College,Grey,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00580,Rectangle / Hourglass,Dusky,Cool,Streetwear,Casual,Grey,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00581,Triangle (Pear),Wheatish,Cool,Bohemian,Party,Peach,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00582,Rectangle,Dark,Cool,Chic,College,Navy,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00583,Triangle (Pear),Dark,Neutral,Chic,Casual,Pastel,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00584,Triangle (Pear),Medium,Warm,Minimalist,Traditional,White,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00585,Hourglass,Wheatish,Warm,Streetwear,Party,Emerald,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00586,Rectangle,Dusky,Cool,Minimalist,Party,Teal,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00587,Hourglass,Fair,Neutral,Modern,Traditional,Yellow,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00588,Inverted Triangle,Medium,Cool,Modern,Party,Yellow,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00589,Rectangle / Hourglass,Wheatish,Neutral,Modern,Casual,Yellow,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00590,Rectangle / Hourglass,Dark,Warm,Classic,College,Emerald,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00591,Rectangle,Wheatish,Warm,Chic,Office,Beige,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00592,Rectangle,Fair,Neutral,Minimalist,Party,Olive,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00593,Triangle (Pear),Medium,Warm,Minimalist,Traditional,Pastel,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00594,Rectangle,Dark,Neutral,Classic,Wedding,Navy,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00595,Rectangle,Medium,Cool,Minimalist,Casual,Peach,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00596,Triangle (Pear),Dark,Neutral,Ethnic,College,Beige,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00597,Inverted Triangle,Dusky,Neutral,Ethnic,Party,Emerald,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00598,Inverted Triangle,Fair,Warm,Modern,Traditional,Maroon,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00599,Triangle (Pear),Dark,Neutral,Classic,Casual,Yellow,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00600,Triangle (Pear),Dusky,Warm,Chic,College,Red,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00601,Hourglass,Dark,Warm,Minimalist,Office,Blue,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00602,Triangle (Pear),Dusky,Warm,Bohemian,Traditional,Teal,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00603,Triangle (Pear),Dusky,Warm,Bohemian,Office,Yellow,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00604,Rectangle / Hourglass,Dark,Cool,Streetwear,Casual,Yellow,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00605,Triangle (Pear),Dusky,Cool,Chic,Casual,Maroon,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00606,Triangle (Pear),Fair,Neutral,Modern,Office,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00607,Rectangle / Hourglass,Dusky,Cool,Streetwear,College,Pink,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00608,Inverted Triangle,Medium,Neutral,Classic,Casual,Pastel,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00609,Triangle (Pear),Dusky,Neutral,Ethnic,Party,White,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00610,Inverted Triangle,Wheatish,Cool,Bohemian,Wedding,Navy,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00611,Inverted Triangle,Fair,Warm,Classic,Traditional,Yellow,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00612,Rectangle,Dusky,Warm,Streetwear,Party,Peach,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00613,Hourglass,Dark,Neutral,Chic,Wedding,Red,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00614,Rectangle / Hourglass,Dark,Warm,Streetwear,Traditional,Blue,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00615,Rectangle / Hourglass,Medium,Cool,Streetwear,Traditional,Pastel,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00616,Hourglass,Fair,Cool,Bohemian,Party,Olive,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00617,Rectangle,Fair,Cool,Chic,Traditional,Pastel,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00618,Triangle (Pear),Dark,Warm,Classic,Traditional,Navy,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00619,Hourglass,Fair,Neutral,Ethnic,Office,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00620,Inverted Triangle,Medium,Cool,Ethnic,Casual,Navy,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00621,Triangle (Pear),Medium,Neutral,Chic,Wedding,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00622,Inverted Triangle,Medium,Cool,Chic,Casual,Navy,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00623,Inverted Triangle,Wheatish,Warm,Bohemian,Casual,Peach,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00624,Rectangle,Dusky,Neutral,Minimalist,Party,Grey,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00625,Hourglass,Wheatish,Cool,Chic,Party,Pink,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00626,Triangle (Pear),Wheatish,Warm,Classic,College,Teal,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00627,Rectangle,Dark,Warm,Ethnic,Wedding,Pastel,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00628,Rectangle / Hourglass,Fair,Neutral,Streetwear,Traditional,Red,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00629,Inverted Triangle,Dark,Cool,Ethnic,College,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00630,Inverted Triangle,Dark,Neutral,Classic,Office,Grey,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00631,Triangle (Pear),Dark,Warm,Bohemian,Office,White,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00632,Triangle (Pear),Medium,Warm,Ethnic,Traditional,Yellow,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00633,Rectangle / Hourglass,Wheatish,Warm,Classic,Wedding,Emerald,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00634,Rectangle,Dark,Neutral,Minimalist,Party,Black,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00635,Hourglass,Dark,Cool,Bohemian,Office,Pastel,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00636,Hourglass,Wheatish,Cool,Minimalist,Office,Maroon,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00637,Triangle (Pear),Wheatish,Neutral,Minimalist,Wedding,Teal,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00638,Rectangle,Dusky,Neutral,Modern,Casual,Yellow,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00639,Inverted Triangle,Dark,Warm,Ethnic,Office,Teal,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00640,Rectangle,Dusky,Cool,Streetwear,Party,Blue,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00641,Rectangle,Dusky,Neutral,Bohemian,Casual,Pink,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00642,Triangle (Pear),Fair,Neutral,Modern,Casual,Pastel,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00643,Rectangle / Hourglass,Dark,Cool,Ethnic,Traditional,Yellow,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00644,Triangle (Pear),Dusky,Cool,Streetwear,Traditional,Peach,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00645,Triangle (Pear),Dark,Neutral,Ethnic,College,Yellow,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00646,Rectangle / Hourglass,Dark,Warm,Bohemian,Office,Teal,1500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00647,Rectangle,Fair,Neutral,Ethnic,Traditional,Black,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00648,Triangle (Pear),Dark,Warm,Chic,College,White,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00649,Rectangle / Hourglass,Wheatish,Warm,Classic,Party,Teal,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00650,Hourglass,Dusky,Cool,Bohemian,Party,Black,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00651,Rectangle / Hourglass,Wheatish,Cool,Minimalist,Traditional,Red,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00652,Rectangle / Hourglass,Medium,Cool,Ethnic,College,Grey,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00653,Inverted Triangle,Dusky,Warm,Streetwear,Office,White,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00654,Rectangle,Fair,Neutral,Modern,Casual,Black,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00655,Rectangle / Hourglass,Wheatish,Cool,Modern,Casual,Yellow,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00656,Rectangle / Hourglass,Medium,Warm,Bohemian,Wedding,Emerald,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00657,Inverted Triangle,Fair,Neutral,Minimalist,Wedding,Navy,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00658,Hourglass,Medium,Neutral,Minimalist,Party,White,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00659,Rectangle,Fair,Cool,Modern,Casual,Navy,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00660,Rectangle,Dark,Warm,Classic,Party,Grey,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00661,Rectangle,Wheatish,Cool,Bohemian,Wedding,Olive,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00662,Rectangle / Hourglass,Dark,Warm,Modern,College,Navy,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00663,Hourglass,Medium,Cool,Classic,Office,White,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00664,Rectangle,Fair,Neutral,Classic,Traditional,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00665,Rectangle,Medium,Cool,Modern,College,Emerald,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00666,Hourglass,Dusky,Cool,Ethnic,Casual,Emerald,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00667,Rectangle / Hourglass,Wheatish,Neutral,Ethnic,Wedding,Red,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00668,Inverted Triangle,Fair,Neutral,Chic,Casual,Grey,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00669,Rectangle,Dark,Neutral,Minimalist,Traditional,Navy,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00670,Rectangle,Fair,Warm,Modern,Party,Grey,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00671,Rectangle / Hourglass,Dusky,Neutral,Streetwear,Wedding,Olive,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00672,Rectangle / Hourglass,Medium,Warm,Ethnic,College,Pink,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00673,Rectangle / Hourglass,Medium,Cool,Minimalist,Wedding,Peach,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00674,Rectangle / Hourglass,Dusky,Warm,Bohemian,Casual,Pink,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00675,Triangle (Pear),Wheatish,Warm,Ethnic,College,Navy,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00676,Triangle (Pear),Medium,Neutral,Minimalist,Wedding,Peach,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00677,Rectangle,Wheatish,Warm,Bohemian,Traditional,Pink,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00678,Rectangle / Hourglass,Dusky,Cool,Ethnic,Office,Olive,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00679,Inverted Triangle,Dark,Warm,Bohemian,Traditional,Red,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00680,Triangle (Pear),Medium,Warm,Bohemian,Casual,Blue,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00681,Rectangle / Hourglass,Medium,Neutral,Modern,College,Pastel,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00682,Inverted Triangle,Dark,Cool,Modern,Wedding,Beige,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00683,Hourglass,Medium,Warm,Streetwear,Party,Grey,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00684,Rectangle / Hourglass,Dusky,Cool,Classic,Casual,Grey,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00685,Triangle (Pear),Fair,Neutral,Chic,Casual,Grey,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00686,Hourglass,Medium,Cool,Streetwear,Casual,Peach,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00687,Triangle (Pear),Wheatish,Warm,Streetwear,Casual,Black,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00688,Triangle (Pear),Wheatish,Cool,Minimalist,Traditional,White,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00689,Triangle (Pear),Wheatish,Neutral,Classic,College,Black,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00690,Inverted Triangle,Dusky,Warm,Chic,Party,Blue,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00691,Rectangle,Wheatish,Neutral,Minimalist,College,Maroon,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00692,Rectangle / Hourglass,Fair,Cool,Streetwear,Wedding,White,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00693,Inverted Triangle,Wheatish,Warm,Minimalist,Casual,Peach,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00694,Hourglass,Fair,Neutral,Classic,Party,Yellow,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00695,Triangle (Pear),Fair,Neutral,Streetwear,Casual,White,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00696,Rectangle,Dusky,Cool,Bohemian,Wedding,Red,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00697,Hourglass,Dark,Cool,Modern,Traditional,Emerald,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00698,Hourglass,Dark,Cool,Minimalist,College,Beige,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00699,Hourglass,Wheatish,Warm,Modern,Traditional,White,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00700,Triangle (Pear),Fair,Cool,Ethnic,Traditional,Pink,10000.0,Sarees,synthetic_academic_demonstration
+SMPL_00701,Hourglass,Medium,Neutral,Modern,College,Red,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00702,Hourglass,Dusky,Cool,Ethnic,Party,Navy,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00703,Hourglass,Medium,Neutral,Streetwear,College,Grey,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00704,Rectangle,Medium,Neutral,Bohemian,Wedding,Navy,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00705,Inverted Triangle,Wheatish,Warm,Ethnic,College,Emerald,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00706,Inverted Triangle,Dark,Cool,Classic,College,Grey,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00707,Hourglass,Dark,Cool,Minimalist,Party,White,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00708,Hourglass,Dark,Neutral,Minimalist,Office,Pastel,15000.0,Trousers,synthetic_academic_demonstration
+SMPL_00709,Triangle (Pear),Dusky,Neutral,Chic,College,Black,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00710,Hourglass,Medium,Neutral,Minimalist,Party,Navy,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00711,Rectangle,Fair,Neutral,Classic,Casual,Blue,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00712,Rectangle / Hourglass,Wheatish,Warm,Modern,Office,Grey,15000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00713,Triangle (Pear),Wheatish,Warm,Modern,Wedding,Pink,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00714,Hourglass,Wheatish,Neutral,Minimalist,Office,Beige,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00715,Triangle (Pear),Medium,Warm,Ethnic,Casual,Maroon,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00716,Triangle (Pear),Dark,Neutral,Bohemian,Party,Pastel,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00717,Triangle (Pear),Fair,Neutral,Minimalist,Party,Blue,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00718,Hourglass,Dusky,Cool,Ethnic,College,Yellow,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00719,Hourglass,Dark,Neutral,Minimalist,Party,Pink,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00720,Rectangle,Wheatish,Cool,Classic,Office,Blue,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00721,Rectangle,Wheatish,Neutral,Ethnic,College,Blue,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00722,Inverted Triangle,Wheatish,Neutral,Chic,Casual,Navy,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00723,Rectangle / Hourglass,Dark,Neutral,Ethnic,College,Navy,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00724,Rectangle,Wheatish,Neutral,Classic,Party,Navy,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00725,Triangle (Pear),Wheatish,Cool,Ethnic,Party,Navy,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00726,Hourglass,Fair,Cool,Streetwear,Casual,Black,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00727,Rectangle,Fair,Cool,Ethnic,College,Pink,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00728,Hourglass,Fair,Neutral,Bohemian,Office,Pastel,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00729,Inverted Triangle,Dark,Cool,Ethnic,Traditional,Navy,2500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00730,Inverted Triangle,Dark,Warm,Ethnic,Office,Beige,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00731,Rectangle / Hourglass,Wheatish,Neutral,Classic,Casual,Yellow,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00732,Triangle (Pear),Fair,Warm,Modern,Casual,Black,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00733,Rectangle / Hourglass,Fair,Warm,Bohemian,Casual,Pastel,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00734,Triangle (Pear),Dark,Neutral,Chic,Party,Peach,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00735,Rectangle / Hourglass,Dark,Warm,Classic,Traditional,Black,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00736,Triangle (Pear),Fair,Neutral,Classic,Casual,Red,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00737,Triangle (Pear),Fair,Neutral,Classic,Party,Navy,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00738,Triangle (Pear),Dusky,Warm,Bohemian,Party,Teal,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00739,Hourglass,Wheatish,Neutral,Bohemian,Wedding,Olive,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00740,Triangle (Pear),Dark,Warm,Classic,College,Grey,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00741,Rectangle,Dark,Warm,Bohemian,Casual,Pastel,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00742,Triangle (Pear),Wheatish,Warm,Minimalist,Party,Peach,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00743,Rectangle,Dusky,Neutral,Bohemian,Office,Grey,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00744,Inverted Triangle,Medium,Neutral,Classic,Traditional,Pink,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00745,Inverted Triangle,Medium,Warm,Classic,Casual,Emerald,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00746,Rectangle,Dusky,Warm,Bohemian,Traditional,Emerald,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00747,Inverted Triangle,Dark,Cool,Bohemian,Traditional,Teal,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00748,Rectangle,Wheatish,Neutral,Chic,Office,Emerald,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00749,Hourglass,Wheatish,Cool,Modern,Party,Navy,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00750,Triangle (Pear),Medium,Neutral,Minimalist,Casual,Pastel,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00751,Hourglass,Dusky,Cool,Chic,Party,Emerald,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00752,Triangle (Pear),Medium,Neutral,Chic,Party,Red,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00753,Inverted Triangle,Dusky,Neutral,Minimalist,Party,Navy,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00754,Triangle (Pear),Medium,Neutral,Minimalist,College,Blue,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00755,Hourglass,Medium,Cool,Modern,College,White,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00756,Triangle (Pear),Wheatish,Neutral,Modern,College,Grey,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00757,Hourglass,Dusky,Warm,Ethnic,Traditional,White,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00758,Rectangle / Hourglass,Wheatish,Neutral,Ethnic,Wedding,Beige,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00759,Rectangle,Dusky,Warm,Ethnic,Party,White,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00760,Triangle (Pear),Wheatish,Neutral,Modern,Traditional,Teal,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00761,Rectangle,Medium,Neutral,Modern,Office,Pastel,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00762,Triangle (Pear),Wheatish,Neutral,Ethnic,Casual,White,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00763,Hourglass,Medium,Warm,Modern,Traditional,Grey,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00764,Inverted Triangle,Dark,Cool,Streetwear,Office,Pastel,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00765,Inverted Triangle,Dark,Warm,Bohemian,Wedding,Teal,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00766,Hourglass,Dark,Cool,Classic,Office,Maroon,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00767,Triangle (Pear),Dark,Cool,Classic,Wedding,Emerald,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00768,Rectangle / Hourglass,Dusky,Cool,Chic,College,Yellow,4000.0,Jeans,synthetic_academic_demonstration
+SMPL_00769,Inverted Triangle,Fair,Cool,Minimalist,College,Peach,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00770,Inverted Triangle,Dark,Cool,Streetwear,College,Yellow,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00771,Hourglass,Wheatish,Neutral,Streetwear,College,Olive,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00772,Rectangle,Dark,Warm,Modern,Traditional,White,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00773,Rectangle,Dark,Cool,Minimalist,Party,Red,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00774,Inverted Triangle,Wheatish,Warm,Minimalist,Office,White,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00775,Hourglass,Fair,Cool,Ethnic,College,Emerald,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00776,Rectangle,Medium,Neutral,Ethnic,Office,Blue,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00777,Inverted Triangle,Medium,Neutral,Streetwear,Party,Beige,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00778,Triangle (Pear),Wheatish,Warm,Classic,Casual,Olive,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00779,Inverted Triangle,Medium,Cool,Chic,Traditional,Red,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00780,Hourglass,Wheatish,Cool,Minimalist,Office,Teal,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00781,Inverted Triangle,Wheatish,Neutral,Chic,Wedding,White,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00782,Triangle (Pear),Dusky,Warm,Classic,College,Black,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00783,Triangle (Pear),Fair,Cool,Modern,Office,Blue,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00784,Rectangle / Hourglass,Dusky,Cool,Streetwear,Casual,Maroon,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00785,Triangle (Pear),Dark,Warm,Chic,College,Emerald,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00786,Inverted Triangle,Medium,Warm,Classic,Traditional,Peach,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00787,Rectangle / Hourglass,Medium,Cool,Classic,Casual,Grey,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00788,Triangle (Pear),Dark,Cool,Modern,Party,Yellow,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00789,Hourglass,Fair,Neutral,Chic,Office,Emerald,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00790,Hourglass,Dark,Warm,Classic,College,Teal,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00791,Triangle (Pear),Dark,Cool,Classic,Office,Pastel,1500.0,Trousers,synthetic_academic_demonstration
+SMPL_00792,Inverted Triangle,Dark,Warm,Ethnic,College,Black,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00793,Rectangle,Wheatish,Cool,Streetwear,Office,Maroon,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00794,Triangle (Pear),Dark,Cool,Modern,College,Navy,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00795,Rectangle / Hourglass,Wheatish,Cool,Classic,Party,Teal,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00796,Rectangle,Dusky,Warm,Minimalist,Casual,White,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00797,Triangle (Pear),Medium,Neutral,Bohemian,Traditional,Beige,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00798,Rectangle,Wheatish,Cool,Ethnic,Casual,Peach,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00799,Rectangle,Wheatish,Warm,Streetwear,Casual,Beige,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00800,Triangle (Pear),Wheatish,Warm,Ethnic,Traditional,Red,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00801,Hourglass,Dusky,Neutral,Chic,College,Pink,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00802,Rectangle,Dark,Cool,Chic,Traditional,Olive,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00803,Rectangle,Fair,Warm,Chic,Casual,Teal,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00804,Inverted Triangle,Fair,Cool,Ethnic,Party,Pastel,10000.0,Party wear,synthetic_academic_demonstration
+SMPL_00805,Rectangle / Hourglass,Fair,Cool,Minimalist,Traditional,Grey,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00806,Rectangle / Hourglass,Wheatish,Cool,Bohemian,Casual,Beige,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00807,Inverted Triangle,Medium,Cool,Ethnic,College,Blue,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00808,Hourglass,Medium,Warm,Classic,Casual,Pastel,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00809,Rectangle,Dark,Cool,Modern,Casual,Pastel,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00810,Rectangle / Hourglass,Medium,Warm,Classic,Party,Peach,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00811,Rectangle / Hourglass,Dusky,Cool,Chic,Party,Red,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00812,Rectangle,Fair,Neutral,Classic,Office,Pastel,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00813,Hourglass,Medium,Cool,Classic,Traditional,Beige,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00814,Hourglass,Fair,Neutral,Classic,Wedding,Olive,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00815,Triangle (Pear),Fair,Cool,Modern,Casual,Teal,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00816,Hourglass,Dark,Warm,Modern,Traditional,Pink,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00817,Inverted Triangle,Wheatish,Cool,Minimalist,Wedding,Red,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00818,Inverted Triangle,Wheatish,Warm,Chic,Traditional,Yellow,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00819,Inverted Triangle,Dusky,Warm,Streetwear,Office,Pink,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00820,Inverted Triangle,Dusky,Cool,Chic,Wedding,Olive,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00821,Rectangle / Hourglass,Wheatish,Neutral,Chic,Traditional,Black,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00822,Rectangle,Medium,Neutral,Minimalist,College,Olive,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00823,Rectangle / Hourglass,Dusky,Warm,Streetwear,Wedding,White,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00824,Rectangle,Fair,Cool,Streetwear,Traditional,Black,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00825,Inverted Triangle,Dusky,Warm,Modern,Traditional,Olive,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00826,Rectangle,Dusky,Warm,Streetwear,Office,Pastel,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00827,Rectangle / Hourglass,Medium,Neutral,Bohemian,Party,Black,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00828,Rectangle / Hourglass,Dark,Warm,Ethnic,College,Pink,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00829,Triangle (Pear),Dusky,Cool,Chic,College,Maroon,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00830,Triangle (Pear),Fair,Warm,Classic,Office,Blue,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00831,Rectangle / Hourglass,Fair,Cool,Ethnic,Casual,Red,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00832,Rectangle / Hourglass,Dark,Cool,Modern,Party,Navy,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00833,Hourglass,Dark,Neutral,Ethnic,Traditional,Teal,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00834,Hourglass,Fair,Cool,Modern,Office,White,4000.0,Trousers,synthetic_academic_demonstration
+SMPL_00835,Hourglass,Dusky,Neutral,Chic,Casual,Red,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00836,Hourglass,Fair,Cool,Classic,Party,Yellow,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00837,Inverted Triangle,Dark,Warm,Classic,College,Pastel,15000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00838,Hourglass,Dusky,Neutral,Modern,College,Teal,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00839,Inverted Triangle,Wheatish,Neutral,Chic,Traditional,Olive,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00840,Rectangle,Dusky,Warm,Classic,Traditional,Black,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00841,Rectangle,Dusky,Warm,Streetwear,College,Emerald,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00842,Rectangle,Fair,Cool,Streetwear,Casual,Pastel,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00843,Triangle (Pear),Dusky,Cool,Chic,College,White,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00844,Hourglass,Fair,Neutral,Minimalist,Casual,Grey,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00845,Triangle (Pear),Fair,Cool,Chic,Traditional,Yellow,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00846,Hourglass,Fair,Cool,Minimalist,College,Navy,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00847,Triangle (Pear),Dusky,Neutral,Classic,Casual,Black,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00848,Rectangle,Dark,Warm,Ethnic,Party,Navy,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00849,Rectangle / Hourglass,Dark,Neutral,Modern,Traditional,Maroon,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00850,Hourglass,Fair,Cool,Ethnic,Wedding,Pastel,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00851,Rectangle / Hourglass,Fair,Cool,Bohemian,Office,Emerald,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00852,Triangle (Pear),Medium,Warm,Classic,College,Blue,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00853,Triangle (Pear),Dusky,Neutral,Streetwear,Office,Maroon,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00854,Rectangle / Hourglass,Medium,Neutral,Ethnic,Casual,Maroon,1500.0,Jeans,synthetic_academic_demonstration
+SMPL_00855,Triangle (Pear),Medium,Cool,Minimalist,Traditional,Pastel,6000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00856,Inverted Triangle,Fair,Neutral,Chic,Casual,Blue,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00857,Rectangle,Dark,Warm,Modern,College,Navy,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00858,Triangle (Pear),Medium,Neutral,Ethnic,Party,Emerald,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00859,Triangle (Pear),Dusky,Neutral,Bohemian,Traditional,Maroon,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00860,Triangle (Pear),Dark,Warm,Chic,Casual,Emerald,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00861,Rectangle,Medium,Warm,Bohemian,Party,Olive,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00862,Triangle (Pear),Wheatish,Cool,Classic,Party,White,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00863,Rectangle / Hourglass,Medium,Neutral,Bohemian,Office,Red,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00864,Triangle (Pear),Medium,Cool,Streetwear,Wedding,Pink,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00865,Triangle (Pear),Dark,Neutral,Modern,Party,Yellow,1500.0,Dresses,synthetic_academic_demonstration
+SMPL_00866,Rectangle,Fair,Cool,Classic,Wedding,Blue,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00867,Rectangle / Hourglass,Wheatish,Cool,Ethnic,Office,Emerald,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00868,Inverted Triangle,Dark,Neutral,Modern,Office,Olive,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00869,Hourglass,Dusky,Neutral,Streetwear,Traditional,Maroon,15000.0,Sarees,synthetic_academic_demonstration
+SMPL_00870,Hourglass,Wheatish,Warm,Bohemian,Party,Navy,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00871,Rectangle,Fair,Cool,Bohemian,Office,Pink,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00872,Rectangle,Dark,Warm,Modern,Office,Pink,2500.0,Trousers,synthetic_academic_demonstration
+SMPL_00873,Triangle (Pear),Wheatish,Cool,Minimalist,Office,Maroon,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00874,Inverted Triangle,Wheatish,Neutral,Ethnic,Traditional,Peach,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00875,Inverted Triangle,Medium,Neutral,Bohemian,Office,Pastel,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00876,Inverted Triangle,Medium,Cool,Streetwear,Wedding,Black,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00877,Triangle (Pear),Medium,Neutral,Chic,Traditional,Olive,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00878,Hourglass,Wheatish,Warm,Ethnic,Party,Pastel,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00879,Hourglass,Dark,Cool,Minimalist,Office,Teal,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00880,Rectangle / Hourglass,Dusky,Neutral,Ethnic,Casual,Blue,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00881,Hourglass,Dusky,Neutral,Streetwear,Office,Maroon,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00882,Triangle (Pear),Wheatish,Warm,Ethnic,Traditional,Emerald,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00883,Hourglass,Dusky,Cool,Modern,Casual,Black,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00884,Inverted Triangle,Fair,Warm,Chic,Casual,Beige,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00885,Triangle (Pear),Fair,Neutral,Bohemian,Party,Grey,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00886,Rectangle,Fair,Warm,Classic,Office,Teal,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00887,Inverted Triangle,Dusky,Warm,Minimalist,College,Teal,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00888,Rectangle,Wheatish,Warm,Minimalist,Casual,Maroon,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00889,Triangle (Pear),Medium,Cool,Minimalist,Wedding,Teal,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00890,Rectangle / Hourglass,Dark,Neutral,Streetwear,Office,Yellow,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00891,Rectangle / Hourglass,Medium,Cool,Minimalist,College,Emerald,10000.0,Jeans,synthetic_academic_demonstration
+SMPL_00892,Triangle (Pear),Medium,Cool,Classic,Casual,Grey,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00893,Hourglass,Dark,Neutral,Chic,Party,Emerald,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00894,Rectangle / Hourglass,Fair,Cool,Bohemian,Party,Emerald,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00895,Hourglass,Dark,Cool,Classic,Wedding,Yellow,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00896,Hourglass,Dusky,Neutral,Modern,Office,White,6000.0,Trousers,synthetic_academic_demonstration
+SMPL_00897,Rectangle,Dusky,Cool,Streetwear,College,Navy,2500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00898,Rectangle,Dusky,Warm,Chic,Party,Grey,2500.0,Dresses,synthetic_academic_demonstration
+SMPL_00899,Inverted Triangle,Dusky,Cool,Minimalist,Traditional,Beige,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00900,Rectangle,Dusky,Warm,Bohemian,Wedding,Grey,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00901,Hourglass,Fair,Cool,Streetwear,Office,Navy,6000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00902,Hourglass,Dusky,Neutral,Ethnic,Party,Blue,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00903,Inverted Triangle,Medium,Cool,Modern,Office,Emerald,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00904,Triangle (Pear),Dark,Neutral,Streetwear,Wedding,Maroon,2500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00905,Hourglass,Wheatish,Warm,Chic,College,Blue,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00906,Rectangle / Hourglass,Dark,Neutral,Streetwear,Casual,Beige,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00907,Hourglass,Medium,Cool,Minimalist,Party,Beige,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00908,Hourglass,Wheatish,Warm,Streetwear,Casual,Grey,1500.0,T-shirts,synthetic_academic_demonstration
+SMPL_00909,Rectangle,Medium,Cool,Streetwear,Party,Red,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00910,Rectangle / Hourglass,Medium,Neutral,Bohemian,Casual,Blue,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00911,Triangle (Pear),Dark,Warm,Chic,Party,Maroon,4000.0,Shirts,synthetic_academic_demonstration
+SMPL_00912,Triangle (Pear),Medium,Neutral,Minimalist,College,Yellow,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00913,Triangle (Pear),Wheatish,Neutral,Chic,Casual,Maroon,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00914,Hourglass,Medium,Warm,Classic,Party,Black,2500.0,Party wear,synthetic_academic_demonstration
+SMPL_00915,Rectangle,Wheatish,Neutral,Chic,Office,Emerald,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00916,Triangle (Pear),Fair,Neutral,Minimalist,College,Peach,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00917,Rectangle / Hourglass,Dusky,Warm,Classic,Office,Emerald,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00918,Hourglass,Dark,Neutral,Bohemian,Party,Pink,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00919,Rectangle,Wheatish,Neutral,Streetwear,Traditional,Olive,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00920,Inverted Triangle,Dark,Cool,Minimalist,Wedding,Olive,6000.0,Sarees,synthetic_academic_demonstration
+SMPL_00921,Rectangle / Hourglass,Medium,Warm,Streetwear,Office,Olive,4000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00922,Rectangle,Dusky,Cool,Ethnic,Office,Navy,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00923,Hourglass,Medium,Warm,Minimalist,Party,Yellow,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00924,Hourglass,Dark,Neutral,Minimalist,Traditional,Yellow,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00925,Triangle (Pear),Medium,Warm,Minimalist,Party,Beige,6000.0,Dresses,synthetic_academic_demonstration
+SMPL_00926,Hourglass,Dusky,Cool,Minimalist,Party,Black,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00927,Triangle (Pear),Medium,Neutral,Classic,Office,Navy,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00928,Hourglass,Dusky,Neutral,Chic,Party,Blue,10000.0,Dresses,synthetic_academic_demonstration
+SMPL_00929,Inverted Triangle,Dark,Neutral,Ethnic,Casual,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00930,Inverted Triangle,Wheatish,Warm,Modern,Wedding,Black,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00931,Triangle (Pear),Dark,Cool,Classic,Casual,Maroon,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00932,Rectangle / Hourglass,Dusky,Cool,Modern,Wedding,Emerald,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00933,Inverted Triangle,Wheatish,Warm,Chic,Wedding,Teal,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00934,Hourglass,Dusky,Neutral,Classic,Traditional,Yellow,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00935,Triangle (Pear),Dusky,Cool,Bohemian,Traditional,Emerald,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00936,Triangle (Pear),Medium,Warm,Classic,Wedding,Red,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00937,Triangle (Pear),Fair,Warm,Modern,Casual,Black,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00938,Rectangle,Medium,Cool,Chic,College,Red,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00939,Triangle (Pear),Fair,Warm,Minimalist,Casual,Beige,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00940,Rectangle / Hourglass,Medium,Cool,Minimalist,Traditional,Emerald,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00941,Hourglass,Wheatish,Neutral,Bohemian,Office,Olive,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00942,Rectangle,Dark,Neutral,Chic,Traditional,Navy,15000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00943,Rectangle,Medium,Neutral,Bohemian,Traditional,Teal,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00944,Rectangle,Medium,Warm,Chic,Casual,Red,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00945,Inverted Triangle,Dark,Cool,Ethnic,Traditional,Red,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00946,Inverted Triangle,Fair,Warm,Streetwear,College,Olive,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00947,Hourglass,Medium,Warm,Bohemian,Wedding,Maroon,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00948,Hourglass,Dusky,Neutral,Modern,Office,Blue,2500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00949,Rectangle,Dusky,Neutral,Classic,Office,Pink,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00950,Hourglass,Dusky,Warm,Ethnic,Party,White,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00951,Rectangle / Hourglass,Wheatish,Warm,Ethnic,Party,Pink,6000.0,Shirts,synthetic_academic_demonstration
+SMPL_00952,Triangle (Pear),Dusky,Cool,Chic,College,Beige,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00953,Inverted Triangle,Medium,Neutral,Modern,Wedding,Red,1500.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00954,Rectangle / Hourglass,Fair,Neutral,Classic,College,Maroon,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00955,Rectangle / Hourglass,Medium,Warm,Classic,Party,Black,1500.0,Party wear,synthetic_academic_demonstration
+SMPL_00956,Inverted Triangle,Wheatish,Neutral,Bohemian,Traditional,Navy,15000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00957,Rectangle / Hourglass,Medium,Cool,Modern,Casual,White,10000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00958,Rectangle / Hourglass,Dark,Warm,Chic,College,Yellow,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00959,Hourglass,Fair,Cool,Streetwear,Office,Teal,10000.0,Formal wear,synthetic_academic_demonstration
+SMPL_00960,Rectangle,Wheatish,Warm,Classic,Party,Teal,4000.0,Party wear,synthetic_academic_demonstration
+SMPL_00961,Rectangle,Fair,Cool,Streetwear,College,Pastel,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00962,Hourglass,Wheatish,Neutral,Minimalist,Traditional,Emerald,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00963,Rectangle,Wheatish,Cool,Bohemian,Traditional,Olive,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00964,Triangle (Pear),Wheatish,Neutral,Modern,College,Grey,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00965,Triangle (Pear),Fair,Warm,Classic,Wedding,Pink,1500.0,Sarees,synthetic_academic_demonstration
+SMPL_00966,Rectangle / Hourglass,Dusky,Warm,Minimalist,Traditional,Blue,4000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00967,Inverted Triangle,Dark,Warm,Bohemian,Party,Red,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00968,Rectangle,Dark,Cool,Bohemian,College,Pink,6000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00969,Inverted Triangle,Medium,Cool,Minimalist,Office,Blue,1500.0,Formal wear,synthetic_academic_demonstration
+SMPL_00970,Inverted Triangle,Dusky,Warm,Chic,Party,Emerald,15000.0,Dresses,synthetic_academic_demonstration
+SMPL_00971,Inverted Triangle,Dusky,Warm,Chic,Office,Pastel,15000.0,Shirts,synthetic_academic_demonstration
+SMPL_00972,Inverted Triangle,Dark,Neutral,Minimalist,Casual,Olive,2500.0,Shirts,synthetic_academic_demonstration
+SMPL_00973,Hourglass,Fair,Cool,Modern,College,White,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00974,Rectangle,Dark,Cool,Modern,College,Pastel,2500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00975,Rectangle / Hourglass,Fair,Neutral,Modern,Traditional,Navy,10000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00976,Inverted Triangle,Fair,Warm,Ethnic,Wedding,Grey,2500.0,Sarees,synthetic_academic_demonstration
+SMPL_00977,Inverted Triangle,Dark,Cool,Streetwear,Party,Pink,10000.0,Shirts,synthetic_academic_demonstration
+SMPL_00978,Rectangle,Dark,Warm,Ethnic,Traditional,Yellow,1500.0,Kurtis,synthetic_academic_demonstration
+SMPL_00979,Rectangle,Dark,Cool,Streetwear,Party,White,4000.0,Dresses,synthetic_academic_demonstration
+SMPL_00980,Rectangle / Hourglass,Dusky,Neutral,Bohemian,Casual,Emerald,6000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00981,Rectangle,Dark,Warm,Modern,Wedding,Grey,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00982,Inverted Triangle,Fair,Warm,Bohemian,Wedding,Beige,6000.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00983,Rectangle / Hourglass,Dark,Warm,Classic,College,Olive,6000.0,Jeans,synthetic_academic_demonstration
+SMPL_00984,Hourglass,Fair,Cool,Classic,Casual,Yellow,4000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00985,Rectangle / Hourglass,Dark,Neutral,Chic,Traditional,Yellow,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00986,Hourglass,Dark,Warm,Streetwear,Traditional,Maroon,4000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00987,Triangle (Pear),Dusky,Neutral,Bohemian,Office,Black,10000.0,Trousers,synthetic_academic_demonstration
+SMPL_00988,Triangle (Pear),Fair,Neutral,Ethnic,Casual,Navy,15000.0,Jeans,synthetic_academic_demonstration
+SMPL_00989,Hourglass,Fair,Warm,Minimalist,Traditional,Pastel,4000.0,Sarees,synthetic_academic_demonstration
+SMPL_00990,Inverted Triangle,Wheatish,Cool,Minimalist,Party,Grey,15000.0,Party wear,synthetic_academic_demonstration
+SMPL_00991,Inverted Triangle,Fair,Cool,Modern,Wedding,Pastel,10000.0,Ethnic wear,synthetic_academic_demonstration
+SMPL_00992,Rectangle / Hourglass,Medium,Warm,Chic,Casual,Grey,1500.0,Shirts,synthetic_academic_demonstration
+SMPL_00993,Triangle (Pear),Fair,Cool,Modern,Casual,Maroon,10000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00994,Rectangle,Fair,Cool,Bohemian,Wedding,Beige,1500.0,Chudidhar,synthetic_academic_demonstration
+SMPL_00995,Rectangle / Hourglass,Wheatish,Warm,Ethnic,College,Maroon,4000.0,T-shirts,synthetic_academic_demonstration
+SMPL_00996,Rectangle,Fair,Warm,Minimalist,College,Navy,2500.0,Jeans,synthetic_academic_demonstration
+SMPL_00997,Hourglass,Wheatish,Warm,Modern,Party,Yellow,6000.0,Party wear,synthetic_academic_demonstration
+SMPL_00998,Rectangle,Dusky,Warm,Minimalist,College,Teal,15000.0,Kurtis,synthetic_academic_demonstration
+SMPL_00999,Rectangle,Fair,Neutral,Minimalist,Traditional,Pink,6000.0,Kurtis,synthetic_academic_demonstration

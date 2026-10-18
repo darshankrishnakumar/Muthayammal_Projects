@@ -1,0 +1,129 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-signal: var(--signal);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-highlight: var(--highlight);
+  --color-disabled: var(--disabled);
+  --color-grid: var(--grid);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--border);
+}
+
+:root {
+  --radius: 0.375rem;
+  --background: oklch(0.233 0.068 251.2);       /* #001E3C */
+  --foreground: oklch(0.975 0.005 258.3);       /* #F5F7FA */
+  --card: oklch(0.255 0.066 249.5);
+  --card-foreground: oklch(0.975 0.005 258.3);
+  --popover: oklch(0.273 0.063 247.6);          /* #082944 */
+  --popover-foreground: oklch(0.975 0.005 258.3);
+  --surface: oklch(0.273 0.063 247.6);          /* #082944 */
+  --surface-raised: oklch(0.298 0.071 249);
+  --primary: oklch(0.905 0.155 194.8);          /* #00FFFF */
+  --primary-foreground: oklch(0.211 0.043 246.7);
+  --secondary: oklch(0.273 0.063 247.6);
+  --secondary-foreground: oklch(0.975 0.005 258.3);
+  --muted: oklch(0.273 0.063 247.6);
+  --muted-foreground: oklch(0.762 0.025 254);   /* #A7B3C2 */
+  --accent: oklch(0.298 0.071 249);
+  --accent-foreground: oklch(0.975 0.005 258.3);
+  --destructive: oklch(0.735 0.168 40.2);
+  --destructive-foreground: oklch(0.211 0.043 246.7);
+  --border: oklch(0.352 0.05 249.4);            /* #263D54 */
+  --input: oklch(0.211 0.043 246.7);            /* #061A2B */
+  --ring: oklch(0.905 0.155 194.8 / 60%);
+  --signal: oklch(0.905 0.155 194.8);           /* cyan */
+  --success: oklch(0.869 0.278 144.5);          /* #00FF41 */
+  --warning: oklch(0.735 0.168 40.2);           /* #FF7F50 */
+  --highlight: oklch(0.788 0.123 20.2);         /* #FF9999 */
+  --disabled: oklch(0.52 0.035 250);
+  --grid: oklch(0.352 0.05 249.4 / 55%);
+  --sidebar: oklch(0.211 0.043 246.7);
+  --sidebar-foreground: oklch(0.762 0.025 254);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { color-scheme: dark; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "tnum" 1, "cv11" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  }
+}
+
+@utility panel {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+@utility label-caps {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-muted-foreground);
+}
+
+@utility signal-grid {
+  background-color: var(--color-input);
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+@utility field {
+  height: 2.25rem;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-input);
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  outline: none;
+  transition: border-color 150ms;
+  &:focus { border-color: var(--color-signal); }
+  &::placeholder { color: var(--color-disabled); }
+}
