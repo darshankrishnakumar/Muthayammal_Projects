@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Urban Air Quality (AQI) Forecasting | Project 28</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #070e17;
+  --card-bg: rgba(13, 27, 42, 0.75);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #10b981;
+  --accent-cyan: #06b6d4;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(245, 158, 11, 0.06) 0px, transparent 60%);
+  background-attachment: fixed;
+}
+.header {
+  background: rgba(10, 21, 37, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+.logo-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #10b981, #06b6d4, #f59e0b);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+}
+.brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 13px; color: var(--text-muted); }
+.header-badges { display: flex; align-items: center; gap: 12px; }
+.badge {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; }
+
+.main-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px 40px;
+}
+
+/* City Selector Bar */
+.control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.city-select {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  min-width: 260px;
+}
+.city-select:focus { border-color: var(--accent); }
+
+/* Hero Current AQI Card */
+.hero-aqi-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 32px;
+  backdrop-filter: blur(16px);
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 1000px) {
+  .hero-aqi-card { grid-template-columns: 1fr; }
+}
+
+.aqi-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.aqi-val {
+  font-size: 72px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+  margin: 12px 0 6px 0;
+  transition: color 0.3s;
+}
+.aqi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+.aqi-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.pollutants-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.pollutant-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+.pollutant-card:hover { transform: translateY(-2px); border-color: rgba(6, 182, 212, 0.3); }
+.pollutant-name { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+.pollutant-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #38bdf8; }
+.pollutant-unit { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+/* 7-Day Forecast Row */
+.forecast-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.day-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 14px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.day-card:hover { transform: translateY(-4px); border-color: rgba(16, 185, 129, 0.4); }
+.day-title { font-size: 13px; font-weight: 700; color: #cbd5e1; margin-bottom: 8px; }
+.day-aqi { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+.day-status { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-block; }
+
+/* Layout Grid for Charts */
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 28px;
+  margin-bottom: 32px;
+}
+@media (max-width: 1100px) {
+  .layout-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(16px);
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-title { font-size: 18px; font-weight: 700; }
+.panel-sub { font-size: 12px; color: var(--text-muted); }
+
+.chart-box {
+  height: 290px;
+  position: relative;
+}
+
+/* Health Advisories */
+.advisory-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.adv-icon { font-size: 24px; }
+.adv-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 2px; }
+.adv-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+/* Meteorology Grid */
+.meteo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.meteo-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+}
+.meteo-val { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #38bdf8; }
+.meteo-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="logo-icon">🍃</div>
+    <div>
+      <div class="brand-title">Urban Air Quality (AQI) Deep Forecasting</div>
+      <div class="brand-sub">Project 28 • Bi-LSTM Deep Sequence-to-Sequence & Multi-Pollutant Forecasting</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge"><span class="pulse-dot"></span> Port :5028 Active</span>
+    <span class="badge">📡 OpenAQ / CPCB Sensor Stream</span>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <!-- Control & City Switcher Bar -->
+  <div class="control-bar">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <label style="font-size:14px; font-weight:700; color:var(--text-muted);">Select Urban Center:</label>
+      <select id="citySelect" class="city-select" onchange="loadForecast()">
+        <option value="Delhi">🇮🇳 Delhi (National Capital Region)</option>
+        <option value="Mumbai">🇮🇳 Mumbai (Coastal Metro)</option>
+        <option value="Bengaluru">🇮🇳 Bengaluru (Silicon Plateau)</option>
+        <option value="Chennai">🇮🇳 Chennai (Southern Bay)</option>
+        <option value="Kolkata">🇮🇳 Kolkata (Eastern Hub)</option>
+        <option value="Hyderabad">🇮🇳 Hyderabad (Deccan Metro)</option>
+        <option value="London">🇬🇧 London (UK)</option>
+        <option value="New York">🇺🇸 New York (USA)</option>
+        <option value="Tokyo">🇯🇵 Tokyo (Japan)</option>
+      </select>
+    </div>
+    <div style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">
+      Deep Model: Bi-LSTM Attention Model • Horizon: 7 Days / 24h Diurnal
+    </div>
+  </div>
+
+  <!-- Hero AQI Indicator & Pollutant Dashboard -->
+  <div class="hero-aqi-card">
+    <div class="aqi-visual">
+      <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Real-Time Air Quality Index</div>
+      <div id="currentAqiVal" class="aqi-val" style="color: #ef4444;">185</div>
+      <div id="currentAqiBadge" class="aqi-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444;">
+        🔴 Unhealthy
+      </div>
+      <div id="currentAqiDesc" class="aqi-desc">
+        Everyone may begin to experience adverse health effects; sensitive groups face serious effects.
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:14px;">
+        Major Criteria Air Pollutants (µg/m³)
+      </div>
+      <div class="pollutants-grid">
+        <div class="pollutant-card">
+          <div class="pollutant-name">PM2.5</div>
+          <div id="valPm25" class="pollutant-val">94.2</div>
+          <div class="pollutant-unit">Fine Particles</div>
+        </div>
+        <div class="pollutant-card">
+          <div class="pollutant-name">PM10</div>
+          <div id="valPm10" class="pollutant-val">142.0</div>
+          <div class="pollutant-unit">Respirable Dust</div>
+        </div>
+        <div class="pollutant-card">
+          <div class="pollutant-name">NO₂</div>
+          <div id="valNo2" class="pollutant-val">42.5</div>
+          <div class="pollutant-unit">Nitrogen Dioxide</div>
+        </div>
+        <div class="pollutant-card">
+          <div class="pollutant-name">SO₂</div>
+          <div id="valSo2" class="pollutant-val">14.8</div>
+          <div class="pollutant-unit">Sulfur Dioxide</div>
+        </div>
+        <div class="pollutant-card">
+          <div class="pollutant-name">CO</div>
+          <div id="valCo" class="pollutant-val">1.2</div>
+          <div class="pollutant-unit">Carbon Monoxide (mg)</div>
+        </div>
+        <div class="pollutant-card">
+          <div class="pollutant-name">Ozone (O₃)</div>
+          <div id="valO3" class="pollutant-val">58.0</div>
+          <div class="pollutant-unit">Ground-level Ozone</div>
+        </div>
+      </div>
+
+      <!-- Meteorological Strip -->
+      <div class="meteo-grid">
+        <div class="meteo-item">
+          <div id="meteoTemp" class="meteo-val">31°C</div>
+          <div class="meteo-lbl">Ambient Temp</div>
+        </div>
+        <div class="meteo-item">
+          <div id="meteoHumid" class="meteo-val">64%</div>
+          <div class="meteo-lbl">Rel. Humidity</div>
+        </div>
+        <div class="meteo-item">
+          <div id="meteoWind" class="meteo-val">6.2 km/h</div>
+          <div class="meteo-lbl">Wind Velocity</div>
+        </div>
+        <div class="meteo-item">
+          <div id="meteoHeight" class="meteo-val">840 m</div>
+          <div class="meteo-lbl">Mixing Layer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7-Day Forecast Strip -->
+  <div style="font-size:14px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px;">
+    7-Day Predictive AQI Outlook
+  </div>
+  <div class="forecast-strip" id="forecastStrip">
+    <div style="color:var(--text-muted); padding:20px;">Loading time-series forecasts...</div>
+  </div>
+
+  <!-- Main Charts Layout -->
+  <div class="layout-grid">
+    
+    <!-- Left: 24-Hour Diurnal Hourly Trend -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">📈 24-Hour Diurnal AQI Trend Curve</div>
+          <div class="panel-sub">Simulated hourly particulate variations driven by commuter traffic & inversion layer</div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <canvas id="hourlyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right: Health Advisory Recommendations -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">🛡️ Smart Health Advisory & Protocols</div>
+          <div class="panel-sub">Targeted public health recommendations based on WHO particulate limits</div>
+        </div>
+      </div>
+      <div id="advisoriesList"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5028/api';
+let hourlyChartInstance = null;
+
+async function loadForecast() {
+  const city = document.getElementById('citySelect').value;
+  try {
+    const res = await fetch(`${API_BASE}/forecast`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ city, days: 7 })
+    });
+    const data = await res.json();
+    displayForecast(data);
+  } catch (err) {
+    console.error("Failed to load forecast from :5028", err);
+  }
+}
+
+function displayForecast(data) {
+  const cur = data.current || {};
+  document.getElementById('currentAqiVal').innerText = cur.aqi || 100;
+  document.getElementById('currentAqiVal').style.color = cur.color || '#ef4444';
+
+  const badge = document.getElementById('currentAqiBadge');
+  badge.innerText = `${cur.icon || '●'} ${cur.label || 'Moderate'}`;
+  badge.style.color = cur.color || '#ef4444';
+  badge.style.border = `1px solid ${cur.color || '#ef4444'}`;
+  badge.style.background = `${cur.color || '#ef4444'}22`;
+
+  document.getElementById('currentAqiDesc').innerText = cur.advisory || '';
+
+  // Pollutants
+  document.getElementById('valPm25').innerText = cur.pm25 || 0;
+  document.getElementById('valPm10').innerText = cur.pm10 || 0;
+  document.getElementById('valNo2').innerText = cur.no2 || 0;
+  document.getElementById('valSo2').innerText = cur.so2 || 0;
+  document.getElementById('valCo').innerText = cur.co || 0;
+  document.getElementById('valO3').innerText = cur.o3 || 0;
+
+  // Meteorology
+  const met = data.meteorology || {};
+  document.getElementById('meteoTemp').innerText = `${met.temperature_c || 28}°C`;
+  document.getElementById('meteoHumid').innerText = `${met.humidity_pct || 65}%`;
+  document.getElementById('meteoWind').innerText = `${met.wind_speed_kmh || 10} km/h`;
+  document.getElementById('meteoHeight').innerText = `${met.boundary_layer_height_m || 800} m`;
+
+  // 7-Day Forecast Cards
+  const strip = document.getElementById('forecastStrip');
+  strip.innerHTML = (data.daily_forecast || []).map((d, i) => `
+    <div class="day-card">
+      <div class="day-title">${i === 0 ? 'Today' : d.day_name}</div>
+      <div class="day-aqi" style="color: ${d.color};">${d.aqi}</div>
+      <div class="day-status" style="background:${d.color}22; color:${d.color}; border:1px solid ${d.color}55;">
+        ${d.label.split(' ')[0]}
+      </div>
+      <div style="font-size:11px; color:#64748b; margin-top:8px;">PM2.5: ${d.pm25}</div>
+    </div>
+  `).join('');
+
+  // Advisories
+  const advContainer = document.getElementById('advisoriesList');
+  advContainer.innerHTML = (data.health_advisories || []).map(a => `
+    <div class="advisory-item">
+      <div class="adv-icon">${a.icon}</div>
+      <div>
+        <div class="adv-title">${a.title}</div>
+        <div class="adv-desc">${a.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  renderHourlyChart(data.hourly_trend || []);
+}
+
+function renderHourlyChart(hourly) {
+  const ctx = document.getElementById('hourlyChart').getContext('2d');
+  if (hourlyChartInstance) hourlyChartInstance.destroy();
+
+  const labels = hourly.map(h => h.time);
+  const data = hourly.map(h => h.aqi);
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+  gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+  gradient.addColorStop(0.5, 'rgba(245, 158, 11, 0.2)');
+  gradient.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+
+  hourlyChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Predicted AQI Index',
+        data: data,
+        borderColor: '#06b6d4',
+        borderWidth: 3,
+        fill: true,
+        backgroundColor: gradient,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#06b6d4'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', maxTicksLimit: 12 } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } }
+      }
+    }
+  });
+}
+
+window.addEventListener('DOMContentLoaded', loadForecast);
+</script>
+
+</body>
+</html>

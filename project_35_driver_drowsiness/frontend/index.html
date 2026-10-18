@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Driver Drowsiness Detection | Project 35</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #090d16;
+  --card-bg: rgba(16, 24, 40, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --accent-cyan: #06b6d4;
+  --accent-alert: #ef4444;
+  --accent-warn: #f59e0b;
+  --accent-safe: #10b981;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(239, 68, 68, 0.07) 0px, transparent 50%);
+  overflow-x: hidden;
+}
+.header {
+  background: rgba(13, 20, 36, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+}
+.brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+.status-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 30px;
+  font-size: 12px; font-weight: 600;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #10b981; box-shadow: 0 0 8px #10b981;
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.85);} }
+
+.container { max-width: 1380px; margin: 0 auto; padding: 28px 32px; }
+
+/* Warning Alert Bar */
+.alarm-banner {
+  display: none;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.35));
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  border-radius: 14px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  align-items: center;
+  justify-content: space-between;
+  animation: strobe 1s infinite alternate;
+}
+@keyframes strobe {
+  from { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+  to { box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
+}
+.alarm-content { display: flex; align-items: center; gap: 14px; }
+.alarm-icon { font-size: 28px; }
+.alarm-title { font-size: 16px; font-weight: 800; color: #fca5a5; }
+.alarm-desc { font-size: 13px; color: #fecaca; }
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content:''; position: absolute; top:0; left:0; width:100%; height:2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-val { font-size: 28px; font-weight: 800; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+.stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Main layout */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+/* Video & HUD Area */
+.feed-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #030712;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.webcam-video {
+  width: 100%; height: 100%; object-fit: cover;
+  display: none;
+}
+.canvas-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+.hud-corner {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-cyan);
+  background: rgba(3, 7, 18, 0.7);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+.hud-tl { top: 12px; left: 12px; }
+.hud-tr { top: 12px; right: 12px; }
+.hud-bl { bottom: 12px; left: 12px; }
+.hud-br { bottom: 12px; right: 12px; }
+
+.feed-placeholder {
+  text-align: center;
+  color: var(--text-muted);
+}
+.feed-placeholder-icon { font-size: 56px; margin-bottom: 12px; opacity: 0.8; }
+
+/* Control buttons */
+.btn-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.btn {
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #06b6d4, #0284c7);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.3);
+}
+.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+}
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Telemetry Gauges */
+.telemetry-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.gauge-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+.gauge-title { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+.gauge-value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+.gauge-bar { height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.gauge-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease, background-color 0.4s ease; }
+.gauge-ref { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+/* Status Display Badge in Right Card */
+.state-banner {
+  padding: 18px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+.state-alert { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); }
+.state-moderate { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.5); }
+.state-slight { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.5); }
+.state-safe { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.5); }
+
+.state-info { display: flex; flex-direction: column; gap: 4px; }
+.state-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.state-name { font-size: 24px; font-weight: 800; }
+.state-score { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 800; }
+
+/* Timeline list */
+.log-list {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.log-list::-webkit-scrollbar { width: 5px; }
+.log-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  font-size: 12px;
+}
+.log-item-left { display: flex; align-items: center; gap: 10px; }
+.log-badge {
+  padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 10px;
+}
+.bg-alert { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.bg-warn { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.bg-safe { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.log-metrics { font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 11px; }
+
+/* Specs footer */
+.tech-spec {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+.spec-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.spec-box h4 { font-size: 13px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 6px; }
+.spec-box p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">👁️</div>
+    <div>
+      <div class="brand-title">Driver Drowsiness & Fatigue Telematics</div>
+      <div class="brand-sub">Project 35 · MediaPipe Mesh + LSTM Temporal Classification</div>
+    </div>
+  </div>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    <span id="backendStatus">Backend Ready (:5035)</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Critical Alert Banner -->
+  <div class="alarm-banner" id="alarmBanner">
+    <div class="alarm-content">
+      <div class="alarm-icon">🚨</div>
+      <div>
+        <div class="alarm-title" id="alarmTitle">DROWSINESS DETECTED! PULL OVER SAFELY</div>
+        <div class="alarm-desc" id="alarmDesc">Driver's eye closure exceeded critical threshold. Auditory alarm sounding.</div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="dismissAlarm()">Acknowledge</button>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Frames Processed</div>
+      <div class="stat-val" id="statFrames">0</div>
+      <div class="stat-sub">30 FPS Live Telemetry</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Fatigue / Drowsy Events</div>
+      <div class="stat-val" id="statAlerts" style="color:var(--accent-alert)">0</div>
+      <div class="stat-sub">Eye Closure &gt; 1.5s</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Mean Eye Aspect Ratio (EAR)</div>
+      <div class="stat-val" id="statAvgEar" style="color:var(--accent-cyan)">0.32</div>
+      <div class="stat-sub">Normal: 0.28 - 0.38</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Yawn Detection Frequency</div>
+      <div class="stat-val" id="statYawnCount" style="color:var(--accent-warn)">0</div>
+      <div class="stat-sub">MAR &gt; 0.40 Yawn Count</div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <!-- Camera Feed and Face HUD -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📹 Driver Optical Feed & Landmark HUD</div>
+        <div style="font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono'">DRIVER_ID: <span style="color:#fff">DRV_8922</span></div>
+      </div>
+
+      <div class="feed-container">
+        <video id="webcam" class="webcam-video" autoplay playsinline muted></video>
+        <canvas id="faceCanvas" class="canvas-overlay"></canvas>
+
+        <div class="feed-placeholder" id="feedPlaceholder">
+          <div class="feed-placeholder-icon">👤</div>
+          <p style="font-weight:600">Simulated Vision Stream / Webcam Feed</p>
+          <p style="font-size:12px;margin-top:4px">Click "Start Live Monitor" or "Simulate Frame" to detect</p>
+        </div>
+
+        <div class="hud-corner hud-tl">FPS: <span id="hudFps">29.8</span> | LATENCY: 22ms</div>
+        <div class="hud-corner hud-tr" id="hudState">STATUS: STANDBY</div>
+        <div class="hud-corner hud-bl">LSTM SEQ: 30 FRAMES</div>
+        <div class="hud-corner hud-br" id="hudTime">UTC 00:00:00</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToggleLoop" onclick="toggleLiveLoop()">
+          ▶️ Start Live Stream
+        </button>
+        <button class="btn btn-secondary" onclick="analyzeSingleFrame()">
+          🎲 Single Scan Frame
+        </button>
+        <button class="btn btn-secondary" onclick="toggleWebcam()">
+          📷 Toggle Camera
+        </button>
+      </div>
+
+      <!-- Live Telemetry Gauges -->
+      <div class="telemetry-row">
+        <div class="gauge-box">
+          <div class="gauge-title">Eye Aspect Ratio (EAR)</div>
+          <div class="gauge-value" id="gaugeEar">0.31</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" id="fillEar" style="width: 77%; background: #10b981;"></div>
+          </div>
+          <div class="gauge-ref">Threshold: &lt; 0.25 (Closed)</div>
+        </div>
+        <div class="gauge-box">
+          <div class="gauge-title">Mouth Aspect Ratio (MAR)</div>
+          <div class="gauge-value" id="gaugeMar">0.18</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" id="fillMar" style="width: 36%; background: #10b981;"></div>
+          </div>
+          <div class="gauge-ref">Threshold: &gt; 0.40 (Yawning)</div>
+        </div>
+        <div class="gauge-box">
+          <div class="gauge-title">Head Pose Pitch / Yaw</div>
+          <div class="gauge-value" id="gaugePose">0.8°</div>
+          <div class="gauge-bar">
+            <div class="gauge-fill" id="fillPose" style="width: 50%; background: #06b6d4;"></div>
+          </div>
+          <div class="gauge-ref">Threshold: ±10° Tilt</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Classification & Telemetry Stream Log -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🧠 Cognitive State & Prediction Engine</div>
+        <span style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:6px;color:var(--text-muted)">Model: FaceMesh+LSTM</span>
+      </div>
+
+      <!-- Real-time Status Card -->
+      <div class="state-banner state-safe" id="stateBanner">
+        <div class="state-info">
+          <div class="state-tag" id="stateTag" style="color:#34d399">DRIVER TELEMETRY STATUS</div>
+          <div class="state-name" id="stateName">Alert & Attentive</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px" id="stateDesc">Optimal gaze fixation and eye open ratio</div>
+        </div>
+        <div>
+          <div class="state-score" id="stateScore" style="color:#34d399">0.05</div>
+          <div style="font-size:10px;text-align:right;color:var(--text-muted)">FATIGUE INDEX</div>
+        </div>
+      </div>
+
+      <!-- Log History -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:13px;font-weight:700">Recent Telemetry Frames</span>
+        <button onclick="clearHistory()" style="background:none;border:none;color:var(--text-muted);font-size:11px;cursor:pointer">Clear</button>
+      </div>
+
+      <div class="log-list" id="logList">
+        <div style="text-align:center;color:var(--text-muted);padding:30px 0;font-size:13px">
+          No frames analyzed yet.<br/>Start live stream or scan a frame.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technical architecture -->
+  <div class="tech-spec">
+    <div class="spec-box">
+      <h4>68 Facial Landmarks</h4>
+      <p>Tracks eyelid contour indices (36-41, 42-47) for euclidean distance estimation of eye opening.</p>
+    </div>
+    <div class="spec-box">
+      <h4>LSTM Temporal Sequence</h4>
+      <p>30-frame temporal window eliminates false positives from natural involuntary blinking (100–400ms).</p>
+    </div>
+    <div class="spec-box">
+      <h4>Multi-Modal Sensing</h4>
+      <p>Correlates micro-sleep patterns, yawning frequency (MAR &gt; 0.4), and head drops (PnP head pose).</p>
+    </div>
+    <div class="spec-box">
+      <h4>Vehicle In-Cabin Alarm</h4>
+      <p>Automated acoustic warning chimes & vibrational haptic pulses to restore driver alertness immediately.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'http://localhost:5035/api';
+let isStreaming = false;
+let streamTimer = null;
+let frameCount = 0;
+let alertCount = 0;
+let yawnCount = 0;
+let earTotal = 0;
+let historyRecords = [];
+let audioCtx = null;
+
+// Sound Synthesizer for Fatigue Alert
+function playAlertTone() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.3);
+  } catch (e) {
+    console.log('Audio disabled or not supported');
+  }
+}
+
+// Clock in HUD
+setInterval(() => {
+  const d = new Date();
+  document.getElementById('hudTime').textContent = 'UTC ' + d.toTimeString().split(' ')[0];
+}, 1000);
+
+// Draw synthetic face mesh on canvas
+function drawSyntheticMesh(ear, mar, headPose, isAlert) {
+  const canvas = document.getElementById('faceCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = canvas.parentElement.clientHeight;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w / 2 + (headPose * 2);
+  const cy = h / 2;
+
+  // Face oval
+  ctx.strokeStyle = isAlert ? 'rgba(239, 68, 68, 0.7)' : 'rgba(6, 182, 212, 0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, 90, 120, headPose * Math.PI / 180, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Eyes
+  const eyeOpenness = Math.max(2, ear * 40);
+  // Left eye
+  ctx.beginPath();
+  ctx.ellipse(cx - 35, cy - 25, 20, eyeOpenness, 0, 0, 2 * Math.PI);
+  ctx.fillStyle = isAlert ? 'rgba(239, 68, 68, 0.3)' : 'rgba(6, 182, 212, 0.3)';
+  ctx.fill();
+  ctx.stroke();
+
+  // Right eye
+  ctx.beginPath();
+  ctx.ellipse(cx + 35, cy - 25, 20, eyeOpenness, 0, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.stroke();
+
+  // Mouth
+  const mouthOpenness = Math.max(3, mar * 50);
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + 45, 25, mouthOpenness, 0, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Target bounding box
+  ctx.strokeStyle = isAlert ? '#ef4444' : '#06b6d4';
+  ctx.lineWidth = 2;
+  const bw = 240, bh = 280;
+  const bx = cx - bw/2, by = cy - bh/2;
+  // Corner markers
+  const clen = 20;
+  ctx.beginPath();
+  ctx.moveTo(bx, by + clen); ctx.lineTo(bx, by); ctx.lineTo(bx + clen, by);
+  ctx.moveTo(bx + bw - clen, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by + clen);
+  ctx.moveTo(bx, by + bh - clen); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + clen, by + bh);
+  ctx.moveTo(bx + bw - clen, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - clen);
+  ctx.stroke();
+}
+
+async function analyzeSingleFrame() {
+  document.getElementById('feedPlaceholder').style.display = 'none';
+
+  // Attempt backend API call
+  let result = null;
+  try {
+    const res = await fetch(`${BACKEND_URL}/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        driver_id: 'DRV_8922',
+        landmarks: []
+      })
+    });
+    if (res.ok) {
+      result = await res.json();
+      document.getElementById('backendStatus').textContent = 'Backend Active (:5035)';
+    }
+  } catch (err) {
+    // Offline client fallback
+    document.getElementById('backendStatus').textContent = 'Client Simulation Active';
+  }
+
+  if (!result) {
+    // Generate realistic simulated metrics
+    const simulateDrowsy = Math.random() < 0.28;
+    const ear = simulateDrowsy ? Number((Math.random() * 0.08 + 0.14).toFixed(4)) : Number((Math.random() * 0.12 + 0.28).toFixed(4));
+    const mar = simulateDrowsy ? Number((Math.random() * 0.35 + 0.35).toFixed(4)) : Number((Math.random() * 0.15 + 0.10).toFixed(4));
+    const pose = Number((Math.random() * 20 - 10).toFixed(2));
+    
+    let score = 0;
+    if (ear < 0.20) score += 0.55;
+    else if (ear < 0.25) score += 0.32;
+    if (mar > 0.45) score += 0.30;
+    if (Math.abs(pose) > 8) score += 0.20;
+    score = Math.min(1.0, Math.max(0.02, score + (Math.random() * 0.1 - 0.05)));
+
+    let state = 'Alert';
+    if (score >= 0.75) state = 'Severely Drowsy';
+    else if (score >= 0.50) state = 'Moderately Drowsy';
+    else if (score >= 0.25) state = 'Slightly Drowsy';
+
+    const alert_req = score > 0.5;
+    result = {
+      id: frameCount + 1,
+      driver_id: 'DRV_8922',
+      drowsiness_score: Number(score.toFixed(4)),
+      drowsiness_state: state,
+      ear: ear,
+      mar: mar,
+      head_pose_degrees: pose,
+      alert_required: alert_req,
+      alert_message: alert_req ? '⚠️ DROWSINESS DETECTED! Pull over safely!' : '✅ Driver Alert & Attentive',
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  processResult(result);
+}
+
+function processResult(data) {
+  frameCount++;
+  earTotal += data.ear;
+  if (data.alert_required) {
+    alertCount++;
+    playAlertTone();
+  }
+  if (data.mar > 0.40) yawnCount++;
+
+  // Update Stats
+  document.getElementById('statFrames').textContent = frameCount;
+  document.getElementById('statAlerts').textContent = alertCount;
+  document.getElementById('statAvgEar').textContent = (earTotal / frameCount).toFixed(2);
+  document.getElementById('statYawnCount').textContent = yawnCount;
+
+  // Gauges
+  document.getElementById('gaugeEar').textContent = data.ear.toFixed(3);
+  const earPct = Math.min(100, (data.ear / 0.4) * 100);
+  const fillEar = document.getElementById('fillEar');
+  fillEar.style.width = earPct + '%';
+  fillEar.style.background = data.ear < 0.25 ? '#ef4444' : '#10b981';
+
+  document.getElementById('gaugeMar').textContent = data.mar.toFixed(3);
+  const marPct = Math.min(100, (data.mar / 0.7) * 100);
+  const fillMar = document.getElementById('fillMar');
+  fillMar.style.width = marPct + '%';
+  fillMar.style.background = data.mar > 0.40 ? '#f59e0b' : '#10b981';
+
+  document.getElementById('gaugePose').textContent = data.head_pose_degrees + '°';
+  const posePct = Math.min(100, Math.max(0, 50 + (data.head_pose_degrees * 3)));
+  document.getElementById('fillPose').style.width = posePct + '%';
+
+  // HUD
+  document.getElementById('hudState').textContent = 'STATE: ' + data.drowsiness_state.toUpperCase();
+  document.getElementById('hudState').style.color = data.alert_required ? '#ef4444' : '#10b981';
+
+  // Draw face overlay
+  drawSyntheticMesh(data.ear, data.mar, data.head_pose_degrees, data.alert_required);
+
+  // Status Banner
+  const banner = document.getElementById('stateBanner');
+  const tag = document.getElementById('stateTag');
+  const name = document.getElementById('stateName');
+  const desc = document.getElementById('stateDesc');
+  const score = document.getElementById('stateScore');
+
+  banner.className = 'state-banner ';
+  score.textContent = (data.drowsiness_score * 100).toFixed(0) + '%';
+
+  if (data.drowsiness_state === 'Severely Drowsy') {
+    banner.classList.add('state-alert');
+    tag.style.color = '#ef4444';
+    score.style.color = '#ef4444';
+    name.textContent = 'Severe Fatigue / Micro-Sleep';
+    desc.textContent = 'Prolonged eye closure (>1.5s). Immediate rest required!';
+    showAlertBanner(data.alert_message);
+  } else if (data.drowsiness_state === 'Moderately Drowsy') {
+    banner.classList.add('state-moderate');
+    tag.style.color = '#f59e0b';
+    score.style.color = '#f59e0b';
+    name.textContent = 'Moderate Drowsiness';
+    desc.textContent = 'Elevated yawn frequency and eyelid drooping observed.';
+    showAlertBanner(data.alert_message);
+  } else if (data.drowsiness_state === 'Slightly Drowsy') {
+    banner.classList.add('state-slight');
+    tag.style.color = '#38bdf8';
+    score.style.color = '#38bdf8';
+    name.textContent = 'Mild Driver Fatigue';
+    desc.textContent = 'Gaze fixation drifting. Early fatigue warning.';
+    dismissAlarm();
+  } else {
+    banner.classList.add('state-safe');
+    tag.style.color = '#34d399';
+    score.style.color = '#34d399';
+    name.textContent = 'Fully Alert & Attentive';
+    desc.textContent = 'Optimal eye aspect ratio and active head movements.';
+    dismissAlarm();
+  }
+
+  // Add to History
+  historyRecords.unshift(data);
+  if (historyRecords.length > 25) historyRecords.pop();
+  renderHistory();
+}
+
+function showAlertBanner(msg) {
+  const ab = document.getElementById('alarmBanner');
+  ab.style.display = 'flex';
+  document.getElementById('alarmTitle').textContent = msg;
+}
+
+function dismissAlarm() {
+  document.getElementById('alarmBanner').style.display = 'none';
+}
+
+function renderHistory() {
+  const list = document.getElementById('logList');
+  list.innerHTML = historyRecords.map(item => {
+    let badgeClass = 'bg-safe';
+    if (item.alert_required) badgeClass = 'bg-alert';
+    else if (item.drowsiness_state.includes('Slightly')) badgeClass = 'bg-warn';
+
+    const t = new Date(item.timestamp).toLocaleTimeString();
+    return `
+      <div class="log-item">
+        <div class="log-item-left">
+          <span class="log-badge ${badgeClass}">${item.drowsiness_state}</span>
+          <span style="font-weight:600">${item.alert_required ? '🚨 Alarm' : '👁️ Normal'}</span>
+        </div>
+        <div class="log-metrics">
+          EAR: ${item.ear.toFixed(2)} | MAR: ${item.mar.toFixed(2)} | ${t}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function clearHistory() {
+  historyRecords = [];
+  document.getElementById('logList').innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:12px">Log cleared.</div>';
+}
+
+function toggleLiveLoop() {
+  const btn = document.getElementById('btnToggleLoop');
+  if (!isStreaming) {
+    isStreaming = true;
+    btn.innerHTML = '⏹️ Stop Live Stream';
+    btn.className = 'btn btn-danger';
+    analyzeSingleFrame();
+    streamTimer = setInterval(analyzeSingleFrame, 800);
+  } else {
+    isStreaming = false;
+    btn.innerHTML = '▶️ Start Live Stream';
+    btn.className = 'btn btn-primary';
+    clearInterval(streamTimer);
+    streamTimer = null;
+  }
+}
+
+async function toggleWebcam() {
+  const video = document.getElementById('webcam');
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+    video.style.display = 'none';
+    document.getElementById('feedPlaceholder').style.display = 'block';
+  } else {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.style.display = 'block';
+      document.getElementById('feedPlaceholder').style.display = 'none';
+    } catch (e) {
+      alert('Camera access denied or unavailable. Using synthetic driver vision simulator.');
+    }
+  }
+}
+
+// Initial single scan simulation
+setTimeout(analyzeSingleFrame, 600);
+</script>
+</body>
+</html>

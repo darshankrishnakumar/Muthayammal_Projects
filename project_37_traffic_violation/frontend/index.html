@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Traffic Violation Detection & ANPR | Project 37</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0e17;
+  --card-bg: rgba(15, 23, 42, 0.85);
+  --border: rgba(56, 189, 248, 0.15);
+  --accent-cyan: #38bdf8;
+  --accent-red: #ef4444;
+  --accent-amber: #f59e0b;
+  --accent-green: #10b981;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(239, 68, 68, 0.08) 0px, transparent 50%);
+}
+.header {
+  background: rgba(11, 19, 36, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, #ef4444, #f59e0b);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+.brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+.brand-sub { font-size: 12px; color: var(--text-muted); }
+.status-pill {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 30px;
+  font-size: 12px; font-weight: 600;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+.container { max-width: 1380px; margin: 0 auto; padding: 28px 32px; }
+
+/* Stats Row */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; top:0; left:0; width:100%; height:2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-val { font-size: 28px; font-weight: 800; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+.stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Main Grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+/* CCTV Surveillance Feed Display */
+.cctv-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #020617;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.cctv-canvas {
+  width: 100%; height: 100%; display: block;
+}
+.cctv-hud {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #38bdf8;
+  background: rgba(2, 6, 23, 0.75);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.hud-tl { top: 12px; left: 12px; }
+.hud-tr { top: 12px; right: 12px; display: flex; align-items: center; gap: 6px; }
+.hud-bl { bottom: 12px; left: 12px; }
+.hud-br { bottom: 12px; right: 12px; }
+.rec-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; animation: recBlink 1s infinite; }
+@keyframes recBlink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+/* Control panel under video */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.camera-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+.camera-select option { background: #0f172a; }
+.btn {
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Detected Vehicles & ANPR Cards */
+.detected-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.vehicle-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+.vehicle-card.has-violation {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.06);
+}
+.v-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.plate-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  background: #facc15;
+  color: #000;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.08em;
+}
+.v-type { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.v-speed {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+}
+.violation-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  margin-top: 4px;
+}
+.fine-badge {
+  font-family: 'JetBrains Mono', monospace;
+  color: #f87171;
+  font-weight: 700;
+}
+
+/* Violation Tickets & Audit Log */
+.challan-list {
+  max-height: 480px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.challan-list::-webkit-scrollbar { width: 5px; }
+.challan-list::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.2); border-radius: 10px; }
+.challan-card {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  position: relative;
+}
+.challan-card::before {
+  content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+  border-radius: 4px; background: #ef4444;
+}
+.challan-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.challan-fine { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 800; color: #ef4444; }
+
+/* Specs footer */
+.specs-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+.spec-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.spec-box h4 { font-size: 13px; font-weight: 700; color: #38bdf8; margin-bottom: 6px; }
+.spec-box p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">🚦</div>
+    <div>
+      <div class="brand-title">AI Traffic Violation & ANPR Surveillance</div>
+      <div class="brand-sub">Project 37 · YOLOv8 Multi-Class Object Tracking · DeepSORT · ANPR OCR</div>
+    </div>
+  </div>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    <span id="backendStatus">Backend Ready (:5037)</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Stats Row -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Vehicles Tracked</div>
+      <div class="stat-val" id="statVehicles">0</div>
+      <div class="stat-sub">Real-Time DeepSORT Tracker</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Violations Detected</div>
+      <div class="stat-val" id="statViolations" style="color:#ef4444">0</div>
+      <div class="stat-sub">Speed / Signal / Helmet / Belt</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Challan Fines Generated</div>
+      <div class="stat-val" id="statRevenue" style="color:#f59e0b">₹0</div>
+      <div class="stat-sub">Automated e-Challan Penalty</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tracking Precision mAP</div>
+      <div class="stat-val" style="color:#34d399">92.4%</div>
+      <div class="stat-sub">YOLOv8 Edge Inference</div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <!-- CCTV Left Viewport -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📹 Intersection CCTV Stream & Bounding Boxes</div>
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:var(--text-muted)">FPS: 30.0 · RESOLUTION: 1080p</div>
+      </div>
+
+      <div class="cctv-viewport">
+        <canvas id="cctvCanvas" class="cctv-canvas"></canvas>
+        <div class="cctv-hud hud-tl" id="hudCam">CAM-01 · HIGHWAY TOLL PLAZA A4</div>
+        <div class="cctv-hud hud-tr">
+          <div class="rec-dot"></div>
+          <span>LIVE RECORDING</span>
+        </div>
+        <div class="cctv-hud hud-bl">DETECTION CONF: &gt; 0.75</div>
+        <div class="cctv-hud hud-br" id="hudClock">2026-10-07 00:00:00</div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-bar">
+        <select class="camera-select" id="camSelect" onchange="switchCamera()">
+          <option value="CAM-01 (Highway Junction)">CAM-01: Highway Junction North</option>
+          <option value="CAM-02 (Central Roundabout)">CAM-02: Central City Roundabout</option>
+          <option value="CAM-03 (Expressway Flyover)">CAM-03: Expressway Flyover East</option>
+        </select>
+        <button class="btn btn-primary" id="btnLiveLoop" onclick="toggleCctvStream()">
+          ▶️ Start CCTV Stream
+        </button>
+        <button class="btn btn-secondary" onclick="scanSingleFrame()">
+          📸 Scan Single Frame
+        </button>
+      </div>
+
+      <!-- Real-Time ANPR Plate Cards in Frame -->
+      <div style="margin-top:20px;font-size:13px;font-weight:700">🚗 Active Detected Vehicles in Frame:</div>
+      <div class="detected-list" id="detectedGrid">
+        <div style="grid-column:span 2;text-align:center;color:var(--text-muted);padding:24px 0;font-size:13px">
+          Click "Scan Single Frame" or "Start CCTV Stream" to run YOLOv8 vehicle detection.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: e-Challan Violation Feed -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🚨 Automated e-Challan Penalties</div>
+        <button onclick="clearViolations()" style="background:none;border:none;color:var(--text-muted);font-size:11px;cursor:pointer">Clear</button>
+      </div>
+
+      <div class="challan-list" id="challanList">
+        <div style="text-align:center;color:var(--text-muted);padding:40px 0;font-size:13px">
+          No traffic violations flagged.<br/>Stream feed is compliant.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech Specs -->
+  <div class="specs-row">
+    <div class="spec-box">
+      <h4>YOLOv8 Edge CV</h4>
+      <p>Multi-class bounding box regression for Cars, Motorcycles, Heavy Commercial Trucks, and Rickshaws.</p>
+    </div>
+    <div class="spec-box">
+      <h4>DeepSORT Tracking</h4>
+      <p>Kalman filtering and cosine distance association tracks vehicle trajectory across occlusion.</p>
+    </div>
+    <div class="spec-box">
+      <h4>High-Speed ANPR</h4>
+      <p>CRNN + CTC beam search decodes high-velocity license plates under night and glare conditions.</p>
+    </div>
+    <div class="spec-box">
+      <h4>Automated e-Challan</h4>
+      <p>Instant SMS & Regional Transport Authority (RTA) webhook dispatch with timestamped photographic proof.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'http://localhost:5037/api';
+let isStreaming = false;
+let streamTimer = null;
+let totalVehicles = 0;
+let totalViolations = 0;
+let totalRevenue = 0;
+let challans = [];
+
+// Clock
+setInterval(() => {
+  const d = new Date();
+  document.getElementById('hudClock').textContent = d.toISOString().replace('T', ' ').substring(0, 19);
+}, 1000);
+
+const VEHICLES = ['Car', 'Motorcycle', 'Truck', 'Bus', 'Auto Rickshaw'];
+const VIOLATIONS = [
+  { type: 'Speeding', fine: 2000, icon: '⚡' },
+  { type: 'Red Light Violation', fine: 1000, icon: '🚦' },
+  { type: 'No Helmet', fine: 1000, icon: '🪖' },
+  { type: 'Mobile Phone Usage', fine: 1500, icon: '📱' },
+  { type: 'Wrong Way Driving', fine: 5000, icon: '⛔' },
+  { type: 'No Seatbelt', fine: 500, icon: '💺' }
+];
+
+function switchCamera() {
+  const sel = document.getElementById('camSelect').value;
+  document.getElementById('hudCam').textContent = sel.toUpperCase();
+  scanSingleFrame();
+}
+
+function drawCctvScene(detections) {
+  const canvas = document.getElementById('cctvCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = canvas.parentElement.clientHeight;
+
+  // Road background
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, w, h);
+
+  // Perspective road lines
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.35, h * 0.2); ctx.lineTo(w * 0.05, h);
+  ctx.moveTo(w * 0.65, h * 0.2); ctx.lineTo(w * 0.95, h);
+  ctx.stroke();
+
+  // Lane dividers (dashed)
+  ctx.setLineDash([15, 15]);
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.5, h * 0.2); ctx.lineTo(w * 0.5, h);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw detections
+  detections.forEach((d, i) => {
+    const bx = (d.bbox.x / 650) * w;
+    const by = (d.bbox.y / 450) * h;
+    const bw = (d.bbox.width / 650) * w;
+    const bh = (d.bbox.height / 450) * h;
+
+    const color = d.violation_detected ? '#ef4444' : '#38bdf8';
+
+    // Box
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(bx, by, bw, bh);
+
+    // Label tag
+    ctx.fillStyle = color;
+    ctx.fillRect(bx, by - 22, Math.max(110, bw), 22);
+
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 11px JetBrains Mono, monospace';
+    ctx.fillText(`${d.vehicle_type} | ${d.speed_kmph}km/h`, bx + 5, by - 6);
+
+    // Plate badge below
+    ctx.fillStyle = '#facc15';
+    ctx.fillRect(bx, by + bh, 90, 16);
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 10px JetBrains Mono, monospace';
+    ctx.fillText(d.license_plate, bx + 4, by + bh + 12);
+  });
+}
+
+async function scanSingleFrame() {
+  const loc = document.getElementById('camSelect').value;
+  let result = null;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ location: loc, camera_id: 'CAM_01' })
+    });
+    if (res.ok) {
+      result = await res.json();
+      document.getElementById('backendStatus').textContent = 'Backend Active (:5037)';
+    }
+  } catch (err) {
+    document.getElementById('backendStatus').textContent = 'Client Simulation Active';
+  }
+
+  // Client fallback
+  if (!result) {
+    const count = Math.floor(Math.random() * 3) + 2;
+    const detections = [];
+    for (let i = 0; i < count; i++) {
+      const vtype = VEHICLES[Math.floor(Math.random() * VEHICLES.length)];
+      const plate = `TN${Math.floor(Math.random()*89+10)}A${Math.floor(Math.random()*8999+1000)}`;
+      const hasViol = Math.random() < 0.45;
+      const viol = hasViol ? VIOLATIONS[Math.floor(Math.random() * VIOLATIONS.length)] : null;
+      const speed = Math.round(Math.random() * 60 + 35);
+      detections.push({
+        vehicle_id: i + 1,
+        vehicle_type: vtype,
+        license_plate: plate,
+        speed_kmph: speed,
+        speed_limit: 60,
+        violation_detected: hasViol || speed > 60,
+        violation_type: speed > 60 ? 'Speeding' : (viol ? viol.type : null),
+        fine_amount: speed > 60 ? 2000 : (viol ? viol.fine : 0),
+        confidence: Number((Math.random() * 0.15 + 0.82).toFixed(3)),
+        bbox: {
+          x: Math.floor(Math.random() * 380 + 50),
+          y: Math.floor(Math.random() * 200 + 80),
+          width: 140,
+          height: 100
+        }
+      });
+    }
+    const viols = detections.filter(d => d.violation_detected);
+    result = {
+      location: loc,
+      camera_id: 'CAM_01',
+      vehicles_detected: detections.length,
+      violations_found: viols.length,
+      total_fine_amount: viols.reduce((s, d) => s + d.fine_amount, 0),
+      detections: detections,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  processScan(result);
+}
+
+function processScan(data) {
+  totalVehicles += data.vehicles_detected;
+  totalViolations += data.violations_found;
+  totalRevenue += data.total_fine_amount;
+
+  document.getElementById('statVehicles').textContent = totalVehicles;
+  document.getElementById('statViolations').textContent = totalViolations;
+  document.getElementById('statRevenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+
+  drawCctvScene(data.detections);
+
+  // Render Detected Vehicles Grid
+  const grid = document.getElementById('detectedGrid');
+  grid.innerHTML = data.detections.map(d => `
+    <div class="vehicle-card ${d.violation_detected ? 'has-violation' : ''}">
+      <div class="v-header">
+        <span class="plate-badge">${d.license_plate}</span>
+        <span class="v-type">${d.vehicle_type}</span>
+      </div>
+      <div class="v-speed">
+        <span>Speed Radar:</span>
+        <strong style="color:${d.speed_kmph > d.speed_limit ? '#ef4444' : '#34d399'}">${d.speed_kmph} km/h</strong>
+      </div>
+      ${d.violation_detected ? `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="violation-pill">⚠️ ${d.violation_type}</span>
+          <span class="fine-badge">+₹${d.fine_amount}</span>
+        </div>
+      ` : `
+        <div style="font-size:11px;color:#34d399;font-weight:600">✅ Compliant with traffic rules</div>
+      `}
+    </div>
+  `).join('');
+
+  // Add Violations to e-Challan Feed
+  data.detections.filter(d => d.violation_detected).forEach(v => {
+    challans.unshift({
+      id: 'CHL-' + Math.floor(Math.random() * 89999 + 10000),
+      plate: v.license_plate,
+      type: v.violation_type,
+      fine: v.fine_amount,
+      location: data.location,
+      speed: v.speed_kmph,
+      time: new Date().toLocaleTimeString()
+    });
+  });
+
+  if (challans.length > 30) challans = challans.slice(0, 30);
+  renderChallans();
+}
+
+function renderChallans() {
+  const el = document.getElementById('challanList');
+  if (challans.length === 0) {
+    el.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px 0;font-size:13px">No traffic violations logged.</div>';
+    return;
+  }
+  el.innerHTML = challans.map(c => `
+    <div class="challan-card">
+      <div class="challan-top">
+        <div>
+          <span class="plate-badge">${c.plate}</span>
+          <span style="font-size:11px;color:var(--text-muted);margin-left:6px">${c.id}</span>
+        </div>
+        <div class="challan-fine">₹${c.fine}</div>
+      </div>
+      <div style="font-weight:700;color:#fca5a5;margin:4px 0">${c.type} (${c.speed} km/h)</div>
+      <div style="font-size:11px;color:var(--text-muted);display:flex;justify-content:space-between">
+        <span>📍 ${c.location}</span>
+        <span>🕒 ${c.time}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearViolations() {
+  challans = [];
+  renderChallans();
+}
+
+function toggleCctvStream() {
+  const btn = document.getElementById('btnLiveLoop');
+  if (!isStreaming) {
+    isStreaming = true;
+    btn.innerHTML = '⏹️ Stop CCTV Stream';
+    btn.className = 'btn btn-secondary';
+    scanSingleFrame();
+    streamTimer = setInterval(scanSingleFrame, 1200);
+  } else {
+    isStreaming = false;
+    btn.innerHTML = '▶️ Start CCTV Stream';
+    btn.className = 'btn btn-primary';
+    clearInterval(streamTimer);
+    streamTimer = null;
+  }
+}
+
+// Initial scan
+setTimeout(scanSingleFrame, 500);
+</script>
+</body>
+</html>
