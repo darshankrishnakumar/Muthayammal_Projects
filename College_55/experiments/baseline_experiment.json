@@ -1,0 +1,50 @@
+{
+  "model_name": "BaselineTemporalCNNGRU",
+  "phase": "Phase 1 Baseline",
+  "device": "mps",
+  "random_seed": 42,
+  "input_resolution": "224x224",
+  "window_size": 16,
+  "training_epochs": 5,
+  "learning_rate": 0.001,
+  "training_duration_seconds": 43.54,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6927,
+      "val_accuracy": 0.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.6178,
+      "val_accuracy": 0.6176
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.4977,
+      "val_accuracy": 0.7059
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.4509,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.4349,
+      "val_accuracy": 0.5294
+    }
+  ],
+  "test_metrics": {
+    "accuracy": 0.6176,
+    "precision": 1.0,
+    "recall": 0.5517,
+    "f1_score": 0.7111,
+    "confusion_matrix": {
+      "tp": 16,
+      "fp": 0,
+      "tn": 5,
+      "fn": 13
+    }
+  }
+}

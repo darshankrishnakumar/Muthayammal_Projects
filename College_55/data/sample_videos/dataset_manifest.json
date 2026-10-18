@@ -1,0 +1,42 @@
+[
+  {
+    "filename": "normal_traffic.mp4",
+    "scenario": "normal",
+    "weather": "clear",
+    "frames": 150,
+    "has_accident": false,
+    "meta_path": "data/sample_videos/normal_traffic_meta.json"
+  },
+  {
+    "filename": "sudden_brake_normal.mp4",
+    "scenario": "sudden_brake_normal",
+    "weather": "clear",
+    "frames": 150,
+    "has_accident": false,
+    "meta_path": "data/sample_videos/sudden_brake_normal_meta.json"
+  },
+  {
+    "filename": "high_speed_collision.mp4",
+    "scenario": "high_speed_collision",
+    "weather": "clear",
+    "frames": 150,
+    "has_accident": true,
+    "meta_path": "data/sample_videos/high_speed_collision_meta.json"
+  },
+  {
+    "filename": "rollover_spinout.mp4",
+    "scenario": "rollover_spinout",
+    "weather": "clear",
+    "frames": 150,
+    "has_accident": true,
+    "meta_path": "data/sample_videos/rollover_spinout_meta.json"
+  },
+  {
+    "filename": "adverse_weather_accident.mp4",
+    "scenario": "adverse_weather_accident",
+    "weather": "rain",
+    "frames": 150,
+    "has_accident": true,
+    "meta_path": "data/sample_videos/adverse_weather_accident_meta.json"
+  }
+]

@@ -1,0 +1,5260 @@
+{
+  "scenario_type": "adverse_weather_accident",
+  "video_path": "data/sample_videos/adverse_weather_accident.mp4",
+  "weather": "rain",
+  "total_frames": 150,
+  "fps": 25,
+  "accident_frame_idx": 30,
+  "frames": [
+    {
+      "frame_idx": 0,
+      "timestamp_sec": 0.0,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            430.6333333333334,
+            336.8,
+            478.6333333333334,
+            420.8
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            243.0,
+            343.5,
+            327.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 1,
+      "timestamp_sec": 0.04,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            429.4333333333334,
+            331.6,
+            477.4333333333334,
+            415.6
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            240.0,
+            343.5,
+            324.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 2,
+      "timestamp_sec": 0.08,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            428.2333333333334,
+            326.40000000000003,
+            476.2333333333334,
+            410.40000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            237.0,
+            343.5,
+            321.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 3,
+      "timestamp_sec": 0.12,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            427.0333333333334,
+            321.20000000000005,
+            475.0333333333334,
+            405.20000000000005
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            234.0,
+            343.5,
+            318.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 4,
+      "timestamp_sec": 0.16,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            425.8333333333334,
+            316.00000000000006,
+            473.8333333333334,
+            400.00000000000006
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            231.0,
+            343.5,
+            315.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 5,
+      "timestamp_sec": 0.2,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            424.63333333333344,
+            310.80000000000007,
+            472.63333333333344,
+            394.80000000000007
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            228.0,
+            343.5,
+            312.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 6,
+      "timestamp_sec": 0.24,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            423.43333333333345,
+            305.6000000000001,
+            471.43333333333345,
+            389.6000000000001
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            225.0,
+            343.5,
+            309.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 7,
+      "timestamp_sec": 0.28,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            422.23333333333346,
+            300.4000000000001,
+            470.23333333333346,
+            384.4000000000001
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            222.0,
+            343.5,
+            306.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 8,
+      "timestamp_sec": 0.32,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            421.0333333333335,
+            295.2000000000001,
+            469.0333333333335,
+            379.2000000000001
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            219.0,
+            343.5,
+            303.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 9,
+      "timestamp_sec": 0.36,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            419.8333333333335,
+            290.0000000000001,
+            467.8333333333335,
+            374.0000000000001
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            216.0,
+            343.5,
+            300.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 10,
+      "timestamp_sec": 0.4,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            418.6333333333335,
+            284.8000000000001,
+            466.6333333333335,
+            368.8000000000001
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            213.0,
+            343.5,
+            297.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 11,
+      "timestamp_sec": 0.44,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            417.4333333333335,
+            279.60000000000014,
+            465.4333333333335,
+            363.60000000000014
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            210.0,
+            343.5,
+            294.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 12,
+      "timestamp_sec": 0.48,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            416.2333333333335,
+            274.40000000000015,
+            464.2333333333335,
+            358.40000000000015
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            207.0,
+            343.5,
+            291.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 13,
+      "timestamp_sec": 0.52,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            415.03333333333353,
+            269.20000000000016,
+            463.03333333333353,
+            353.20000000000016
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            204.0,
+            343.5,
+            288.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 14,
+      "timestamp_sec": 0.56,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            413.83333333333354,
+            264.00000000000017,
+            461.83333333333354,
+            348.00000000000017
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            201.0,
+            343.5,
+            285.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 15,
+      "timestamp_sec": 0.6,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            412.63333333333355,
+            258.8000000000002,
+            460.63333333333355,
+            342.8000000000002
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            198.0,
+            343.5,
+            282.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 16,
+      "timestamp_sec": 0.64,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            411.43333333333356,
+            253.6000000000002,
+            459.43333333333356,
+            337.6000000000002
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            195.0,
+            343.5,
+            279.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 17,
+      "timestamp_sec": 0.68,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            410.2333333333336,
+            248.4000000000002,
+            458.2333333333336,
+            332.4000000000002
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            192.0,
+            343.5,
+            276.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 18,
+      "timestamp_sec": 0.72,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            409.0333333333336,
+            243.20000000000022,
+            457.0333333333336,
+            327.2000000000002
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            189.0,
+            343.5,
+            273.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 19,
+      "timestamp_sec": 0.76,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            407.8333333333336,
+            238.00000000000023,
+            455.8333333333336,
+            322.0000000000002
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            186.0,
+            343.5,
+            270.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 20,
+      "timestamp_sec": 0.8,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            406.6333333333336,
+            232.80000000000024,
+            454.6333333333336,
+            316.80000000000024
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            183.0,
+            343.5,
+            267.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 21,
+      "timestamp_sec": 0.84,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            405.4333333333336,
+            227.60000000000025,
+            453.4333333333336,
+            311.60000000000025
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            180.0,
+            343.5,
+            264.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 22,
+      "timestamp_sec": 0.88,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            404.23333333333363,
+            222.40000000000026,
+            452.23333333333363,
+            306.40000000000026
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            177.0,
+            343.5,
+            261.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 23,
+      "timestamp_sec": 0.92,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            403.03333333333364,
+            217.20000000000027,
+            451.03333333333364,
+            301.2000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            174.0,
+            343.5,
+            258.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 24,
+      "timestamp_sec": 0.96,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            401.83333333333366,
+            212.00000000000028,
+            449.83333333333366,
+            296.0000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            171.0,
+            343.5,
+            255.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 25,
+      "timestamp_sec": 1.0,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            400.63333333333367,
+            206.8000000000003,
+            448.63333333333367,
+            290.8000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            168.0,
+            343.5,
+            252.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 26,
+      "timestamp_sec": 1.04,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            399.4333333333337,
+            201.6000000000003,
+            447.4333333333337,
+            285.6000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            165.0,
+            343.5,
+            249.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 27,
+      "timestamp_sec": 1.08,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            398.2333333333337,
+            196.40000000000032,
+            446.2333333333337,
+            280.4000000000003
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            162.0,
+            343.5,
+            246.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 28,
+      "timestamp_sec": 1.12,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            397.0333333333337,
+            191.20000000000033,
+            445.0333333333337,
+            275.20000000000033
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            159.0,
+            343.5,
+            243.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 29,
+      "timestamp_sec": 1.16,
+      "is_accident": false,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            395.8333333333337,
+            186.00000000000034,
+            443.8333333333337,
+            270.00000000000034
+          ],
+          "speed": 133.42,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            156.0,
+            343.5,
+            240.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 30,
+      "timestamp_sec": 1.2,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            394.5613333333337,
+            181.02400000000034,
+            442.5613333333337,
+            265.02400000000034
+          ],
+          "speed": 128.4,
+          "deceleration": 125.41,
+          "angle": 14.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            153.0,
+            343.5,
+            237.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 31,
+      "timestamp_sec": 1.24,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            393.2173333333337,
+            176.27200000000033,
+            441.2173333333337,
+            260.27200000000033
+          ],
+          "speed": 123.46,
+          "deceleration": 123.5,
+          "angle": 28.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            150.0,
+            343.5,
+            234.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 32,
+      "timestamp_sec": 1.28,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            391.80133333333373,
+            171.74400000000034,
+            439.80133333333373,
+            255.74400000000034
+          ],
+          "speed": 118.61,
+          "deceleration": 121.35,
+          "angle": 42.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            147.0,
+            343.5,
+            231.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 33,
+      "timestamp_sec": 1.32,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            390.31333333333373,
+            167.44000000000034,
+            438.31333333333373,
+            251.44000000000034
+          ],
+          "speed": 113.85,
+          "deceleration": 118.93,
+          "angle": 56.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            144.0,
+            343.5,
+            228.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 34,
+      "timestamp_sec": 1.36,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            388.7533333333337,
+            163.36000000000033,
+            436.7533333333337,
+            247.36000000000033
+          ],
+          "speed": 109.2,
+          "deceleration": 116.18,
+          "angle": 70.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            141.0,
+            343.5,
+            225.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 35,
+      "timestamp_sec": 1.4,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            387.1213333333337,
+            159.50400000000033,
+            435.1213333333337,
+            243.50400000000033
+          ],
+          "speed": 104.68,
+          "deceleration": 113.08,
+          "angle": 84.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            138.0,
+            343.5,
+            222.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 36,
+      "timestamp_sec": 1.44,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            385.4173333333337,
+            155.87200000000033,
+            433.4173333333337,
+            239.87200000000033
+          ],
+          "speed": 100.3,
+          "deceleration": 109.55,
+          "angle": 98.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            135.0,
+            343.5,
+            219.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 37,
+      "timestamp_sec": 1.48,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            383.6413333333337,
+            152.4640000000003,
+            431.6413333333337,
+            236.4640000000003
+          ],
+          "speed": 96.07,
+          "deceleration": 105.54,
+          "angle": 112.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            132.0,
+            343.5,
+            216.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 38,
+      "timestamp_sec": 1.52,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            381.7933333333337,
+            149.2800000000003,
+            429.7933333333337,
+            233.2800000000003
+          ],
+          "speed": 92.04,
+          "deceleration": 100.98,
+          "angle": 126.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            129.0,
+            343.5,
+            213.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 39,
+      "timestamp_sec": 1.56,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            379.8733333333337,
+            146.3200000000003,
+            427.8733333333337,
+            230.3200000000003
+          ],
+          "speed": 88.2,
+          "deceleration": 95.79,
+          "angle": 140.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            126.0,
+            343.5,
+            210.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 40,
+      "timestamp_sec": 1.6,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            377.88133333333366,
+            143.58400000000032,
+            425.88133333333366,
+            227.58400000000032
+          ],
+          "speed": 84.61,
+          "deceleration": 89.89,
+          "angle": 154.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            123.0,
+            343.5,
+            207.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 41,
+      "timestamp_sec": 1.64,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            375.81733333333364,
+            141.07200000000032,
+            423.81733333333364,
+            225.07200000000032
+          ],
+          "speed": 81.28,
+          "deceleration": 83.22,
+          "angle": 168.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            120.0,
+            343.5,
+            204.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 42,
+      "timestamp_sec": 1.68,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            373.6813333333336,
+            138.7840000000003,
+            421.6813333333336,
+            222.7840000000003
+          ],
+          "speed": 78.25,
+          "deceleration": 75.69,
+          "angle": 182.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            117.0,
+            343.5,
+            201.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 43,
+      "timestamp_sec": 1.72,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            371.4733333333336,
+            136.7200000000003,
+            419.4733333333336,
+            220.7200000000003
+          ],
+          "speed": 75.56,
+          "deceleration": 67.26,
+          "angle": 196.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            114.0,
+            343.5,
+            198.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 44,
+      "timestamp_sec": 1.76,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            369.1933333333336,
+            134.8800000000003,
+            417.1933333333336,
+            218.8800000000003
+          ],
+          "speed": 73.25,
+          "deceleration": 57.89,
+          "angle": 210.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            111.0,
+            343.5,
+            195.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 45,
+      "timestamp_sec": 1.8,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            366.84133333333364,
+            133.2640000000003,
+            414.84133333333364,
+            217.2640000000003
+          ],
+          "speed": 71.34,
+          "deceleration": 47.62,
+          "angle": 224.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            108.0,
+            343.5,
+            192.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 46,
+      "timestamp_sec": 1.84,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            364.41733333333366,
+            131.8720000000003,
+            412.41733333333366,
+            215.8720000000003
+          ],
+          "speed": 69.88,
+          "deceleration": 36.5,
+          "angle": 238.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            105.0,
+            343.5,
+            189.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 47,
+      "timestamp_sec": 1.88,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            361.9213333333337,
+            130.7040000000003,
+            409.9213333333337,
+            214.7040000000003
+          ],
+          "speed": 68.89,
+          "deceleration": 24.68,
+          "angle": 252.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            102.0,
+            343.5,
+            186.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 48,
+      "timestamp_sec": 1.92,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            359.3533333333337,
+            129.7600000000003,
+            407.3533333333337,
+            213.7600000000003
+          ],
+          "speed": 68.4,
+          "deceleration": 12.35,
+          "angle": 266.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            99.0,
+            343.5,
+            183.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 49,
+      "timestamp_sec": 1.96,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            356.7133333333337,
+            129.0400000000003,
+            404.7133333333337,
+            213.0400000000003
+          ],
+          "speed": 68.41,
+          "deceleration": 0.0,
+          "angle": 280.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            96.0,
+            343.5,
+            180.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 50,
+      "timestamp_sec": 2.0,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            354.0013333333337,
+            128.5440000000003,
+            402.0013333333337,
+            212.5440000000003
+          ],
+          "speed": 68.92,
+          "deceleration": 0.0,
+          "angle": 294.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            93.0,
+            343.5,
+            177.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 51,
+      "timestamp_sec": 2.04,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            351.2173333333337,
+            128.2720000000003,
+            399.2173333333337,
+            212.2720000000003
+          ],
+          "speed": 69.93,
+          "deceleration": 0.0,
+          "angle": 308.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            90.0,
+            343.5,
+            174.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 52,
+      "timestamp_sec": 2.08,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            348.36133333333373,
+            128.2240000000003,
+            396.36133333333373,
+            212.2240000000003
+          ],
+          "speed": 71.41,
+          "deceleration": 0.0,
+          "angle": 322.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            87.0,
+            343.5,
+            171.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 53,
+      "timestamp_sec": 2.12,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            345.43333333333374,
+            128.4000000000003,
+            393.43333333333374,
+            212.4000000000003
+          ],
+          "speed": 73.33,
+          "deceleration": 0.0,
+          "angle": 336.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            84.0,
+            343.5,
+            168.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 54,
+      "timestamp_sec": 2.16,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            342.43333333333374,
+            128.8000000000003,
+            390.43333333333374,
+            212.8000000000003
+          ],
+          "speed": 75.66,
+          "deceleration": 0.0,
+          "angle": 350.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            81.0,
+            343.5,
+            165.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 55,
+      "timestamp_sec": 2.2,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            339.36133333333373,
+            129.4240000000003,
+            387.36133333333373,
+            213.4240000000003
+          ],
+          "speed": 78.37,
+          "deceleration": 0.0,
+          "angle": 4.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            78.0,
+            343.5,
+            162.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 56,
+      "timestamp_sec": 2.24,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            336.2173333333337,
+            130.27200000000028,
+            384.2173333333337,
+            214.27200000000028
+          ],
+          "speed": 81.41,
+          "deceleration": 0.0,
+          "angle": 18.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            75.0,
+            343.5,
+            159.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 57,
+      "timestamp_sec": 2.28,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            333.0013333333337,
+            131.34400000000028,
+            381.0013333333337,
+            215.34400000000028
+          ],
+          "speed": 84.75,
+          "deceleration": 0.0,
+          "angle": 32.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            72.0,
+            343.5,
+            156.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 58,
+      "timestamp_sec": 2.32,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            329.7133333333337,
+            132.64000000000027,
+            377.7133333333337,
+            216.64000000000027
+          ],
+          "speed": 88.35,
+          "deceleration": 0.0,
+          "angle": 46.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            69.0,
+            343.5,
+            153.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 59,
+      "timestamp_sec": 2.36,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            326.3533333333337,
+            134.16000000000028,
+            374.3533333333337,
+            218.16000000000028
+          ],
+          "speed": 92.2,
+          "deceleration": 0.0,
+          "angle": 60.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            66.0,
+            343.5,
+            150.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 60,
+      "timestamp_sec": 2.4,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            322.9213333333337,
+            135.90400000000028,
+            370.9213333333337,
+            219.90400000000028
+          ],
+          "speed": 96.24,
+          "deceleration": 0.0,
+          "angle": 74.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            63.0,
+            343.5,
+            147.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 61,
+      "timestamp_sec": 2.44,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            319.41733333333366,
+            137.87200000000027,
+            367.41733333333366,
+            221.87200000000027
+          ],
+          "speed": 100.47,
+          "deceleration": 0.0,
+          "angle": 88.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            60.0,
+            343.5,
+            144.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 62,
+      "timestamp_sec": 2.48,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            315.84133333333364,
+            140.06400000000028,
+            363.84133333333364,
+            224.06400000000028
+          ],
+          "speed": 104.86,
+          "deceleration": 0.0,
+          "angle": 102.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            57.0,
+            343.5,
+            141.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 63,
+      "timestamp_sec": 2.52,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            312.1933333333336,
+            142.48000000000027,
+            360.1933333333336,
+            226.48000000000027
+          ],
+          "speed": 109.39,
+          "deceleration": 0.0,
+          "angle": 116.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            54.0,
+            343.5,
+            138.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 64,
+      "timestamp_sec": 2.56,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            308.47333333333364,
+            145.12000000000026,
+            356.47333333333364,
+            229.12000000000026
+          ],
+          "speed": 114.04,
+          "deceleration": 0.0,
+          "angle": 130.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            51.0,
+            343.5,
+            135.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 65,
+      "timestamp_sec": 2.6,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            304.68133333333367,
+            147.98400000000026,
+            352.68133333333367,
+            231.98400000000026
+          ],
+          "speed": 118.8,
+          "deceleration": 0.0,
+          "angle": 144.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            48.0,
+            343.5,
+            132.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 66,
+      "timestamp_sec": 2.64,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            300.8173333333337,
+            151.07200000000026,
+            348.8173333333337,
+            235.07200000000026
+          ],
+          "speed": 123.66,
+          "deceleration": 0.0,
+          "angle": 158.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            45.0,
+            343.5,
+            129.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 67,
+      "timestamp_sec": 2.68,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            296.8813333333337,
+            154.38400000000024,
+            344.8813333333337,
+            238.38400000000024
+          ],
+          "speed": 128.6,
+          "deceleration": 0.0,
+          "angle": 172.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            42.0,
+            343.5,
+            126.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 68,
+      "timestamp_sec": 2.72,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            292.87333333333373,
+            157.92000000000024,
+            340.87333333333373,
+            241.92000000000024
+          ],
+          "speed": 133.62,
+          "deceleration": 0.0,
+          "angle": 186.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            39.0,
+            343.5,
+            123.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 69,
+      "timestamp_sec": 2.76,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            288.79333333333375,
+            161.68000000000023,
+            336.79333333333375,
+            245.68000000000023
+          ],
+          "speed": 138.71,
+          "deceleration": 0.0,
+          "angle": 200.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            36.0,
+            343.5,
+            120.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 70,
+      "timestamp_sec": 2.8,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            284.64133333333376,
+            165.66400000000024,
+            332.64133333333376,
+            249.66400000000024
+          ],
+          "speed": 143.86,
+          "deceleration": 0.0,
+          "angle": 214.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            33.0,
+            343.5,
+            117.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 71,
+      "timestamp_sec": 2.84,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            280.4173333333338,
+            169.87200000000024,
+            328.4173333333338,
+            253.87200000000024
+          ],
+          "speed": 149.06,
+          "deceleration": 0.0,
+          "angle": 228.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            30.0,
+            343.5,
+            114.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 72,
+      "timestamp_sec": 2.88,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            276.1213333333338,
+            174.30400000000023,
+            324.1213333333338,
+            258.3040000000002
+          ],
+          "speed": 154.31,
+          "deceleration": 0.0,
+          "angle": 242.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            27.0,
+            343.5,
+            111.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 73,
+      "timestamp_sec": 2.92,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            271.7533333333338,
+            178.96000000000024,
+            319.7533333333338,
+            262.96000000000026
+          ],
+          "speed": 159.6,
+          "deceleration": 0.0,
+          "angle": 256.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            24.0,
+            343.5,
+            108.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 74,
+      "timestamp_sec": 2.96,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            267.3133333333338,
+            183.84000000000023,
+            315.3133333333338,
+            267.84000000000026
+          ],
+          "speed": 164.94,
+          "deceleration": 0.0,
+          "angle": 270.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            21.0,
+            343.5,
+            105.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 75,
+      "timestamp_sec": 3.0,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            262.8013333333338,
+            188.94400000000022,
+            310.8013333333338,
+            272.9440000000002
+          ],
+          "speed": 170.31,
+          "deceleration": 0.0,
+          "angle": 284.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            18.0,
+            343.5,
+            102.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 76,
+      "timestamp_sec": 3.04,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            258.2173333333338,
+            194.27200000000022,
+            306.2173333333338,
+            278.2720000000002
+          ],
+          "speed": 175.71,
+          "deceleration": 0.0,
+          "angle": 298.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            15.0,
+            343.5,
+            99.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 77,
+      "timestamp_sec": 3.08,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            253.56133333333378,
+            199.8240000000002,
+            301.5613333333338,
+            283.8240000000002
+          ],
+          "speed": 181.15,
+          "deceleration": 0.0,
+          "angle": 312.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            12.0,
+            343.5,
+            96.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 78,
+      "timestamp_sec": 3.12,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            248.83333333333377,
+            205.6000000000002,
+            296.83333333333377,
+            289.6000000000002
+          ],
+          "speed": 186.61,
+          "deceleration": 0.0,
+          "angle": 326.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            9.0,
+            343.5,
+            93.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 79,
+      "timestamp_sec": 3.16,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            244.03333333333376,
+            211.6000000000002,
+            292.03333333333376,
+            295.6000000000002
+          ],
+          "speed": 192.09,
+          "deceleration": 0.0,
+          "angle": 340.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            6.0,
+            343.5,
+            90.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 80,
+      "timestamp_sec": 3.2,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            239.16133333333374,
+            217.82400000000018,
+            287.16133333333374,
+            301.8240000000002
+          ],
+          "speed": 197.6,
+          "deceleration": 0.0,
+          "angle": 354.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            3.0,
+            343.5,
+            87.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 81,
+      "timestamp_sec": 3.24,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            234.21733333333373,
+            224.27200000000016,
+            282.2173333333337,
+            308.27200000000016
+          ],
+          "speed": 203.13,
+          "deceleration": 0.0,
+          "angle": 8.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            84.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 82,
+      "timestamp_sec": 3.28,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            229.20133333333374,
+            230.94400000000013,
+            277.20133333333376,
+            314.94400000000013
+          ],
+          "speed": 208.68,
+          "deceleration": 0.0,
+          "angle": 22.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            81.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 83,
+      "timestamp_sec": 3.32,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            224.11333333333374,
+            237.84000000000015,
+            272.11333333333374,
+            321.84000000000015
+          ],
+          "speed": 214.25,
+          "deceleration": 0.0,
+          "angle": 36.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            78.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 84,
+      "timestamp_sec": 3.36,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            218.95333333333375,
+            244.96000000000015,
+            266.9533333333337,
+            328.96000000000015
+          ],
+          "speed": 219.83,
+          "deceleration": 0.0,
+          "angle": 50.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            75.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 85,
+      "timestamp_sec": 3.4,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            213.72133333333375,
+            252.30400000000014,
+            261.72133333333375,
+            336.30400000000014
+          ],
+          "speed": 225.43,
+          "deceleration": 0.0,
+          "angle": 64.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            72.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 86,
+      "timestamp_sec": 3.44,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            208.41733333333374,
+            259.8720000000001,
+            256.4173333333338,
+            343.8720000000001
+          ],
+          "speed": 231.04,
+          "deceleration": 0.0,
+          "angle": 78.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            69.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 87,
+      "timestamp_sec": 3.48,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            203.04133333333374,
+            267.6640000000001,
+            251.04133333333374,
+            351.6640000000001
+          ],
+          "speed": 236.67,
+          "deceleration": 0.0,
+          "angle": 92.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            66.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 88,
+      "timestamp_sec": 3.52,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            197.59333333333373,
+            275.6800000000001,
+            245.59333333333373,
+            359.6800000000001
+          ],
+          "speed": 242.3,
+          "deceleration": 0.0,
+          "angle": 106.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            63.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 89,
+      "timestamp_sec": 3.56,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            192.07333333333372,
+            283.92000000000013,
+            240.07333333333372,
+            367.92000000000013
+          ],
+          "speed": 247.95,
+          "deceleration": 0.0,
+          "angle": 120.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            60.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 90,
+      "timestamp_sec": 3.6,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            186.48133333333374,
+            292.3840000000001,
+            234.48133333333374,
+            376.3840000000001
+          ],
+          "speed": 253.61,
+          "deceleration": 0.0,
+          "angle": 134.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            57.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 91,
+      "timestamp_sec": 3.64,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            180.81733333333375,
+            301.0720000000001,
+            228.81733333333375,
+            385.0720000000001
+          ],
+          "speed": 259.28,
+          "deceleration": 0.0,
+          "angle": 148.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            54.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 92,
+      "timestamp_sec": 3.68,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            175.08133333333376,
+            309.9840000000001,
+            223.08133333333376,
+            393.9840000000001
+          ],
+          "speed": 264.96,
+          "deceleration": 0.0,
+          "angle": 162.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            51.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 93,
+      "timestamp_sec": 3.72,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            169.27333333333377,
+            319.12000000000006,
+            217.27333333333377,
+            403.12000000000006
+          ],
+          "speed": 270.65,
+          "deceleration": 0.0,
+          "angle": 176.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            48.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 94,
+      "timestamp_sec": 3.76,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            163.39333333333377,
+            328.4800000000001,
+            211.39333333333377,
+            412.4800000000001
+          ],
+          "speed": 276.34,
+          "deceleration": 0.0,
+          "angle": 190.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            45.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 95,
+      "timestamp_sec": 3.8,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            157.44133333333377,
+            338.0640000000001,
+            205.44133333333377,
+            422.0640000000001
+          ],
+          "speed": 282.05,
+          "deceleration": 0.0,
+          "angle": 204.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            42.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 96,
+      "timestamp_sec": 3.84,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            151.41733333333377,
+            347.87200000000007,
+            199.41733333333377,
+            431.87200000000007
+          ],
+          "speed": 287.76,
+          "deceleration": 0.0,
+          "angle": 218.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            39.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 97,
+      "timestamp_sec": 3.88,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            145.32133333333377,
+            357.90400000000005,
+            193.32133333333377,
+            441.90400000000005
+          ],
+          "speed": 293.47,
+          "deceleration": 0.0,
+          "angle": 232.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            36.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 98,
+      "timestamp_sec": 3.92,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            139.15333333333376,
+            368.16,
+            187.15333333333376,
+            452.16
+          ],
+          "speed": 299.2,
+          "deceleration": 0.0,
+          "angle": 246.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            33.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 99,
+      "timestamp_sec": 3.96,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            132.91333333333375,
+            378.64000000000004,
+            180.91333333333375,
+            462.64000000000004
+          ],
+          "speed": 304.93,
+          "deceleration": 0.0,
+          "angle": 260.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            30.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 100,
+      "timestamp_sec": 4.0,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            126.60133333333374,
+            389.34400000000005,
+            174.60133333333374,
+            473.34400000000005
+          ],
+          "speed": 310.66,
+          "deceleration": 0.0,
+          "angle": 274.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            27.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 101,
+      "timestamp_sec": 4.04,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            120.21733333333373,
+            400.27200000000005,
+            168.21733333333373,
+            480.0
+          ],
+          "speed": 316.4,
+          "deceleration": 0.0,
+          "angle": 288.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            24.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 102,
+      "timestamp_sec": 4.08,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            113.76133333333371,
+            411.42400000000004,
+            161.7613333333337,
+            480.0
+          ],
+          "speed": 322.15,
+          "deceleration": 0.0,
+          "angle": 302.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            21.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 103,
+      "timestamp_sec": 4.12,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            107.23333333333372,
+            422.8,
+            155.23333333333372,
+            480.0
+          ],
+          "speed": 327.9,
+          "deceleration": 0.0,
+          "angle": 316.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            18.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 104,
+      "timestamp_sec": 4.16,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            100.63333333333371,
+            434.40000000000003,
+            148.63333333333372,
+            480.0
+          ],
+          "speed": 333.65,
+          "deceleration": 0.0,
+          "angle": 330.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            15.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 105,
+      "timestamp_sec": 4.2,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            93.9613333333337,
+            446.22400000000005,
+            141.9613333333337,
+            480.0
+          ],
+          "speed": 339.41,
+          "deceleration": 0.0,
+          "angle": 344.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            12.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 106,
+      "timestamp_sec": 4.24,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            87.2173333333337,
+            458.27200000000005,
+            135.2173333333337,
+            480.0
+          ],
+          "speed": 345.18,
+          "deceleration": 0.0,
+          "angle": 358.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            9.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 107,
+      "timestamp_sec": 4.28,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            80.4013333333337,
+            470.5440000000001,
+            128.4013333333337,
+            480.0
+          ],
+          "speed": 350.95,
+          "deceleration": 0.0,
+          "angle": 12.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            6.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 108,
+      "timestamp_sec": 4.32,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            73.51333333333369,
+            483.0400000000001,
+            121.51333333333369,
+            480.0
+          ],
+          "speed": 356.72,
+          "deceleration": 0.0,
+          "angle": 26.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            3.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 109,
+      "timestamp_sec": 4.36,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            66.55333333333368,
+            495.7600000000001,
+            114.55333333333368,
+            480.0
+          ],
+          "speed": 362.49,
+          "deceleration": 0.0,
+          "angle": 40.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            0.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 110,
+      "timestamp_sec": 4.4,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            59.52133333333367,
+            508.70400000000006,
+            107.52133333333367,
+            480.0
+          ],
+          "speed": 368.27,
+          "deceleration": 0.0,
+          "angle": 54.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -3.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 111,
+      "timestamp_sec": 4.44,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            52.41733333333366,
+            521.8720000000001,
+            100.41733333333366,
+            480.0
+          ],
+          "speed": 374.05,
+          "deceleration": 0.0,
+          "angle": 68.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -6.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 112,
+      "timestamp_sec": 4.48,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            45.24133333333366,
+            535.2640000000001,
+            93.24133333333366,
+            480.0
+          ],
+          "speed": 379.84,
+          "deceleration": 0.0,
+          "angle": 82.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -9.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 113,
+      "timestamp_sec": 4.52,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            37.99333333333365,
+            548.8800000000001,
+            85.99333333333365,
+            480.0
+          ],
+          "speed": 385.62,
+          "deceleration": 0.0,
+          "angle": 96.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -12.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 114,
+      "timestamp_sec": 4.56,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            30.673333333333645,
+            562.7200000000001,
+            78.67333333333364,
+            480.0
+          ],
+          "speed": 391.41,
+          "deceleration": 0.0,
+          "angle": 110.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -15.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 115,
+      "timestamp_sec": 4.6,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            23.281333333333635,
+            576.7840000000001,
+            71.28133333333363,
+            480.0
+          ],
+          "speed": 397.21,
+          "deceleration": 0.0,
+          "angle": 124.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -18.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 116,
+      "timestamp_sec": 4.64,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            15.817333333333622,
+            591.0720000000001,
+            63.81733333333362,
+            480.0
+          ],
+          "speed": 403.0,
+          "deceleration": 0.0,
+          "angle": 138.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -21.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 117,
+      "timestamp_sec": 4.68,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            8.281333333333613,
+            605.5840000000002,
+            56.28133333333361,
+            480.0
+          ],
+          "speed": 408.8,
+          "deceleration": 0.0,
+          "angle": 152.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -24.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 118,
+      "timestamp_sec": 4.72,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.673333333333602,
+            620.3200000000002,
+            48.6733333333336,
+            480.0
+          ],
+          "speed": 414.6,
+          "deceleration": 0.0,
+          "angle": 166.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -27.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 119,
+      "timestamp_sec": 4.76,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            635.2800000000002,
+            40.993333333333595,
+            480.0
+          ],
+          "speed": 420.4,
+          "deceleration": 0.0,
+          "angle": 180.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -30.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 120,
+      "timestamp_sec": 4.8,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            650.4640000000002,
+            33.241333333333586,
+            480.0
+          ],
+          "speed": 426.21,
+          "deceleration": 0.0,
+          "angle": 194.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -33.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 121,
+      "timestamp_sec": 4.84,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            665.8720000000002,
+            25.41733333333357,
+            480.0
+          ],
+          "speed": 432.02,
+          "deceleration": 0.0,
+          "angle": 208.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -36.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 122,
+      "timestamp_sec": 4.88,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            681.5040000000002,
+            17.52133333333356,
+            480.0
+          ],
+          "speed": 437.83,
+          "deceleration": 0.0,
+          "angle": 222.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -39.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 123,
+      "timestamp_sec": 4.92,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            697.3600000000002,
+            9.553333333333548,
+            480.0
+          ],
+          "speed": 443.64,
+          "deceleration": 0.0,
+          "angle": 236.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -42.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 124,
+      "timestamp_sec": 4.96,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            713.4400000000003,
+            1.5133333333335344,
+            480.0
+          ],
+          "speed": 449.45,
+          "deceleration": 0.0,
+          "angle": 250.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -45.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 125,
+      "timestamp_sec": 5.0,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            729.7440000000003,
+            -6.598666666666478,
+            480.0
+          ],
+          "speed": 455.26,
+          "deceleration": 0.0,
+          "angle": 264.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -48.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 126,
+      "timestamp_sec": 5.04,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            746.2720000000003,
+            -14.782666666666493,
+            480.0
+          ],
+          "speed": 461.08,
+          "deceleration": 0.0,
+          "angle": 278.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -51.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 127,
+      "timestamp_sec": 5.08,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            763.0240000000003,
+            -23.038666666666508,
+            480.0
+          ],
+          "speed": 466.9,
+          "deceleration": 0.0,
+          "angle": 292.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -54.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 128,
+      "timestamp_sec": 5.12,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            780.0000000000003,
+            -31.366666666666518,
+            480.0
+          ],
+          "speed": 472.72,
+          "deceleration": 0.0,
+          "angle": 306.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -57.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 129,
+      "timestamp_sec": 5.16,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            797.2000000000004,
+            -39.76666666666653,
+            480.0
+          ],
+          "speed": 478.54,
+          "deceleration": 0.0,
+          "angle": 320.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -60.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 130,
+      "timestamp_sec": 5.2,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            814.6240000000004,
+            -48.238666666666546,
+            480.0
+          ],
+          "speed": 484.36,
+          "deceleration": 0.0,
+          "angle": 334.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -63.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 131,
+      "timestamp_sec": 5.24,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            832.2720000000004,
+            -56.78266666666656,
+            480.0
+          ],
+          "speed": 490.19,
+          "deceleration": 0.0,
+          "angle": 348.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -66.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 132,
+      "timestamp_sec": 5.28,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            850.1440000000005,
+            -65.39866666666657,
+            480.0
+          ],
+          "speed": 496.01,
+          "deceleration": 0.0,
+          "angle": 2.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -69.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 133,
+      "timestamp_sec": 5.32,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            868.2400000000005,
+            -74.08666666666659,
+            480.0
+          ],
+          "speed": 501.84,
+          "deceleration": 0.0,
+          "angle": 16.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -72.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 134,
+      "timestamp_sec": 5.36,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            886.5600000000005,
+            -82.84666666666661,
+            480.0
+          ],
+          "speed": 507.67,
+          "deceleration": 0.0,
+          "angle": 30.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -75.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 135,
+      "timestamp_sec": 5.4,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            905.1040000000005,
+            -91.67866666666663,
+            480.0
+          ],
+          "speed": 513.5,
+          "deceleration": 0.0,
+          "angle": 44.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -78.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 136,
+      "timestamp_sec": 5.44,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            923.8720000000005,
+            -100.58266666666665,
+            480.0
+          ],
+          "speed": 519.33,
+          "deceleration": 0.0,
+          "angle": 58.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -81.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 137,
+      "timestamp_sec": 5.48,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            942.8640000000006,
+            -109.55866666666668,
+            480.0
+          ],
+          "speed": 525.16,
+          "deceleration": 0.0,
+          "angle": 72.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -84.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 138,
+      "timestamp_sec": 5.52,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            962.0800000000006,
+            -118.60666666666671,
+            480.0
+          ],
+          "speed": 530.99,
+          "deceleration": 0.0,
+          "angle": 86.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -87.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 139,
+      "timestamp_sec": 5.56,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            981.5200000000007,
+            -127.72666666666674,
+            480.0
+          ],
+          "speed": 536.82,
+          "deceleration": 0.0,
+          "angle": 100.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -90.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 140,
+      "timestamp_sec": 5.6,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1001.1840000000007,
+            -136.91866666666675,
+            480.0
+          ],
+          "speed": 542.66,
+          "deceleration": 0.0,
+          "angle": 114.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -93.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 141,
+      "timestamp_sec": 5.64,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1021.0720000000006,
+            -146.18266666666676,
+            480.0
+          ],
+          "speed": 548.49,
+          "deceleration": 0.0,
+          "angle": 128.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -96.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 142,
+      "timestamp_sec": 5.68,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1041.1840000000007,
+            -155.51866666666677,
+            480.0
+          ],
+          "speed": 554.33,
+          "deceleration": 0.0,
+          "angle": 142.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -99.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 143,
+      "timestamp_sec": 5.72,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1061.5200000000007,
+            -164.9266666666668,
+            480.0
+          ],
+          "speed": 560.17,
+          "deceleration": 0.0,
+          "angle": 156.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -102.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 144,
+      "timestamp_sec": 5.76,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1082.0800000000006,
+            -174.4066666666668,
+            480.0
+          ],
+          "speed": 566.01,
+          "deceleration": 0.0,
+          "angle": 170.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -105.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 145,
+      "timestamp_sec": 5.8,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1102.8640000000007,
+            -183.95866666666683,
+            480.0
+          ],
+          "speed": 571.85,
+          "deceleration": 0.0,
+          "angle": 184.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -108.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 146,
+      "timestamp_sec": 5.84,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1123.8720000000008,
+            -193.58266666666685,
+            480.0
+          ],
+          "speed": 577.69,
+          "deceleration": 0.0,
+          "angle": 198.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -111.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 147,
+      "timestamp_sec": 5.88,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1145.1040000000007,
+            -203.27866666666688,
+            480.0
+          ],
+          "speed": 583.53,
+          "deceleration": 0.0,
+          "angle": 212.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -114.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 148,
+      "timestamp_sec": 5.92,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1166.5600000000009,
+            -213.0466666666669,
+            480.0
+          ],
+          "speed": 589.37,
+          "deceleration": 0.0,
+          "angle": 226.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -117.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    },
+    {
+      "frame_idx": 149,
+      "timestamp_sec": 5.96,
+      "is_accident": true,
+      "vehicles": [
+        {
+          "vehicle_id": 1,
+          "box": [
+            0.0,
+            1188.240000000001,
+            -222.88666666666694,
+            480.0
+          ],
+          "speed": 595.21,
+          "deceleration": 0.0,
+          "angle": 240.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        },
+        {
+          "vehicle_id": 2,
+          "box": [
+            295.5,
+            0.0,
+            343.5,
+            -120.0
+          ],
+          "speed": 75.0,
+          "deceleration": 0.0,
+          "angle": 0.0,
+          "is_immobile": false,
+          "immobility_sec": 0.0
+        }
+      ]
+    }
+  ]
+}

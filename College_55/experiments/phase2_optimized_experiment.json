@@ -1,0 +1,56 @@
+{
+  "model_name": "MultiCueTemporalFusionModel",
+  "phase": "Phase 2 Optimized Model",
+  "device": "mps",
+  "random_seed": 42,
+  "input_resolution": "224x224",
+  "window_size": 16,
+  "training_epochs": 6,
+  "loss_function": "FocalLoss(alpha=0.65, gamma=2.0)",
+  "optimizer": "AdamW(lr=8e-4, weight_decay=1e-3)",
+  "training_duration_seconds": 54.82,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.0596,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.0032,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.0001,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.0001,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.0,
+      "val_accuracy": 1.0
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0,
+      "val_accuracy": 1.0
+    }
+  ],
+  "test_metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "confusion_matrix": {
+      "tp": 29,
+      "fp": 0,
+      "tn": 5,
+      "fn": 0
+    }
+  }
+}
