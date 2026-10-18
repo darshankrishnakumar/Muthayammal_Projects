@@ -1,34 +1,28 @@
 # Resume Instructions for Next Step / Session
 
 ## Current Status
-- **PROJECT-001**: **100% VERIFIED COMPLETE**.
-  - Code, dataset, models, database, backend (port 5001), frontend, 18/18 tests, 02:37 MP4 walkthrough video, 15-slide PPTX with screenshots, DOCX documentation, and master trackers all updated and verified.
-- **Next Project to Execute**: **`PROJECT-002: network Intrusion Detection Using Ensemble Machine Learning and Anomaly Detection`**
+- **PROJECT-001**: **100% VERIFIED COMPLETE**. (BiLSTM .pth, 18/18 tests, 02:37 video, 15-slide PPTX, DOCX, port 5001).
+- **PROJECT-002**: **100% VERIFIED COMPLETE**. (Random Forest + Extra Trees + Isolation Forest, NSL-KDD 22,544 rows, 19/19 tests, 03:00 video, 15-slide PPTX, DOCX, port 5002).
+- **Next Project to Execute**: **`PROJECT-003: Plant Disease Detection (Apple Disease Detection Using Deep Learning / CNN)`**
 
 ---
 
-## Action Plan for PROJECT-002
-1. **Directory**: `project_02_network_intrusion_anomaly`
+## Action Plan for PROJECT-003
+1. **Directory**: `project_03_apple_disease_detection`
 2. **Inspect Existing State**:
-   - Check existing files, code, datasets, tests, docs, PPTX.
+   - Check existing code, datasets, models, database, tests, docs, PPTX.
 3. **Acquire Real Dataset**:
-   - NSL-KDD or CICIDS2017 network traffic dataset (features: duration, protocol_type, service, flag, src_bytes, dst_bytes, count, srv_count, etc., target: normal vs. attack categories like DoS, Probe, R2L, U2R).
-4. **Train Ensemble ML & Anomaly Detection Models**:
-   - Random Forest Regressor / Classifier.
-   - Extra Trees or Gradient Boosting Classifier.
-   - Isolation Forest for zero-day / anomaly detection.
-   - Save serialized weights to `source_code/models/`.
+   - PlantVillage Apple dataset (Apple Scab, Black Rot, Cedar Apple Rust, Healthy).
+4. **Train Computer Vision / Deep Learning Model**:
+   - PyTorch CNN / MobileNetV2 / ResNet transfer learning on apple leaf disease images.
+   - Save serialized weights `.pth` in `source_code/models/`.
 5. **Backend & Database**:
-   - FastAPI backend on port 5002 (or appropriate non-conflicting port).
-   - SQLite database for traffic logging, alerts, and attack metrics.
+   - FastAPI backend on port 5003.
+   - SQLite database for diagnostic scans, treatments, and leaf metrics.
 6. **Frontend**:
-   - Network Security Operations Center (SOC) dashboard:
-     - Real-time packet analyzer & scoring.
-     - Anomaly detection gauge.
-     - Attack breakdown (DoS, Probe, etc.).
-     - Incident logs & analytics.
+   - Diagnostic leaf image uploader, disease confidence gauge, symptoms breakdown, chemical/organic treatment recommendations.
 7. **Automated Tests**:
-   - Comprehensive pytest suite (unit, model, database, API, anomaly detection).
+   - pytest suite for image tensor loading, model inference, database, and API endpoints.
 8. **Screen Recording**:
    - 2.5–3.5 minute MP4 recording (`walkthrough/walkthrough_video.mp4`).
 9. **Presentations & Docs**:

@@ -17,17 +17,40 @@
 - **Database Subsystem**:
   - Implemented SQLite transactional store `source_code/database/database.py` with indexed `prediction_logs` table.
 - **FastAPI Backend Server**:
-  - Developed asynchronous REST API with 6 endpoints (`/health`, `/api/options`, `/api/predict`, `/api/history`, `/api/metrics`, `/api/analytics`).
-  - Added Pydantic v2 schemas for strong payload validation.
+  - Developed asynchronous REST API on port 5001 with 6 endpoints (`/health`, `/api/options`, `/api/predict`, `/api/history`, `/api/metrics`, `/api/analytics`).
 - **Interactive UI**:
-  - Modernized HTML5/CSS glassmorphism web interface with 4 functional tabs (Valuation Engine, Model Performance, Prediction History, Pricing Analytics), dynamic multi-currency conversions (INR, USD, EUR, GBP), and confidence intervals.
+  - Modernized HTML5/CSS glassmorphism web interface with 4 functional tabs, dynamic multi-currency conversions, and confidence intervals.
 - **Automated Test Suite**:
   - Created 18 automated tests in `source_code/tests/`. All 18 passed in 2.41 seconds.
 - **Recorded Video Demonstration**:
-  - Programmatically drove browser through 9 distinct user scenarios and piped frames directly into `ffmpeg` (`libx264`, `yuv420p`, 1280x800, 24fps).
-  - Output: `walkthrough/walkthrough_video.mp4` (Duration: **02:37 / 157.0s**, Size: **1.55 MB**).
-- **Academic Documentation & Presentation**:
-  - Updated `presentations/project_presentation.pptx` to 15 widescreen slides embedding real high-resolution screenshots.
-  - Regenerated `docs/technical_documentation.docx` with mathematical formulation, loss equations, architecture diagrams, and empirical benchmark tables.
-  - Generated complete 8-document markdown technical suite in `docs/`.
+  - `walkthrough/walkthrough_video.mp4` (Duration: **02:37 / 157.0s**, Size: **1.55 MB**).
+- **Status**: **VERIFIED COMPLETE (100%)**.
+
+---
+
+## PROJECT-002: Network Intrusion Detection Using Ensemble Machine Learning and Anomaly Detection
+- **Rectified Misaligned Source Record**:
+  - The source document contained a misaligned abstract describing video surveillance. Rectified the abstract to match the official project title: Network Intrusion Detection & Anomaly Detection.
+- **Acquired Real Benchmark Dataset**:
+  - Downloaded official NSL-KDD Network Intrusion Detection dataset (`KDDTest+.txt`, 22,544 connection records). Cleaned and saved structured dataset to `source_code/datasets/nsl_kdd_clean.csv`.
+- **Constructed 111-Dimensional Feature Preprocessor**:
+  - Implemented `ColumnTransformer` scaling 34 continuous traffic variables with `StandardScaler` and expanding `protocol_type`, `service`, and `flag` into one-hot vectors.
+- **Trained Dual-Engine Machine Learning Models**:
+  - **Random Forest Classifier** (100 trees, depth 16): Achieved **98.34%** test accuracy and **0.9833** weighted F1-score across 5 attack classes (Normal, DoS, Probe, R2L, U2R). Saved to `source_code/models/rf_nids_classifier.joblib` (7.5 MB).
+  - **Extra Trees Classifier** (100 trees, depth 16): Achieved **98.03%** test accuracy and **0.9800** weighted F1-score. Saved to `source_code/models/et_nids_classifier.joblib` (9.3 MB).
+  - **Isolation Forest Anomaly Detector** (contamination = 0.18): Unsupervised anomaly detector for zero-day out-of-distribution threats. Saved to `source_code/models/isolation_forest_anomaly.joblib` (889 KB).
+- **Database Subsystem**:
+  - Implemented SQLite store `source_code/database/database.py` with `security_events` table and aggregate threat analytics functions (`nids.db`).
+- **FastAPI Microservice Backend**:
+  - Developed REST API on port 5002 with 6 endpoints (`/health`, `/api/presets`, `/api/inspect`, `/api/events`, `/api/metrics`, `/api/analytics`).
+- **Interactive Security Operations Center (SOC) Frontend**:
+  - Developed responsive cyberpunk cyber defense portal (`index.html`) with 4 views: Packet Inspector with one-click attack presets, Model Benchmarks & taxonomy, Transactional Event Logs, and Threat Intelligence Analytics.
+- **Automated Test Suite**:
+  - Implemented 19 automated tests in `source_code/tests/`. All 19 passed in 2.51 seconds (100% pass rate).
+- **High-Resolution Presentation Deck**:
+  - Generated 15 widescreen slides (`project_presentation.pptx`, 1.4 MB) embedding 7 high-resolution screenshots of the UI.
+- **Technical Documentation**:
+  - Generated 60-paragraph formal academic document (`docs/technical_documentation.docx`) and 8-file markdown technical documentation suite.
+- **Recorded Video Demonstration**:
+  - Screen-recorded end-to-end user workflows using Puppeteer and FFmpeg. Output: `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, Size: **1.82 MB**, 1280x800 H.264 MP4).
 - **Status**: **VERIFIED COMPLETE (100%)**.

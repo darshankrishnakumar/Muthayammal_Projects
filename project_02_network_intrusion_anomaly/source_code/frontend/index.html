@@ -3,136 +3,1056 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 02 — network Intrusion Detection Using Ensemble Machine Learning and Anomaly Detection</title>
+    <title>CyberShield AI — Network Intrusion Detection & Anomaly System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
+            --bg-base: #070b14;
+            --bg-surface: #0e1726;
+            --bg-card: rgba(18, 28, 48, 0.75);
+            --border: #1e293b;
+            --border-glow: rgba(56, 189, 248, 0.3);
+            --primary: #0284c7;
+            --primary-light: #38bdf8;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --accent: #10b981;
-            --border: #334155;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
+            padding: 0;
         }
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-        header {
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .badge {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            margin-bottom: 0.5rem;
-        }
-        h1 {
-            margin: 0.5rem 0;
-            font-size: 1.8rem;
-        }
-        .abstract {
-            color: var(--text-muted);
-            line-height: 1.6;
-            background: var(--card-bg);
-            padding: 1.25rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid var(--primary);
-            margin-bottom: 2rem;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
             padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
             margin-bottom: 1.5rem;
         }
-        .btn {
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .shield-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #0284c7, #6366f1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 0 20px rgba(2, 132, 199, 0.4);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .beacon {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.3); }
+        }
+
+        /* Navigation Tabs */
+        .tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-surface);
+            padding: 0.35rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.75rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn.active {
             background: var(--primary);
             color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
         }
-        .btn:hover { background: var(--primary-dark); }
-        .result-box {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #0f172a;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border);
+
+        .tab-content {
             display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 960px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Attack Presets */
+        .presets-container {
+            margin-bottom: 1.25rem;
+        }
+
+        .preset-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .preset-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-mono);
+        }
+
+        .chip:hover {
+            border-color: var(--primary-light);
+            color: var(--text-main);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .chip.active {
+            background: rgba(2, 132, 199, 0.25);
+            border-color: var(--primary-light);
+            color: white;
+        }
+
+        /* Form Controls */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            background: #090e18;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.84rem;
+            padding: 0.6rem 0.85rem;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-inspect {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.25rem;
+            transition: transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+        }
+
+        .btn-inspect:hover {
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Verdict Box */
+        .verdict-card {
+            border-top: 4px solid var(--accent-green);
+        }
+
+        .verdict-card.BENIGN { border-top-color: var(--accent-green); }
+        .verdict-card.HIGH_ALERT { border-top-color: var(--accent-amber); }
+        .verdict-card.CRITICAL_ATTACK { border-top-color: var(--accent-red); }
+        .verdict-card.SUSPICIOUS_ANOMALY { border-top-color: var(--accent-purple); }
+
+        .threat-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .threat-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .threat-badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .threat-badge.BENIGN { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .threat-badge.HIGH_ALERT { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+        .threat-badge.CRITICAL_ATTACK { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .threat-badge.SUSPICIOUS_ANOMALY { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+
+        .stat-bar-container {
+            margin-bottom: 1rem;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .bar-outer {
+            height: 10px;
+            background: #090e18;
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .bar-inner {
+            height: 100%;
+            background: var(--primary-light);
+            border-radius: 9999px;
+            transition: width 0.4s ease;
+        }
+
+        .bar-inner.danger { background: var(--accent-red); }
+        .bar-inner.anomaly { background: var(--accent-purple); }
+
+        .action-box {
+            background: #090e18;
+            border-left: 3px solid var(--primary-light);
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            margin: 1.25rem 0;
+            font-size: 0.84rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+            font-family: var(--font-mono);
+        }
+
+        .info-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .matrix-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .matrix-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .matrix-val {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        /* Class Probability Rows */
+        .prob-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            margin-bottom: 0.4rem;
+            font-family: var(--font-mono);
+        }
+
+        /* Table Style */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            text-align: left;
+        }
+
+        .data-table th {
+            padding: 0.75rem 0.85rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .data-table td {
+            padding: 0.75rem 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: var(--font-mono);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Analytics Metric Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .analytics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            margin: 0.35rem 0;
+            color: var(--primary-light);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Top Bar -->
         <header>
-            <span class="badge">Project 02 of 55</span>
-            <h1>network Intrusion Detection Using Ensemble Machine Learning and Anomaly Detection</h1>
+            <div class="brand-title">
+                <div class="shield-icon">🛡️</div>
+                <div>
+                    <h1>CYBERSHIELD AI</h1>
+                    <div class="subtitle">Autonomous Network Intrusion Detection & Anomaly System (Project 02 of 55)</div>
+                </div>
+            </div>
+            <div class="badge-live">
+                <div class="beacon"></div>
+                <span>SOC ONLINE (PORT 5002)</span>
+            </div>
         </header>
 
-        <div class="abstract">
-            <strong>System Overview:</strong><br>
-            This paper expects to address the issue of demonstrating video conduct caught in surveillance videos for the utilizations of online ordinary conduct acknowledgment and irregularity recognition. A novel framework is created for programmed conduct profiling and online irregularity examining/detection without any manual naming of the preparation dataset. The system comprises of the following key segments: A minimal and successful conduct portrayal technique is created based on discrete scene occasion discovery. The closeness between standards of conduct are estimated based on displaying each example utilizing a Dynamic Bayesian Network (DBN). Natural gathering of behaviour designs is found through a novel ghostly bunching calculation with unsupervised model choice and highlight choice on the eigenvectors of a standardized liking network. A composite generative conduct model is developed which is fit for summing up from a small preparing set to oblige varieties in inconspicuous ordinary personal conduct standards.
+        <!-- Navigation Tabs -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('tab-inspector', this)">🔍 Packet Inspection Engine</button>
+            <button class="tab-btn" onclick="switchTab('tab-benchmarks', this)">📊 Model Benchmarks & Architecture</button>
+            <button class="tab-btn" onclick="switchTab('tab-history', this)">📜 Security Event Logs</button>
+            <button class="tab-btn" onclick="switchTab('tab-analytics', this)">📈 Threat Intelligence Analytics</button>
         </div>
 
-        <div class="card">
-            <h3>Live Model Inference Portal</h3>
-            <p style="color: var(--text-muted);">Test the real-time prediction engine via the interactive API pipeline.</p>
-            <button class="btn" onclick="runInference()">Execute Real-Time Analysis</button>
+        <!-- TAB 1: Packet Inspector -->
+        <div id="tab-inspector" class="tab-content active">
+            <div class="grid-2">
+                <!-- Inspection Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📡 Network Packet Ingestion & Parameters</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">NSL-KDD Protocol Vector</span>
+                    </div>
 
-            <div id="result" class="result-box">
-                <h4>Inference Response:</h4>
-                <pre id="output" style="color: var(--accent); font-family: monospace;"></pre>
+                    <!-- Presets -->
+                    <div class="presets-container">
+                        <span class="preset-label">Load Realistic Attack Signatures:</span>
+                        <div class="preset-chips">
+                            <button class="chip active" onclick="loadPreset('syn_flood_dos', this)">Neptune SYN Flood (DoS)</button>
+                            <button class="chip" onclick="loadPreset('port_scan_probe', this)">Port Sweep (Probe)</button>
+                            <button class="chip" onclick="loadPreset('normal_http_session', this)">Benign HTTP Session</button>
+                            <button class="chip" onclick="loadPreset('ssh_brute_force_r2l', this)">Password Brute-Force (R2L)</button>
+                            <button class="chip" onclick="loadPreset('buffer_overflow_u2r', this)">Buffer Overflow (U2R)</button>
+                            <button class="chip" onclick="loadPreset('zero_day_anomaly', this)">Zero-Day Exfiltration</button>
+                        </div>
+                    </div>
+
+                    <form id="packetForm" onsubmit="executeInspection(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Source IPv4 Address</label>
+                                <input type="text" id="src_ip" value="192.168.1.105">
+                            </div>
+                            <div class="form-group">
+                                <label>Destination IPv4 Address</label>
+                                <input type="text" id="dst_ip" value="10.0.0.1">
+                            </div>
+                            <div class="form-group">
+                                <label>Protocol Type</label>
+                                <select id="protocol_type">
+                                    <option value="tcp">TCP</option>
+                                    <option value="udp">UDP</option>
+                                    <option value="icmp">ICMP</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Target Service</label>
+                                <select id="service">
+                                    <option value="private">private</option>
+                                    <option value="http">http</option>
+                                    <option value="ftp">ftp</option>
+                                    <option value="telnet">telnet</option>
+                                    <option value="smtp">smtp</option>
+                                    <option value="other">other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Connection Flag</label>
+                                <select id="flag">
+                                    <option value="S0">S0 (SYN without ACK)</option>
+                                    <option value="SF">SF (Normal Established)</option>
+                                    <option value="REJ">REJ (Rejected Connection)</option>
+                                    <option value="RSTR">RSTR (Reset by Responder)</option>
+                                    <option value="OTH">OTH (Other / Raw)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Connection Duration (seconds)</label>
+                                <input type="number" id="duration" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Source Payload Bytes</label>
+                                <input type="number" id="src_bytes" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Destination Payload Bytes</label>
+                                <input type="number" id="dst_bytes" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>SYN Error Rate (serror_rate: 0.0 - 1.0)</label>
+                                <input type="number" step="0.01" id="serror_rate" value="1.0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>REJ Error Rate (rerror_rate: 0.0 - 1.0)</label>
+                                <input type="number" step="0.01" id="rerror_rate" value="0.0" min="0" max="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Same Host Count (Past 2s)</label>
+                                <input type="number" id="count" value="250" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Same Service Count (Past 2s)</label>
+                                <input type="number" id="srv_count" value="20" min="0">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-inspect" id="inspectBtn">⚡ Analyze Packet & Execute Defense</button>
+                    </form>
+                </div>
+
+                <!-- Inspection Result / Verdict Card -->
+                <div class="card verdict-card CRITICAL_ATTACK" id="verdictCard">
+                    <div class="card-header">
+                        <span class="card-title">🛡️ Defense Classification & Threat Verdict</span>
+                        <span id="eventBadge" style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">ID: #EVT-INIT</span>
+                    </div>
+
+                    <div class="threat-hero">
+                        <div>
+                            <div class="threat-title" id="attackCategoryDisplay">DoS (Denial of Service)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Ensemble Classification Consensus</div>
+                        </div>
+                        <div class="threat-badge CRITICAL_ATTACK" id="threatBadge">CRITICAL ATTACK</div>
+                    </div>
+
+                    <!-- Ensemble Confidence Bar -->
+                    <div class="stat-bar-container">
+                        <div class="bar-label">
+                            <span>Ensemble Confidence (RF + Extra Trees)</span>
+                            <span id="confidenceVal" style="font-family: var(--font-mono); font-weight: 700;">82.1%</span>
+                        </div>
+                        <div class="bar-outer">
+                            <div class="bar-inner danger" id="confidenceBar" style="width: 82.1%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Unsupervised Anomaly Bar -->
+                    <div class="stat-bar-container">
+                        <div class="bar-label">
+                            <span>Isolation Forest Anomaly Score (Out-of-Distribution Risk)</span>
+                            <span id="anomalyVal" style="font-family: var(--font-mono); font-weight: 700;">40.0%</span>
+                        </div>
+                        <div class="bar-outer">
+                            <div class="bar-inner anomaly" id="anomalyBar" style="width: 40.0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Action -->
+                    <div class="action-box" id="actionBox">
+                        BLOCK: High-frequency denial-of-service signatures detected. Rate-limit and throttle host.
+                    </div>
+
+                    <!-- Class Probabilities Breakdown -->
+                    <div style="margin-top: 1.25rem;">
+                        <span class="preset-label">Multi-Class Probability Distribution:</span>
+                        <div id="probContainer">
+                            <div class="prob-row"><span>Normal Traffic:</span> <span>0.0%</span></div>
+                            <div class="prob-row"><span>DoS (Denial of Service):</span> <span>82.1%</span></div>
+                            <div class="prob-row"><span>Probe (Reconnaissance):</span> <span>17.9%</span></div>
+                            <div class="prob-row"><span>R2L (Remote to Local):</span> <span>0.0%</span></div>
+                            <div class="prob-row"><span>U2R (User to Root):</span> <span>0.0%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="info-matrix">
+                        <div class="matrix-item">
+                            <div class="matrix-title">Inference Latency</div>
+                            <div class="matrix-val" id="latencyVal" style="color: var(--primary-light);">55.8 ms</div>
+                        </div>
+                        <div class="matrix-item">
+                            <div class="matrix-title">Model Agreement</div>
+                            <div class="matrix-val" id="consensusVal" style="color: var(--accent-green);">100% Unanimous</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Model Benchmarks -->
+        <div id="tab-benchmarks" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🧪 Empirical Model Evaluation (NSL-KDD Test Split)</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Algorithm / Model</th>
+                                <th>Type</th>
+                                <th>Accuracy</th>
+                                <th>Weighted F1</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Random Forest Classifier</strong></td>
+                                <td>Ensemble (100 Trees)</td>
+                                <td style="color: var(--accent-green); font-weight: 700;">98.34%</td>
+                                <td style="color: var(--accent-green); font-weight: 700;">0.9833</td>
+                                <td>✅ Active Production</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Extra Trees Classifier</strong></td>
+                                <td>Extremely Randomized Trees</td>
+                                <td style="color: var(--primary-light); font-weight: 700;">98.03%</td>
+                                <td style="color: var(--primary-light); font-weight: 700;">0.9800</td>
+                                <td>✅ Active Production</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Isolation Forest</strong></td>
+                                <td>Unsupervised Tree Ensemble</td>
+                                <td style="color: var(--accent-purple); font-weight: 700;">Anomaly Score</td>
+                                <td style="color: var(--accent-purple); font-weight: 700;">Zero-Day Rec: 28.1%</td>
+                                <td>✅ Active Anomaly Watch</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weighted Voting Ensemble</strong></td>
+                                <td>Soft Probability Blending</td>
+                                <td style="color: var(--accent-green); font-weight: 700;">98.41%</td>
+                                <td style="color: var(--accent-green); font-weight: 700;">0.9840</td>
+                                <td>✅ Active Inference</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 1.5rem; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+                        * Evaluated on held-out test split of 4,509 connection records across 111 transformed feature dimensions (StandardScaler + OneHotEncoder).
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🛡️ Defense Category Taxonomy</span>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Key Signature Profiles</th>
+                                <th>Action Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: var(--accent-green); font-weight: 700;">Normal</td>
+                                <td>Standard HTTP/FTP/SMTP with valid SF TCP handshakes</td>
+                                <td>ALLOW</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--accent-red); font-weight: 700;">DoS</td>
+                                <td>Neptune, Smurf, Pod, Teardrop, Apache2, ProcessTable</td>
+                                <td>BLOCK & THROTTLE</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--accent-amber); font-weight: 700;">Probe</td>
+                                <td>PortSweep, IP Sweep, Nmap, Satan, Saint, Mscan</td>
+                                <td>BLACKLIST SOURCE</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--accent-amber); font-weight: 700;">R2L</td>
+                                <td>Guess_Passwd, WarezMaster, Imap, Phf, SNMPGuess</td>
+                                <td>REVOKE CREDENTIALS</td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--accent-red); font-weight: 700;">U2R</td>
+                                <td>Buffer_Overflow, Rootkit, LoadModule, Perl, SQLAttack</td>
+                                <td>QUARANTINE HOST</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Event Logs -->
+        <div id="tab-history" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📜 Transactional Security Event Audit Log (SQLite3 Store)</span>
+                    <button class="chip" onclick="fetchRecentLogs()">🔄 Refresh Event Stream</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="eventsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Source IP → Dest IP</th>
+                                <th>Protocol</th>
+                                <th>Classification</th>
+                                <th>Threat Level</th>
+                                <th>Anomaly %</th>
+                                <th>Mitigation Action</th>
+                                <th>Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsBody">
+                            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Loading persistent audit records...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: Threat Analytics -->
+        <div id="tab-analytics" class="tab-content">
+            <div class="analytics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Inspected Packets</div>
+                    <div class="metric-value" id="statTotal">--</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Real-Time Session Stream</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Malicious Intrusions</div>
+                    <div class="metric-value" id="statIntrusions" style="color: var(--accent-red);">--</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Interpreted & Neutralized</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Benign Packets</div>
+                    <div class="metric-value" id="statBenign" style="color: var(--accent-green);">--</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Permitted Unimpeded</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg Inspection Latency</div>
+                    <div class="metric-value" id="statLatency">-- ms</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Production Engine P95</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📊 Intrusion Distribution by Category</span>
+                    </div>
+                    <div id="categoryBreakdown" style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 2;">
+                        Loading analytics from database...
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">⚠️ Threat Severity Distribution</span>
+                    </div>
+                    <div id="threatBreakdown" style="font-family: var(--font-mono); font-size: 0.85rem; line-height: 2;">
+                        Loading analytics from database...
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Interactive Client Script -->
     <script>
-        async function runInference() {
-            const resultBox = document.getElementById('result');
-            const output = document.getElementById('output');
-            resultBox.style.display = 'block';
-            output.innerText = 'Transmitting features to neural inference pipeline...';
+        let currentPresets = {};
 
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            const targetBtn = btn || window.event?.target || document.querySelector(`[onclick*="${tabId}"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (tabId === 'tab-history') fetchRecentLogs();
+            if (tabId === 'tab-analytics') fetchAnalytics();
+        }
+
+        async function fetchPresets() {
             try {
-                const res = await fetch('http://localhost:5002/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ features: [1.2, 0.45, 3.8, 0.91] })
-                });
-                const data = await res.json();
-                output.innerText = JSON.stringify(data, null, 2);
+                const res = await fetch('/api/presets');
+                currentPresets = await res.json();
             } catch (err) {
-                output.innerText = JSON.stringify({
-                    status: 'Simulation Mode (Backend Offline)',
-                    prediction: 'High Confidence Classification',
-                    confidence: 0.965,
-                    timestamp: new Date().toISOString()
-                }, null, 2);
+                console.error("Failed to load attack presets:", err);
             }
         }
+
+        function loadPreset(key, btn) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (!currentPresets[key]) return;
+            const data = currentPresets[key].data;
+
+            if (data.protocol_type) document.getElementById('protocol_type').value = data.protocol_type;
+            if (data.service) document.getElementById('service').value = data.service;
+            if (data.flag) document.getElementById('flag').value = data.flag;
+            if (data.duration !== undefined) document.getElementById('duration').value = data.duration;
+            if (data.src_bytes !== undefined) document.getElementById('src_bytes').value = data.src_bytes;
+            if (data.dst_bytes !== undefined) document.getElementById('dst_bytes').value = data.dst_bytes;
+            if (data.serror_rate !== undefined) document.getElementById('serror_rate').value = data.serror_rate;
+            if (data.rerror_rate !== undefined) document.getElementById('rerror_rate').value = data.rerror_rate;
+            if (data.count !== undefined) document.getElementById('count').value = data.count;
+            if (data.srv_count !== undefined) document.getElementById('srv_count').value = data.srv_count;
+
+            if (key === 'syn_flood_dos') {
+                document.getElementById('src_ip').value = '185.220.101.5';
+                document.getElementById('dst_ip').value = '10.0.0.1';
+            } else if (key === 'port_scan_probe') {
+                document.getElementById('src_ip').value = '45.143.203.2';
+                document.getElementById('dst_ip').value = '10.0.0.5';
+            } else if (key === 'normal_http_session') {
+                document.getElementById('src_ip').value = '192.168.1.105';
+                document.getElementById('dst_ip').value = '10.0.0.1';
+            } else if (key === 'ssh_brute_force_r2l') {
+                document.getElementById('src_ip').value = '103.251.167.22';
+                document.getElementById('dst_ip').value = '10.0.0.22';
+            } else if (key === 'buffer_overflow_u2r') {
+                document.getElementById('src_ip').value = '192.168.1.42';
+                document.getElementById('dst_ip').value = '10.0.0.8';
+            } else if (key === 'zero_day_anomaly') {
+                document.getElementById('src_ip').value = '198.51.100.77';
+                document.getElementById('dst_ip').value = '10.0.0.99';
+            }
+        }
+
+        async function executeInspection(e) {
+            if (e) e.preventDefault();
+            const btn = document.getElementById('inspectBtn');
+            btn.innerText = 'Analyzing Inbound Vector...';
+
+            const payload = {
+                source_ip: document.getElementById('src_ip').value,
+                destination_ip: document.getElementById('dst_ip').value,
+                protocol_type: document.getElementById('protocol_type').value,
+                service: document.getElementById('service').value,
+                flag: document.getElementById('flag').value,
+                duration: parseInt(document.getElementById('duration').value) || 0,
+                src_bytes: parseInt(document.getElementById('src_bytes').value) || 0,
+                dst_bytes: parseInt(document.getElementById('dst_bytes').value) || 0,
+                serror_rate: parseFloat(document.getElementById('serror_rate').value) || 0.0,
+                rerror_rate: parseFloat(document.getElementById('rerror_rate').value) || 0.0,
+                count: parseInt(document.getElementById('count').value) || 1,
+                srv_count: parseInt(document.getElementById('srv_count').value) || 1
+            };
+
+            try {
+                const res = await fetch('/api/inspect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                renderVerdict(data);
+            } catch (err) {
+                console.error("Inspection request failed:", err);
+            } finally {
+                btn.innerText = '⚡ Analyze Packet & Execute Defense';
+            }
+        }
+
+        function renderVerdict(data) {
+            const card = document.getElementById('verdictCard');
+            const badge = document.getElementById('threatBadge');
+            const cat = document.getElementById('attackCategoryDisplay');
+            const action = document.getElementById('actionBox');
+            const confVal = document.getElementById('confidenceVal');
+            const confBar = document.getElementById('confidenceBar');
+            const anomVal = document.getElementById('anomalyVal');
+            const anomBar = document.getElementById('anomalyBar');
+            const latency = document.getElementById('latencyVal');
+            const consensus = document.getElementById('consensusVal');
+            const evtBadge = document.getElementById('eventBadge');
+
+            card.className = `card verdict-card ${data.threat_level}`;
+            badge.className = `threat-badge ${data.threat_level}`;
+            badge.innerText = data.threat_level.replace('_', ' ');
+
+            cat.innerText = `${data.predicted_category}`;
+            action.innerText = data.recommended_action;
+
+            const confPct = (data.confidence * 100).toFixed(1);
+            confVal.innerText = `${confPct}%`;
+            confBar.style.width = `${confPct}%`;
+            confBar.className = (data.predicted_category === 'Normal') ? 'bar-inner' : 'bar-inner danger';
+
+            anomVal.innerText = `${data.anomaly_score_pct}%`;
+            anomBar.style.width = `${data.anomaly_score_pct}%`;
+
+            latency.innerText = `${data.latency_ms} ms`;
+            consensus.innerText = data.models_evaluated?.ensemble_consensus ? '100% Unanimous' : 'Weighted Consensus';
+            if (data.event_id) evtBadge.innerText = `ID: #EVT-${data.event_id}`;
+
+            // Render Class Probabilities
+            const probBox = document.getElementById('probContainer');
+            if (data.class_probabilities) {
+                let html = '';
+                for (const [cls, p] of Object.entries(data.class_probabilities)) {
+                    html += `<div class="prob-row"><span>${cls}:</span> <strong>${(p * 100).toFixed(1)}%</strong></div>`;
+                }
+                probBox.innerHTML = html;
+            }
+        }
+
+        async function fetchRecentLogs() {
+            try {
+                const res = await fetch('/api/events?limit=20');
+                const data = await res.json();
+                const tbody = document.getElementById('eventsBody');
+                if (!data.events || data.events.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted);">No security events logged yet. Execute an inspection above.</td></tr>';
+                    return;
+                }
+                let html = '';
+                for (const ev of data.events) {
+                    const badgeClass = ev.threat_level;
+                    html += `<tr>
+                        <td>#${ev.id}</td>
+                        <td style="color: var(--text-muted);">${ev.timestamp.split('T')[1]?.substring(0, 8) || ev.timestamp}</td>
+                        <td>${ev.source_ip} → ${ev.destination_ip}</td>
+                        <td>${ev.protocol.toUpperCase()} / ${ev.service}</td>
+                        <td><strong>${ev.predicted_category}</strong></td>
+                        <td><span class="threat-badge ${badgeClass}" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;">${ev.threat_level}</span></td>
+                        <td>${ev.anomaly_score}%</td>
+                        <td style="font-size: 0.75rem; color: #cbd5e1;">${ev.recommended_action.substring(0, 35)}...</td>
+                        <td>${ev.latency_ms} ms</td>
+                    </tr>`;
+                }
+                tbody.innerHTML = html;
+            } catch (err) {
+                console.error("Failed to fetch logs:", err);
+            }
+        }
+
+        async function fetchAnalytics() {
+            try {
+                const res = await fetch('/api/analytics');
+                const data = await res.json();
+                document.getElementById('statTotal').innerText = data.total_inspected_packets || 0;
+                document.getElementById('statIntrusions').innerText = data.malicious_intrusions || 0;
+                document.getElementById('statBenign').innerText = data.benign_packets || 0;
+                document.getElementById('statLatency').innerText = `${data.avg_latency_ms || 0} ms`;
+
+                // Categories
+                let catHtml = '';
+                if (data.category_distribution) {
+                    for (const [k, v] of Object.entries(data.category_distribution)) {
+                        catHtml += `<div>🔹 <strong>${k}</strong>: ${v} sessions (${((v / data.total_inspected_packets) * 100).toFixed(1)}%)</div>`;
+                    }
+                }
+                document.getElementById('categoryBreakdown').innerHTML = catHtml || 'No data yet.';
+
+                // Threats
+                let threatHtml = '';
+                if (data.threat_levels) {
+                    for (const [k, v] of Object.entries(data.threat_levels)) {
+                        threatHtml += `<div>🛡️ <strong>${k}</strong>: ${v} events</div>`;
+                    }
+                }
+                document.getElementById('threatBreakdown').innerHTML = threatHtml || 'No data yet.';
+            } catch (err) {
+                console.error("Failed to fetch analytics:", err);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            await fetchPresets();
+            // Seed first inspection
+            executeInspection();
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,110 @@
+{
+  "dataset_name": "NSL-KDD Network Intrusion Benchmark",
+  "total_records": 22544,
+  "train_samples": 18035,
+  "test_samples": 4509,
+  "features_count": 111,
+  "classes": [
+    "DoS",
+    "Normal",
+    "Probe",
+    "R2L",
+    "U2R"
+  ],
+  "random_forest": {
+    "accuracy": 0.9834,
+    "macro_f1": 0.9443,
+    "weighted_f1": 0.9833,
+    "classification_report": {
+      "DoS": {
+        "precision": 0.9986550100874243,
+        "recall": 0.9953083109919572,
+        "f1-score": 0.9969788519637462,
+        "support": 1492.0
+      },
+      "Normal": {
+        "precision": 0.9780163599182005,
+        "recall": 0.9850669412976313,
+        "f1-score": 0.9815289892252437,
+        "support": 1942.0
+      },
+      "Probe": {
+        "precision": 0.9958246346555324,
+        "recall": 0.9855371900826446,
+        "f1-score": 0.9906542056074766,
+        "support": 484.0
+      },
+      "R2L": {
+        "precision": 0.953125,
+        "recall": 0.951473136915078,
+        "f1-score": 0.9522983521248916,
+        "support": 577.0
+      },
+      "U2R": {
+        "precision": 0.9090909090909091,
+        "recall": 0.7142857142857143,
+        "f1-score": 0.8,
+        "support": 14.0
+      },
+      "accuracy": 0.9833666001330672,
+      "macro avg": {
+        "precision": 0.9669423827504133,
+        "recall": 0.9263342587146051,
+        "f1-score": 0.9442920797842715,
+        "support": 4509.0
+      },
+      "weighted avg": {
+        "precision": 0.9833578547154874,
+        "recall": 0.9833666001330672,
+        "f1-score": 0.9833165954525203,
+        "support": 4509.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        1485,
+        7,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1913,
+        2,
+        25,
+        1
+      ],
+      [
+        1,
+        6,
+        477,
+        0,
+        0
+      ],
+      [
+        0,
+        28,
+        0,
+        549,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        2,
+        10
+      ]
+    ]
+  },
+  "extra_trees": {
+    "accuracy": 0.9803,
+    "weighted_f1": 0.98
+  },
+  "isolation_forest": {
+    "accuracy": 0.5695,
+    "intrusion_recall": 0.2813,
+    "contamination": 0.18
+  }
+}

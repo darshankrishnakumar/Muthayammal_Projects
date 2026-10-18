@@ -20,3 +20,22 @@ This register tracks all third-party open-source libraries, pretrained model wei
   - `pytest`: MIT License
   - `httpx`: BSD 3-Clause License
   - `ffmpeg`: LGPL 2.1+ / GPL 2.0+ (Video encoding pipeline)
+
+---
+
+## PROJECT-002: Network Intrusion Detection Using Ensemble Machine Learning and Anomaly Detection
+- **Dataset**: NSL-KDD Network Intrusion Detection Benchmark (`KDDTest+.txt`, 22,544 records)
+  - Source: University of New Brunswick (UNB) / Canadian Institute for Cybersecurity (CIC)
+  - Purpose: Supervised multi-class attack classification and unsupervised anomaly detection
+- **Machine Learning**:
+  - `scikit-learn` (v1.3+): BSD 3-Clause License (RandomForestClassifier, ExtraTreesClassifier, IsolationForest, ColumnTransformer, StandardScaler, OneHotEncoder)
+  - `joblib`: BSD 3-Clause License
+  - `pandas`, `numpy`: BSD 3-Clause License
+- **Backend & Web**:
+  - `fastapi`: MIT License
+  - `uvicorn`: BSD 3-Clause License
+  - `pydantic`: MIT License
+- **Testing & Tooling**:
+  - `pytest`: MIT License
+  - `httpx`: BSD 3-Clause License
+  - `ffmpeg`: LGPL 2.1+ / GPL 2.0+

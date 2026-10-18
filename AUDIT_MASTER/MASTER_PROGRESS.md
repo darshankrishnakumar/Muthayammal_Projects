@@ -10,13 +10,13 @@
 | Metric | Target | Current Status | % Complete |
 |---|:---:|:---:|:---:|
 | **Total Projects** | 55 | 55 | 100% |
-| **Fully Verified Complete (15/15 Criteria)** | 55 | **1** | 1.8% |
-| **Active In-Progress Project** | — | **PROJECT-002** | — |
-| **Trained ML Models Available** | 55 | 1 | 1.8% |
-| **Real Datasets Acquired** | 55 | 1 | 1.8% |
-| **Automated Tests Passing** | 55 Suites | 1 Suite (18 tests) | 1.8% |
-| **Walkthrough Videos Recorded (2.5–3.5m)** | 55 | 1 (`02:37`) | 1.8% |
-| **Updated Presentations with Screenshots** | 55 | 1 (15 slides) | 1.8% |
+| **Fully Verified Complete (15/15 Criteria)** | 55 | **2** | 3.6% |
+| **Active In-Progress Project** | — | **PROJECT-003** | — |
+| **Trained ML Models Available** | 55 | 2 (BiLSTM, RF, Extra Trees, Isolation Forest) | 3.6% |
+| **Real Datasets Acquired** | 55 | 2 (Flight Fare, NSL-KDD) | 3.6% |
+| **Automated Tests Passing** | 55 Suites | 2 Suites (37 tests passed) | 3.6% |
+| **Walkthrough Videos Recorded (2.5–3.5m)** | 55 | 2 (`02:37`, `03:00`) | 3.6% |
+| **Updated Presentations with Screenshots** | 55 | 2 (30 total slides) | 3.6% |
 
 ---
 
@@ -24,9 +24,9 @@
 
 | ID | Project Name | Directory | Real Model | Tests Passed | Video Recorded | Overall Status |
 |:---:|---|---|:---:|:---:|:---:|:---:|
-| **001** | **Airfare Price Prediction (LSTM)** | `project_01_airfare_price_prediction` | **Yes (BiLSTM .pth)** | **18 / 18** | **02:37 (157s)** | **VERIFIED COMPLETE** |
-| 002 | Network Intrusion Detection (Ensemble) | `project_02_network_intrusion_anomaly` | Next | Pending | Pending | In Queue / Next |
-| 003 | Apple Disease Detection (CNN / MobileNet) | `project_03_apple_disease_detection` | Pending | Pending | Pending | In Queue |
+| **001** | **Airfare Price Prediction (LSTM)** | `project_01_airfare_price_prediction` | **BiLSTM .pth + RF** | **18 / 18** | **02:37 (157s)** | **VERIFIED COMPLETE** |
+| **002** | **Network Intrusion Detection (Ensemble)** | `project_02_network_intrusion_anomaly` | **RF + Extra Trees + IsoForest** | **19 / 19** | **03:00 (180s)** | **VERIFIED COMPLETE** |
+| 003 | Apple Disease Detection (CNN / MobileNet) | `project_03_apple_disease_detection` | Next | Pending | Pending | In Queue / Next |
 | 004 | Car Price Prediction (XGBoost / RF) | `project_04_car_price_prediction` | Pending | Pending | Pending | In Queue |
 | 005 | Career Guidance System (NLP / ML) | `project_05_career_guidance` | Pending | Pending | Pending | In Queue |
 | 006 | Crop Recommendation System | `project_06_crop_recommendation` | Pending | Pending | Pending | In Queue |
