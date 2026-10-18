@@ -1,0 +1,84 @@
+{
+  "benchmark": [
+    {
+      "Model": "Passive Aggressive (PAC)",
+      "Accuracy": 91.42,
+      "Precision": 91.54,
+      "Recall": 91.42,
+      "F1_Score": 91.42,
+      "ROC_AUC": 96.91,
+      "Train_Time_s": 0.016,
+      "Infer_Latency_ms": 0.64
+    },
+    {
+      "Model": "Logistic Regression (LR)",
+      "Accuracy": 91.5,
+      "Precision": 92.66,
+      "Recall": 91.5,
+      "F1_Score": 91.46,
+      "ROC_AUC": 97.12,
+      "Train_Time_s": 0.043,
+      "Infer_Latency_ms": 0.32
+    },
+    {
+      "Model": "Linear SVM (LinearSVC)",
+      "Accuracy": 92.08,
+      "Precision": 92.45,
+      "Recall": 92.08,
+      "F1_Score": 92.07,
+      "ROC_AUC": 97.21,
+      "Train_Time_s": 0.024,
+      "Infer_Latency_ms": 0.36
+    },
+    {
+      "Model": "Multinomial Naive Bayes (MNB)",
+      "Accuracy": 84.58,
+      "Precision": 85.32,
+      "Recall": 84.58,
+      "F1_Score": 84.47,
+      "ROC_AUC": 95.14,
+      "Train_Time_s": 0.002,
+      "Infer_Latency_ms": 0.94
+    },
+    {
+      "Model": "Random Forest (RFC)",
+      "Accuracy": 83.42,
+      "Precision": 87.52,
+      "Recall": 83.42,
+      "F1_Score": 83.02,
+      "ROC_AUC": 95.67,
+      "Train_Time_s": 0.326,
+      "Infer_Latency_ms": 17.8
+    }
+  ],
+  "ablation": [
+    {
+      "Configuration": "Unigram Only (1,1)",
+      "Vocabulary Size": 5000,
+      "Accuracy": 90.25,
+      "F1_Score": 90.25
+    },
+    {
+      "Configuration": "Unigram + Bigram (1,2)",
+      "Vocabulary Size": 10000,
+      "Accuracy": 91.42,
+      "F1_Score": 91.42
+    },
+    {
+      "Configuration": "Bigram Only (2,2)",
+      "Vocabulary Size": 10000,
+      "Accuracy": 84.75,
+      "F1_Score": 84.62
+    },
+    {
+      "Configuration": "Tri-Gram Window (1,3)",
+      "Vocabulary Size": 15000,
+      "Accuracy": 91.08,
+      "F1_Score": 91.08
+    }
+  ],
+  "timestamp": "2026-10-06 17:27:34",
+  "sample_size": 6000,
+  "train_size": 4800,
+  "test_size": 1200
+}

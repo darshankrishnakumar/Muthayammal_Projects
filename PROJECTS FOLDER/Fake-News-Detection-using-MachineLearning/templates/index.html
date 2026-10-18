@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VeriNews AI — Fake News Detection & Decision Visualizer</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 65%, #05070c 100%);
+        min-height: 100vh;
+        color: #e2e8f0;
+      }
+      .glass-card {
+        background: rgba(17, 24, 39, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      }
+      .glow-border {
+        box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.3);
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-white/10 sticky top-0 z-50 bg-[#090d16]/80 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-shield-halved text-lg"></i>
+          </div>
+          <div>
+            <span class="font-bold text-lg tracking-tight text-white block">VeriNews AI</span>
+            <span class="text-xs text-emerald-400 font-mono -mt-1 block">Decision Visualizer</span>
+          </div>
+        </a>
+
+        <nav class="flex items-center gap-2 sm:gap-4 text-sm font-medium">
+          <a href="/" class="px-3 py-2 rounded-lg bg-white/10 text-white transition-colors">Home</a>
+          <a href="/predict" class="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-white font-semibold shadow-md shadow-indigo-500/20 transition-all">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-xs"></i>Open Visualizer
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col justify-center">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Passive Aggressive Classifier &bull; 96% Kaggle Accuracy
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+            Detect Fake News with <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-400">
+              Explainable Decision AI
+            </span>
+          </h1>
+
+          <p class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+            Move beyond static blacklists. Our machine learning platform deconstructs linguistic patterns, calculates calibrated probabilities, and visually highlights the specific words swaying classification decisions in real-time.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-2">
+            <a href="/predict" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-white font-bold text-base shadow-xl shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5">
+              <i class="fa-solid fa-magnifying-glass-chart"></i> Launch Decision Visualizer
+            </a>
+            <a href="/predict?news=Wells+Fargo+Chief+Abruptly+Steps+Down+-+The+New+York+Times" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 font-semibold text-base border border-slate-700 transition-colors">
+              <i class="fa-solid fa-play text-xs text-emerald-400"></i> Try Demo Headline
+            </a>
+          </div>
+
+          <!-- Feature Bullets -->
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 text-left">
+            <div>
+              <span class="text-2xl font-extrabold text-white font-mono block">96.0%</span>
+              <span class="text-xs text-slate-400">Evaluation Accuracy</span>
+            </div>
+            <div>
+              <span class="text-2xl font-extrabold text-emerald-400 font-mono block">146k+</span>
+              <span class="text-xs text-slate-400">TF-IDF N-Grams</span>
+            </div>
+            <div>
+              <span class="text-2xl font-extrabold text-indigo-400 font-mono block">XAI</span>
+              <span class="text-xs text-slate-400">Word-Level Attribution</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual Card -->
+        <div class="lg:col-span-5">
+          <div class="glass-card rounded-2xl p-6 sm:p-8 border border-white/10 glow-border space-y-6 relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-mono text-slate-400 ml-2">decision_preview.py</span>
+              </div>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Live Demo</span>
+            </div>
+
+            <!-- Visual Preview Mockup -->
+            <div class="space-y-4">
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                <span class="text-[11px] font-mono text-slate-400 block mb-1">Headline Sample:</span>
+                <p class="text-sm font-medium text-slate-200">
+                  <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/40">Secret</span> government 
+                  <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-semibold border border-rose-500/40">revealed</span> to control weather
+                </p>
+              </div>
+
+              <!-- Probability Preview Bar -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-mono">
+                  <span class="text-emerald-400 font-bold">Real: 20.9%</span>
+                  <span class="text-rose-400 font-bold">Fake: 79.1%</span>
+                </div>
+                <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden flex">
+                  <div class="bg-emerald-500 h-full" style="width: 21%;"></div>
+                  <div class="bg-rose-500 h-full" style="width: 79%;"></div>
+                </div>
+              </div>
+
+              <!-- Key Highlights -->
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center justify-between p-2 rounded-lg bg-white/5 font-mono">
+                  <span class="text-slate-300">"revealed" (fake weight)</span>
+                  <span class="text-rose-400 font-bold">+0.3570</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded-lg bg-white/5 font-mono">
+                  <span class="text-slate-300">"secret" (fake weight)</span>
+                  <span class="text-rose-400 font-bold">+0.1950</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="/predict" class="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-colors">
+              Analyze Your Own News <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-6 bg-[#090d16]/60 text-xs text-slate-500 text-center">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span>&copy; 2026 VeriNews AI &bull; Fake News Detection using Machine Learning</span>
+        <div class="flex items-center gap-4 text-slate-400">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <a href="/predict" class="hover:text-white transition-colors">Decision Visualizer</a>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

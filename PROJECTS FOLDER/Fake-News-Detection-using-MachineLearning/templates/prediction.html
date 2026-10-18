@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Decision Visualizer & Linguistic Stylometry — Fake News Detection</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              brand: {
+                dark: '#090d16',
+                card: '#111827',
+                cardBorder: '#1f293d',
+                fake: '#f43f5e',
+                real: '#10b981',
+                accent: '#6366f1'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #090d16 65%, #05070c 100%);
+        min-height: 100vh;
+        color: #e2e8f0;
+      }
+      .glass-card {
+        background: rgba(17, 24, 39, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      }
+      .glow-fake {
+        box-shadow: 0 0 35px -5px rgba(244, 63, 94, 0.35);
+      }
+      .glow-real {
+        box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.35);
+      }
+      .word-pill {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .word-pill:hover {
+        transform: translateY(-2px);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.6);
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-white/10 sticky top-0 z-50 bg-[#090d16]/80 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-shield-halved text-lg"></i>
+          </div>
+          <div>
+            <span class="font-bold text-lg tracking-tight text-white block">VeriNews AI</span>
+            <span class="text-xs text-emerald-400 font-mono -mt-1 block">Linguistic Stylometry & XAI</span>
+          </div>
+        </a>
+
+        <nav class="flex items-center gap-1 sm:gap-4 text-sm font-medium">
+          <a href="/" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+            <i class="fa-solid fa-house mr-1.5 text-xs text-slate-400"></i>Home
+          </a>
+          <a href="/predict" class="px-3 py-2 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+            <i class="fa-solid fa-chart-pie mr-1.5 text-xs"></i>Visualizer
+          </a>
+          <button onclick="toggleModal('metricsModal')" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+            <i class="fa-solid fa-flask-vial mr-1.5 text-xs text-indigo-400"></i>Measurable Experiments
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+      <!-- Header Title Section -->
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-3">
+          <i class="fa-solid fa-microchip text-indigo-400"></i> Language Pattern Stylometry &bull; Beyond Blacklists
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Visualization of Classification Decision
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base mt-2">
+          Deconstructs intuitive language indicators, measures feature attribution, and enforces source-independent language pattern recognition.
+        </p>
+      </div>
+
+      <!-- Input Form Card -->
+      <div class="glass-card rounded-2xl p-6 sm:p-8 mb-8 border border-white/10">
+        <form action="/predict" method="POST" id="newsForm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
+            <label for="newsInput" class="text-sm font-semibold text-slate-200 flex items-center">
+              <i class="fa-solid fa-newspaper text-indigo-400 mr-2"></i>Enter News Headline or Content Excerpt:
+            </label>
+
+            <!-- Beyond Blacklist Toggle Switch -->
+            <label class="inline-flex items-center cursor-pointer gap-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700/80 hover:border-slate-600 transition-colors">
+              <input type="checkbox" id="pureLanguageToggle" name="pure_language_mode" value="1" {% if pure_language_mode %}checked{% endif %} class="sr-only peer">
+              <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-filter-circle-xmark text-emerald-400 text-[11px]"></i>
+                Pure Language Mode <span class="text-[10px] text-slate-500 font-normal hidden sm:inline">(Strip Source Watermarks)</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="relative">
+            <textarea 
+              id="newsInput" 
+              name="news" 
+              rows="3" 
+              required
+              placeholder="e.g., Secret government plan revealed to control weather with cell towers..." 
+              class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-base resize-none custom-scrollbar font-medium"
+            >{{ news }}</textarea>
+          </div>
+
+          <!-- Quick Test Samples Buttons -->
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-slate-400 font-medium"><i class="fa-solid fa-bolt text-amber-400 mr-1"></i>Quick Test Samples:</span>
+              <button type="button" onclick="loadSample('Wells Fargo Chief Abruptly Steps Down - The New York Times')" class="px-2.5 py-1 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-colors">
+                🟢 Sample Real (With Source)
+              </button>
+              <button type="button" onclick="loadSample('Wells Fargo Chief Abruptly Steps Down', true)" class="px-2.5 py-1 rounded-md bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 transition-colors">
+                🟢 Pure Headline (No Source)
+              </button>
+              <button type="button" onclick="loadSample('Secret government plan revealed to control weather with cell towers')" class="px-2.5 py-1 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-colors">
+                🔴 Sensational Fake
+              </button>
+              <button type="button" onclick="loadSample('Celebrity discovers miracle cure that doctors do not want you to know')" class="px-2.5 py-1 rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-colors">
+                🔴 Clickbait Urgent Fake
+              </button>
+            </div>
+
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-indigo-600 hover:from-emerald-400 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5">
+              <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze & Visualize Decision
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% if analysis %}
+      <!-- VISUALIZATION DASHBOARD SECTION -->
+      <div id="resultsDashboard" class="space-y-8 animate-fade-in">
+
+        <!-- Beyond Blacklist Mode Status Chip -->
+        {% if analysis.pure_language_mode or analysis.source_watermark_found %}
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+              <i class="fa-solid fa-code-compare"></i>
+            </span>
+            <div>
+              <span class="font-bold text-slate-200 block">Moving Beyond Author / Source Blacklists:</span>
+              <span class="text-slate-400">
+                {% if analysis.pure_language_mode %}
+                  <strong class="text-emerald-400">Pure Language Stylometry Active:</strong> Source watermarks were stripped prior to model inference. The verdict is based purely on syntax and linguistic vocabulary.
+                {% else %}
+                  <strong class="text-amber-400">Source Watermark Detected:</strong> Note that relying on source metadata can mask fake news from reliable authors. Try toggling <em>Pure Language Mode</em> above to evaluate intrinsic language patterns.
+                {% endif %}
+              </span>
+            </div>
+          </div>
+          {% if analysis.pure_language_mode %}
+            <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-mono font-semibold self-start sm:self-auto">
+              Source-Agnostic
+            </span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- 1. Primary Verdict Banner & Probability Meter -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border {% if analysis.is_fake %}border-rose-500/40 glow-fake{% else %}border-emerald-500/40 glow-real{% endif %} relative overflow-hidden">
+          
+          <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full {% if analysis.is_fake %}bg-rose-500/15{% else %}bg-emerald-500/15{% endif %} blur-3xl pointer-events-none"></div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left: Classification Verdict Badge -->
+            <div class="lg:col-span-5 space-y-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border {% if analysis.is_fake %}bg-rose-500/20 text-rose-300 border-rose-500/40{% else %}bg-emerald-500/20 text-emerald-300 border-emerald-500/40{% endif %}">
+                <i class="fa-solid {% if analysis.is_fake %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                {{ analysis.verdict_badge }}
+              </div>
+              <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                {{ analysis.verdict_title }}
+              </h2>
+              <p class="text-sm font-semibold text-slate-300">
+                {{ analysis.verdict_subtitle }}
+              </p>
+              <div class="pt-2 flex items-center gap-4 text-xs font-mono text-slate-400">
+                <div>
+                  <span class="text-slate-500 block">RISK ASSESSMENT</span>
+                  <span class="font-bold text-sm {{ analysis.risk_color }}">{{ analysis.risk_tier }}</span>
+                </div>
+                <div class="border-l border-slate-700 pl-4">
+                  <span class="text-slate-500 block">DECISION MARGIN (w·x + b)</span>
+                  <span class="font-bold text-sm text-slate-200">{{ analysis.decision_score }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Dual Probability Meter Gauge -->
+            <div class="lg:col-span-7 bg-slate-900/80 rounded-xl p-5 border border-white/5 space-y-4">
+              <div class="flex items-center justify-between text-sm">
+                <span class="font-semibold text-slate-200 flex items-center gap-2">
+                  <i class="fa-solid fa-gauge-high text-indigo-400"></i> Calibrated Probability Spectrum
+                </span>
+                <span class="text-xs font-mono text-slate-400">Sigmoid-Transformed Margin</span>
+              </div>
+
+              <!-- Dual Progress Bar -->
+              <div class="relative w-full h-7 bg-slate-800 rounded-full overflow-hidden p-1 flex items-center">
+                <div 
+                  class="h-full rounded-l-full bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-start pl-3 text-[11px] font-extrabold text-white transition-all duration-1000 shadow-md"
+                  style="width: {{ analysis.real_pct }}%;"
+                >
+                  {% if analysis.real_pct >= 15 %}Real: {{ analysis.real_pct }}%{% endif %}
+                </div>
+                <div 
+                  class="h-full rounded-r-full bg-gradient-to-r from-rose-500 to-rose-600 flex items-center justify-end pr-3 text-[11px] font-extrabold text-white transition-all duration-1000 shadow-md"
+                  style="width: {{ analysis.fake_pct }}%;"
+                >
+                  {% if analysis.fake_pct >= 15 %}Fake: {{ analysis.fake_pct }}%{% endif %}
+                </div>
+              </div>
+
+              <!-- Stat Numbers -->
+              <div class="grid grid-cols-2 gap-4 text-center pt-1">
+                <div class="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                  <span class="text-xs text-emerald-400 font-semibold block">Real Credibility Score</span>
+                  <span class="text-2xl font-black text-emerald-300 font-mono">{{ analysis.real_pct }}%</span>
+                </div>
+                <div class="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
+                  <span class="text-xs text-rose-400 font-semibold block">Fake Misinformation Score</span>
+                  <span class="text-2xl font-black text-rose-300 font-mono">{{ analysis.fake_pct }}%</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. INTUITIVE INDICATIONS OF REAL & FAKE NEWS PANEL -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border border-white/10 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-radar text-indigo-400"></i> Intuitive Indications of Real & Fake News
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                Detects intuitive human-recognizable language cues: clickbait triggers, sensationalism, urgency, and objective reporting framing.
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold px-3 py-1 rounded-lg border {{ analysis.sensationalism_badge }}">
+                {{ analysis.sensationalism_level }}
+              </span>
+            </div>
+          </div>
+
+          <!-- 4 Intuitive Signals Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Signal 1: Sensationalism Meter -->
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+              <span class="text-xs font-semibold text-slate-400 flex items-center justify-between">
+                <span>Sensationalism Index</span>
+                <span class="font-mono text-white">{{ analysis.sensational_score }}/100</span>
+              </span>
+              <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full rounded-full {% if analysis.sensational_score >= 50 %}bg-rose-500{% elif analysis.sensational_score >= 20 %}bg-amber-500{% else %}bg-emerald-500{% endif %}" style="width: {{ analysis.sensational_score }}%;"></div>
+              </div>
+              <span class="text-[11px] text-slate-400 block pt-1">
+                {% if analysis.sensational_score >= 50 %}Overuses hyperbole and urgency cues.{% else %}Measured discursive structure.{% endif %}
+              </span>
+            </div>
+
+            <!-- Signal 2: Discursive Tone -->
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+              <span class="text-xs font-semibold text-slate-400 block">Linguistic Tone Framing</span>
+              <span class="text-sm font-bold {{ analysis.tone_color }} block">{{ analysis.tone_description }}</span>
+              <span class="text-[11px] text-slate-400 block">Derived from semantic adjective polarity.</span>
+            </div>
+
+            <!-- Signal 3: Formatting & Punctuation Hysteria -->
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+              <span class="text-xs font-semibold text-slate-400 block">Formatting & Shouting</span>
+              <span class="text-sm font-bold text-white font-mono block">
+                {{ analysis.caps_ratio }}% Caps &bull; {{ analysis.exclamations }} (!) &bull; {{ analysis.questions }} (?)
+              </span>
+              <span class="text-[11px] text-slate-400 block">
+                {% if analysis.caps_ratio > 20 %}Elevated uppercase ratio (shouting).{% else %}Normal journalistic case formatting.{% endif %}
+              </span>
+            </div>
+
+            <!-- Signal 4: Lexical Diversity -->
+            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+              <span class="text-xs font-semibold text-slate-400 block">Information Density</span>
+              <span class="text-sm font-bold text-white font-mono block">
+                {{ analysis.word_count }} Words &bull; {{ analysis.vocab_tokens }} Lemmata
+              </span>
+              <span class="text-[11px] text-slate-400 block">NLTK lemmatized vocabulary tokens.</span>
+            </div>
+
+          </div>
+
+          <!-- Detected Keywords Callout -->
+          <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-3">
+            <span class="text-xs font-semibold text-slate-300 block flex items-center gap-2">
+              <i class="fa-solid fa-tags text-indigo-400"></i> Detected Lexical Indicators in Input Text:
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs">
+              {% if analysis.detected_sensational %}
+                {% for w in analysis.detected_sensational %}
+                  <span class="px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1.5 font-mono">
+                    <i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Sensational Cue: "{{ w }}"
+                  </span>
+                {% endfor %}
+              {% endif %}
+
+              {% if analysis.detected_speculative %}
+                {% for w in analysis.detected_speculative %}
+                  <span class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 font-mono">
+                    <i class="fa-solid fa-question text-[10px]"></i> Speculative / Hearsay: "{{ w }}"
+                  </span>
+                {% endfor %}
+              {% endif %}
+
+              {% if analysis.detected_objective %}
+                {% for w in analysis.detected_objective %}
+                  <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 font-mono">
+                    <i class="fa-solid fa-check text-[10px]"></i> Objective Journalistic: "{{ w }}"
+                  </span>
+                {% endfor %}
+              {% endif %}
+
+              {% if not analysis.detected_sensational and not analysis.detected_speculative and not analysis.detected_objective %}
+                <span class="text-slate-500 italic">No extreme sensational or speculative lexemes identified; classified primarily via TF-IDF statistical n-gram weights.</span>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3. Interactive Feature Attribution (Headline Word Highlighting) -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border border-white/10 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-highlighter text-amber-400"></i> Interactive Word-Level Decision Attribution
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">
+                Hover over words to inspect their mathematical contribution (<code class="text-indigo-300 font-mono">TF-IDF × Model Weight</code>) pushing toward Real or Fake.
+              </p>
+            </div>
+            
+            <!-- Attribution Legend -->
+            <div class="flex items-center gap-3 text-xs font-medium">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                <span class="w-2 h-2 rounded-full bg-rose-400"></span> Pushes Toward Fake
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Pushes Toward Real
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                <span class="w-2 h-2 rounded-full bg-slate-500"></span> Neutral / Stopword
+              </span>
+            </div>
+          </div>
+
+          <!-- Highlighted Sentence Container -->
+          <div class="bg-slate-900/90 rounded-xl p-5 border border-slate-800 leading-loose text-lg sm:text-xl font-medium flex flex-wrap gap-2 items-center">
+            {% for item in analysis.annotated_words %}
+              {% if item.direction == 'fake' %}
+                <span class="word-pill relative inline-block px-2.5 py-1 rounded-lg bg-rose-500/25 text-rose-200 border border-rose-500/50 shadow-sm cursor-help group" title="Root Lemma: {{ item.clean }} | Impact: +{{ item.impact }} | Model Weight: {{ item.weight }}">
+                  {{ item.token }}
+                  <span class="text-[10px] font-mono text-rose-400 ml-1 font-bold">+{{ item.impact }}</span>
+                </span>
+              {% elif item.direction == 'real' %}
+                <span class="word-pill relative inline-block px-2.5 py-1 rounded-lg bg-emerald-500/25 text-emerald-200 border border-emerald-500/50 shadow-sm cursor-help group" title="Root Lemma: {{ item.clean }} | Impact: {{ item.impact }} | Model Weight: {{ item.weight }}">
+                  {{ item.token }}
+                  <span class="text-[10px] font-mono text-emerald-400 ml-1 font-bold">{{ item.impact }}</span>
+                </span>
+              {% else %}
+                <span class="text-slate-400 hover:text-slate-200 px-1 py-0.5 rounded transition-colors" title="Neutral / Unweighted">
+                  {{ item.token }}
+                </span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- 4. Two-Column Analysis: Top Words Impact Chart & Beyond Blacklists Diagnostic -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Column A: Top Influential Words Impact Chart -->
+          <div class="lg:col-span-7 glass-card rounded-2xl p-6 border border-white/10 space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-indigo-400"></i> Top Influential Decision Features
+              </h3>
+              <span class="text-xs text-slate-400 font-mono">Ranked by Absolute Impact</span>
+            </div>
+
+            {% if analysis.top_words %}
+            <div class="space-y-3 pt-2">
+              {% for word_stat in analysis.top_words %}
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-medium">
+                  <span class="font-mono text-slate-200 font-semibold flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full {% if word_stat.direction == 'fake' %}bg-rose-400{% else %}bg-emerald-400{% endif %}"></span>
+                    "{{ word_stat.word }}" <span class="text-slate-500 font-normal">({{ word_stat.lemma }})</span>
+                  </span>
+                  <div class="flex items-center gap-3 font-mono text-[11px]">
+                    <span class="text-slate-400">TFIDF: {{ word_stat.tfidf }}</span>
+                    <span class="{% if word_stat.direction == 'fake' %}text-rose-400 font-bold{% else %}text-emerald-400 font-bold{% endif %}">
+                      {{ '+' if word_stat.impact > 0 else '' }}{{ word_stat.impact }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Horizontal Relative Bar -->
+                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex items-center">
+                  <div 
+                    class="h-full rounded-full transition-all duration-700 {% if word_stat.direction == 'fake' %}bg-gradient-to-r from-rose-500 to-rose-400{% else %}bg-gradient-to-r from-emerald-500 to-emerald-400{% endif %}"
+                    style="width: {{ word_stat.relative_pct }}%;"
+                  ></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-slate-400 py-6 text-center">
+              No strong vocabulary tokens matched the model's vocabulary. The prediction is leaning on baseline intercept weights.
+            </p>
+            {% endif %}
+          </div>
+
+          <!-- Column B: Beyond Blacklists Architecture Card -->
+          <div class="lg:col-span-5 glass-card rounded-2xl p-6 border border-white/10 space-y-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                  <i class="fa-solid fa-shield-virus text-indigo-400"></i> Beyond Author Blacklists
+                </h3>
+                <span class="text-xs text-slate-400 font-mono">Why Stylometry Wins</span>
+              </div>
+
+              <div class="space-y-3 pt-3 text-xs leading-relaxed text-slate-300">
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <span class="font-bold text-rose-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-xmark text-rose-400"></i> The Flaw of Static Blacklists:
+                  </span>
+                  <p class="text-slate-400 text-[11px]">
+                    Author/domain blacklists fail when a reputable source publishes unverified rumors or when fake outlets switch domain names.
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                  <span class="font-bold text-emerald-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-check text-emerald-400"></i> Pure Stylometric NLP:
+                  </span>
+                  <p class="text-slate-400 text-[11px]">
+                    Analyzes grammatical exaggeration, sensational word frequencies, and semantic TF-IDF weights directly from text, regardless of who authored it.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button to View Experiments -->
+            <button onclick="toggleModal('metricsModal')" class="w-full mt-4 py-2.5 px-4 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/30 font-semibold text-xs flex items-center justify-center gap-2 transition-colors">
+              <i class="fa-solid fa-chart-line"></i> View Measurable Experiments Benchmark
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+      {% endif %}
+
+    </main>
+
+    <!-- Global Model Metrics & Measurable Experiments Modal -->
+    <div id="metricsModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+      <div class="glass-card rounded-2xl max-w-5xl w-full max-h-[92vh] overflow-y-auto border border-white/20 p-6 sm:p-8 space-y-6 custom-scrollbar">
+        
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600/30 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+              <i class="fa-solid fa-flask-vial text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">Measurable Experiments & Evaluation Benchmark</h3>
+              <p class="text-xs text-slate-400">Multi-Model Comparative Testing on 20,800 Kaggle Articles</p>
+            </div>
+          </div>
+          <button onclick="toggleModal('metricsModal')" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Section 1: Benchmark Summary Table -->
+        <div class="space-y-3">
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-table text-indigo-400"></i> 1. Comparative Classifier Benchmark (Stratified Test Split)
+          </h4>
+          
+          <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/90">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 font-mono uppercase text-[11px] border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-4">Classifier Architecture</th>
+                  <th class="py-3 px-3">Accuracy</th>
+                  <th class="py-3 px-3">Precision</th>
+                  <th class="py-3 px-3">Recall</th>
+                  <th class="py-3 px-3">F1-Score</th>
+                  <th class="py-3 px-3">ROC-AUC</th>
+                  <th class="py-3 px-3">Train Latency</th>
+                  <th class="py-3 px-3">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60 font-mono text-[12px]">
+                {% if experiments and experiments.benchmark %}
+                  {% for row in experiments.benchmark %}
+                  <tr class="hover:bg-slate-800/40 transition-colors {% if 'Passive Aggressive' in row.Model %}bg-emerald-950/20 font-bold{% endif %}">
+                    <td class="py-3 px-4 font-sans font-medium text-white flex items-center gap-2">
+                      {% if 'Passive Aggressive' in row.Model %}
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      {% endif %}
+                      {{ row.Model }}
+                    </td>
+                    <td class="py-3 px-3 text-emerald-400 font-bold">{{ row.Accuracy }}%</td>
+                    <td class="py-3 px-3 text-slate-300">{{ row.Precision }}%</td>
+                    <td class="py-3 px-3 text-slate-300">{{ row.Recall }}%</td>
+                    <td class="py-3 px-3 text-indigo-300 font-semibold">{{ row.F1_Score }}%</td>
+                    <td class="py-3 px-3 text-amber-300">{{ row.ROC_AUC }}%</td>
+                    <td class="py-3 px-3 text-slate-400">{{ row.Train_Time_s }}s</td>
+                    <td class="py-3 px-3">
+                      {% if 'Passive Aggressive' in row.Model %}
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Deployed</span>
+                      {% else %}
+                        <span class="text-slate-500 text-[11px]">Benchmark</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="8" class="py-4 text-center text-slate-500">Benchmark results loading...</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Visual Comparison Chart & Ablation Table -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          
+          <!-- Visual Chart -->
+          <div class="space-y-2">
+            <h4 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-chart-column text-indigo-400"></i> Benchmark Accuracy Comparison
+            </h4>
+            <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+              <img src="/images/Model_Comparison_Benchmark.png" alt="Model Comparison Benchmark" class="w-full h-auto rounded-lg object-contain">
+            </div>
+            <p class="text-[11px] text-slate-400">Empirical benchmark confirming PAC's superior balance of 91.4% accuracy with fastest online training latency.</p>
+          </div>
+
+          <!-- Feature Representation Ablation Study -->
+          <div class="space-y-2 flex flex-col justify-between">
+            <div>
+              <h4 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-emerald-400"></i> 2. Feature Representation Ablation Study
+              </h4>
+              <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/90 mt-2">
+                <table class="w-full text-left text-xs text-slate-300">
+                  <thead class="bg-slate-950 text-slate-400 font-mono uppercase text-[10px] border-b border-slate-800">
+                    <tr>
+                      <th class="py-2.5 px-3">Configuration</th>
+                      <th class="py-2.5 px-2">Vocab Features</th>
+                      <th class="py-2.5 px-2">Accuracy</th>
+                      <th class="py-2.5 px-2">F1-Score</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                    {% if experiments and experiments.ablation %}
+                      {% for ab in experiments.ablation %}
+                      <tr class="hover:bg-slate-800/40">
+                        <td class="py-2.5 px-3 font-sans text-slate-200">{{ ab.Configuration }}</td>
+                        <td class="py-2.5 px-2 text-slate-400">{{ ab["Vocabulary Size"] }}</td>
+                        <td class="py-2.5 px-2 text-emerald-400 font-bold">{{ ab.Accuracy }}%</td>
+                        <td class="py-2.5 px-2 text-indigo-300">{{ ab.F1_Score }}%</td>
+                      </tr>
+                      {% endfor %}
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Confusion Matrix Preview -->
+            <div class="pt-3">
+              <h5 class="text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-table-cells text-indigo-400"></i> Confusion Matrix (Deployed PAC)
+              </h5>
+              <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-1.5 max-h-48 flex items-center justify-center">
+                <img src="/images/ConfusionMatrix.jpg" alt="Confusion Matrix" class="max-h-44 w-auto object-contain">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-white/10">
+          <button onclick="toggleModal('metricsModal')" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold transition-colors">
+            Close Experiments
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-6 mt-12 bg-[#090d16]/60 text-xs text-slate-500 text-center">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span>&copy; 2026 VeriNews AI &bull; Fake News Detection using Machine Learning</span>
+        <div class="flex items-center gap-4 text-slate-400">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <a href="/predict" class="hover:text-white transition-colors">Visualizer</a>
+          <button onclick="toggleModal('metricsModal')" class="hover:text-white transition-colors">Measurable Experiments</button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+      function loadSample(text, pureMode = false) {
+        document.getElementById('newsInput').value = text;
+        const toggle = document.getElementById('pureLanguageToggle');
+        if (toggle) {
+          toggle.checked = pureMode;
+        }
+        document.getElementById('newsForm').submit();
+      }
+
+      function toggleModal(id) {
+        const modal = document.getElementById(id);
+        if (modal.classList.contains('hidden')) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        } else {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      }
+    </script>
+  </body>
+</html>
