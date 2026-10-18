@@ -41,14 +41,14 @@ from scripts.train_model import get_transforms
 
 class TestDatasetIntegrity(unittest.TestCase):
     def test_verify_image_valid(self):
-        img_path = Path("sample_images/normal_apple_sample.jpg")
+        img_path = root_dir / "sample_images/normal_apple_sample.jpg"
         if img_path.exists():
             is_valid, err, size = verify_image(str(img_path))
             self.assertTrue(is_valid)
             self.assertIsNotNone(size)
 
     def test_duplicate_detection_hash(self):
-        img_path = Path("sample_images/normal_apple_sample.jpg")
+        img_path = root_dir / "sample_images/normal_apple_sample.jpg"
         if img_path.exists():
             h1 = compute_file_hash(str(img_path))
             h2 = compute_file_hash(str(img_path))
@@ -56,7 +56,7 @@ class TestDatasetIntegrity(unittest.TestCase):
             self.assertEqual(len(h1), 32)
 
     def test_processed_splits_exist_and_balanced(self):
-        proc_dir = Path("datasets/processed/fruit_condition")
+        proc_dir = root_dir / "datasets/processed/fruit_condition"
         self.assertTrue((proc_dir / "train" / "Fresh").exists())
         self.assertTrue((proc_dir / "train" / "Rotten").exists())
         self.assertTrue((proc_dir / "val" / "Fresh").exists())
@@ -72,8 +72,8 @@ class TestDatasetIntegrity(unittest.TestCase):
         self.assertEqual(train_fresh, train_rot)
 
     def test_manifest_and_summary_files_exist(self):
-        summary_path = Path("datasets/processed/fruit_condition/dataset_summary.json")
-        manifest_path = Path("datasets/processed/fruit_condition/manifest.json")
+        summary_path = root_dir / "datasets/processed/fruit_condition/dataset_summary.json"
+        manifest_path = root_dir / "datasets/processed/fruit_condition/manifest.json"
         self.assertTrue(summary_path.exists(), "dataset_summary.json must exist")
         self.assertTrue(manifest_path.exists(), "manifest.json must exist")
         
@@ -107,7 +107,7 @@ class TestModelArchitectureAndTransforms(unittest.TestCase):
 
 class TestModelCheckpoints(unittest.TestCase):
     def setUp(self):
-        self.models_dir = Path("models")
+        self.models_dir = root_dir / "models"
 
     def test_fruit_checkpoint_exists_and_loads(self):
         ckpt_path = self.models_dir / "apple_fruit_condition_v1.pth"
@@ -140,7 +140,7 @@ class TestInferenceAndExplainability(unittest.TestCase):
         self.engine = get_engine()
 
     def test_fresh_fruit_prediction_and_routing(self):
-        p = Path("sample_images/normal_apple_sample.jpg")
+        p = root_dir / "sample_images/normal_apple_sample.jpg"
         if p.exists():
             img = Image.open(p)
             res = self.engine.predict(img, model_type="transfer", specimen_override="apple_fruit")
@@ -152,7 +152,7 @@ class TestInferenceAndExplainability(unittest.TestCase):
             self.assertIn("activations", res)
 
     def test_rotten_fruit_prediction_and_routing(self):
-        p = Path("sample_images/rot_apple_sample.jpg")
+        p = root_dir / "sample_images/rot_apple_sample.jpg"
         if p.exists():
             img = Image.open(p)
             res = self.engine.predict(img, model_type="transfer", specimen_override="apple_fruit")
@@ -162,7 +162,7 @@ class TestInferenceAndExplainability(unittest.TestCase):
             self.assertIn("gradcam_image", res)
 
     def test_leaf_prediction_and_routing(self):
-        p = Path("sample_images/scab_leaf_sample.jpg")
+        p = root_dir / "sample_images/scab_leaf_sample.jpg"
         if p.exists():
             img = Image.open(p)
             res = self.engine.predict(img, model_type="transfer")

@@ -394,8 +394,18 @@ class AppleDiagnosisEngine:
     """
     def __init__(self, models_dir: str = "models", legacy_weights: str = "apple_cnn_model_v2.pth"):
         self.device = torch.device("cpu")
-        self.models_dir = Path(models_dir)
-        self.legacy_weights = legacy_weights
+        base_dir = Path(__file__).resolve().parent
+        if not os.path.isabs(models_dir):
+            resolved = base_dir / models_dir
+            self.models_dir = resolved if resolved.exists() else Path(models_dir)
+        else:
+            self.models_dir = Path(models_dir)
+
+        if not os.path.isabs(legacy_weights):
+            resolved_w = base_dir / legacy_weights
+            self.legacy_weights = str(resolved_w if resolved_w.exists() else legacy_weights)
+        else:
+            self.legacy_weights = legacy_weights
 
         # Preprocessing transforms
         self.transform = transforms.Compose([

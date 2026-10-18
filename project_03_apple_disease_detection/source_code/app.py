@@ -3,6 +3,7 @@ import io
 import json
 import base64
 from PIL import Image
+from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from apple_cnn_engine import get_engine, CLASS_NAMES, CLASS_DISPLAY
 from database import init_db, save_diagnosis, get_recent_diagnoses, get_db_stats
@@ -13,20 +14,21 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 # Initialize database schema
 init_db()
 
-os.makedirs('sample_images', exist_ok=True)
-os.makedirs('static/css', exist_ok=True)
-os.makedirs('static/js', exist_ok=True)
-os.makedirs('templates', exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parent
+os.makedirs(BASE_DIR / 'sample_images', exist_ok=True)
+os.makedirs(BASE_DIR / 'static/css', exist_ok=True)
+os.makedirs(BASE_DIR / 'static/js', exist_ok=True)
+os.makedirs(BASE_DIR / 'templates', exist_ok=True)
 
 # Preset authentic sample mapping covering all abstract conditions (leaf & fruit)
 SAMPLE_MAP = {
-    'cedar_rust': ('sample_images/cedar_rust_sample.jpg', 'Cedar Apple Rust (Leaf)', 'Gymnosporangium juniperi-virginianae'),
-    'scab_leaf': ('sample_images/scab_leaf_sample.jpg', 'Apple Scab (Leaf)', 'Venturia inaequalis'),
-    'black_rot_leaf': ('sample_images/black_rot_leaf_sample.jpg', 'Black Rot / Frog-Eye (Leaf)', 'Botryosphaeria obtusa'),
-    'healthy_leaf': ('sample_images/healthy_leaf_sample.jpg', 'Healthy Apple Leaf', 'Malus domestica (Pathogen-Free)'),
-    'scab_fruit': ('sample_images/scab_apple_sample.jpg', 'Apple Scab (Fruit)', 'Venturia inaequalis (Fruit Loci)'),
-    'rot_fruit': ('sample_images/rot_apple_sample.jpg', 'Black Rot (Fruit Decay)', 'Botryosphaeria obtusa (Concentric Rings)'),
-    'blotch_fruit': ('sample_images/blotch_apple_sample.jpg', 'Apple Blotch (Fruit)', 'Phyllosticta solitaria (Crusty Margins)')
+    'cedar_rust': (str(BASE_DIR / 'sample_images/cedar_rust_sample.jpg'), 'Cedar Apple Rust (Leaf)', 'Gymnosporangium juniperi-virginianae'),
+    'scab_leaf': (str(BASE_DIR / 'sample_images/scab_leaf_sample.jpg'), 'Apple Scab (Leaf)', 'Venturia inaequalis'),
+    'black_rot_leaf': (str(BASE_DIR / 'sample_images/black_rot_leaf_sample.jpg'), 'Black Rot / Frog-Eye (Leaf)', 'Botryosphaeria obtusa'),
+    'healthy_leaf': (str(BASE_DIR / 'sample_images/healthy_leaf_sample.jpg'), 'Healthy Apple Leaf', 'Malus domestica (Pathogen-Free)'),
+    'scab_fruit': (str(BASE_DIR / 'sample_images/scab_apple_sample.jpg'), 'Apple Scab (Fruit)', 'Venturia inaequalis (Fruit Loci)'),
+    'rot_fruit': (str(BASE_DIR / 'sample_images/rot_apple_sample.jpg'), 'Black Rot (Fruit Decay)', 'Botryosphaeria obtusa (Concentric Rings)'),
+    'blotch_fruit': (str(BASE_DIR / 'sample_images/blotch_apple_sample.jpg'), 'Apple Blotch (Fruit)', 'Phyllosticta solitaria (Crusty Margins)')
 }
 
 @app.route('/')

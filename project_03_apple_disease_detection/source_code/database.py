@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
-DB_FILE = Path("apple_diagnostics.db")
+DB_FILE = Path(__file__).resolve().parent / "apple_diagnostics.db"
 
 def get_connection() -> sqlite3.Connection:
     """Returns a SQLite connection with row factory configured."""

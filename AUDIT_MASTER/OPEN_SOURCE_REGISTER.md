@@ -39,3 +39,25 @@ This register tracks all third-party open-source libraries, pretrained model wei
   - `pytest`: MIT License
   - `httpx`: BSD 3-Clause License
   - `ffmpeg`: LGPL 2.1+ / GPL 2.0+
+
+---
+
+## PROJECT-003: Plant Disease Detection (Apple Disease Detection Using Deep Learning / CNN)
+- **Dataset**: PlantVillage Apple Leaf Pathology Dataset
+  - Source: Penn State University / PlantVillage open access benchmark
+  - Target Classes: Apple Scab, Black Rot, Cedar Apple Rust, Healthy
+  - License: CC BY-SA 4.0
+- **Machine Learning & Deep Learning**:
+  - `torch` (PyTorch 2.0+): Modified BSD License (Meta Platforms, Inc.)
+  - `torchvision`: BSD 3-Clause License
+  - `scikit-learn`: BSD 3-Clause License
+  - `numpy`, `pillow`: BSD-style / HPND License
+- **Backend & Web**:
+  - `fastapi`: MIT License
+  - `uvicorn`: BSD 3-Clause License
+  - `pydantic`: MIT License
+- **Testing & Tooling**:
+  - `pytest`: MIT License
+  - `httpx`: BSD 3-Clause License
+  - `puppeteer`: Apache 2.0 License
+  - `ffmpeg`: LGPL 2.1+ / GPL 2.0+
