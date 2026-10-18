@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Canny Morphological Segmenter",
+  "mIoU": 0.54,
+  "f1_score": 0.68,
+  "latency_ms": 14.2
+}

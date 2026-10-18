@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  smart-energy:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8051:8051"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

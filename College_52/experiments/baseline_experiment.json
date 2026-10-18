@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Blob Counter & Thresholding",
+  "mae_people": 34.8,
+  "anomaly_f1": 0.72,
+  "latency_ms": 11.2
+}

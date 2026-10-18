@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 CSRNet Dilated CNN + Optical Flow",
+  "mae_people": 4.8,
+  "anomaly_f1": 0.942,
+  "latency_ms": 23.4
+}

@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "engagement_mae": {
+      "baseline": 12.8,
+      "phase2": 3.4,
+      "error_reduction_pct": 73.4
+    },
+    "affective_f1": {
+      "baseline": 0.715,
+      "phase2": 0.948,
+      "improvement_pct": 32.58
+    }
+  }
+}

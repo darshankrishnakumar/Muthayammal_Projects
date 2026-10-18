@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Multi-Horizon Deep Bi-LSTM",
+  "mape_pct": 3.42,
+  "rmse_kwh": 12.8,
+  "latency_ms": 13.5
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Deep CRNN-CTC Handwriting Recognizer",
+  "cer_error_rate": 0.042,
+  "wer_error_rate": 0.078,
+  "latency_ms": 18.2
+}

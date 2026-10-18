@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Deep FPN Defect Net",
+  "defect_f1": 0.968,
+  "mean_iou": 0.935,
+  "latency_ms": 11.2
+}

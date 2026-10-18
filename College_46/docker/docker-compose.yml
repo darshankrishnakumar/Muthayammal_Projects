@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  product-defect:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8046:8046"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

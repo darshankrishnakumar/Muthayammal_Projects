@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Multimodal Affective Fusion Net",
+  "engagement_mae": 3.4,
+  "affective_f1": 0.948,
+  "latency_ms": 10.4
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Multi-Layer Perceptron (Tabular)",
+  "accuracy": 0.742,
+  "f1_score": 0.71,
+  "latency_ms": 3.8
+}

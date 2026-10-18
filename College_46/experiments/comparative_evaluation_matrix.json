@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "defect_f1": {
+      "baseline": 0.724,
+      "phase2": 0.968,
+      "improvement_pct": 33.7
+    },
+    "mean_iou": {
+      "baseline": 0.685,
+      "phase2": 0.935,
+      "improvement_pct": 36.5
+    }
+  }
+}

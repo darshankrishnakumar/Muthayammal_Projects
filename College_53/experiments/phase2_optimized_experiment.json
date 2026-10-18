@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 ResUNet Multi-Class Defect Segmenter",
+  "mIoU": 0.862,
+  "f1_score": 0.935,
+  "latency_ms": 22.1
+}

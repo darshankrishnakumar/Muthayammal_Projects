@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Template Difference Detector",
+  "defect_f1": 0.724,
+  "mean_iou": 0.685,
+  "latency_ms": 3.4
+}

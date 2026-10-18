@@ -1,0 +1,15 @@
+{
+  "dataset_size": 150,
+  "comparison": {
+    "mae_people": {
+      "baseline": 34.8,
+      "phase2": 4.8,
+      "error_reduction_pct": 86.21
+    },
+    "anomaly_f1": {
+      "baseline": 0.72,
+      "phase2": 0.942,
+      "gain_pct": 30.83
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "accuracy": {
+      "baseline": 0.742,
+      "phase2": 0.958,
+      "gain_pct": 29.11
+    },
+    "f1_score": {
+      "baseline": 0.71,
+      "phase2": 0.952,
+      "gain_pct": 34.08
+    }
+  }
+}

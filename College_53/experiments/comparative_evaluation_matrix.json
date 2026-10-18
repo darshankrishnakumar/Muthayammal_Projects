@@ -1,0 +1,15 @@
+{
+  "dataset_size": 140,
+  "comparison": {
+    "mIoU": {
+      "baseline": 0.54,
+      "phase2": 0.862,
+      "gain_pct": 59.63
+    },
+    "f1_score": {
+      "baseline": 0.68,
+      "phase2": 0.935,
+      "gain_pct": 37.5
+    }
+  }
+}

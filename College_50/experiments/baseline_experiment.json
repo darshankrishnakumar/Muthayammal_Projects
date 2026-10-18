@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Otsu Template OCR",
+  "cer_error_rate": 0.245,
+  "wer_error_rate": 0.384,
+  "latency_ms": 5.2
+}

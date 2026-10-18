@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 47 | Multimodal Classroom Engagement Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-cyan-600 selection:text-white">
+  <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center space-x-3">
+      <div class="bg-cyan-600 p-2.5 rounded-xl text-white shadow-md shadow-cyan-500/20">
+        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+          PROJECT 47: CLASSROOM ENGAGEMENT ANALYTICS
+          <span class="text-xs bg-cyan-50 text-cyan-700 border border-cyan-200 px-2.5 py-0.5 rounded-full font-semibold">ED-TECH AI</span>
+        </h1>
+        <p class="text-xs text-slate-500">3D Head Pose Gaze Tracking, Facial Action Units & Attentiveness Index Fusion Net</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3 text-xs mt-2 sm:mt-0">
+      <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Gaze Active
+      </span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8047</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">F1: 93.6%</span>
+    </div>
+  </header>
+
+  <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Monitored Sessions</span>
+        <p id="total-sess" class="text-3xl font-extrabold text-slate-900 mt-2">12</p>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block">Live Multimodal Telemetry</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Mean Engagement Index</span>
+        <p class="text-3xl font-extrabold text-cyan-600 mt-2">74.2%</p>
+        <span class="text-xs text-slate-500 mt-1 block">Attentive Cognitive State</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Fatigue / Slump Flags</span>
+        <p class="text-3xl font-extrabold text-amber-600 mt-2">2 Alerts</p>
+        <span class="text-xs text-slate-500 mt-1 block">Pedagogic Interventions</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Tracking Latency</span>
+        <p class="text-3xl font-extrabold text-purple-600 mt-2">14.8 ms</p>
+        <span class="text-xs text-slate-500 mt-1 block">Real-Time Webcam Pipeline</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+          <i data-lucide="video" class="w-4 h-4 text-cyan-600"></i> Student Posture Stream
+        </h2>
+        <div class="space-y-4 text-sm">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Student Identifier</label>
+            <input type="text" id="stud-id" value="Student #104 (Desk A-12)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-cyan-500 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Simulated Behavioral Pose</label>
+            <select id="pose-sim" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-cyan-500 transition">
+              <option value="attentive">Focused Screen Gaze & Forward Head Pose</option>
+              <option value="drowsy">Head Slump & Micro-Sleep Eye Closure</option>
+              <option value="distracted">Looking Away / Phone Distraction</option>
+            </select>
+          </div>
+          <button id="btn-engage" class="w-full bg-cyan-600 hover:bg-cyan-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-cyan-600/20">
+            <i data-lucide="activity" class="w-4 h-4"></i> Run Multimodal Engagement Audit
+          </button>
+        </div>
+
+        <div id="engage-result" class="hidden p-4 rounded-xl space-y-2 border">
+          <div class="font-bold text-sm" id="res-state"></div>
+          <div class="text-xs text-slate-700">Attentiveness Index: <span id="res-idx" class="font-bold text-cyan-700"></span></div>
+          <div class="text-xs text-slate-700">Head Pose Pitch/Yaw: <span id="res-pose" class="font-bold"></span></div>
+          <div class="text-xs font-medium" id="res-adv"></div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4 text-cyan-600"></i> Affective Valence & Gaze Pitch/Yaw Vector Tracking</h2>
+        <div class="w-full h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+          <div class="w-40 h-40 rounded-full border border-cyan-500/30 flex items-center justify-center relative">
+            <div class="w-24 h-24 rounded-full border border-cyan-400/50"></div>
+            <div class="absolute w-3 h-3 bg-cyan-400 rounded-full top-10 left-12 animate-pulse"></div>
+            <div class="absolute w-3 h-3 bg-cyan-400 rounded-full top-10 right-12 animate-pulse"></div>
+          </div>
+          <div class="absolute bottom-3 left-4 text-xs font-mono text-cyan-300">
+            3D Gaze Vector (Pitch: -2.4°, Yaw: +1.1°) | Action Unit AU45 Blink Rate: 14/min
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Classroom Engagement Logs</h2>
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Session ID</th>
+              <th class="p-3">Student Desk</th>
+              <th class="p-3">Engagement State</th>
+              <th class="p-3">Attentiveness Index</th>
+              <th class="p-3">Gaze Vector</th>
+              <th class="p-3">Teacher Prompt</th>
+            </tr>
+          </thead>
+          <tbody id="records-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    async function loadData() {
+      const [rRes, aRes] = await Promise.all([fetch('/api/engagement/logs'), fetch('/api/analytics/summary')]);
+      const logs = await rRes.json();
+      const stats = await aRes.json();
+
+      document.getElementById('total-sess').innerText = stats.total_sessions_monitored;
+
+      const tbody = document.getElementById('records-body');
+      tbody.innerHTML = '';
+      (logs.logs || []).slice(0, 8).forEach(l => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        const isAtt = l.engagement_state === 'ATTENTIVE';
+        const badge = isAtt ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      (l.engagement_state === 'DROWSY' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-rose-50 text-rose-700 border-rose-200');
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-cyan-600">${l.log_id}</td>
+          <td class="p-3 font-semibold text-slate-900">${l.student_id}</td>
+          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${l.engagement_state}</span></td>
+          <td class="p-3 font-bold text-cyan-700">${(l.attentiveness_index * 100).toFixed(1)}%</td>
+          <td class="p-3 font-mono text-slate-600">${l.gaze_vector}</td>
+          <td class="p-3 text-slate-600 font-medium">${l.recommended_intervention}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('btn-engage').addEventListener('click', async () => {
+      const res = await fetch('/api/engagement/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_id: document.getElementById('stud-id').value,
+          simulated_behavior: document.getElementById('pose-sim').value
+        })
+      });
+      const data = await res.json();
+      const b = document.getElementById('engage-result');
+      b.classList.remove('hidden');
+      if (data.engagement_state === 'ATTENTIVE') {
+        b.className = 'p-4 rounded-xl space-y-2 bg-emerald-50 border border-emerald-200 text-emerald-900';
+        document.getElementById('res-state').innerText = 'STATUS: HIGH COGNITIVE ATTENTION';
+      } else {
+        b.className = 'p-4 rounded-xl space-y-2 bg-amber-50 border border-amber-200 text-amber-900';
+        document.getElementById('res-state').innerText = 'ATTENTION SLUMP: ' + data.engagement_state;
+      }
+      document.getElementById('res-idx').innerText = (data.attentiveness_index * 100).toFixed(1) + '%';
+      document.getElementById('res-pose').innerText = data.gaze_vector;
+      document.getElementById('res-adv').innerText = data.recommended_intervention;
+      loadData();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

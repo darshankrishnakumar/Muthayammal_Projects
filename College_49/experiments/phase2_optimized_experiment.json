@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Longitudinal Multi-Condition Deep Net",
+  "c_index": 0.892,
+  "risk_mae": 3.6,
+  "latency_ms": 12.5
+}

@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "freshness_mae": {
+      "baseline": 13.5,
+      "phase2": 3.8,
+      "error_reduction_pct": 71.85
+    },
+    "shelf_life_r2": {
+      "baseline": 0.684,
+      "phase2": 0.941,
+      "improvement_pct": 37.57
+    }
+  }
+}

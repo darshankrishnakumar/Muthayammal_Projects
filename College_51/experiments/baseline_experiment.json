@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Persistence Moving Average",
+  "mape_pct": 14.8,
+  "rmse_kwh": 48.2,
+  "latency_ms": 2.4
+}

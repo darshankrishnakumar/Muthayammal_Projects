@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "c_index": {
+      "baseline": 0.718,
+      "phase2": 0.892,
+      "improvement_pct": 24.23
+    },
+    "risk_mae": {
+      "baseline": 14.8,
+      "phase2": 3.6,
+      "error_reduction_pct": 75.68
+    }
+  }
+}

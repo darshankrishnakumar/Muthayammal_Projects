@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  food-freshness:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8048:8048"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

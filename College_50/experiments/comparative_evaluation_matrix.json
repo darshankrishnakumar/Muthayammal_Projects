@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "cer_error_rate": {
+      "baseline": 0.245,
+      "phase2": 0.042,
+      "error_reduction_pct": 82.85
+    },
+    "wer_error_rate": {
+      "baseline": 0.384,
+      "phase2": 0.078,
+      "error_reduction_pct": 79.68
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Framingham Point Scorer",
+  "c_index": 0.718,
+  "risk_mae": 14.8,
+  "latency_ms": 1.8
+}

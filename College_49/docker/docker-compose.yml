@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  health-risk:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8049:8049"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped
