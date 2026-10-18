@@ -1,5 +1,10 @@
-import requests
 import json
+import os
+import sys
+
+# Add directory to sys.path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from app import app
 
 data = {
     "Age": 50,
@@ -15,11 +20,11 @@ data = {
     "ST_Slope": 1
 }
 
-try:
-    res = requests.post("http://127.0.0.1:5000/api/predict", json=data)
-    print("STATUS:", res.status_code)
-    print("RESPONSE:", res.text)
-except requests.exceptions.ConnectionError:
-    print("ERROR: Connection Refused. Server is NOT running on port 5000.")
-except Exception as e:
-    print("ERROR:", e)
+client = app.test_client()
+res = client.post("/api/predict", json=data)
+print("STATUS:", res.status_code)
+print("RESPONSE:", res.get_json())
+assert res.status_code == 200
+assert "prediction" in res.get_json()
+print("TEST PASSED: Model prediction endpoint successfully verified.")
+
