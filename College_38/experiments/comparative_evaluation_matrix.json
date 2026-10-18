@@ -1,0 +1,20 @@
+{
+  "dataset_size": 100,
+  "comparison": {
+    "mean_iou": {
+      "baseline": 0.612,
+      "phase2": 0.884,
+      "improvement_pct": 44.4
+    },
+    "dice_score": {
+      "baseline": 0.684,
+      "phase2": 0.912,
+      "improvement_pct": 33.3
+    },
+    "pci_mae": {
+      "baseline": 14.2,
+      "phase2": 4.1,
+      "error_reduction_pct": 71.1
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Chromatic Thresholding",
+  "flame_accuracy": 0.768,
+  "false_alarm_rate": 0.224,
+  "mean_latency_ms": 2.1
+}

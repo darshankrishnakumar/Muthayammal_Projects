@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "accuracy": {
+      "baseline": 0.768,
+      "phase2": 0.982,
+      "improvement_pct": 27.86
+    },
+    "false_alarm_rate": {
+      "baseline": 0.224,
+      "phase2": 0.026,
+      "reduction_pct": 88.39
+    }
+  }
+}

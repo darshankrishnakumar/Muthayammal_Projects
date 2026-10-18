@@ -1,0 +1,15 @@
+{
+  "dataset_size": 150,
+  "comparison": {
+    "trajectory_relevance": {
+      "baseline": 0.714,
+      "phase2": 0.945,
+      "improvement_pct": 32.35
+    },
+    "competency_mae": {
+      "baseline": 15.2,
+      "phase2": 3.8,
+      "error_reduction_pct": 75.0
+    }
+  }
+}

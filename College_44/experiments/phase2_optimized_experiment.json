@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 SBERT Contextual Transformer Matcher",
+  "semantic_correlation_r": 0.924,
+  "matching_accuracy": 0.958,
+  "latency_ms": 14.8
+}

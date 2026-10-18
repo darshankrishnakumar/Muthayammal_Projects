@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  pavement-crack:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8038:8038"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

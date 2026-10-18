@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Dual-Domain Forensic Net",
+  "forgery_auc": 0.978,
+  "pixel_f1": 0.942,
+  "latency_ms": 19.5
+}

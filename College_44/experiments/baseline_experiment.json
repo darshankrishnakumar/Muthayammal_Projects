@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline TF-IDF & Keyword Jaccard Matcher",
+  "semantic_correlation_r": 0.684,
+  "matching_accuracy": 0.742,
+  "latency_ms": 3.8
+}

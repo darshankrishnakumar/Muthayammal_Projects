@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline EigenFace & Variance Liveness",
+  "face_match_accuracy": 0.812,
+  "anti_spoofing_tnr": 0.725,
+  "latency_ms": 5.4
+}

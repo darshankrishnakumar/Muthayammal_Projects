@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  fire-smoke:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8040:8040"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

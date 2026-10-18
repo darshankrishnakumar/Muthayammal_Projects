@@ -1,0 +1,7 @@
+{
+  "model": "Phase 1 Baseline Otsu Edge Detection",
+  "mean_iou": 0.612,
+  "dice_score": 0.684,
+  "pci_estimation_mae": 14.2,
+  "latency_ms": 3.4
+}

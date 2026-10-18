@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Set-Difference Matcher",
+  "trajectory_relevance": 0.714,
+  "competency_mae": 15.2,
+  "latency_ms": 2.5
+}

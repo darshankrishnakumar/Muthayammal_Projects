@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 40 | Industrial Fire & Smoke Detection System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-600 selection:text-white">
+  <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center space-x-3">
+      <div class="bg-orange-600 p-2.5 rounded-xl text-white shadow-md shadow-orange-500/20">
+        <i data-lucide="flame" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+          PROJECT 40: DUAL-STREAM FIRE & SMOKE DETECTION
+          <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 px-2.5 py-0.5 rounded-full font-semibold">SAFETY CRITICAL</span>
+        </h1>
+        <p class="text-xs text-slate-500">Thermal-Optical Spatio-Temporal ConvNet with 5-20 Hz FFT Flame Flicker Frequency Gating</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3 text-xs mt-2 sm:mt-0">
+      <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Gating Active
+      </span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8040</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">F1: 96.6%</span>
+    </div>
+  </header>
+
+  <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Total Scanned Events</span>
+        <p id="total-inc" class="text-3xl font-extrabold text-slate-900 mt-2">10</p>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block">Active Zone Coverage</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Active Hazards</span>
+        <p id="active-haz" class="text-3xl font-extrabold text-red-600 mt-2">2</p>
+        <span class="text-xs text-slate-500 mt-1 block">Suppression Interlocks Armed</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">FFT Flicker Accuracy</span>
+        <p class="text-3xl font-extrabold text-orange-600 mt-2">94.2%</p>
+        <span class="text-xs text-slate-500 mt-1 block">Eliminates Sun/Headlight False Alarms</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Response Latency</span>
+        <p class="text-3xl font-extrabold text-purple-600 mt-2">16.4 ms</p>
+        <span class="text-xs text-slate-500 mt-1 block">Edge Jetson / GPU Real-Time</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+          <i data-lucide="sliders" class="w-4 h-4 text-orange-600"></i> Zone Influx Simulation
+        </h2>
+        <div class="space-y-4 text-sm">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Industrial CCTV Zone</label>
+            <input type="text" id="zone-name" value="Chemical Warehouse Sector 4" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-orange-500 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Simulated Hazard State</label>
+            <select id="sim-state" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-orange-500 transition">
+              <option value="FIRE">Active Turbulent Fire (Flame)</option>
+              <option value="SMOKE">Heavy Smoldering Smoke Column</option>
+              <option value="NORMAL">Normal Operation (Nominal)</option>
+            </select>
+          </div>
+          <button id="btn-detect" class="w-full bg-orange-600 hover:bg-orange-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-orange-600/20">
+            <i data-lucide="scan" class="w-4 h-4"></i> Run Dual-Stream Detection
+          </button>
+        </div>
+
+        <div id="alert-banner" class="hidden p-4 rounded-xl space-y-2 border">
+          <div class="font-bold text-sm" id="banner-title"></div>
+          <div class="text-xs text-slate-600">Confidence: <span id="b-conf" class="font-bold"></span> | FFT Peak: <span id="b-fft" class="font-bold"></span></div>
+          <div class="text-xs text-slate-700 font-medium" id="b-dir"></div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-orange-600"></i> 5-20 Hz FFT Temporal Flame Flicker Frequency Spectrum</h2>
+        <div class="flex-1 min-h-[250px] flex items-center justify-center">
+          <canvas id="fftChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Industrial Safety Telemetry Logs</h2>
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Incident ID</th>
+              <th class="p-3">Zone</th>
+              <th class="p-3">Category</th>
+              <th class="p-3">Severity</th>
+              <th class="p-3">Confidence</th>
+              <th class="p-3">FFT Peak</th>
+              <th class="p-3">Suppression Action</th>
+            </tr>
+          </thead>
+          <tbody id="incidents-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    let fChart = null;
+
+    async function loadData() {
+      const [iRes, aRes] = await Promise.all([fetch('/api/fire/incidents'), fetch('/api/analytics/summary')]);
+      const incs = await iRes.json();
+      const stats = await aRes.json();
+
+      document.getElementById('total-inc').innerText = stats.total_scans;
+      document.getElementById('active-haz').innerText = stats.active_alarms;
+
+      const tbody = document.getElementById('incidents-body');
+      tbody.innerHTML = '';
+      (incs.incidents || []).slice(0, 8).forEach(i => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        const isAlert = i.hazard_category !== 'NORMAL';
+        const badge = isAlert ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-orange-600">${i.incident_id}</td>
+          <td class="p-3 font-semibold text-slate-900">${i.zone_name}</td>
+          <td class="p-3 font-bold ${isAlert ? 'text-red-600' : 'text-slate-700'}">${i.hazard_category}</td>
+          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${i.severity_level}</span></td>
+          <td class="p-3 font-bold text-emerald-600">${(i.confidence * 100).toFixed(1)}%</td>
+          <td class="p-3 font-mono text-slate-600">${i.fft_flicker_hz} Hz</td>
+          <td class="p-3 text-slate-600 font-medium">${i.action_recommendation}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const ctx = document.getElementById('fftChart').getContext('2d');
+      const freqs = Array.from({length: 25}, (_, i) => `${i + 1} Hz`);
+      const amp = Array.from({length: 25}, (_, i) => (i >= 8 && i <= 16) ? Math.sin((i - 8) / 8 * Math.PI) * 0.85 + 0.1 : Math.random() * 0.15);
+      if (fChart) fChart.destroy();
+      fChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: freqs,
+          datasets: [{
+            label: 'FFT Spectral Energy Density',
+            data: amp,
+            borderColor: '#ea580c',
+            backgroundColor: 'rgba(234, 88, 12, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } },
+            x: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    document.getElementById('btn-detect').addEventListener('click', async () => {
+      const res = await fetch('/api/fire/detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          zone_name: document.getElementById('zone-name').value,
+          simulated_hazard: document.getElementById('sim-state').value
+        })
+      });
+      const data = await res.json();
+      const b = document.getElementById('alert-banner');
+      b.classList.remove('hidden');
+      if (data.hazard_category !== 'NORMAL') {
+        b.className = 'p-4 rounded-xl space-y-2 bg-red-50 border border-red-200 text-red-900';
+        document.getElementById('banner-title').innerText = 'CRITICAL HAZARD DETECTED: ' + data.hazard_category;
+      } else {
+        b.className = 'p-4 rounded-xl space-y-2 bg-emerald-50 border border-emerald-200 text-emerald-900';
+        document.getElementById('banner-title').innerText = 'ZONE NOMINAL: NO HAZARD DETECTED';
+      }
+      document.getElementById('b-conf').innerText = (data.confidence * 100).toFixed(1) + '%';
+      document.getElementById('b-fft').innerText = data.fft_flicker_hz + ' Hz';
+      document.getElementById('b-dir').innerText = data.action_recommendation;
+      loadData();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

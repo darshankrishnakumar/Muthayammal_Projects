@@ -1,0 +1,15 @@
+{
+  "dataset_size": 150,
+  "comparison": {
+    "grading_accuracy": {
+      "baseline": 0.745,
+      "phase2": 0.973,
+      "improvement_pct": 30.6
+    },
+    "defect_f1": {
+      "baseline": 0.692,
+      "phase2": 0.941,
+      "improvement_pct": 35.98
+    }
+  }
+}

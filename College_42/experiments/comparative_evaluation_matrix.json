@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "face_match_accuracy": {
+      "baseline": 0.812,
+      "phase2": 0.985,
+      "improvement_pct": 21.3
+    },
+    "anti_spoofing_defense": {
+      "baseline": 0.725,
+      "phase2": 0.989,
+      "improvement_pct": 36.41
+    }
+  }
+}

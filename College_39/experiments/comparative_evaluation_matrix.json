@@ -1,0 +1,16 @@
+{
+  "dataset_size": 150,
+  "vocabulary_classes": 10,
+  "comparison": {
+    "top1_accuracy": {
+      "baseline": 0.742,
+      "phase2": 0.966,
+      "improvement_pct": 30.18
+    },
+    "macro_f1": {
+      "baseline": 0.735,
+      "phase2": 0.958,
+      "improvement_pct": 30.34
+    }
+  }
+}

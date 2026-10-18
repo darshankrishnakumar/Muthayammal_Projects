@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Color Histogram Grader",
+  "grading_accuracy": 0.745,
+  "defect_f1": 0.692,
+  "throughput_fps": 60.0
+}

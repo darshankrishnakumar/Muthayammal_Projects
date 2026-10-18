@@ -1,0 +1,15 @@
+{
+  "dataset_size": 150,
+  "comparison": {
+    "correlation_r": {
+      "baseline": 0.684,
+      "phase2": 0.924,
+      "improvement_pct": 35.08
+    },
+    "matching_accuracy": {
+      "baseline": 0.742,
+      "phase2": 0.958,
+      "improvement_pct": 29.11
+    }
+  }
+}

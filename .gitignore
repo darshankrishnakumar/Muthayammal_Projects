@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Virtual Environments
+.venv
+.venv/
+venv/
+env/
+ENV/
+*.venv
+
+# Node Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Java / Maven
+target/
+*.class
+
+# Backups and temporary files
+*.backup
+*.bak
+*.tmp
+
+# Large Model / Data Caches (> 100MB, rejected by GitHub)
+models_cache.joblib
+
+# College_55 runtime generated evidence snapshots (24,800+ generated run files)
+College_55/data/processed/evidence_snapshots/evidence_INC-[0-9A-Fa-f]*.jpg
+
+# Root temporary data
+/data/project55_enterprise.db

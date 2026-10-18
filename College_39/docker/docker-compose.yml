@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  sign-speech:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8039:8039"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

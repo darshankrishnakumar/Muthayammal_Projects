@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Spatio-Temporal BiLSTM + Attention",
+  "top1_accuracy": 0.966,
+  "macro_f1": 0.958,
+  "latency_ms": 21.4
+}

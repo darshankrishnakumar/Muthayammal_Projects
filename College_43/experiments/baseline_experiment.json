@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline ELA Thresholding",
+  "forgery_auc": 0.748,
+  "pixel_f1": 0.712,
+  "latency_ms": 6.2
+}

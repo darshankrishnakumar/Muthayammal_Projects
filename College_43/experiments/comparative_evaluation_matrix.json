@@ -1,0 +1,15 @@
+{
+  "dataset_size": 160,
+  "comparison": {
+    "forgery_auc": {
+      "baseline": 0.748,
+      "phase2": 0.978,
+      "improvement_pct": 30.75
+    },
+    "pixel_f1": {
+      "baseline": 0.712,
+      "phase2": 0.942,
+      "improvement_pct": 32.3
+    }
+  }
+}

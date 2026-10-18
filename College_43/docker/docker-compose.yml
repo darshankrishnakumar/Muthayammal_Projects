@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  doc-forgery:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8043:8043"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

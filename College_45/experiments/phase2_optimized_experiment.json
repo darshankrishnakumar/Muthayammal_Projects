@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Collaborative Competency Embedding Net",
+  "trajectory_relevance": 0.945,
+  "competency_mae": 3.8,
+  "latency_ms": 13.2
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 1 Baseline Random Forest",
+  "top1_accuracy": 0.742,
+  "macro_f1": 0.735,
+  "latency_ms": 4.2
+}

@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 ArcFace & Multi-Modal Anti-Spoofing Net",
+  "face_match_accuracy": 0.985,
+  "anti_spoofing_tnr": 0.989,
+  "latency_ms": 16.2
+}

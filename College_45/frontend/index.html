@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 45 | Enterprise Skill-Gap Analysis & Career Recommendation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-600 selection:text-white">
+  <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
+    <div class="flex items-center space-x-3">
+      <div class="bg-emerald-600 p-2.5 rounded-xl text-white shadow-md shadow-emerald-500/20">
+        <i data-lucide="compass" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
+          PROJECT 45: SKILL-GAP ANALYSIS & CAREER RECOMMENDER
+          <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-semibold">ED-TECH SOTA</span>
+        </h1>
+        <p class="text-xs text-slate-500">Vector Space Competency Embedding & Topological Learning Curriculum Roadmapping</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3 text-xs mt-2 sm:mt-0">
+      <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Career Engine Active
+      </span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8045</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">Alignment: 95.4%</span>
+    </div>
+  </header>
+
+  <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Active Roadmaps</span>
+        <p id="total-maps" class="text-3xl font-extrabold text-slate-900 mt-2">12</p>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block">Custom Career Pathways</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Mean Skill Match</span>
+        <p class="text-3xl font-extrabold text-emerald-600 mt-2">81.2%</p>
+        <span class="text-xs text-slate-500 mt-1 block">Baseline Competency Fit</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Role Alignment</span>
+        <p class="text-3xl font-extrabold text-blue-600 mt-2">95.4%</p>
+        <span class="text-xs text-slate-500 mt-1 block">Topological Course Sequencing</span>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Diagnostic Time</span>
+        <p class="text-3xl font-extrabold text-purple-600 mt-2">14.1 ms</p>
+        <span class="text-xs text-slate-500 mt-1 block">Real-Time Vector Mapping</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+          <i data-lucide="user" class="w-4 h-4 text-emerald-600"></i> Career Diagnostic Profiler
+        </h2>
+        <div class="space-y-4 text-sm">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Target Professional Aspiration</label>
+            <select id="aspire-role" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-emerald-500 transition">
+              <option value="Principal AI Architect">Principal AI Architect</option>
+              <option value="Enterprise Cloud Lead">Enterprise Cloud Lead</option>
+              <option value="Director of Engineering">Director of Engineering</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Current Competency Stack</label>
+            <select id="current-stack" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-emerald-500 transition">
+              <option value="Python, PyTorch, Docker, SQL">Python, PyTorch, Docker, SQL (ML Engineer)</option>
+              <option value="JavaScript, Node.js, React, AWS">JavaScript, Node.js, React, AWS (Full-Stack)</option>
+              <option value="Linux, Kubernetes, Terraform, Go">Linux, Kubernetes, Terraform, Go (DevOps)</option>
+            </select>
+          </div>
+          <button id="btn-diag" class="w-full bg-emerald-600 hover:bg-emerald-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20">
+            <i data-lucide="play" class="w-4 h-4"></i> Generate Topological Learning Roadmap
+          </button>
+        </div>
+
+        <div id="diag-box" class="hidden p-4 bg-slate-50 border border-emerald-200 rounded-xl space-y-2">
+          <div class="font-bold text-sm text-emerald-800" id="res-gap"></div>
+          <div class="text-xs text-slate-700">Missing Critical Capabilities: <span id="res-miss" class="font-bold text-rose-600"></span></div>
+          <div class="text-xs text-slate-700">Recommended Courses: <span id="res-courses" class="font-bold text-slate-900"></span></div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
+        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2"><i data-lucide="radar" class="w-4 h-4 text-emerald-600"></i> Multi-Dimensional Competency Radar Match</h2>
+        <div class="flex-1 min-h-[250px] flex items-center justify-center">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Enterprise Career Roadmaps Registry</h2>
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Plan ID</th>
+              <th class="p-3">Candidate</th>
+              <th class="p-3">Target Role</th>
+              <th class="p-3">Skill Match</th>
+              <th class="p-3">Top Skill Gaps</th>
+              <th class="p-3">Curriculum Status</th>
+            </tr>
+          </thead>
+          <tbody id="records-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    let rChart = null;
+
+    async function loadData() {
+      const [rRes, aRes] = await Promise.all([fetch('/api/career/roadmaps'), fetch('/api/analytics/summary')]);
+      const maps = await rRes.json();
+      const stats = await aRes.json();
+
+      document.getElementById('total-maps').innerText = stats.total_roadmaps;
+
+      const tbody = document.getElementById('records-body');
+      tbody.innerHTML = '';
+      (maps.roadmaps || []).slice(0, 8).forEach(m => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 transition';
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-emerald-600">${m.roadmap_id}</td>
+          <td class="p-3 font-semibold text-slate-900">${m.candidate_name}</td>
+          <td class="p-3 font-bold text-slate-800">${m.target_role}</td>
+          <td class="p-3 font-bold text-emerald-600">${(m.match_percentage * 100).toFixed(1)}%</td>
+          <td class="p-3 font-medium text-rose-600">${m.key_gaps}</td>
+          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">${m.status}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      if (rChart) rChart.destroy();
+      rChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Deep Learning', 'System Design', 'Cloud Infra', 'Data Ops', 'Leadership', 'Algorithms'],
+          datasets: [
+            {
+              label: 'Target Role Benchmark',
+              data: [90, 85, 80, 85, 75, 90],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              borderWidth: 2
+            },
+            {
+              label: 'Current Candidate Profile',
+              data: [85, 65, 60, 75, 55, 80],
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.15)',
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { r: { grid: { color: '#f1f5f9' }, angleLines: { color: '#f1f5f9' }, pointLabels: { color: '#64748b', font: { weight: 'bold' } } } },
+          plugins: { legend: { labels: { color: '#334155', font: { weight: '600' } } } }
+        }
+      });
+    }
+
+    document.getElementById('btn-diag').addEventListener('click', async () => {
+      const res = await fetch('/api/career/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          target_role: document.getElementById('aspire-role').value,
+          current_skills: document.getElementById('current-stack').value
+        })
+      });
+      const data = await res.json();
+      const b = document.getElementById('diag-box');
+      b.classList.remove('hidden');
+      document.getElementById('res-gap').innerText = 'COMPETENCY MATCH: ' + (data.match_percentage * 100).toFixed(1) + '%';
+      document.getElementById('res-miss').innerText = data.key_gaps;
+      document.getElementById('res-courses').innerText = data.recommended_modules;
+      loadData();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

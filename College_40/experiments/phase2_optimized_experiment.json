@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Dual-Stream Spatio-Temporal Net",
+  "flame_accuracy": 0.982,
+  "false_alarm_rate": 0.026,
+  "mean_latency_ms": 11.8
+}

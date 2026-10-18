@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  fruit-grading:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8041:8041"
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped

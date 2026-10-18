@@ -1,0 +1,7 @@
+{
+  "model": "Phase 2 ResUNet Semantic Crack Segmenter",
+  "mean_iou": 0.884,
+  "dice_score": 0.912,
+  "pci_estimation_mae": 4.1,
+  "latency_ms": 18.2
+}

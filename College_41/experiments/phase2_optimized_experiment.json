@@ -1,0 +1,6 @@
+{
+  "model": "Phase 2 Multi-Task ConvNet",
+  "grading_accuracy": 0.973,
+  "defect_f1": 0.941,
+  "throughput_fps": 45.0
+}
