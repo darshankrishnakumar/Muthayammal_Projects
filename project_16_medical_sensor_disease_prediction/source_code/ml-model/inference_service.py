@@ -33,37 +33,116 @@ from preprocessing.ecg_pipeline import (
 # Global model and config holders
 MODEL = None
 CONFIG = None
-MODEL_PATH = os.path.join(SCRIPT_DIR, "saved-model", "ecg_cnn.keras")
+MODEL_PATH_KERAS = os.path.join(SCRIPT_DIR, "saved-model", "ecg_cnn.keras")
+MODEL_PATH_TORCH = os.path.join(SCRIPT_DIR, "saved-model", "ecg_cnn.pt")
 CONFIG_PATH = os.path.join(SCRIPT_DIR, "saved-model", "preprocessing_config.json")
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class ResBlock1D(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1):
+        super().__init__()
+        self.conv1 = nn.Conv1d(in_channels, out_channels, kernel_size=5, stride=stride, padding=2, bias=False)
+        self.bn1 = nn.BatchNorm1d(out_channels)
+        self.conv2 = nn.Conv1d(out_channels, out_channels, kernel_size=3, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm1d(out_channels)
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv1d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm1d(out_channels)
+            )
+
+    def forward(self, x):
+        res = self.shortcut(x)
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        out += res
+        return F.relu(out)
+
+class ECGResidual1DCNN(nn.Module):
+    def __init__(self, num_classes=5):
+        super().__init__()
+        self.stem = nn.Sequential(
+            nn.Conv1d(1, 32, kernel_size=7, padding=3, bias=False),
+            nn.BatchNorm1d(32),
+            nn.ReLU()
+        )
+        self.res1 = ResBlock1D(32, 32)
+        self.pool1 = nn.MaxPool1d(2)
+        self.res2 = ResBlock1D(32, 64)
+        self.pool2 = nn.MaxPool1d(2)
+        self.res3 = ResBlock1D(64, 128)
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc1 = nn.Linear(128, 64)
+        self.dropout = nn.Dropout(0.2)
+        self.fc2 = nn.Linear(64, num_classes)
+
+    def forward(self, x):
+        x = self.stem(x)
+        x = self.pool1(self.res1(x))
+        x = self.pool2(self.res2(x))
+        x = self.res3(x)
+        x = self.global_pool(x).squeeze(-1)
+        x = F.relu(self.fc1(x))
+        x = self.dropout(x)
+        logits = self.fc2(x)
+        return F.softmax(logits, dim=-1)
+
+class TorchPredictor:
+    def __init__(self, pt_model):
+        self.net = pt_model
+        self.net.eval()
+
+    def predict(self, beats_batch, verbose=0):
+        x = np.transpose(beats_batch, (0, 2, 1))
+        with torch.no_grad():
+            tx = torch.from_numpy(x).float()
+            probs = self.net(tx).cpu().numpy()
+        return probs
 
 def load_model_and_config():
     global MODEL, CONFIG
-    import tensorflow as tf
 
-    if not os.path.exists(MODEL_PATH):
-        print(f"[WARN] Model file not found at {MODEL_PATH}")
-        return False
+    # 1. Try PyTorch first
+    if os.path.exists(MODEL_PATH_TORCH):
+        try:
+            net = ECGResidual1DCNN(num_classes=5)
+            net.load_state_dict(torch.load(MODEL_PATH_TORCH, map_location='cpu'))
+            MODEL = TorchPredictor(net)
+            print(f"[OK] PyTorch 1D CNN Model loaded from {MODEL_PATH_TORCH}")
+            
+            if os.path.exists(CONFIG_PATH):
+                with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+                    CONFIG = json.load(f)
+            else:
+                CONFIG = {
+                    "model_name": "Residual 1D CNN Arrhythmia Classifier",
+                    "model_version": "2.0.0",
+                    "sampling_rate_hz": 360,
+                }
+            return True
+        except Exception as e:
+            print(f"[WARN] Failed to load PyTorch model: {e}")
 
-    try:
-        MODEL = tf.keras.models.load_model(MODEL_PATH)
-        print(f"[OK] 1D CNN Model loaded from {MODEL_PATH}")
+    # 2. Fallback to Keras if available
+    if os.path.exists(MODEL_PATH_KERAS):
+        try:
+            import tensorflow as tf
+            MODEL = tf.keras.models.load_model(MODEL_PATH_KERAS)
+            print(f"[OK] Keras 1D CNN Model loaded from {MODEL_PATH_KERAS}")
+            if os.path.exists(CONFIG_PATH):
+                with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+                    CONFIG = json.load(f)
+            return True
+        except Exception as e:
+            print(f"[ERROR] Failed to load Keras model: {e}")
+            return False
 
-        if os.path.exists(CONFIG_PATH):
-            with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-                CONFIG = json.load(f)
-            print(f"[OK] Preprocessing config loaded from {CONFIG_PATH}")
-        else:
-            CONFIG = {
-                "model_name": "1D CNN Arrhythmia Classifier",
-                "model_version": "1.0.0",
-                "sampling_rate_hz": 360,
-            }
-        return True
-    except Exception as e:
-        print(f"[ERROR] Failed to load model: {e}")
-        traceback.print_exc()
-        return False
+    print(f"[WARN] No validated model found at {MODEL_PATH_TORCH} or {MODEL_PATH_KERAS}")
+    return False
 
 
 def read_ecg_signal_from_file(file_path, file_format):
