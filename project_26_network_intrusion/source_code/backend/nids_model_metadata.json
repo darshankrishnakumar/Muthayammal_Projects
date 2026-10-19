@@ -1,0 +1,106 @@
+{
+  "model_designation": "Deep Dual-Engine NIDS (Autoencoder Anomaly + 17D Enriched Deep Classifier)",
+  "features": [
+    "duration",
+    "src_bytes",
+    "dst_bytes",
+    "count",
+    "srv_count",
+    "serror_rate",
+    "rerror_rate",
+    "same_srv_rate",
+    "diff_srv_rate",
+    "dst_host_count",
+    "dst_host_srv_count",
+    "dst_host_same_src_port_rate"
+  ],
+  "input_features_count": 12,
+  "latent_dimensions": 4,
+  "classifier_input_dim": 17,
+  "classes": [
+    "Normal",
+    "DoS_SYN_Flood",
+    "Probe_PortScan",
+    "R2L_SSH_BruteForce",
+    "Botnet_Mirai_C2",
+    "U2R_BufferOverflow",
+    "ZeroDay_Anomaly"
+  ],
+  "num_classes": 7,
+  "feature_mean": [
+    3.886155366897583,
+    2153.51123046875,
+    4497.97021484375,
+    77.88200378417969,
+    60.29666519165039,
+    0.19234450161457062,
+    0.18109799921512604,
+    0.7859013676643372,
+    0.21387548744678497,
+    132.204833984375,
+    102.97450256347656,
+    0.2803976535797119
+  ],
+  "feature_std": [
+    10.236443519592285,
+    6381.67431640625,
+    4726.77392578125,
+    126.79693603515625,
+    125.95556640625,
+    0.3403429090976715,
+    0.32456445693969727,
+    0.3190385699272156,
+    0.3187807500362396,
+    89.36661529541016,
+    93.00747680664062,
+    0.3743676245212555
+  ],
+  "anomaly_reconstruction_threshold": 0.009316784329712391,
+  "metrics": {
+    "test_accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "training_samples": 4200,
+    "validation_samples": 900,
+    "test_samples": 900,
+    "total_samples": 6000
+  },
+  "taxonomy": {
+    "Normal": {
+      "category": "Benign",
+      "severity": "SAFE",
+      "action": "ALLOW"
+    },
+    "DoS_SYN_Flood": {
+      "category": "Denial of Service",
+      "severity": "CRITICAL",
+      "action": "QUARANTINE_IP"
+    },
+    "Probe_PortScan": {
+      "category": "Reconnaissance",
+      "severity": "HIGH",
+      "action": "RATE_LIMIT"
+    },
+    "R2L_SSH_BruteForce": {
+      "category": "Remote to Local",
+      "severity": "CRITICAL",
+      "action": "QUARANTINE_IP"
+    },
+    "Botnet_Mirai_C2": {
+      "category": "Malware C2",
+      "severity": "CRITICAL",
+      "action": "QUARANTINE_IP"
+    },
+    "U2R_BufferOverflow": {
+      "category": "Privilege Escalation",
+      "severity": "CRITICAL",
+      "action": "QUARANTINE_IP"
+    },
+    "ZeroDay_Anomaly": {
+      "category": "Unknown Zero-Day",
+      "severity": "HIGH",
+      "action": "SANDBOX_ISOLATE"
+    }
+  }
+}
