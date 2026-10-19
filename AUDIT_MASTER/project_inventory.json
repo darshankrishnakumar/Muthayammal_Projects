@@ -488,31 +488,33 @@
     "exact_title": "Heart Disease Prediction",
     "project_directory": "project_15_heart_disease_prediction",
     "origin_type": "FULL_LEGACY_APP",
-    "overall_status": "PARTIALLY COMPLETE",
+    "overall_status": "VERIFIED COMPLETE",
     "execution_status": "FUNCTIONAL_VERIFIED",
     "ml_model_status": "TRAINED_WEIGHTS_PRESENT",
     "models_count": 1,
     "models_list": [
       "source_code/heart_model.pkl"
     ],
-    "dataset_status": "1 files present",
+    "dataset_status": "REAL_DATASET_LOADED (UCI Heart Disease Comprehensive Benchmark, 918 Patient Records)",
     "test_status": "REAL_TESTS_VERIFIED",
     "test_category": "REAL_APP_TESTS",
     "tests_list": [
-      "source_code/test_import.py",
-      "source_code/test_api.py"
+      "source_code/tests/test_api.py",
+      "source_code/tests/test_model.py",
+      "source_code/tests/test_database.py",
+      "source_code/tests/test_audit_verification.py"
     ],
-    "documentation_status": "DOCX_PRESENT (Generic Outline)",
-    "docx_paragraphs": 19,
-    "ppt_status": "PPTX_PRESENT (Standard 8-Slide Deck)",
-    "ppt_slides": 8,
-    "walkthrough_script_status": "SCRIPT_READY",
-    "walkthrough_video_status": "NOT RECORDED",
-    "video_file_size": 0,
-    "defects_count": 3,
-    "defects_summary": "Walkthrough video missing (NOT RECORDED); Presentation deck contains standardized structure without embedded application screenshots; test_api.py depends on live port 5000 server; test_import.py attempts import of main instead of app",
+    "documentation_status": "DOCX_PRESENT (Comprehensive 52-Paragraph Academic Report + 8 MD Files)",
+    "docx_paragraphs": 52,
+    "ppt_status": "PPTX_PRESENT (15-Slide Widescreen Deck with Embedded Screenshots)",
+    "ppt_slides": 15,
+    "walkthrough_script_status": "SCRIPT_VERIFIED",
+    "walkthrough_video_status": "RECORDED_VERIFIED",
+    "video_file_size": 1368943,
+    "defects_count": 0,
+    "defects_summary": "None. All 15 acceptance criteria satisfied.",
     "audit_phase": "Phase 2 Independent Final Verification",
-    "next_action": "Record walkthrough video (walkthrough_video.mp4); embed UI screenshots in PPT"
+    "next_action": "Project verified complete. Proceed to PROJECT-016 in numerical order."
   },
   {
     "project_id": "PROJECT-016",
