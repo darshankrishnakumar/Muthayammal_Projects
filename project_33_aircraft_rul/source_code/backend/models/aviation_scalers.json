@@ -1,0 +1,34 @@
+{
+  "cycle_ratio": {
+    "min": 0.0501,
+    "max": 0.9795
+  },
+  "t50_lpt_outlet_temp_r": {
+    "min": 315.0,
+    "max": 1761.6
+  },
+  "p30_hpc_pressure_psia": {
+    "min": 41.5,
+    "max": 1211.7
+  },
+  "nc_core_speed_rpm": {
+    "min": 9018.1,
+    "max": 9883.8
+  },
+  "nf_fan_speed_rpm": {
+    "min": 2261.5,
+    "max": 2568.1
+  },
+  "fuel_flow_ratio_pps_psi": {
+    "min": 0.02247,
+    "max": 0.03403
+  },
+  "egt_margin_deg_c": {
+    "min": -8.9,
+    "max": 88.5
+  },
+  "vibration_broadband_g": {
+    "min": 0.19,
+    "max": 3.524
+  }
+}

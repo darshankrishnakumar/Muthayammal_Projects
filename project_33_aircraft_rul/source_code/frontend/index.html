@@ -432,6 +432,36 @@ body {
 
   </div>
 
+  <!-- Maintenance Shop Orders & Audit Trail Grid -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px;">
+    <!-- Maintenance Shop Orders -->
+    <div class="ledger-panel" style="margin-bottom:0;">
+      <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div class="panel-title">🛠️ Active Maintenance Shop Orders (MSO)</div>
+          <div class="panel-sub">Work orders scheduled for powerplant teardown & inspection</div>
+        </div>
+        <button class="sample-chip" style="margin:0; border-color:var(--accent);" onclick="promptNewShopOrder()">+ New MSO</button>
+      </div>
+      <div id="shopOrdersList" style="max-height: 280px; overflow-y:auto; padding: 12px;">
+        <div style="color:var(--text-muted); text-align:center; padding:20px;">Loading shop orders...</div>
+      </div>
+    </div>
+
+    <!-- Audit Trail -->
+    <div class="ledger-panel" style="margin-bottom:0;">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">🔒 FAA / EASA Regulatory Audit Trail</div>
+          <div class="panel-sub">Immutable SQLite Write-Ahead Logging telemetry entries</div>
+        </div>
+      </div>
+      <div id="auditLogList" style="max-height: 280px; overflow-y:auto; padding: 12px; font-family:'JetBrains Mono', monospace; font-size:11px;">
+        <div style="color:var(--text-muted); text-align:center; padding:20px;">Loading audit trail...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Historical Flight Telemetry Ledger -->
   <div class="ledger-panel">
     <div class="panel-header">
@@ -448,24 +478,36 @@ body {
 </div>
 
 <script>
-const API = 'http://localhost:5033/api';
+const API = (window.location.origin && window.location.origin.startsWith('http')) 
+  ? `${window.location.origin}/api` 
+  : 'http://127.0.0.1:5033/api';
+
 let selectedComponent = 'High-Pressure Turbine (HPT) Blades';
 let decayChartInstance = null;
 let sensorChartInstance = null;
 
 async function loadData() {
   try {
-    const [statsRes, compRes, historyRes] = await Promise.all([
-      fetch(`${API}/stats`).then(r => r.json()),
-      fetch(`${API}/components`).then(r => r.json()),
-      fetch(`${API}/history`).then(r => r.json())
+    const [statsRes, compRes, historyRes, msoRes, auditRes] = await Promise.all([
+      fetch(`${API}/stats`).then(r => r.json()).catch(() => ({})),
+      fetch(`${API}/components`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/history`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/shop-orders`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/audit-logs`).then(r => r.json()).catch(() => [])
     ]);
 
-    document.getElementById('fleetHealth').innerText = (statsRes.avg_fleet_health_score || 94) + '%';
-    document.getElementById('groundedAog').innerText = statsRes.grounded_critical || 0;
+    if (document.getElementById('fleetHealth')) {
+      document.getElementById('fleetHealth').innerText = (statsRes.avg_fleet_health_score || 94) + '%';
+    }
+    if (document.getElementById('groundedAog')) {
+      document.getElementById('groundedAog').innerText = statsRes.grounded_critical || 0;
+    }
 
     renderComponents(compRes || []);
     renderHistory(historyRes || []);
+    renderShopOrders(msoRes || []);
+    renderAuditLogs(auditRes || []);
+
     if (historyRes && historyRes.length > 0) {
       displayResult(historyRes[0]);
     }
@@ -476,14 +518,15 @@ async function loadData() {
 
 function renderComponents(list) {
   const container = document.getElementById('subsystemsRow');
+  if (!container) return;
   container.innerHTML = list.map(c => `
-    <div class="subsystem-card ${c.name === selectedComponent ? 'active' : ''}" onclick="selectComponent('${c.name}')">
+    <div class="subsystem-card ${c.component_name === selectedComponent || c.name === selectedComponent ? 'active' : ''}" onclick="selectComponent('${c.component_name || c.name}')">
       <div class="sub-top">
         <span class="sub-icon">${c.icon}</span>
         <span class="sub-engine">${c.engine_model}</span>
       </div>
-      <div class="sub-name">${c.name}</div>
-      <div class="sub-cycles">${c.max_design_cycles.toLocaleString()} Max Cycles</div>
+      <div class="sub-name">${c.component_name || c.name}</div>
+      <div class="sub-cycles">${(c.max_design_cycles || 0).toLocaleString()} Max Cycles</div>
     </div>
   `).join('');
 }
@@ -513,33 +556,46 @@ async function runPrediction(scenario) {
 }
 
 function displayResult(data) {
-  document.getElementById('heroIcon').innerText = data.icon || '✈️';
-  document.getElementById('heroName').innerText = `${data.component} (${data.engine_model})`;
-  document.getElementById('heroStatus').innerText = `${data.airworthiness_status} • Health: ${data.health_score}%`;
-  document.getElementById('heroStatus').style.color = data.color;
-  document.getElementById('heroFailure').innerText = `Critical Failure Risk: ${data.failure_mode}`;
+  const heroIcon = document.getElementById('heroIcon');
+  if (heroIcon) heroIcon.innerText = data.icon || '✈️';
+  const heroName = document.getElementById('heroName');
+  if (heroName) heroName.innerText = `${data.component_name || data.component} (${data.engine_model})`;
+  const heroStatus = document.getElementById('heroStatus');
+  if (heroStatus) {
+    heroStatus.innerText = `${data.airworthiness_status} • Health: ${data.health_score}%`;
+    heroStatus.style.color = data.color;
+  }
+  const heroFailure = document.getElementById('heroFailure');
+  if (heroFailure) heroFailure.innerText = `Critical Failure Risk: ${data.failure_mode}`;
 
-  document.getElementById('heroRulCycles').innerText = `${data.rul_cycles.toLocaleString()} Cycles`;
-  document.getElementById('heroRulCycles').style.color = data.color;
-  document.getElementById('heroRulHours').innerText = `Remaining Flight Hours: ${data.rul_flight_hours.toLocaleString()}h`;
+  const heroCycles = document.getElementById('heroRulCycles');
+  if (heroCycles) {
+    heroCycles.innerText = `${(data.rul_cycles || 0).toLocaleString()} Cycles`;
+    heroCycles.style.color = data.color;
+  }
+  const heroHours = document.getElementById('heroRulHours');
+  if (heroHours) heroHours.innerText = `Remaining Flight Hours: ${(data.rul_flight_hours || 0).toLocaleString()}h`;
 
-  document.getElementById('dirAction').innerText = data.action_required;
-  document.getElementById('dirBox').style.borderColor = data.color;
+  const dirAction = document.getElementById('dirAction');
+  if (dirAction) dirAction.innerText = data.action_required;
+  const dirBox = document.getElementById('dirBox');
+  if (dirBox) dirBox.style.borderColor = data.color;
 
   const s = data.cmapss_sensors || {};
-  document.getElementById('sensorT50').innerText = `${s.t50_lpt_outlet_temp_r} °R`;
-  document.getElementById('sensorP30').innerText = `${s.p30_hpc_pressure_psia} psia`;
-  document.getElementById('sensorNc').innerText = `${s.nc_core_speed_rpm.toLocaleString()} RPM`;
-  document.getElementById('sensorNf').innerText = `${s.nf_fan_speed_rpm.toLocaleString()} RPM`;
-  document.getElementById('sensorEgt').innerText = `${s.egt_margin_deg_c >= 0 ? '+' : ''}${s.egt_margin_deg_c} °C`;
-  document.getElementById('sensorCycles').innerText = `${data.flight_cycles_completed} / ${data.max_design_cycles}`;
+  if (document.getElementById('sensorT50')) document.getElementById('sensorT50').innerText = `${s.t50_lpt_outlet_temp_r || 1580} °R`;
+  if (document.getElementById('sensorP30')) document.getElementById('sensorP30').innerText = `${s.p30_hpc_pressure_psia || 550} psia`;
+  if (document.getElementById('sensorNc')) document.getElementById('sensorNc').innerText = `${(s.nc_core_speed_rpm || 9200).toLocaleString()} RPM`;
+  if (document.getElementById('sensorNf')) document.getElementById('sensorNf').innerText = `${(s.nf_fan_speed_rpm || 2450).toLocaleString()} RPM`;
+  if (document.getElementById('sensorEgt')) document.getElementById('sensorEgt').innerText = `${(s.egt_margin_deg_c >= 0 ? '+' : '')}${s.egt_margin_deg_c || 45} °C`;
+  if (document.getElementById('sensorCycles')) document.getElementById('sensorCycles').innerText = `${data.flight_cycles_completed} / ${data.max_design_cycles}`;
 
   renderCharts(data);
 }
 
 function renderCharts(data) {
-  // Degradation decay curve
-  const ctxDecay = document.getElementById('decayChart').getContext('2d');
+  const decayCanvas = document.getElementById('decayChart');
+  if (!decayCanvas) return;
+  const ctxDecay = decayCanvas.getContext('2d');
   if (decayChartInstance) decayChartInstance.destroy();
 
   const labels = ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'];
@@ -579,8 +635,9 @@ function renderCharts(data) {
     }
   });
 
-  // Sensor deviation bar chart
-  const ctxSensor = document.getElementById('sensorBarChart').getContext('2d');
+  const sensorCanvas = document.getElementById('sensorBarChart');
+  if (!sensorCanvas) return;
+  const ctxSensor = sensorCanvas.getContext('2d');
   if (sensorChartInstance) sensorChartInstance.destroy();
 
   sensorChartInstance = new Chart(ctxSensor, {
@@ -595,7 +652,7 @@ function renderCharts(data) {
           75,
           Math.max(10, Math.min(100, 50 + (data.cmapss_sensors?.egt_margin_deg_c || 20)))
         ],
-        backgroundColor: ['#38bdf8', '#2563eb', '#8b5cf6', '#06b6d4', data.color],
+        backgroundColor: ['#38bdf8', '#2563eb', '#8b5cf6', '#06b6d4', data.color || '#38bdf8'],
         borderRadius: 6
       }]
     },
@@ -611,8 +668,75 @@ function renderCharts(data) {
   });
 }
 
+function renderShopOrders(list) {
+  const container = document.getElementById('shopOrdersList');
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:12px;">No active shop orders.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(o => `
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-weight:700; color:#fff; font-size:12px;">
+          ${o.order_id} • <span style="color:#38bdf8;">${o.component_name}</span>
+          <span style="font-size:10px; margin-left:6px; padding:2px 6px; border-radius:4px; background:${o.priority==='CRITICAL'?'rgba(239,68,68,0.2)':'rgba(245,158,11,0.2)'}; color:${o.priority==='CRITICAL'?'#ef4444':'#f59e0b'}; font-weight:700;">${o.priority}</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${o.defect_summary}</div>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px; color:#10b981; font-weight:600;">${o.status}</span>
+        <div style="font-size:10px; color:#64748b;">${o.assigned_technician}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAuditLogs(list) {
+  const container = document.getElementById('auditLogList');
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:12px;">No audit records.</div>`;
+    return;
+  }
+  container.innerHTML = list.slice(0, 15).map(a => `
+    <div style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+      <span style="color:#38bdf8;">[${a.action}]</span> <span style="color:#94a3b8;">${a.entity_id}:</span> ${a.details}
+      <span style="color:#64748b; font-size:10px; float:right;">${a.timestamp.substring(11, 19)}</span>
+    </div>
+  `).join('');
+}
+
+function promptNewShopOrder() {
+  const reason = prompt("Enter defect summary for MSO order:", "Eddy-current non-destructive inspection scheduled for blade root");
+  if (!reason) return;
+  createShopOrder({
+    component_id: 'COMP-TURB-01',
+    priority: 'HIGH',
+    defect_summary: reason,
+    assigned_technician: 'Lead Powerplant Inspector',
+    estimated_downtime_hrs: 24.0
+  });
+}
+
+async function createShopOrder(orderData) {
+  try {
+    const res = await fetch(`${API}/shop-orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    const data = await res.json();
+    console.log(`Shop Order created: ${data.order_id}`);
+    await loadData();
+  } catch (err) {
+    console.error("Failed to create shop order:", err);
+  }
+}
+
 function renderHistory(list) {
   const container = document.getElementById('historyList');
+  if (!container) return;
   if (list.length === 0) {
     container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">No flight history records.</div>`;
     return;
@@ -622,17 +746,23 @@ function renderHistory(list) {
       <div style="display:flex; align-items:center; gap:12px;">
         <span style="font-size:22px;">${item.icon || '✈️'}</span>
         <div>
-          <div style="font-weight:700; color:#fff; font-size:14px;">${item.component} <span style="font-size:11px; color:#38bdf8;">(${item.engine_model})</span></div>
+          <div style="font-weight:700; color:#fff; font-size:14px;">${item.component_name || item.component} <span style="font-size:11px; color:#38bdf8;">(${item.engine_model})</span></div>
           <div style="font-size:11px; color:var(--text-muted);">${item.airworthiness_status} • ${item.flight_cycles_completed} Cycles Completed</div>
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-family:'JetBrains Mono', monospace; font-weight:700; color:${item.color};">${item.rul_cycles.toLocaleString()} Cycles RUL</div>
+        <div style="font-family:'JetBrains Mono', monospace; font-weight:700; color:${item.color};">${(item.rul_cycles || 0).toLocaleString()} Cycles RUL</div>
         <div style="font-size:10px; color:#64748b;">Health: ${item.health_score}%</div>
       </div>
     </div>
   `).join('');
 }
+
+// Global exports for automation & puppeteer
+window.selectComponent = selectComponent;
+window.runPrediction = runPrediction;
+window.loadData = loadData;
+window.createShopOrder = createShopOrder;
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>

@@ -1,0 +1,91 @@
+{
+  "project": "PROJECT-033 Aircraft Component RUL Telemetry Prediction",
+  "n_samples": 6000,
+  "features": [
+    "cycle_ratio",
+    "t50_lpt_outlet_temp_r",
+    "p30_hpc_pressure_psia",
+    "nc_core_speed_rpm",
+    "nf_fan_speed_rpm",
+    "fuel_flow_ratio_pps_psi",
+    "egt_margin_deg_c",
+    "vibration_broadband_g"
+  ],
+  "components": {
+    "COMP-TURB-01": {
+      "name": "High-Pressure Turbine (HPT) Blades",
+      "engine_model": "CFM56-7B / LEAP-1B",
+      "max_design_cycles": 4200,
+      "nominal_temp_r": 1580,
+      "nominal_pres_psia": 550,
+      "nominal_core_rpm": 9450,
+      "nominal_fan_rpm": 2500,
+      "nominal_fuel_ratio": 0.0265,
+      "icon": "\ud83d\udd25",
+      "failure_mode": "Thermal Creep & Oxidation Erosion"
+    },
+    "COMP-HPC-02": {
+      "name": "High-Pressure Compressor (HPC) Rotor",
+      "engine_model": "GE90-115B",
+      "max_design_cycles": 6000,
+      "nominal_temp_r": 1120,
+      "nominal_pres_psia": 480,
+      "nominal_core_rpm": 9200,
+      "nominal_fan_rpm": 2350,
+      "nominal_fuel_ratio": 0.0245,
+      "icon": "\ud83c\udf00",
+      "failure_mode": "High-Cycle Fatigue (HCF) Micro-Cracking"
+    },
+    "COMP-BRG-03": {
+      "name": "Mainshaft Roller Bearings (#4 Bearing)",
+      "engine_model": "Trent 1000",
+      "max_design_cycles": 5500,
+      "nominal_temp_r": 460,
+      "nominal_pres_psia": 45,
+      "nominal_core_rpm": 9100,
+      "nominal_fan_rpm": 2400,
+      "nominal_fuel_ratio": 0.023,
+      "icon": "\u2699\ufe0f",
+      "failure_mode": "Spallation & Subsurface Shear Fatigue"
+    },
+    "COMP-FMU-04": {
+      "name": "Fuel Metering Unit (FMU)",
+      "engine_model": "PW1100G-JM",
+      "max_design_cycles": 8500,
+      "nominal_temp_r": 320,
+      "nominal_pres_psia": 1200,
+      "nominal_core_rpm": 9300,
+      "nominal_fan_rpm": 2480,
+      "nominal_fuel_ratio": 0.028,
+      "icon": "\u26fd",
+      "failure_mode": "Servo Valve Sticking & Orifice Wear"
+    },
+    "COMP-LPT-05": {
+      "name": "Low-Pressure Turbine (LPT) Stator",
+      "engine_model": "CF34-8E",
+      "max_design_cycles": 7200,
+      "nominal_temp_r": 1340,
+      "nominal_pres_psia": 180,
+      "nominal_core_rpm": 9050,
+      "nominal_fan_rpm": 2320,
+      "nominal_fuel_ratio": 0.025,
+      "icon": "\ud83d\udee9\ufe0f",
+      "failure_mode": "Thermal Barrier Coating (TBC) Delamination"
+    }
+  },
+  "status_classes": [
+    "AIRWORTHY / OPTIMAL",
+    "MAINTENANCE DUE SOON",
+    "GROUNDED / MANDATORY SHOP VISIT"
+  ],
+  "classifier_accuracy": "98.08%",
+  "regression_health_mae": "0.82%",
+  "regression_rul_mae": "51.5 cycles",
+  "framework": "PyTorch 2.x Deep Residual MLP & Dual-Head RUL Regressor",
+  "c_mapss_subsets": [
+    "FD001",
+    "FD002",
+    "FD003",
+    "FD004"
+  ]
+}
