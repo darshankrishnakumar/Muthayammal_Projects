@@ -472,7 +472,7 @@ canvas#inundationCanvas {
 </div>
 
 <script>
-const API = 'http://localhost:5031/api';
+const API = (window.location.protocol.startsWith('http')) ? `${window.location.origin}/api` : 'http://localhost:5031/api';
 let selectedZone = 'Riverside Embankment District';
 let gaugeChartInstance = null;
 let leadTimeChartInstance = null;
@@ -697,6 +697,11 @@ function renderHistory(list) {
     </div>
   `).join('');
 }
+
+window.selectZone = selectZone;
+window.simulateEvent = simulateEvent;
+window.runPrediction = runPrediction;
+window.loadData = loadData;
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>

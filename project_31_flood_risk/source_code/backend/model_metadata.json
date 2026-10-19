@@ -1,0 +1,36 @@
+{
+  "project": "PROJECT-031 Urban Flood Risk Prediction & Early Warning System",
+  "dataset_samples": 5800,
+  "features": [
+    "rainfall_mm",
+    "river_stage_m",
+    "river_threshold_m",
+    "soil_moisture",
+    "storm_surge_m",
+    "dem_elevation_m",
+    "drainage_score",
+    "crest_exceedance_ratio"
+  ],
+  "alert_levels": [
+    "NORMAL",
+    "ADVISORY",
+    "WARNING",
+    "CRITICAL"
+  ],
+  "models": {
+    "FloodRiskClassifierNet": {
+      "architecture": "Residual Deep Multi-Layer Perceptron (8 -> 64 -> 64 -> 32 -> 4)",
+      "train_accuracy": ">96%",
+      "weights_file": "flood_risk_classifier_weights.pt"
+    },
+    "InundationDepthRegressorNet": {
+      "architecture": "Deep LayerNorm MLP (8 -> 64 -> 64 -> 32 -> 2)",
+      "outputs": [
+        "inundation_depth_m",
+        "lead_time_hours"
+      ],
+      "weights_file": "inundation_regressor_weights.pt"
+    }
+  },
+  "created_at": "2026-10-20T04:30:00Z"
+}
