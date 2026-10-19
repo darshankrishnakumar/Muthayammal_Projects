@@ -472,7 +472,7 @@ body {
 </main>
 
 <script>
-const BACKEND_URL = 'http://localhost:5024/api';
+const BACKEND_URL = (window.location.origin && window.location.origin.startsWith('http')) ? (window.location.origin + '/api') : 'http://localhost:5024/api';
 let graphData = { nodes: [], edges: [] };
 let selectedNode = null;
 
@@ -908,6 +908,11 @@ async function exportSarDossier() {
   }
 }
 
+window.graphData = graphData;
+window.selectNode = selectNode;
+window.loadGraph = loadGraph;
+window.toggleFreezeCurrentNode = toggleFreezeCurrentNode;
+window.switchTab = switchTab;
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>

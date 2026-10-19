@@ -1,0 +1,52 @@
+{
+  "model_architecture": "2-Layer Graph Convolutional Network (GCN)",
+  "input_features": 8,
+  "hidden_embedding_dim": 16,
+  "output_classes": 2,
+  "classes": [
+    "CLEAN",
+    "FRAUD_MULE_RING"
+  ],
+  "feature_names": [
+    "log10_balance",
+    "in_degree",
+    "out_degree",
+    "log10_inflow",
+    "log10_outflow",
+    "country_risk",
+    "fan_out_ratio",
+    "flow_asymmetry"
+  ],
+  "feature_mean": [
+    4.310292720794678,
+    3.173076868057251,
+    3.173076868057251,
+    2.8164279460906982,
+    2.761911392211914,
+    0.07648041844367981,
+    0.47104179859161377,
+    -0.0033961718436330557
+  ],
+  "feature_std": [
+    0.4705175757408142,
+    3.4352290630340576,
+    3.2823596000671387,
+    1.5567694902420044,
+    1.6262556314468384,
+    0.14358527958393097,
+    0.35292989015579224,
+    0.7489304542541504
+  ],
+  "metrics": {
+    "test_accuracy": 1.0,
+    "test_precision": 1.0,
+    "test_recall": 1.0,
+    "test_f1": 1.0,
+    "training_samples": 312,
+    "validation_samples": 104,
+    "test_samples": 104,
+    "total_nodes": 520,
+    "total_edges": 1650
+  },
+  "trained_timestamp": "2026-10-19T19:56:52.071920+00:00"
+}
