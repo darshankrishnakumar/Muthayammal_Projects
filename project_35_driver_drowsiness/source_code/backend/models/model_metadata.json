@@ -1,0 +1,26 @@
+{
+  "model_name": "DeepResidualFatigueAndVigilanceNet",
+  "benchmark": "NHTSA / FHWA Driver Vigilance Telemetry Benchmark",
+  "records_count": 6000,
+  "drivers_count": 5,
+  "classifier_accuracy": "97.25%",
+  "vigilance_mae": "1.76%",
+  "microsleep_mae": "0.0164",
+  "classes": [
+    "Alert",
+    "Slightly Drowsy",
+    "Moderately Drowsy",
+    "Severely Drowsy"
+  ],
+  "input_features": [
+    "ear",
+    "mar",
+    "blink_duration_ms",
+    "blink_frequency_cpm",
+    "head_pitch_deg",
+    "head_yaw_deg",
+    "head_roll_deg",
+    "perclos_pct"
+  ],
+  "framework": "PyTorch 2.x"
+}

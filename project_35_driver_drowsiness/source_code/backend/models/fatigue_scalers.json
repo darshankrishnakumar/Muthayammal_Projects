@@ -1,0 +1,38 @@
+{
+  "feature_cols": [
+    "ear",
+    "mar",
+    "blink_duration_ms",
+    "blink_frequency_cpm",
+    "head_pitch_deg",
+    "head_yaw_deg",
+    "head_roll_deg",
+    "perclos_pct"
+  ],
+  "means": {
+    "ear": 0.2597796618938446,
+    "mar": 0.35502609610557556,
+    "blink_duration_ms": 381.58258056640625,
+    "blink_frequency_cpm": 23.055599212646484,
+    "head_pitch_deg": -7.6032915115356445,
+    "head_yaw_deg": -0.12542998790740967,
+    "head_roll_deg": 0.03804166242480278,
+    "perclos_pct": 27.590457916259766
+  },
+  "stds": {
+    "ear": 0.061364997178316116,
+    "mar": 0.21462692320346832,
+    "blink_duration_ms": 168.34445190429688,
+    "blink_frequency_cpm": 5.974185943603516,
+    "head_pitch_deg": 7.269248008728027,
+    "head_yaw_deg": 9.573869705200195,
+    "head_roll_deg": 6.895163536071777,
+    "perclos_pct": 16.290666580200195
+  },
+  "classes": [
+    "Alert",
+    "Slightly Drowsy",
+    "Moderately Drowsy",
+    "Severely Drowsy"
+  ]
+}
