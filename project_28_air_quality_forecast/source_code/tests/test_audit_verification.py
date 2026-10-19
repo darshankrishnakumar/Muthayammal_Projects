@@ -7,6 +7,9 @@ class TestPROJECT028(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         app_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "app.py"))
+        backend_dir = os.path.dirname(app_path)
+        if backend_dir not in sys.path:
+            sys.path.insert(0, backend_dir)
         spec = importlib.util.spec_from_file_location("app_mod_28", app_path)
         cls.app_mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.app_mod)

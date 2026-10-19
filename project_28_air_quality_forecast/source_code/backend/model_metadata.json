@@ -1,0 +1,43 @@
+{
+  "project_id": "PROJECT-028",
+  "service_name": "AI-Based Air Quality Forecasting and Pollution Level Prediction",
+  "assigned_port": 5028,
+  "bilstm_architecture": {
+    "model_name": "AQITimeSeriesBiLSTM",
+    "input_features": 10,
+    "hidden_dim": 64,
+    "num_layers": 2,
+    "bidirectional": true,
+    "output_horizon_hours": 24,
+    "output_features": [
+      "pm25",
+      "pm10",
+      "predicted_aqi"
+    ],
+    "loss_function": "HuberLoss (delta=10.0)"
+  },
+  "classifier_architecture": {
+    "model_name": "AQIHazardClassifier",
+    "input_features": 10,
+    "hidden_layers": [
+      64,
+      48
+    ],
+    "output_classes": [
+      "Good",
+      "Moderate",
+      "Unhealthy for Sensitive",
+      "Unhealthy",
+      "Very Unhealthy",
+      "Hazardous"
+    ],
+    "test_accuracy": 0.9373,
+    "loss_function": "CrossEntropyLoss"
+  },
+  "dataset": {
+    "total_records": 5500,
+    "monitoring_stations": 10,
+    "sampling_frequency": "1 hour",
+    "start_date": "2026-01-01 00:00:00"
+  }
+}
