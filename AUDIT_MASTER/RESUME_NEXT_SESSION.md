@@ -4,25 +4,23 @@
 - **PROJECT-001**: **100% VERIFIED COMPLETE**. (BiLSTM .pth, 18/18 tests, 02:37 video, 15-slide PPTX, DOCX, port 5001).
 - **PROJECT-002**: **100% VERIFIED COMPLETE**. (Random Forest + Extra Trees + Isolation Forest, NSL-KDD 22,544 rows, 19/19 tests, 03:00 video, 15-slide PPTX, DOCX, port 5002).
 - **PROJECT-003**: **100% VERIFIED COMPLETE**. (5 PyTorch Vision Models, PlantVillage dataset, 24/24 tests, 03:00 video, 15-slide PPTX, DOCX, port 5003).
-- **Next Project to Execute**: **`PROJECT-004: Car Price Prediction (Machine Learning Regression Pipeline)`**
+- **PROJECT-004**: **100% VERIFIED COMPLETE**. (Random Forest 97.23% R² + DT + OLS, 450 vehicle sales records, 18/18 tests, 03:00 video, 15-slide PPTX, 79-para DOCX, port 5004).
+- **Next Project to Execute**: **`PROJECT-005: Career Guidance System (Machine Learning & NLP Career Path Recommendation)`**
 
 ---
 
-## Action Plan for PROJECT-004
-1. **Directory**: `project_04_car_price_prediction`
+## Action Plan for PROJECT-005
+1. **Directory**: `project_05_career_guidance`
 2. **Inspect Existing State**:
-   - Check existing code, datasets (`car_data.csv`, `quikr_car.csv`), models (`best_car_price_model.pkl`, `random_forest_regression.joblib`, `decision_tree_regression.joblib`, `linear_regression.joblib`), database, tests, docs, PPTX.
+   - Check existing code, datasets, models, database, tests, docs, PPTX.
 3. **Backend & Database**:
-   - FastAPI backend on port 5004.
-   - SQLite database for valuation queries and price histories.
-4. **Frontend**:
-   - Interactive car valuation dashboard, dynamic filters (make, model, year, mileage, fuel type, transmission), model comparisons, price breakdown, depreciation visualizer.
-5. **Automated Tests**:
-   - pytest test suite for regression inference, database operations, error handling, and API endpoints.
-6. **Screen Recording**:
-   - 2.5–3.5 minute MP4 recording (`walkthrough/walkthrough_video.mp4`) via Puppeteer and FFmpeg.
-7. **Presentations & Docs**:
-   - 15 widescreen slides (`project_presentation.pptx`) with real UI screenshots.
-   - Comprehensive `docs/technical_documentation.docx` and markdown documentation suite.
-8. **Master Tracker Updates & Acceptance Sign-off**:
-   - Update `AUDIT_MASTER/` inventory, CSV, Excel, and progress logs.
+   - FastAPI backend on port 5005.
+   - SQLite database for student skill profiles, assessments, and career recommendations.
+4. **Machine Learning & NLP Model**:
+   - Skill-to-career recommendation models (e.g., TF-IDF / Random Forest / SVM multi-class career pathway classifier).
+5. **Frontend**:
+   - Interactive student skill assessment portal, aptitude evaluation, career matching breakdown, role pathways, and salary benchmarks.
+6. **Automated Tests**:
+   - Pytest suite for skill parsing, recommendation inference, API endpoints, and database persistence.
+7. **Screen Recording & Documentation**:
+   - 3-minute video (`walkthrough/walkthrough_video.mp4`), 15-slide presentation (`project_presentation.pptx`), formal DOCX report (`docs/technical_documentation.docx`), and markdown suite.

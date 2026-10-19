@@ -119,20 +119,33 @@ python tests/test_api_and_model.py
 
 ### 4. Running the Web Application
 
-#### Option A: Run Pure Python (FastAPI + Uvicorn)
+#### Option A: Run FastAPI Microservice & Automotive Portal (Port 5004)
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 3000 --reload
+python3 -m uvicorn app.main:app --host 127.0.0.1 --port 5004
 ```
-Open your browser to `http://localhost:3000`.
+Open your browser to `http://localhost:5004`.
 
 #### Option B: Run Full-Stack Web Application (Node / React + Python)
-On Windows PowerShell:
-```powershell
-npm.cmd run dev
+```bash
+npm run dev
 ```
-*(On Linux/macOS: `npm run dev`)*
 
-Access the interactive dashboard at [http://localhost:3000](http://localhost:3000).
+---
+
+## 📚 Technical Documentation Suite
+
+Complete technical documentation is located in the `docs/` directory:
+- [Architecture & Dataflow Design](docs/architecture.md)
+- [Dataset & Model Benchmarks](docs/dataset_and_model_details.md)
+- [REST API Reference](docs/api_documentation.md)
+- [Setup & Execution Instructions](docs/setup_and_execution.md)
+- [Automated Testing & Verification Report](docs/testing_report.md)
+- [Limitations & Future Roadmap](docs/limitations_and_future_work.md)
+- [Third-Party Notices](docs/third_party_notices.md)
+- [Final Acceptance Sign-off Report](docs/acceptance_report.md)
+- [Formal Academic Documentation (DOCX)](docs/technical_documentation.docx)
+- [15-Slide Presentation Deck (PPTX)](presentations/project_presentation.pptx)
+- [Walkthrough Video Demonstration](walkthrough/walkthrough_video.mp4)
 
 ---
 

@@ -82,3 +82,28 @@
 - **Recorded Video Demonstration**:
   - Headless browser automation via Puppeteer streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, Size: **2.87 MB**, 1280x800 H.264 MP4).
 - **Status**: **VERIFIED COMPLETE (100%)**.
+
+---
+
+## PROJECT-004: Car Price Prediction (Regression Ensemble Pipeline)
+- **Dataset Integration**:
+  - Kaggle & Quikr pre-owned vehicle benchmark repository (`source_code/data/car_data.csv`, 450 verified sales records across major automotive segments).
+- **Trained Machine Learning Models**:
+  - Random Forest Regressor (150 trees, max depth 12): **97.23%** test $R^2$, RMSE = ₹1.3989 Lakhs, MAE = ₹0.8835 Lakhs. Serialized to `source_code/models/best_car_price_model.joblib`.
+  - Decision Tree Regressor (max depth 7): 95.25% test $R^2$, RMSE = ₹1.8307 Lakhs, MAE = ₹1.1746 Lakhs.
+  - Linear Regression (OLS baseline): 89.68% test $R^2$, RMSE = ₹2.6989 Lakhs.
+- **Database Subsystem**:
+  - SQLite database `source_code/data/predictions.db` with `prediction_history` table for valuation audits, depreciation tracking, and deletion CRUD operations.
+- **FastAPI Backend Server**:
+  - Asynchronous REST API running on port 5004 with 7 endpoints: `/api/health`, `/api/presets`, `/api/predict`, `/api/info`, `/api/history`, `/api/analytics`, `/api/dataset/sample`.
+- **Interactive Automotive Intelligence Frontend**:
+  - Responsive single-page web portal (`index.html`) featuring quick preset vehicle pills, 90% confidence bounds, value retention rating badges, dynamic 10-year value decay curve, model benchmark cards, and database history viewer.
+- **Automated Test Suite**:
+  - 18 automated unit, API, boundary, and regression tests in `source_code/tests/test_api_and_model.py`. 100% passed (18/18 in 2.51s).
+- **Presentation Deck**:
+  - Generated 15 widescreen slides (`presentations/project_presentation.pptx`, 1.0 MB) embedding 7 high-resolution UI screenshots.
+- **Technical Documentation**:
+  - 79-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and 8-file markdown technical documentation suite in `docs/`.
+- **Recorded Video Demonstration**:
+  - Headless browser automation streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, Size: **1.9 MB**, 1280x800 H.264 MP4).
+- **Status**: **VERIFIED COMPLETE (100%)**.

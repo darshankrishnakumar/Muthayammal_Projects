@@ -61,3 +61,24 @@ This register tracks all third-party open-source libraries, pretrained model wei
   - `httpx`: BSD 3-Clause License
   - `puppeteer`: Apache 2.0 License
   - `ffmpeg`: LGPL 2.1+ / GPL 2.0+
+
+---
+
+## PROJECT-004: Car Price Prediction (Regression Ensemble Pipeline)
+- **Dataset**: Kaggle & Quikr Used Car Price Dataset (450 records)
+  - License: CC0: Public Domain
+  - Origin: Pre-owned automotive aggregator sales logs
+- **Machine Learning**:
+  - `scikit-learn` (v1.3+): BSD 3-Clause License (RandomForestRegressor, DecisionTreeRegressor, LinearRegression, ColumnTransformer, StandardScaler, OneHotEncoder)
+  - `joblib`: BSD 3-Clause License
+  - `pandas`, `numpy`: BSD 3-Clause License
+- **Backend & Web**:
+  - `fastapi`: MIT License
+  - `uvicorn`: BSD 3-Clause License
+  - `pydantic`: MIT License
+  - `jinja2`: BSD 3-Clause License
+- **Testing & Tooling**:
+  - `pytest`: MIT License
+  - `httpx`: BSD 3-Clause License
+  - `puppeteer`: Apache 2.0 License
+  - `ffmpeg`: LGPL 2.1+ / GPL 2.0+

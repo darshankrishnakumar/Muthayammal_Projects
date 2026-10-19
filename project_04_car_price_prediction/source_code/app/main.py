@@ -174,6 +174,159 @@ class CarInputSchema(BaseModel):
         return v_title
 
 
+
+PRESETS = [
+    {
+        "id": "swift-2018",
+        "name": "Maruti Suzuki Swift VXI",
+        "category": "Commuter Hatchback",
+        "brand": "Maruti",
+        "car_model": "Swift",
+        "year": 2018,
+        "present_price": 7.2,
+        "kms_driven": 45000.0,
+        "fuel_type": "Petrol",
+        "seller_type": "Dealer",
+        "transmission": "Manual",
+        "owner": 0,
+        "algorithm": "Random Forest Regression",
+        "description": "Popular Indian family hatchback with high resale retention and low maintenance."
+    },
+    {
+        "id": "city-2020",
+        "name": "Honda City ZX",
+        "category": "Executive Sedan",
+        "brand": "Honda",
+        "car_model": "City",
+        "year": 2020,
+        "present_price": 14.5,
+        "kms_driven": 32000.0,
+        "fuel_type": "Petrol",
+        "seller_type": "Dealer",
+        "transmission": "Automatic",
+        "owner": 0,
+        "algorithm": "Random Forest Regression",
+        "description": "Midsize premium executive sedan with i-VTEC engine and sunroof."
+    },
+    {
+        "id": "creta-2019",
+        "name": "Hyundai Creta SX (O)",
+        "category": "Compact SUV",
+        "brand": "Hyundai",
+        "car_model": "Creta",
+        "year": 2019,
+        "present_price": 16.8,
+        "kms_driven": 52000.0,
+        "fuel_type": "Diesel",
+        "seller_type": "Dealer",
+        "transmission": "Manual",
+        "owner": 0,
+        "algorithm": "Random Forest Regression",
+        "description": "High-demand compact crossover with 1.5L CRDi diesel engine."
+    },
+    {
+        "id": "fortuner-2021",
+        "name": "Toyota Fortuner 4x4 AT",
+        "category": "Premium Full-Size SUV",
+        "brand": "Toyota",
+        "car_model": "Fortuner",
+        "year": 2021,
+        "present_price": 42.0,
+        "kms_driven": 38000.0,
+        "fuel_type": "Diesel",
+        "seller_type": "Dealer",
+        "transmission": "Automatic",
+        "owner": 0,
+        "algorithm": "Random Forest Regression",
+        "description": "Legendary Japanese ladder-frame SUV with unmatched resale value."
+    },
+    {
+        "id": "bmw-3series-2021",
+        "name": "BMW 3 Series 330i M Sport",
+        "category": "Luxury Sports Sedan",
+        "brand": "BMW",
+        "car_model": "3 Series",
+        "year": 2021,
+        "present_price": 54.0,
+        "kms_driven": 24000.0,
+        "fuel_type": "Petrol",
+        "seller_type": "Dealer",
+        "transmission": "Automatic",
+        "owner": 0,
+        "algorithm": "Random Forest Regression",
+        "description": "Luxury rear-wheel-drive German sports sedan with 255 bhp turbo powertrain."
+    }
+]
+
+
+@app.get("/api/presets")
+def get_presets():
+    """Returns curated preset vehicles for rapid interactive testing and valuation demonstration."""
+    return PRESETS
+
+
+@app.get("/api/analytics")
+def get_analytics():
+    """Returns aggregated valuation and market intelligence statistics."""
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            cursor.execute("SELECT COUNT(*) as total FROM prediction_history")
+            row = cursor.fetchone()
+            total = row["total"] if row else 0
+            
+            cursor.execute("""
+                SELECT 
+                    AVG(predicted_price_lakhs) as avg_price,
+                    AVG(depreciation_percentage) as avg_depreciation,
+                    MIN(predicted_price_lakhs) as min_price,
+                    MAX(predicted_price_lakhs) as max_price
+                FROM prediction_history
+            """)
+            stats_row = cursor.fetchone()
+            stats = dict(stats_row) if stats_row else {}
+            
+            cursor.execute("""
+                SELECT brand, COUNT(*) as count, AVG(predicted_price_lakhs) as avg_price
+                FROM prediction_history
+                GROUP BY brand
+                ORDER BY count DESC
+                LIMIT 5
+            """)
+            brands = [dict(r) for r in cursor.fetchall()]
+            
+            cursor.execute("""
+                SELECT retention_rating, COUNT(*) as count
+                FROM prediction_history
+                GROUP BY retention_rating
+            """)
+            retention = {r["retention_rating"]: r["count"] for r in cursor.fetchall()}
+            
+            return {
+                "total_predictions": total,
+                "summary": {
+                    "avg_predicted_price_lakhs": round(stats.get("avg_price") or 0.0, 2),
+                    "avg_depreciation_pct": round(stats.get("avg_depreciation") or 0.0, 1),
+                    "min_predicted_price_lakhs": round(stats.get("min_price") or 0.0, 2),
+                    "max_predicted_price_lakhs": round(stats.get("max_price") or 0.0, 2),
+                },
+                "brand_distribution": brands,
+                "retention_distribution": retention,
+                "dataset_total_samples": 450,
+                "best_model": metadata_cache.get("best_model", "Random Forest Regression")
+            }
+    except Exception as e:
+        logger.error(f"Analytics query error: {e}")
+        return {
+            "total_predictions": 0,
+            "summary": {"avg_predicted_price_lakhs": 0.0, "avg_depreciation_pct": 0.0},
+            "brand_distribution": [],
+            "retention_distribution": {}
+        }
+
+
 @app.get("/api/health")
 def health_check():
     return {
@@ -198,7 +351,6 @@ def get_dataset_sample(limit: int = 10):
         raise HTTPException(status_code=404, detail="Dataset file not found.")
     try:
         df = pd.read_csv(DATASET_FILE)
-        # Sample or head
         sample_df = df.head(min(limit, 50)).fillna("")
         return sample_df.to_dict(orient="records")
     except Exception as e:
@@ -393,13 +545,16 @@ def clear_history():
 @app.get("/", response_class=HTMLResponse)
 def serve_index_page(request: Request):
     """Serves the pure Jinja2 HTML template if accessed directly via FastAPI."""
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "metadata": metadata_cache,
-        "title": "Car Price Prediction System"
-    })
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "metadata": metadata_cache,
+            "title": "Car Price Prediction System"
+        }
+    )
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3000)
+    uvicorn.run(app, host="0.0.0.0", port=5004)

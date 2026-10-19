@@ -6,7 +6,7 @@ import { createServer as createViteServer } from "vite";
 
 const app = express();
 const PORT = 3000;
-const PYTHON_PORT = 5001;
+const PYTHON_PORT = 5004;
 const PYTHON_CMD = process.platform === "win32" ? "python" : "python3";
 
 app.use(express.json());

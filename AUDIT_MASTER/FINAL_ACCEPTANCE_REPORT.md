@@ -9,9 +9,9 @@
 ## Acceptance Status Overview
 
 - **Total Projects**: 55
-- **Verified Complete**: 3 (`PROJECT-001`, `PROJECT-002`, `PROJECT-003`)
-- **Partially Complete / Prototype**: 52 (`PROJECT-004` through `PROJECT-055`)
-- **Active Numerical Order Target**: `PROJECT-004`
+- **Verified Complete**: 4 (`PROJECT-001`, `PROJECT-002`, `PROJECT-003`, `PROJECT-004`)
+- **Partially Complete / Prototype**: 51 (`PROJECT-005` through `PROJECT-055`)
+- **Active Numerical Order Target**: `PROJECT-005`
 
 ---
 
@@ -63,5 +63,22 @@
   7. Video Demonstration: `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264, size 2.87 MB).
   8. Presentation Deck: 15 widescreen slides with 7 embedded UI screenshots (`presentations/project_presentation.pptx`, 1.7 MB).
   9. Academic Documentation: 49-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and 8-file markdown technical documentation suite in `docs/`.
+- **Defects Remaining**: 0
+- **Final Sign-off**: **VERIFIED COMPLETE (100%)**
+
+---
+
+### PROJECT-004: Car Price Prediction (Regression Ensemble Pipeline)
+- **Directory**: `project_04_car_price_prediction`
+- **Verification Summary**:
+  1. Real Dataset: Curated Kaggle & Quikr used vehicle dataset (450 verified sales records across major segments) in `source_code/data/car_data.csv`.
+  2. Trained AI/ML Models: 3 Scikit-Learn models serialized in `source_code/models/` (`Random Forest Regressor` with 150 trees achieving 97.23% test $R^2$, `Decision Tree Regressor`, and `Linear Regression`).
+  3. Working Backend & API: FastAPI service running on port 5004 with 7 operational REST endpoints (`/api/health`, `/api/presets`, `/api/predict`, `/api/info`, `/api/history`, `/api/analytics`, `/api/dataset/sample`).
+  4. Working Database: SQLite transactional database `source_code/data/predictions.db` logging vehicle valuations, 90% confidence bounds, and depreciation ratings.
+  5. Interactive Frontend: Modern automotive intelligence dashboard (`source_code/app/templates/index.html`) featuring 6 tabs, quick vehicle presets, real-time pricing in INR & USD, 10-year value decay trajectory bars, and history table with deletion actions.
+  6. Automated Tests: 18/18 passed in 2.51s (`pytest tests/test_api_and_model.py`).
+  7. Video Demonstration: `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264, size 1.9 MB).
+  8. Presentation Deck: 15 widescreen slides with 7 embedded UI screenshots (`presentations/project_presentation.pptx`, 1.0 MB).
+  9. Academic Documentation: 79-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and 8-file markdown technical documentation suite in `docs/`.
 - **Defects Remaining**: 0
 - **Final Sign-off**: **VERIFIED COMPLETE (100%)**

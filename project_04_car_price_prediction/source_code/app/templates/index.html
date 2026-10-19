@@ -3,149 +3,575 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Price Prediction System | ML Valuation</title>
+  <title>AutoValuate AI | Production Car Price Prediction & Market Intelligence</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <span class="badge">Machine Learning Pipeline &bull; Scikit-Learn</span>
-      <h1>Car Price Prediction System</h1>
-      <p class="subtitle">Production regression models comparing Linear Regression, Decision Tree, and Random Forest.</p>
-    </header>
 
-    <div class="metrics-bar">
-      <div class="metric-card">
-        <div class="metric-label">Best Model</div>
-        <div class="metric-value">{{ metadata.best_model if metadata else 'Random Forest' }}</div>
-        <div class="metric-desc">Cross-evaluated on test set</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Model R² Accuracy</div>
-        <div class="metric-value">97.2%</div>
-        <div class="metric-desc">Explains 97.2% of price variance</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Mean Absolute Error</div>
-        <div class="metric-value">0.89 L</div>
-        <div class="metric-desc">Low average prediction error</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Training Records</div>
-        <div class="metric-value">{{ metadata.training_samples if metadata else '360' }}</div>
-        <div class="metric-desc">450 total historical sales</div>
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-section">
+      <div class="logo-badge">🚗</div>
+      <div class="brand-text">
+        <h1>AutoValuate AI</h1>
+        <p>Enterprise Car Price Prediction & Automotive Valuation Engine &bull; Scikit-Learn Regression Pipeline</p>
       </div>
     </div>
+    <div class="header-actions">
+      <span class="status-pill">
+        <span class="status-dot"></span>
+        FastAPI Online &bull; Port 5004
+      </span>
+    </div>
+  </header>
 
-    <div class="main-grid">
-      <div class="card">
-        <h2>Enter Vehicle Details</h2>
-        <form id="prediction-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="brand">Brand / Make</label>
-              <select id="brand" name="brand" required>
-                <option value="Toyota">Toyota</option>
-                <option value="Honda">Honda</option>
-                <option value="Hyundai">Hyundai</option>
-                <option value="Maruti" selected>Maruti</option>
-                <option value="Ford">Ford</option>
-                <option value="Volkswagen">Volkswagen</option>
-                <option value="Mahindra">Mahindra</option>
-                <option value="Tata">Tata</option>
-                <option value="BMW">BMW</option>
-                <option value="Audi">Audi</option>
-                <option value="Mercedes">Mercedes</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="year">Manufacturing Year</label>
-              <input type="number" id="year" name="year" min="2005" max="2024" value="2018" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="present_price">Original Showroom Price (Lakhs)</label>
-              <input type="number" id="present_price" name="present_price" step="0.1" min="1.0" max="100.0" value="8.5" required>
-            </div>
-            <div class="form-group">
-              <label for="kms_driven">Kilometers Driven</label>
-              <input type="number" id="kms_driven" name="kms_driven" min="500" max="400000" step="500" value="42000" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="fuel_type">Fuel Type</label>
-              <select id="fuel_type" name="fuel_type" required>
-                <option value="Petrol" selected>Petrol</option>
-                <option value="Diesel">Diesel</option>
-                <option value="CNG">CNG</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="transmission">Transmission</label>
-              <select id="transmission" name="transmission" required>
-                <option value="Manual" selected>Manual</option>
-                <option value="Automatic">Automatic</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="seller_type">Seller Type</label>
-              <select id="seller_type" name="seller_type" required>
-                <option value="Dealer" selected>Dealer</option>
-                <option value="Individual">Individual</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="owner">Previous Owners</label>
-              <select id="owner" name="owner" required>
-                <option value="0" selected>0 (First Owner)</option>
-                <option value="1">1 Prior Owner</option>
-                <option value="2">2 Prior Owners</option>
-                <option value="3">3+ Prior Owners</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="algorithm">Regression Model</label>
-            <select id="algorithm" name="algorithm">
-              <option value="Random Forest Regression" selected>Random Forest Regression (Best: R² = 0.97)</option>
-              <option value="Decision Tree Regression">Decision Tree Regression (R² = 0.95)</option>
-              <option value="Linear Regression">Linear Regression (R² = 0.90)</option>
-            </select>
-          </div>
-
-          <button type="submit" class="btn-primary" id="submit-btn">Calculate Valuation</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <h2>Valuation Estimate</h2>
-        <div id="result-container">
-          <p style="color: #64748b; font-size: 14px;">Fill out the car details on the left and click <strong>Calculate Valuation</strong> to run inference using the trained Scikit-Learn regression pipeline.</p>
-        </div>
-      </div>
+  <!-- Navigation Tabs Bar -->
+  <div class="nav-container">
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('valuation')">
+        <span>⚡</span> Valuation Engine
+      </button>
+      <button class="tab-btn" onclick="switchTab('benchmarks')">
+        <span>📊</span> Model Benchmarks
+      </button>
+      <button class="tab-btn" onclick="switchTab('importance')">
+        <span>🎯</span> Feature Importance
+      </button>
+      <button class="tab-btn" onclick="switchTab('history')">
+        <span>🕒</span> Prediction History (<span id="history-badge">0</span>)
+      </button>
+      <button class="tab-btn" onclick="switchTab('dataset')">
+        <span>📁</span> Dataset Explorer
+      </button>
+      <button class="tab-btn" onclick="switchTab('api')">
+        <span>🔌</span> REST API Docs
+      </button>
     </div>
   </div>
 
-  <script>
-    const form = document.getElementById('prediction-form');
-    const resultContainer = document.getElementById('result-container');
-    const submitBtn = document.getElementById('submit-btn');
+  <div class="main-wrapper">
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Calculating...';
+    <!-- KPI Summary Cards -->
+    <div class="kpi-strip">
+      <div class="kpi-card">
+        <span class="kpi-title">Optimal Production Model</span>
+        <span class="kpi-value" id="kpi-best-model">Random Forest</span>
+        <span class="kpi-subtitle">150-Tree Ensemble Regressor</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-title">Test R² Accuracy</span>
+        <span class="kpi-value" style="color: #16a34a;">97.23%</span>
+        <span class="kpi-subtitle">Variance Explained on Unseen Data</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-title">Mean Absolute Error</span>
+        <span class="kpi-value" style="color: #2563eb;">₹0.88 Lakhs</span>
+        <span class="kpi-subtitle">~$1,060 USD Average Error</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-title">Evaluated Training Records</span>
+        <span class="kpi-value">450 Vehicles</span>
+        <span class="kpi-subtitle">80/20 Train-Test Verified Split</span>
+      </div>
+    </div>
+
+    <!-- TAB 1: VALUATION ENGINE -->
+    <div id="tab-valuation" class="tab-pane active">
+      
+      <!-- Preset Selector Strip -->
+      <div class="presets-card">
+        <h3>⚡ Quick Preset Vehicles (One-Click Valuation Demonstrator)</h3>
+        <div class="presets-grid" id="presets-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div class="valuation-grid">
+        
+        <!-- Left: Form Card -->
+        <div class="panel-card">
+          <h2><span>⚙️</span> Vehicle Specifications & Parameters</h2>
+          <form id="car-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="brand">Manufacturer Brand</label>
+                <select id="brand" name="brand" required onchange="handleBrandChange()">
+                  <option value="Maruti" selected>Maruti Suzuki</option>
+                  <option value="Hyundai">Hyundai</option>
+                  <option value="Honda">Honda</option>
+                  <option value="Toyota">Toyota</option>
+                  <option value="Ford">Ford</option>
+                  <option value="Volkswagen">Volkswagen</option>
+                  <option value="Mahindra">Mahindra</option>
+                  <option value="Tata">Tata</option>
+                  <option value="BMW">BMW</option>
+                  <option value="Audi">Audi</option>
+                  <option value="Mercedes">Mercedes-Benz</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="car_model">Model Variant</label>
+                <input type="text" id="car_model" name="car_model" value="Swift VXI" placeholder="e.g. Swift, City, Creta" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="year">Manufacturing Year</label>
+                <input type="number" id="year" name="year" min="2005" max="2025" value="2018" required>
+              </div>
+              <div class="form-group">
+                <label for="present_price">Original Showroom Price (₹ Lakhs)</label>
+                <input type="number" id="present_price" name="present_price" step="0.1" min="0.5" max="150.0" value="7.2" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="kms_driven">Odometer (Kilometers Driven)</label>
+                <input type="number" id="kms_driven" name="kms_driven" min="100" max="500000" step="500" value="45000" required>
+              </div>
+              <div class="form-group">
+                <label for="fuel_type">Fuel Powertrain</label>
+                <select id="fuel_type" name="fuel_type" required>
+                  <option value="Petrol" selected>Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="CNG">CNG</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="transmission">Transmission Type</label>
+                <select id="transmission" name="transmission" required>
+                  <option value="Manual" selected>Manual Transmission</option>
+                  <option value="Automatic">Automatic Transmission</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="seller_type">Seller Channel</label>
+                <select id="seller_type" name="seller_type" required>
+                  <option value="Dealer" selected>Certified Dealership</option>
+                  <option value="Individual">Individual Seller</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="owner">Previous Ownership History</label>
+                <select id="owner" name="owner" required>
+                  <option value="0" selected>0 (First Owner / Single Hand)</option>
+                  <option value="1">1 Previous Owner</option>
+                  <option value="2">2 Previous Owners</option>
+                  <option value="3">3+ Previous Owners</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="algorithm">Scikit-Learn ML Algorithm</label>
+                <select id="algorithm" name="algorithm">
+                  <option value="Random Forest Regression" selected>Random Forest (Recommended: R² = 97.2%)</option>
+                  <option value="Decision Tree Regression">Decision Tree (R² = 95.3%)</option>
+                  <option value="Linear Regression">Linear Regression (R² = 89.7%)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="btn-calculate">
+                <span>⚡</span> Run Valuation Inference
+              </button>
+              <button type="button" class="btn-secondary" onclick="resetForm()">
+                Reset Form
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right: Valuation Result Panel -->
+        <div class="panel-card">
+          <h2><span>🏷️</span> AI Market Valuation & Depreciation Analysis</h2>
+          <div id="valuation-result-box">
+            <div class="price-hero">
+              <div class="label">Estimated Current Market Fair Value</div>
+              <div class="price-inr" id="res-price-inr">₹4.25 Lakhs</div>
+              <div class="price-usd" id="res-price-usd">~$5,100 USD Equivalent</div>
+              <div class="retention-badge-container">
+                <span class="retention-badge good" id="res-retention">Good Value Retention</span>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-label">Depreciation Rate</div>
+                <div class="detail-value" id="res-deprec-pct">40.9%</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Depreciation Amount</div>
+                <div class="detail-value" id="res-deprec-amt">₹2.95 Lakhs</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Vehicle Age</div>
+                <div class="detail-value" id="res-age">6 Years Old</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Algorithm Confidence</div>
+                <div class="detail-value" id="res-algo-r2">R² = 97.23%</div>
+              </div>
+            </div>
+
+            <div class="ci-card">
+              <div class="ci-card-header">
+                <span>90% Confidence Interval Range</span>
+                <span id="res-ci-text">₹3.80L &mdash; ₹4.70L</span>
+              </div>
+              <div class="ci-bar-track">
+                <div class="ci-bar-fill" style="left: 30%; width: 40%;"></div>
+              </div>
+            </div>
+
+            <!-- Resale Trajectory Chart -->
+            <div class="trajectory-section">
+              <h4>📉 Estimated Value Decay Trajectory (Years 1 to 10)</h4>
+              <div class="trajectory-bars" id="trajectory-bars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: MODEL BENCHMARKS -->
+    <div id="tab-benchmarks" class="tab-pane">
+      <div class="benchmarks-grid">
+        
+        <!-- Random Forest -->
+        <div class="model-card recommended">
+          <span class="rec-tag">Production Best</span>
+          <h3>Random Forest Regressor</h3>
+          <p class="desc">150 decision trees trained with bootstrap aggregation and maximum depth of 12.</p>
+          <div class="metric-row"><span class="name">Test R² Score</span><span class="val" style="color: #16a34a;">0.9723 (97.2%)</span></div>
+          <div class="metric-row"><span class="name">Train R² Score</span><span class="val">0.9922</span></div>
+          <div class="metric-row"><span class="name">Test RMSE</span><span class="val">1.3989 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Test MAE</span><span class="val">0.8835 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Number of Estimators</span><span class="val">150 Trees</span></div>
+          <div class="metric-row"><span class="name">Max Tree Depth</span><span class="val">12 Levels</span></div>
+          <div class="metric-row"><span class="name">Generalization Gap</span><span class="val">0.0199 (Extremely Low)</span></div>
+        </div>
+
+        <!-- Decision Tree -->
+        <div class="model-card">
+          <h3>Decision Tree Regressor</h3>
+          <p class="desc">Single optimal decision tree using squared error criterion with maximum depth 7.</p>
+          <div class="metric-row"><span class="name">Test R² Score</span><span class="val" style="color: #2563eb;">0.9525 (95.3%)</span></div>
+          <div class="metric-row"><span class="name">Train R² Score</span><span class="val">0.9910</span></div>
+          <div class="metric-row"><span class="name">Test RMSE</span><span class="val">1.8307 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Test MAE</span><span class="val">1.1746 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Criterion</span><span class="val">Squared Error</span></div>
+          <div class="metric-row"><span class="name">Max Tree Depth</span><span class="val">7 Levels</span></div>
+          <div class="metric-row"><span class="name">Interpretability</span><span class="val">High (Rule-based)</span></div>
+        </div>
+
+        <!-- Linear Regression -->
+        <div class="model-card">
+          <h3>Linear Regression (OLS)</h3>
+          <p class="desc">Ordinary Least Squares baseline on standardized continuous and one-hot categorical features.</p>
+          <div class="metric-row"><span class="name">Test R² Score</span><span class="val" style="color: #f59e0b;">0.8968 (89.7%)</span></div>
+          <div class="metric-row"><span class="name">Train R² Score</span><span class="val">0.8856</span></div>
+          <div class="metric-row"><span class="name">Test RMSE</span><span class="val">2.6989 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Test MAE</span><span class="val">1.7214 Lakhs</span></div>
+          <div class="metric-row"><span class="name">Fit Intercept</span><span class="val">True</span></div>
+          <div class="metric-row"><span class="name">Feature Scaling</span><span class="val">StandardScaler</span></div>
+          <div class="metric-row"><span class="name">Baseline Role</span><span class="val">Linear Lower Bound</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: FEATURE IMPORTANCE -->
+    <div id="tab-importance" class="tab-pane">
+      <div class="fi-container">
+        <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Scikit-Learn Feature Importance Hierarchy</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Gini-impurity reduction weights extracted from the 150-tree Random Forest regressor.</p>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Showroom Price (Ex-Showroom Original Cost)</span>
+            <span><strong>75.14%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 75.14%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Vehicle Age (Years Since Manufacture)</span>
+            <span><strong>13.30%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 13.30%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Odometer Mileage (Kilometers Driven)</span>
+            <span><strong>9.31%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 9.31%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Manufacturer Brand Equity</span>
+            <span><strong>1.32%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 1.32%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Number of Previous Owners</span>
+            <span><strong>0.33%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 0.33%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Seller Channel (Dealer vs. Private Individual)</span>
+            <span><strong>0.20%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 0.20%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Transmission Type (Automatic vs. Manual)</span>
+            <span><strong>0.20%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 0.20%;"></div></div>
+        </div>
+
+        <div class="fi-item">
+          <div class="fi-header">
+            <span>Fuel Powertrain (Petrol / Diesel / CNG)</span>
+            <span><strong>0.20%</strong></span>
+          </div>
+          <div class="fi-bar-bg"><div class="fi-bar-fill" style="width: 0.20%;"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: PREDICTION HISTORY -->
+    <div id="tab-history" class="tab-pane">
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div>
+            <h3>SQLite Transactional Valuation Log</h3>
+            <p style="color: var(--text-muted); font-size: 13px;">Real-time persistence stored in <code>source_code/data/predictions.db</code>.</p>
+          </div>
+          <div class="table-actions">
+            <button class="btn-secondary" onclick="fetchHistory()">🔄 Refresh Log</button>
+            <button class="btn-secondary" style="color: #dc2626; border-color: #fca5a5;" onclick="clearHistory()">🗑️ Clear All History</button>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Timestamp</th>
+              <th>Brand & Model</th>
+              <th>Year</th>
+              <th>Original Price</th>
+              <th>Odometer</th>
+              <th>Algorithm</th>
+              <th>Predicted Price</th>
+              <th>Retention</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <tr><td colspan="10" style="text-align: center; color: var(--text-muted);">Loading valuation history...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 5: DATASET EXPLORER -->
+    <div id="tab-dataset" class="tab-pane">
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div>
+            <h3>Historical Automotive Sales Benchmark Dataset</h3>
+            <p style="color: var(--text-muted); font-size: 13px;">Displaying verified records from <code>source_code/data/car_data.csv</code> (450 total sales).</p>
+          </div>
+          <div>
+            <button class="btn-secondary" onclick="fetchDatasetSample()">🔄 Reload Records</button>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Vehicle Name</th>
+              <th>Year</th>
+              <th>Selling Price (₹L)</th>
+              <th>Showroom Price (₹L)</th>
+              <th>Kms Driven</th>
+              <th>Fuel</th>
+              <th>Seller</th>
+              <th>Transmission</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody id="dataset-table-body">
+            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Loading dataset records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 6: REST API DOCS -->
+    <div id="tab-api" class="tab-pane">
+      <div class="panel-card">
+        <h2><span>🔌</span> FastAPI REST Service Specification</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Production OpenAPI REST endpoints available on <code>http://localhost:5004</code>.
+        </p>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/health</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Returns system operational health, models in memory, and artifact availability.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/presets</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Provides curated vehicle specifications for instant interactive evaluation and testing.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method post">POST</span><span class="api-path">/api/predict</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Executes regression inference pipeline, computes 90% confidence bounds, and logs transaction.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/info</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Returns complete model metrics, feature importances, and brand catalog metadata.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/history</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Retrieves paginated SQLite valuation records.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/analytics</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Returns aggregated valuation statistics, average resale prices, and retention distributions.</p>
+        </div>
+
+        <div class="api-card">
+          <div><span class="api-method get">GET</span><span class="api-path">/api/dataset/sample</span></div>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px;">Returns raw benchmark vehicle sample rows from the CSV repository.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentPresets = [];
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetPane = document.getElementById(`tab-${tabId}`);
+      if (targetPane) targetPane.classList.add('active');
+      
+      // Match active button
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(tabId)) {
+          btn.classList.add('active');
+        }
+      });
+
+      if (tabId === 'history') fetchHistory();
+      if (tabId === 'dataset') fetchDatasetSample();
+    }
+
+    // Load Presets
+    async function loadPresets() {
+      try {
+        const res = await fetch('/api/presets');
+        if (res.ok) {
+          currentPresets = await res.json();
+          renderPresets();
+        }
+      } catch (e) {
+        console.warn('Could not load presets:', e);
+      }
+    }
+
+    function renderPresets() {
+      const container = document.getElementById('presets-container');
+      container.innerHTML = '';
+      currentPresets.forEach((p, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `preset-btn ${idx === 0 ? 'active' : ''}`;
+        btn.innerHTML = `<span>🚘</span> <strong>${p.brand} ${p.car_model}</strong> (${p.year}) &bull; ₹${p.present_price}L`;
+        btn.onclick = () => selectPreset(p, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectPreset(preset, btnEl) {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      document.getElementById('brand').value = preset.brand;
+      document.getElementById('car_model').value = preset.car_model || '';
+      document.getElementById('year').value = preset.year;
+      document.getElementById('present_price').value = preset.present_price;
+      document.getElementById('kms_driven').value = preset.kms_driven;
+      document.getElementById('fuel_type').value = preset.fuel_type;
+      document.getElementById('transmission').value = preset.transmission;
+      document.getElementById('seller_type').value = preset.seller_type;
+      document.getElementById('owner').value = preset.owner;
+      document.getElementById('algorithm').value = preset.algorithm || 'Random Forest Regression';
+
+      // Auto submit
+      submitForm();
+    }
+
+    function handleBrandChange() {
+      const brand = document.getElementById('brand').value;
+      const modelInput = document.getElementById('car_model');
+      if (brand === 'Toyota') modelInput.value = 'Innova Crysta';
+      else if (brand === 'Honda') modelInput.value = 'City';
+      else if (brand === 'Hyundai') modelInput.value = 'Creta';
+      else if (brand === 'Maruti') modelInput.value = 'Swift';
+      else if (brand === 'BMW') modelInput.value = '3 Series';
+      else if (brand === 'Audi') modelInput.value = 'A4';
+      else if (brand === 'Mercedes') modelInput.value = 'C-Class';
+    }
+
+    // Submit Valuation Form
+    async function submitForm() {
+      const btn = document.getElementById('btn-calculate');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Calculating Inference...';
 
       const payload = {
         brand: document.getElementById('brand').value,
+        car_model: document.getElementById('car_model').value,
         year: parseInt(document.getElementById('year').value),
         present_price: parseFloat(document.getElementById('present_price').value),
         kms_driven: parseFloat(document.getElementById('kms_driven').value),
@@ -157,51 +583,180 @@
       };
 
       try {
-        const response = await fetch('/api/predict', {
+        const res = await fetch('/api/predict', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
-          const err = await response.json();
-          throw new Error(err.detail || 'Prediction request failed');
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Prediction failed');
         }
 
-        const data = await response.json();
-        resultContainer.innerHTML = `
-          <div class="result-box">
-            <div class="result-title">Estimated Market Value</div>
-            <div class="result-price">₹${data.predicted_price_lakhs} Lakhs <span style="font-size: 18px; font-weight: normal; color: #166534;">(~$${data.predicted_price_usd.toLocaleString()} USD)</span></div>
-            <p style="font-size: 13px; color: #15803d; margin-top: 4px;">
-              Value Retention: <strong>${data.retention_rating}</strong> &bull; Total Depreciation: <strong>${data.depreciation_percentage}%</strong>
-            </p>
-            <div class="result-details">
-              <div class="result-detail-item">
-                <div class="detail-label">Confidence Interval (90%)</div>
-                <div class="detail-val">₹${data.confidence_range.lower_lakhs}L - ₹${data.confidence_range.upper_lakhs}L</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Model Used</div>
-                <div class="detail-val">${data.model_details.algorithm}</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Model Test R² Score</div>
-                <div class="detail-val">${(data.model_details.r2_score * 100).toFixed(1)}%</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Vehicle Age</div>
-                <div class="detail-val">${data.vehicle_summary.age_years} years old</div>
-              </div>
-            </div>
-          </div>
-        `;
+        const data = await res.json();
+        renderResult(data);
+        updateHistoryCount();
       } catch (err) {
-        resultContainer.innerHTML = `<div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 16px; border-radius: 8px;">Error: ${err.message}</div>`;
+        alert('Valuation Error: ' + err.message);
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Calculate Valuation';
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡</span> Run Valuation Inference';
       }
+    }
+
+    document.getElementById('car-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      submitForm();
+    });
+
+    function resetForm() {
+      document.getElementById('car-form').reset();
+      handleBrandChange();
+    }
+
+    function renderResult(data) {
+      document.getElementById('res-price-inr').textContent = `₹${data.predicted_price_lakhs} Lakhs`;
+      document.getElementById('res-price-usd').textContent = `~$${data.predicted_price_usd.toLocaleString()} USD Equivalent`;
+      
+      const badge = document.getElementById('res-retention');
+      badge.textContent = `${data.retention_rating} Value Retention`;
+      badge.className = 'retention-badge ' + data.retention_rating.toLowerCase().split(' ')[0];
+
+      document.getElementById('res-deprec-pct').textContent = `${data.depreciation_percentage}%`;
+      document.getElementById('res-deprec-amt').textContent = `₹${data.depreciation_amount_lakhs} Lakhs`;
+      document.getElementById('res-age').textContent = `${data.vehicle_summary.age_years} Years Old`;
+      document.getElementById('res-algo-r2').textContent = `R² = ${(data.model_details.r2_score * 100).toFixed(1)}%`;
+
+      document.getElementById('res-ci-text').textContent = `₹${data.confidence_range.lower_lakhs}L &mdash; ₹${data.confidence_range.upper_lakhs}L`;
+
+      // Render Trajectory Bars (Years 1 to 10 decay)
+      const container = document.getElementById('trajectory-bars');
+      container.innerHTML = '';
+      const present = data.original_price_lakhs;
+      const curAge = data.vehicle_summary.age_years;
+
+      for (let yr = 1; yr <= 10; yr++) {
+        // Empirical depreciation approximation: Price * (1 - 0.12)^yr
+        const estVal = Math.max(0.2, present * Math.pow(0.88, yr));
+        const pctHeight = Math.min(100, (estVal / present) * 100);
+
+        const col = document.createElement('div');
+        col.className = 'traj-col';
+        col.innerHTML = `
+          <div class="traj-bar ${yr === curAge ? 'current' : ''}" style="height: ${pctHeight}%;"></div>
+          <span class="traj-label">Y${yr}</span>
+        `;
+        container.appendChild(col);
+      }
+    }
+
+    // History Functions
+    async function updateHistoryCount() {
+      try {
+        const res = await fetch('/api/history');
+        if (res.ok) {
+          const list = await res.json();
+          document.getElementById('history-badge').textContent = list.length;
+        }
+      } catch (e) {}
+    }
+
+    async function fetchHistory() {
+      const tbody = document.getElementById('history-table-body');
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Loading history records...</td></tr>';
+      try {
+        const res = await fetch('/api/history?limit=50');
+        if (res.ok) {
+          const rows = await res.json();
+          document.getElementById('history-badge').textContent = rows.length;
+          if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color: var(--text-muted);">No stored predictions yet. Run a valuation above!</td></tr>';
+            return;
+          }
+          tbody.innerHTML = rows.map(r => `
+            <tr>
+              <td>#${r.id}</td>
+              <td style="font-size: 11px; color: var(--text-muted);">${r.created_at ? r.created_at.slice(0, 19).replace('T', ' ') : '-'}</td>
+              <td><strong>${r.brand}</strong> ${r.car_model || ''}</td>
+              <td>${r.year}</td>
+              <td>₹${r.present_price}L</td>
+              <td>${Number(r.kms_driven).toLocaleString()} km</td>
+              <td style="font-size: 11px;">${r.algorithm || 'Random Forest'}</td>
+              <td><strong style="color: #166534;">₹${r.predicted_price_lakhs}L</strong></td>
+              <td><span class="retention-badge ${r.retention_rating.toLowerCase().split(' ')[0]}" style="font-size:10px; padding:2px 8px;">${r.retention_rating}</span></td>
+              <td><button class="delete-btn" onclick="deleteRecord(${r.id})">Delete</button></td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="10" style="color:red; text-align:center;">Failed to fetch history: ${e.message}</td></tr>`;
+      }
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm(`Delete prediction record #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/history/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          fetchHistory();
+        }
+      } catch (e) {
+        alert('Delete failed');
+      }
+    }
+
+    async function clearHistory() {
+      if (!confirm('Are you sure you want to delete all historical prediction records?')) return;
+      try {
+        const res = await fetch('/api/history', { method: 'DELETE' });
+        if (res.ok) {
+          fetchHistory();
+        }
+      } catch (e) {
+        alert('Clear failed');
+      }
+    }
+
+    // Dataset Sample
+    async function fetchDatasetSample() {
+      const tbody = document.getElementById('dataset-table-body');
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Loading dataset rows...</td></tr>';
+      try {
+        const res = await fetch('/api/dataset/sample?limit=25');
+        if (res.ok) {
+          const rows = await res.json();
+          tbody.innerHTML = rows.map(r => `
+            <tr>
+              <td><strong>${r.Car_Name}</strong></td>
+              <td>${r.Year}</td>
+              <td style="color: #166534; font-weight: 700;">₹${r.Selling_Price}L</td>
+              <td>₹${r.Present_Price}L</td>
+              <td>${Number(r.Kms_Driven).toLocaleString()} km</td>
+              <td>${r.Fuel_Type}</td>
+              <td>${r.Seller_Type}</td>
+              <td>${r.Transmission}</td>
+              <td>${r.Owner}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="9" style="color:red; text-align:center;">Failed to load dataset: ${e.message}</td></tr>`;
+      }
+    }
+
+    // Initial Load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPresets();
+      updateHistoryCount();
+      // Run initial prediction with preset #1
+      setTimeout(() => {
+        if (currentPresets.length > 0) {
+          selectPreset(currentPresets[0], document.querySelector('.preset-btn'));
+        } else {
+          submitForm();
+        }
+      }, 300);
     });
   </script>
 </body>

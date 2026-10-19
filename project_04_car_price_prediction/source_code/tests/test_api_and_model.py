@@ -237,6 +237,120 @@ def test_dataset_sample_endpoint():
         assert key in first
 
 
+def test_presets_endpoint():
+    """10. Verify /api/presets returns valid preset vehicles."""
+    response = client.get("/api/presets")
+    assert response.status_code == 200
+    presets = response.json()
+    assert len(presets) >= 4
+    for p in presets:
+        assert "brand" in p
+        assert "present_price" in p
+        assert "kms_driven" in p
+        assert "year" in p
+        assert "fuel_type" in p
+
+
+def test_analytics_endpoint():
+    """11. Verify /api/analytics returns statistical summary of valuations."""
+    response = client.get("/api/analytics")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_predictions" in data
+    assert "summary" in data
+    assert "best_model" in data
+
+
+def test_root_index_html():
+    """12. Verify GET / serves the interactive automotive intelligence portal."""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers.get("content-type", "")
+    assert "AutoValuate AI" in response.text
+    assert "Valuation Engine" in response.text
+
+
+def test_prediction_with_each_preset():
+    """13. Verify inference succeeds for every preset vehicle."""
+    presets = client.get("/api/presets").json()
+    for p in presets:
+        payload = {
+            "brand": p["brand"],
+            "car_model": p.get("car_model", "Standard"),
+            "year": p["year"],
+            "present_price": p["present_price"],
+            "kms_driven": p["kms_driven"],
+            "fuel_type": p["fuel_type"],
+            "seller_type": p["seller_type"],
+            "transmission": p["transmission"],
+            "owner": p["owner"],
+            "algorithm": p.get("algorithm", "Random Forest Regression")
+        }
+        res = client.post("/api/predict", json=payload)
+        assert res.status_code == 200
+        val = res.json()
+        assert val["predicted_price_lakhs"] > 0
+        assert val["predicted_price_lakhs"] <= p["present_price"] * 1.05
+
+
+def test_feature_importance_consistency():
+    """14. Verify top features influencing price are showroom price, age, and odometer."""
+    meta = client.get("/api/info").json()
+    importances = meta["feature_importances"]
+    top_keys = [f["key"] for f in importances[:3]]
+    assert "Present_Price" in top_keys
+    assert "Car_Age" in top_keys
+    assert "Kms_Driven" in top_keys
+
+
+def test_decision_tree_estimator_depth():
+    """15. Verify decision tree model depth and splitting properties."""
+    path = os.path.join("models", "decision_tree_regression.joblib")
+    pipeline = joblib.load(path)
+    dt = pipeline.named_steps["regressor"]
+    assert dt.get_depth() <= 8
+    # After one-hot encoding of categorical features (Brand, Fuel, etc.), feature space is 22 dimensions
+    assert dt.n_features_in_ == 22
+
+
+def test_linear_regression_coefficients():
+    """16. Verify linear regression baseline has coefficients and intercept."""
+    path = os.path.join("models", "linear_regression.joblib")
+    pipeline = joblib.load(path)
+    lr = pipeline.named_steps["regressor"]
+    assert hasattr(lr, "coef_")
+    assert hasattr(lr, "intercept_")
+    assert lr.fit_intercept is True
+
+
+def test_extreme_mileage_and_age_depreciation():
+    """17. Verify older cars with high mileage suffer severe depreciation."""
+    payload_old = {
+        "brand": "Maruti",
+        "car_model": "Alto",
+        "year": 2008,
+        "present_price": 4.5,
+        "kms_driven": 180000.0,
+        "fuel_type": "Petrol",
+        "seller_type": "Individual",
+        "transmission": "Manual",
+        "owner": 2,
+        "algorithm": "Random Forest Regression"
+    }
+    res_old = client.post("/api/predict", json=payload_old)
+    assert res_old.status_code == 200
+    data_old = res_old.json()
+    assert data_old["depreciation_percentage"] >= 50.0
+
+
+def test_clear_and_repopulate_history():
+    """18. Verify clear history and query on empty state."""
+    client.delete("/api/history")
+    res = client.get("/api/history")
+    assert res.status_code == 200
+    assert len(res.json()) == 0
+
+
 if __name__ == "__main__":
     test_suite = [
         ("1. Model Artifact Loading (Joblib, Pickle, Candidates)", test_model_loading_artifacts),
@@ -248,6 +362,15 @@ if __name__ == "__main__":
         ("7. Pydantic Boundary & Error Input Validation", test_predict_input_validation_boundary_conditions),
         ("8. SQLite Persistence & History CRUD", test_sqlite_database_crud_persistence),
         ("9. Dataset Sample Endpoint Integrity", test_dataset_sample_endpoint),
+        ("10. Curated Presets Endpoint Integrity", test_presets_endpoint),
+        ("11. Valuation Analytics Endpoint Integrity", test_analytics_endpoint),
+        ("12. Interactive UI Portal Servicing (GET /)", test_root_index_html),
+        ("13. Multi-Vehicle Preset Valuation Inferences", test_prediction_with_each_preset),
+        ("14. Feature Importance Hierarchy Consistency", test_feature_importance_consistency),
+        ("15. Decision Tree Regressor Depth & Structure", test_decision_tree_estimator_depth),
+        ("16. Linear Regression OLS Weights & Intercept", test_linear_regression_coefficients),
+        ("17. Non-linear Depreciation on High Age & Mileage", test_extreme_mileage_and_age_depreciation),
+        ("18. SQLite History Table Clearance & Reset", test_clear_and_repopulate_history),
     ]
 
     print("==================================================================")
