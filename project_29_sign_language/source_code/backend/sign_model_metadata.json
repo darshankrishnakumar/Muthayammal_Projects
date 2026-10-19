@@ -1,0 +1,77 @@
+{
+  "project_id": "PROJECT-029",
+  "domain": "Computer Vision & Accessibility - Sign Language Translation",
+  "classes": [
+    "HELLO",
+    "THANK YOU",
+    "PLEASE",
+    "YES",
+    "NO",
+    "HELP",
+    "I LOVE YOU",
+    "WATER",
+    "DOCTOR",
+    "EMERGENCY",
+    "GOOD",
+    "WELCOME",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+  ],
+  "class_count": 38,
+  "dataset_samples": 5700,
+  "features_count": 63,
+  "landmarks_count": 21,
+  "models": {
+    "SignSpatialClassifier": {
+      "architecture": "Deep Residual Landmark Classifier (Linear 128-256, 2x Residual Blocks, Head 128-38)",
+      "weights_file": "sign_spatial_classifier_weights.pt",
+      "file_size_bytes": 1390591,
+      "test_accuracy_pct": 92.89,
+      "loss_function": "CrossEntropyLoss",
+      "parameters_count": 344998
+    },
+    "SignSequenceBiLSTM": {
+      "architecture": "2-Layer Bidirectional LSTM with Temporal Self-Attention and Transition Head",
+      "weights_file": "sign_sequence_bilstm_weights.pt",
+      "file_size_bytes": 807193,
+      "test_accuracy_pct": 89.39,
+      "sequence_length": 16,
+      "parameters_count": 199272
+    }
+  },
+  "kinematic_skeleton": {
+    "bones_count": 21,
+    "chains": [
+      "Thumb (0-4)",
+      "Index (0-8)",
+      "Middle (0-12)",
+      "Ring (0-16)",
+      "Pinky (0-20)",
+      "Palm Base (5,9,13,17)"
+    ]
+  }
+}

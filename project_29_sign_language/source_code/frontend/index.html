@@ -481,7 +481,7 @@ canvas#handCanvas {
 </div>
 
 <script>
-const API_BASE = 'http://localhost:5029/api';
+const API_BASE = window.location.origin.includes('5029') ? `${window.location.origin}/api` : 'http://127.0.0.1:5029/api';
 let candidatesChartInstance = null;
 let currentSignData = null;
 let speechVoice = null;
@@ -690,6 +690,14 @@ window.addEventListener('DOMContentLoaded', () => {
   initAlphabet();
   loadData();
 });
+
+// Expose automation helpers for test suite & puppeteer recording
+window.triggerSign = triggerSign;
+window.speakCurrentSentence = speakCurrentSentence;
+window.clearSentence = clearSentence;
+window.copySentence = copySentence;
+window.loadData = loadData;
+window.speakText = speakText;
 </script>
 
 </body>
