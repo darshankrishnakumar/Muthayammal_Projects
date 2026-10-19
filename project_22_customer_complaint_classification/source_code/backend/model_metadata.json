@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-10-19T19:25:15.669250",
+  "dataset_samples": 6000,
+  "train_samples": 4800,
+  "test_samples": 1200,
+  "vocab_size": 2603,
+  "ngram_range": [
+    1,
+    2
+  ],
+  "category_model": {
+    "algorithm": "Logistic Regression (Calibrated L2 Regularized)",
+    "classes": [
+      "account_issue",
+      "delivery_problem",
+      "payment_issue",
+      "product_complaint",
+      "service_dissatisfaction",
+      "technical_issue"
+    ],
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "classification_report": {
+      "account_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 194.0
+      },
+      "delivery_problem": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 200.0
+      },
+      "payment_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 201.0
+      },
+      "product_complaint": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 208.0
+      },
+      "service_dissatisfaction": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 200.0
+      },
+      "technical_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 197.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      }
+    }
+  },
+  "priority_model": {
+    "algorithm": "Logistic Regression (Calibrated L2 Regularized)",
+    "classes": [
+      "critical",
+      "high",
+      "low",
+      "medium"
+    ],
+    "accuracy": 0.8225,
+    "macro_f1": 0.8366,
+    "classification_report": {
+      "critical": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 181.0
+      },
+      "high": {
+        "precision": 0.817629179331307,
+        "recall": 0.7620396600566572,
+        "f1-score": 0.7888563049853372,
+        "support": 353.0
+      },
+      "low": {
+        "precision": 0.6901960784313725,
+        "recall": 0.7822222222222223,
+        "f1-score": 0.7333333333333333,
+        "support": 225.0
+      },
+      "medium": {
+        "precision": 0.8298850574712644,
+        "recall": 0.81859410430839,
+        "f1-score": 0.8242009132420092,
+        "support": 441.0
+      },
+      "accuracy": 0.8225,
+      "macro avg": {
+        "precision": 0.8344275788084858,
+        "recall": 0.8407139966468173,
+        "f1-score": 0.8365976378901698,
+        "support": 1200.0
+      },
+      "weighted avg": {
+        "precision": 0.8257471069131981,
+        "recall": 0.8225,
+        "f1-score": 0.8232823986662917,
+        "support": 1200.0
+      }
+    }
+  }
+}

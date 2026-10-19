@@ -607,7 +607,7 @@ tr:hover td { background: rgba(255, 255, 255, 0.02); }
 </div>
 
 <script>
-const API_BASE = 'http://localhost:5022/api';
+const API_BASE = (window.location.protocol.startsWith('http') && window.location.port === '5022') ? '/api' : 'http://127.0.0.1:5022/api';
 let allTickets = [];
 let catChartInstance = null;
 let priChartInstance = null;
