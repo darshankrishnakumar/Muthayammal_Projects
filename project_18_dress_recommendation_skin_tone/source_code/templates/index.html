@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dress Recommender • Skin Tone & Body Measurement Multi-Modal Engine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <div class="nav-brand">
+                <div class="brand-icon">👗</div>
+                <div class="brand-text">
+                    <h1>StyleHarmonize AI <span class="badge-port">PORT 5018</span></h1>
+                    <p class="tagline">Skin Tone & Body Measurement Multi-Modal Dress Recommendation</p>
+                </div>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-tab="studio">
+                    <span class="tab-icon">✨</span> Recommender Studio
+                </button>
+                <button class="nav-tab" data-tab="catalogue">
+                    <span class="tab-icon">🛍️</span> Catalogue Explorer
+                </button>
+                <button class="nav-tab" data-tab="models">
+                    <span class="tab-icon">📊</span> Model Benchmarks
+                </button>
+                <button class="nav-tab" data-tab="history">
+                    <span class="tab-icon">🗄️</span> SQLite History
+                </button>
+                <button class="nav-tab" data-tab="architecture">
+                    <span class="tab-icon">🧠</span> Neural Pipeline
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- TAB 1: RECOMMENDER STUDIO -->
+            <section id="tab-studio" class="tab-pane active">
+                <div class="studio-layout">
+                    <!-- Left: Profile & Styling Form -->
+                    <div class="glass-card config-panel">
+                        <div class="panel-header">
+                            <h2>Personalized Styling Parameters</h2>
+                            <span class="badge-tag">Multi-Modal Inputs</span>
+                        </div>
+                        <p class="panel-desc">Configure anatomical silhouette ratios, melanin chromatic tone, and aesthetic preferences.</p>
+
+                        <!-- Preset Evaluated Personas -->
+                        <div class="presets-section">
+                            <label class="input-label">Evaluated Benchmark Profiles:</label>
+                            <div class="preset-chips">
+                                <button type="button" class="preset-chip active" data-preset="p1">🌸 Fair Cool • Hourglass (Gala)</button>
+                                <button type="button" class="preset-chip" data-preset="p2">🌿 Medium Warm • Pear (Formal)</button>
+                                <button type="button" class="preset-chip" data-preset="p3">🍂 Olive Warm • Rectangle (Ethnic)</button>
+                                <button type="button" class="preset-chip" data-preset="p4">🍫 Deep Neutral • Inverted Triangle (Casual)</button>
+                            </div>
+                        </div>
+
+                        <form id="recommendForm">
+                            <!-- Section 1: Chromatic Tone Analysis -->
+                            <div class="form-section">
+                                <h3 class="section-title">1. Chromatic Skin Tone & Undertone</h3>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="skinTone">Melanin Depth (Skin Tone):</label>
+                                        <select id="skinTone" name="skin_tone" class="custom-select">
+                                            <option value="Fair">Fair / Porcelain (Light Melanin)</option>
+                                            <option value="Medium" selected>Medium / Wheatish (Moderate Melanin)</option>
+                                            <option value="Olive">Olive / Golden (Rich Undertone)</option>
+                                            <option value="Deep">Deep / Espresso (High Melanin)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="undertone">Vascular Undertone:</label>
+                                        <select id="undertone" name="undertone" class="custom-select">
+                                            <option value="Warm" selected>Warm (Golden / Peachy)</option>
+                                            <option value="Cool">Cool (Rosy / Bluish)</option>
+                                            <option value="Neutral">Neutral (Balanced Vein Tone)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Body Proportions & Silhouette -->
+                            <div class="form-section">
+                                <h3 class="section-title">2. Anatomical Silhouette Classification</h3>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="bodyShape">Body Silhouette Type:</label>
+                                        <select id="bodyShape" name="body_shape" class="custom-select">
+                                            <option value="Hourglass" selected>Hourglass (Balanced Shoulders/Hips, Defined Waist)</option>
+                                            <option value="Pear">Pear / Triangle (Hips Broader than Shoulders)</option>
+                                            <option value="Rectangle">Rectangle / Athletic (Balanced, Straight Torso)</option>
+                                            <option value="Inverted Triangle">Inverted Triangle (Broad Shoulders, Slim Hips)</option>
+                                            <option value="Apple">Apple / Round (Weight Centered at Midsection)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="preferredOccasion">Occasion / Setting:</label>
+                                        <select id="preferredOccasion" name="preferred_occasions" class="custom-select">
+                                            <option value="Formal" selected>Formal / Corporate Business</option>
+                                            <option value="Casual">Casual / Everyday Weekend</option>
+                                            <option value="Party">Party / Evening Gala</option>
+                                            <option value="Ethnic">Ethnic / Traditional Celebration</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Aesthetics & Budget -->
+                            <div class="form-section">
+                                <h3 class="section-title">3. Aesthetic Preference & Query</h3>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="preferredStyle">Aesthetic Style:</label>
+                                        <select id="preferredStyle" name="preferred_styles" class="custom-select">
+                                            <option value="Classic" selected>Classic / Tailored</option>
+                                            <option value="Modern">Modern / Contemporary</option>
+                                            <option value="Bohemian">Bohemian / Flowing</option>
+                                            <option value="Minimalist">Minimalist / Clean</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="preferredColour">Accent Color Preference:</label>
+                                        <select id="preferredColour" name="preferred_colours" class="custom-select">
+                                            <option value="Navy Blue" selected>Navy Blue / Indigo</option>
+                                            <option value="White">Crisp White / Ivory</option>
+                                            <option value="Emerald">Emerald Green / Teal</option>
+                                            <option value="Crimson">Crimson / Maroon</option>
+                                            <option value="Charcoal">Charcoal / Black</option>
+                                            <option value="Pastel">Soft Pastel / Sky Blue</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="queryText">Semantic Style Query (Optional keywords):</label>
+                                    <input type="text" id="queryText" name="query_text" class="custom-input" placeholder="e.g. breathable cotton slim fit shirt, elegant wrap dress">
+                                </div>
+
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="budgetMax">Maximum Budget (₹): <span id="budgetValue">₹6,000</span></label>
+                                        <input type="range" id="budgetMax" name="budget_max" min="1000" max="15000" step="500" value="6000" class="custom-range">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="preferredCategory">Category Filter:</label>
+                                        <select id="preferredCategory" name="preferred_categories" class="custom-select">
+                                            <option value="All" selected>All Categories (Hybrid Recommended)</option>
+                                            <option value="Shirts">Shirts</option>
+                                            <option value="Dresses">Dresses</option>
+                                            <option value="Formal wear">Formal Wear</option>
+                                            <option value="Sarees">Sarees</option>
+                                            <option value="Kurtis">Kurtis</option>
+                                            <option value="Jeans">Jeans</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="btnRecommend" class="btn-primary">
+                                <span class="btn-icon">⚡</span> Run Multi-Modal Hybrid Recommendation
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Recommendation Showcase -->
+                    <div class="results-panel">
+                        <!-- Telemetry Summary Banner -->
+                        <div class="glass-card telemetry-card" id="telemetryBanner">
+                            <div class="telemetry-grid">
+                                <div class="tel-item">
+                                    <span class="tel-label">ML PREDICTED CATEGORY</span>
+                                    <span class="tel-val text-accent" id="telCategory">Shirts</span>
+                                </div>
+                                <div class="tel-item">
+                                    <span class="tel-label">GBM CONFIDENCE</span>
+                                    <span class="tel-val text-success" id="telConfidence">78.4%</span>
+                                </div>
+                                <div class="tel-item">
+                                    <span class="tel-label">CATALOGUE CANDIDATES</span>
+                                    <span class="tel-val" id="telCandidates">20 Outfits</span>
+                                </div>
+                                <div class="tel-item">
+                                    <span class="tel-label">INFERENCE LATENCY</span>
+                                    <span class="tel-val text-cyan" id="telLatency">11.8 ms</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations Grid -->
+                        <div class="outfit-grid-header">
+                            <h3>Curated Outfit Recommendations</h3>
+                            <span class="badge-count" id="outfitCountBadge">Top 6 Matches</span>
+                        </div>
+                        <div class="outfits-container" id="outfitGrid">
+                            <div class="loading-state">Generating multi-modal recommendations...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: CATALOGUE EXPLORER -->
+            <section id="tab-catalogue" class="tab-pane">
+                <div class="glass-card table-card">
+                    <div class="card-header-row">
+                        <div>
+                            <h2>Clothing Catalogue Explorer</h2>
+                            <p class="section-desc">20+ curations annotated with garment type, price, skin tones, undertones, and body silhouettes.</p>
+                        </div>
+                        <span class="badge-pill badge-primary" id="catalogueTotalBadge">20 Items</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="catalogueTable">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Outfit ID</th>
+                                    <th>Name & Type</th>
+                                    <th>Category</th>
+                                    <th>Occasion</th>
+                                    <th>Dominant Colour</th>
+                                    <th>Suitable Skin Tones</th>
+                                    <th>Compatible Silhouettes</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalogueTableBody">
+                                <tr><td colspan="9">Loading catalogue data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: MODEL BENCHMARKS -->
+            <section id="tab-models" class="tab-pane">
+                <div class="benchmarks-grid">
+                    <div class="glass-card">
+                        <h2>Gradient Boosting Machine (GBM) Architecture</h2>
+                        <p class="section-desc">Trained on 1,000 multi-attribute customer purchasing cycles across 11 garment classes.</p>
+                        <div class="metrics-row">
+                            <div class="metric-box">
+                                <span class="m-val text-accent">11</span>
+                                <span class="m-lbl">Garment Classes</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="m-val text-success">800 / 200</span>
+                                <span class="m-lbl">Train / Test Split</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="m-val text-cyan">4</span>
+                                <span class="m-lbl">Ensemble Models</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="m-val text-amber">&lt; 15ms</span>
+                                <span class="m-lbl">Inference Latency</span>
+                            </div>
+                        </div>
+
+                        <h3 class="sub-heading">Ensemble Component Weights Allocation</h3>
+                        <div class="weight-bars">
+                            <div class="w-bar-item">
+                                <div class="w-info"><span>TF-IDF Textual Semantic Matching</span><span>35%</span></div>
+                                <div class="progress-track"><div class="progress-fill fill-blue" style="width: 35%;"></div></div>
+                            </div>
+                            <div class="w-bar-item">
+                                <div class="w-info"><span>Gradient Boosting Category Alignment</span><span>30%</span></div>
+                                <div class="progress-track"><div class="progress-fill fill-accent" style="width: 30%;"></div></div>
+                            </div>
+                            <div class="w-bar-item">
+                                <div class="w-info"><span>Color Harmony & Undertone Compatibility</span><span>20%</span></div>
+                                <div class="progress-track"><div class="progress-fill fill-green" style="width: 20%;"></div></div>
+                            </div>
+                            <div class="w-bar-item">
+                                <div class="w-info"><span>Anatomical Silhouette Proportions</span><span>15%</span></div>
+                                <div class="progress-track"><div class="progress-fill fill-amber" style="width: 15%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h2>Color Harmony & Optical Science</h2>
+                        <p class="section-desc">Chromatic melanin absorption rules pairing skin undertones with garment dye spectra.</p>
+                        <div class="color-rules-grid">
+                            <div class="rule-card">
+                                <span class="tone-badge warm">Warm Undertone</span>
+                                <p>Golden, peachy skin tones harmonize best with rich earthy shades, warm terracottas, emerald greens, navy blue, and ivory.</p>
+                            </div>
+                            <div class="rule-card">
+                                <span class="tone-badge cool">Cool Undertone</span>
+                                <p>Rosy, bluish skin tones harmonize with jewel tones, royal cobalt, crisp white, pastel chiffon, and icy charcoal.</p>
+                            </div>
+                            <div class="rule-card">
+                                <span class="tone-badge neutral">Neutral Undertone</span>
+                                <p>Balanced vascular profile capable of carrying both warm jewel tones and muted cool pastels without chromatic clash.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: SQLITE HISTORY -->
+            <section id="tab-history" class="tab-pane">
+                <div class="glass-card table-card">
+                    <div class="card-header-row">
+                        <div>
+                            <h2>Relational SQLite Recommendation Audit Log</h2>
+                            <p class="section-desc">Logged transactions from <code>user_data.db</code> (<code>RECOMMENDATION_HISTORY</code> table).</p>
+                        </div>
+                        <span class="badge-pill badge-success">ACID Compliant</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Timestamp</th>
+                                    <th>User ID</th>
+                                    <th>Outfit ID</th>
+                                    <th>Outfit Name</th>
+                                    <th>Category</th>
+                                    <th>Match Score</th>
+                                    <th>Forensic Rationale</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr><td colspan="8">Loading history from SQLite...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: NEURAL PIPELINE ARCHITECTURE -->
+            <section id="tab-architecture" class="tab-pane">
+                <div class="glass-card">
+                    <h2>Multi-Modal Hybrid Recommendation Pipeline</h2>
+                    <p class="section-desc">End-to-end data transformation pipeline from image/attribute ingestion to ranked garment delivery.</p>
+                    
+                    <div class="architecture-flow">
+                        <div class="flow-step">
+                            <div class="step-num">1</div>
+                            <h4>Anatomical & Chromatic Ingestion</h4>
+                            <p>Melanin depth classification, vascular undertone detection, and anatomical silhouette ratio calculation.</p>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-step">
+                            <div class="step-num">2</div>
+                            <h4>TF-IDF Textual Modeling</h4>
+                            <p>Cosine similarity computed between customer preference query and clothing catalogue item descriptions.</p>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-step">
+                            <div class="step-num">3</div>
+                            <h4>Gradient Boosting Category Engine</h4>
+                            <p>GBM pipeline scores category affinity across 11 target garment classes with confidence estimation.</p>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-step">
+                            <div class="step-num">4</div>
+                            <h4>Rule-Based Attribute Synthesis</h4>
+                            <p>Heuristic harmony matrices evaluate skin undertone alignment, body silhouette balance, and budget filtering.</p>
+                        </div>
+                        <div class="flow-arrow">➔</div>
+                        <div class="flow-step">
+                            <div class="step-num">5</div>
+                            <h4>Ranked Scoring & SQLite Log</h4>
+                            <p>Weighted multi-modal score synthesis, ranked presentation, and transactional SQLite persistence.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
