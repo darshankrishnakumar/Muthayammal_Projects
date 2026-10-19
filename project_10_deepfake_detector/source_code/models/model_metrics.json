@@ -1,0 +1,31 @@
+{
+  "model_architecture": "MesoInception-4 (Deep ConvNet) + Multi-Modal Forensic Ensemble",
+  "framework": "PyTorch 2.14.1 / Scikit-Learn",
+  "dataset_name": "FaceForensics++ / Celeb-DF Synthetic Benchmark (1,000 Curated Faces)",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "roc_auc": 1.0,
+  "confusion_matrix": [
+    [
+      100,
+      0
+    ],
+    [
+      0,
+      100
+    ]
+  ],
+  "classes": [
+    "REAL",
+    "DEEPFAKE"
+  ],
+  "feature_importances": {
+    "fft_high_freq_ratio": 0.385,
+    "boundary_gradient_discontinuity": 0.315,
+    "color_chroma_variance": 0.145,
+    "eye_asymmetry_index": 0.105,
+    "laplacian_blur_metric": 0.05
+  }
+}
