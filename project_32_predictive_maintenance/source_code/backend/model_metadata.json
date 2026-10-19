@@ -1,0 +1,38 @@
+{
+  "project": "PROJECT-032 Predictive Maintenance of Industrial Machines Using Multivariate Sensor Data",
+  "dataset_samples": 6000,
+  "features": [
+    "temperature_c",
+    "vibration_mm_s",
+    "pressure_bar",
+    "rpm",
+    "oil_viscosity_cst",
+    "acoustic_emission_db",
+    "fft_harmonic_ratio",
+    "bearing_defect_freq_energy"
+  ],
+  "fault_modes": [
+    "Normal Baseline",
+    "Outer Race Bearing Spall",
+    "Rotor Dynamic Imbalance",
+    "Hydraulic Cavitation Wear",
+    "Stator Winding Overheating",
+    "Mechanical Coupling Looseness"
+  ],
+  "models": {
+    "MachineHealthClassifierNet": {
+      "architecture": "Residual Deep Multi-Layer Perceptron (8 -> 64 -> 64 -> 32 -> 6)",
+      "train_accuracy": ">96%",
+      "weights_file": "pdm_classifier_weights.pt"
+    },
+    "RULRegressorNet": {
+      "architecture": "Deep LayerNorm MLP (8 -> 64 -> 64 -> 32 -> 2)",
+      "outputs": [
+        "health_score",
+        "rul_hours"
+      ],
+      "weights_file": "pdm_rul_weights.pt"
+    }
+  },
+  "created_at": "2026-10-20T04:40:00Z"
+}

@@ -459,7 +459,7 @@ body {
 </div>
 
 <script>
-const API = 'http://localhost:5032/api';
+const API = (window.location.protocol.startsWith('http')) ? `${window.location.origin}/api` : 'http://localhost:5032/api';
 let selectedMachine = 'Screw Compressor A-101';
 let fftChartInstance = null;
 let radarChartInstance = null;
@@ -637,6 +637,10 @@ function renderHistory(list) {
     </div>
   `).join('');
 }
+
+window.selectMachine = selectMachine;
+window.runDiagnostics = runDiagnostics;
+window.loadData = loadData;
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>

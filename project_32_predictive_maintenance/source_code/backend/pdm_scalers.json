@@ -1,0 +1,40 @@
+{
+  "feature_names": [
+    "temperature_c",
+    "vibration_mm_s",
+    "pressure_bar",
+    "rpm",
+    "oil_viscosity_cst",
+    "acoustic_emission_db",
+    "fft_harmonic_ratio",
+    "bearing_defect_freq_energy"
+  ],
+  "means": [
+    87.75045013427734,
+    2.6750411987304688,
+    9.489139556884766,
+    2454.97021484375,
+    51.58552551269531,
+    75.84699249267578,
+    0.48749423027038574,
+    0.3106467127799988
+  ],
+  "stds": [
+    31.08260726928711,
+    1.7473552227020264,
+    7.407825946807861,
+    1635.04248046875,
+    9.93985366821289,
+    15.757614135742188,
+    0.4075135886669159,
+    0.36811643838882446
+  ],
+  "fault_modes": [
+    "Normal Baseline",
+    "Outer Race Bearing Spall",
+    "Rotor Dynamic Imbalance",
+    "Hydraulic Cavitation Wear",
+    "Stator Winding Overheating",
+    "Mechanical Coupling Looseness"
+  ]
+}
