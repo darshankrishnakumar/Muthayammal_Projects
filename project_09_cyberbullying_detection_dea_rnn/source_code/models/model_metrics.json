@@ -1,0 +1,76 @@
+{
+  "model_architecture": "DEA-RNN (Differential Evolutionary Algorithm + Bidirectional GRU with Attention)",
+  "framework": "PyTorch 2.14 / Torch MPS",
+  "dataset_name": "Twitter Multi-Class Cyberbullying Corpus (3,000 Tweets)",
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "roc_auc": 1.0,
+  "confusion_matrix": [
+    [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      100,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      100,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      100,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      100,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      100
+    ]
+  ],
+  "classes": [
+    "not_cyberbullying",
+    "gender",
+    "religion",
+    "age",
+    "ethnicity",
+    "other_cyberbullying"
+  ],
+  "parameters": {
+    "vocab_size": 545,
+    "embed_dim": 64,
+    "hidden_dim": 64,
+    "recurrent_layers": 2,
+    "bidirectional": true,
+    "attention_mechanism": "Token-level additive attention"
+  }
+}
