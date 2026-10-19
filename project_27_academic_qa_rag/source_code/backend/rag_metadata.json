@@ -1,0 +1,23 @@
+{
+  "service_name": "Academic Retrieval-Augmented Generation (RAG) System",
+  "model_architecture": "Dense Bi-Encoder (PyTorch) + Hybrid Lexical BM25 Ranking",
+  "embedding_dimensions": 128,
+  "vocabulary_size": 1142,
+  "total_indexed_chunks": 5000,
+  "indexed_documents_count": 6,
+  "domains": [
+    "Systems & Concurrency",
+    "Data Structures & Algorithms",
+    "Deep Learning & NLP",
+    "Databases & Storage Engines",
+    "Computer Networks & Protocols",
+    "Distributed Systems & Reliability"
+  ],
+  "metrics": {
+    "top1_retrieval_accuracy": 0.3333,
+    "mrr_at_5": 0.4028,
+    "total_corpus_size": 5000,
+    "average_retrieval_latency_ms": 1.25,
+    "vector_index_format": "NPZ Dense Cosine Matrix"
+  }
+}

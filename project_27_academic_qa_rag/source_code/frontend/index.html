@@ -486,7 +486,9 @@ textarea:focus {
 </div>
 
 <script>
-const API_BASE = 'http://localhost:5027/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('5027')) 
+  ? `${window.location.origin}/api` 
+  : 'http://127.0.0.1:5027/api';
 let simChartInstance = null;
 
 const PRESETS = {
@@ -622,6 +624,12 @@ function renderCorpora(docs) {
     </div>
   `).join('');
 }
+
+window.setQuery = setQuery;
+window.askQuestion = askQuestion;
+window.clearInput = clearInput;
+window.loadData = loadData;
+window.displayResult = displayResult;
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>
