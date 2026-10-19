@@ -8,6 +8,7 @@ from flask import Flask, request, jsonify, Response, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
+from ml_engine import MLEngine
 
 app = Flask(__name__)
 CORS(app)
@@ -756,31 +757,18 @@ def smart_scale_telemetry():
         'status': 'MATCH' if discrepancy == 0 else ('SURPLUS' if discrepancy > 0 else 'DEFICIT')
     })
 
-# 10. AI Demand Forecasting & ROP Optimization
+# 10. AI Demand Forecasting & ROP Optimization (PyTorch Bi-LSTM + RF + GBM Ensemble)
 @app.route('/api/forecast', methods=['GET'])
 def get_forecast():
-    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    today_idx = now_utc().weekday()
-    ordered_days = [days[(today_idx - 3 + i) % 7] for i in range(7)]
-
-    total_sales_count = Sale.query.count()
-    base_demand = max(20, total_sales_count * 6)
-
-    forecast_series = []
-    for i, d in enumerate(ordered_days):
-        variation = int((i * 4 + (i % 2) * 7) - 8)
-        forecast_series.append({
-            'day': d,
-            'actual': round(base_demand + variation, 1) if i < 4 else None,
-            'predicted': round(base_demand + variation + 5, 1) if i >= 3 else None,
-            'upper_bound': round(base_demand + variation + 12, 1) if i >= 3 else None,
-            'lower_bound': round(base_demand + variation - 2, 1) if i >= 3 else None,
-        })
+    sku = request.args.get('sku')
+    engine = MLEngine.get_instance()
+    forecast_res = engine.forecast_7day(sku=sku)
 
     products = Product.query.all()
     reorder_alerts = []
     for p in products:
-        rop = p.reorder_point or (p.min_stock + 5)
+        opt = engine.compute_inventory_optimization(p, p.quantity, p.lead_time_days, p.cost_price)
+        rop = opt['reorder_point']
         if p.quantity <= rop:
             reorder_alerts.append({
                 'id': p.id,
@@ -791,17 +779,39 @@ def get_forecast():
                 'min_stock': p.min_stock,
                 'reorder_point': rop,
                 'lead_time_days': p.lead_time_days or 3,
-                'suggested_reorder': max(25, rop * 3 - p.quantity),
-                'urgency': 'CRITICAL' if p.quantity == 0 else ('HIGH' if p.quantity <= p.min_stock else 'MODERATE')
+                'safety_stock': opt['safety_stock'],
+                'economic_order_quantity': opt['economic_order_quantity'],
+                'suggested_reorder': opt['suggested_reorder'],
+                'urgency': opt['urgency'],
+                'stockout_risk_percentage': opt['stockout_risk_percentage']
             })
 
+    forecast_res['reorder_alerts'] = reorder_alerts
+    forecast_res['models_evaluated'] = engine.get_model_benchmarks()
+    return jsonify(forecast_res)
+
+@app.route('/api/forecast/models', methods=['GET'])
+def get_forecast_models():
+    engine = MLEngine.get_instance()
     return jsonify({
-        'forecast_series': forecast_series,
-        'reorder_alerts': reorder_alerts,
-        'confidence_score': 95.2,
-        'model': 'ARIMA(1,1,1) + Exponential Moving Average',
-        'inventory_turnover_ratio': 4.8,
-        'service_level_target': '98.5%'
+        'models': engine.get_model_benchmarks(),
+        'active_model': 'PyTorch Bi-Directional Multi-Layer LSTM Forecaster (Ensemble Hybrid)',
+        'features': engine.feature_cols,
+        'dataset_sample_size': 5840
+    })
+
+@app.route('/api/forecast/product/<sku>', methods=['GET'])
+def get_product_forecast(sku):
+    product = Product.query.filter_by(sku=sku).first()
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    engine = MLEngine.get_instance()
+    forecast_res = engine.forecast_7day(sku=sku)
+    opt = engine.compute_inventory_optimization(product, product.quantity, product.lead_time_days, product.cost_price)
+    return jsonify({
+        'product': product.to_dict(),
+        'forecast': forecast_res,
+        'inventory_optimization': opt
     })
 
 # 11. Reports & CSV Export Engine

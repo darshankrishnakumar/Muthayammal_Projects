@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-10-19T16:45:56.639610",
+  "total_historical_records": 5728,
+  "feature_count": 12,
+  "feature_names": [
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "is_promo",
+    "trend_index",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_7",
+    "rolling_mean_7",
+    "rolling_std_7",
+    "rolling_mean_14"
+  ],
+  "models": {
+    "pytorch_lstm": {
+      "name": "PyTorch Bi-Directional Multi-Layer LSTM Forecaster",
+      "mae": 5.45,
+      "rmse": 11.066,
+      "r2_score": 0.9327,
+      "mape": 23.29,
+      "accuracy_percentage": 85.0,
+      "parameters": 55361,
+      "status": "ACTIVE_PRODUCTION_MODEL"
+    },
+    "random_forest": {
+      "name": "Scikit-Learn Random Forest Regressor (100 Trees)",
+      "mae": 4.511,
+      "rmse": 7.752,
+      "r2_score": 0.9668,
+      "mape": 13.17,
+      "accuracy_percentage": 86.8,
+      "status": "BENCHMARK_VALIDATED"
+    },
+    "gradient_boosting": {
+      "name": "Scikit-Learn Gradient Boosting Regressor (100 Estimators)",
+      "mae": 4.433,
+      "rmse": 7.723,
+      "r2_score": 0.967,
+      "mape": 12.74,
+      "accuracy_percentage": 87.3,
+      "status": "BENCHMARK_VALIDATED"
+    },
+    "arima_baseline": {
+      "name": "AutoRegressive Integrated Moving Average ARIMA(2,1,2)",
+      "mae": 6.541,
+      "rmse": 10.698,
+      "r2_score": 0.8468,
+      "mape": 17.78,
+      "accuracy_percentage": 84.6,
+      "status": "STATISTICAL_BASELINE"
+    }
+  }
+}
