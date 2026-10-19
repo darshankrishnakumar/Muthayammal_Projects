@@ -1,138 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 13 — EMPIRICAL ANALYSIS FOR CRIME PREDICTION AND FORECASTING USING MACHINE LEARNING AND DEEP LEARNING TECHNIQUES</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #10b981;
-            --border: #334155;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-        header {
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .badge {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            margin-bottom: 0.5rem;
-        }
-        h1 {
-            margin: 0.5rem 0;
-            font-size: 1.8rem;
-        }
-        .abstract {
-            color: var(--text-muted);
-            line-height: 1.6;
-            background: var(--card-bg);
-            padding: 1.25rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid var(--primary);
-            margin-bottom: 2rem;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn:hover { background: var(--primary-dark); }
-        .result-box {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #0f172a;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border);
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Crime Prediction & Deep Learning Forecasting Subsystem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top right, #1e1b4b, #0f172a, #020617);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-accent {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    .badge-critical {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.45));
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+    .badge-high {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(194, 65, 12, 0.45));
+      border: 1px solid #f97316;
+      color: #fdba74;
+    }
+    .badge-mod {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(161, 98, 7, 0.45));
+      border: 1px solid #eab308;
+      color: #fde047;
+    }
+    .badge-low {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(4, 120, 87, 0.45));
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <span class="badge">Project 13 of 55</span>
-            <h1>EMPIRICAL ANALYSIS FOR CRIME PREDICTION AND FORECASTING USING MACHINE LEARNING AND DEEP LEARNING TECHNIQUES</h1>
-        </header>
+<body class="p-4 md:p-8">
 
-        <div class="abstract">
-            <strong>System Overview:</strong><br>
-            Crime forecasting is one of the most wanted possible forecasts, as it could lead to fewercrimes and fewer police forces to secure threatened areas. However, predicting whenand where crime will happen is challenging. Even modern predictive policing methodsdon’t provide a reasonable or accurate approximation to forecast crimes. It has a longhistory of experiments and tests to reduce and to prevent crime. Deep Learning is arelatively new machine learning topic, which achieved state-of-the-art performance inmany tasks and slowly but surely changes the machine learning area. For a few tasks,it is even better than the human himself This success leads to the questions "Is deep learning able to forecast crime as ac-curate or even better as a human?" and "How to forecast crime using deep learningtechniques?".
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header -->
+    <header class="glass-card rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4 border-b border-indigo-500/20">
+      <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white text-2xl font-bold">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-rose-200 via-indigo-200 to-sky-200 bg-clip-text text-transparent">
+              Urban Crime Prediction & Deep Learning Forecaster
+            </h1>
+            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              Online • Port 5013
+            </span>
+          </div>
+          <p class="text-slate-400 text-sm mt-0.5">
+            PROJECT-013: Empirical Analysis for Crime Prediction and Forecasting using PyTorch Deep Neural Networks & Random Forest Ensembles
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick KPI Stats -->
+      <div class="flex items-center gap-3">
+        <div class="bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800 text-center">
+          <div class="text-xs text-slate-400 font-medium">Logged Incidents</div>
+          <div id="statTotalIncidents" class="text-lg font-bold text-indigo-400">5,040</div>
+        </div>
+        <div class="bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800 text-center">
+          <div class="text-xs text-slate-400 font-medium">Patrol Dispatches</div>
+          <div id="statTotalDispatches" class="text-lg font-bold text-emerald-400">12</div>
+        </div>
+        <div class="bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800 text-center">
+          <div class="text-xs text-slate-400 font-medium">Mean Risk Index</div>
+          <div id="statAvgRisk" class="text-lg font-bold text-amber-400">0.542</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Panel: Input Controls & Tactical Scenarios (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <!-- Presets Card -->
+        <div class="glass-card rounded-2xl p-5 shadow-xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Tactical Crime Presets
+            </span>
+            <span class="text-xs text-slate-500">1-Click Simulation</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="loadPreset('late_night_downtown')" class="btn-preset text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-rose-500/40 text-xs transition-all">
+              <div class="font-semibold text-rose-300">Late-Night Downtown</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">23:00 • Nightclub Corridor</div>
+            </button>
+            <button onclick="loadPreset('transit_rush_hour')" class="btn-preset text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-amber-500/40 text-xs transition-all">
+              <div class="font-semibold text-amber-300">Transit Station Peak</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">18:00 • Commuter Hub</div>
+            </button>
+            <button onclick="loadPreset('harbor_industrial_night')" class="btn-preset text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-indigo-500/40 text-xs transition-all">
+              <div class="font-semibold text-indigo-300">Harbor Industrial</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">02:00 • Low Illumination</div>
+            </button>
+            <button onclick="loadPreset('suburban_quiet')" class="btn-preset text-left p-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/40 text-xs transition-all">
+              <div class="font-semibold text-emerald-300">Westside Suburban</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">11:00 • High Patrol Presence</div>
+            </button>
+          </div>
         </div>
 
-        <div class="card">
-            <h3>Live Model Inference Portal</h3>
-            <p style="color: var(--text-muted);">Test the real-time prediction engine via the interactive API pipeline.</p>
-            <button class="btn" onclick="runInference()">Execute Real-Time Analysis</button>
+        <!-- Simulation Intake Form -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-700/60">
+            <h2 class="text-base font-semibold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-indigo-400"></i>
+              <span>Spatial & Temporal Parameters</span>
+            </h2>
+            <span class="text-xs text-slate-400">Feature Vector: 11-D</span>
+          </div>
 
-            <div id="result" class="result-box">
-                <h4>Inference Response:</h4>
-                <pre id="output" style="color: var(--accent); font-family: monospace;"></pre>
+          <div class="space-y-3 text-sm">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Police District</label>
+              <select id="selDistrict" onchange="updateDistrictCoords()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                <option value="Central Downtown">Central Downtown (Baseline Risk: 0.78)</option>
+                <option value="Harbor District">Harbor District (Baseline Risk: 0.70)</option>
+                <option value="South Industrial">South Industrial (Baseline Risk: 0.65)</option>
+                <option value="East Commercial">East Commercial (Baseline Risk: 0.58)</option>
+                <option value="Uptown Arts">Uptown Arts (Baseline Risk: 0.48)</option>
+                <option value="North Waterfront">North Waterfront (Baseline Risk: 0.42)</option>
+                <option value="Westside Residential">Westside Residential (Baseline Risk: 0.35)</option>
+                <option value="Tech Corridor">Tech Corridor (Baseline Risk: 0.30)</option>
+              </select>
             </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1">Location Environment Type</label>
+              <select id="selLocationType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                <option value="Nightclub / Bar">Nightclub / Bar</option>
+                <option value="Street / Sidewalk">Street / Sidewalk</option>
+                <option value="Transit Hub / Station">Transit Hub / Station</option>
+                <option value="Commercial Store / Mall">Commercial Store / Mall</option>
+                <option value="Parking Garage">Parking Garage</option>
+                <option value="Residential Apartment">Residential Apartment</option>
+                <option value="Park / Public Space">Park / Public Space</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Hour of Day (0-23)</label>
+                <div class="flex items-center gap-2">
+                  <input type="range" id="rngHour" min="0" max="23" value="23" oninput="document.getElementById('lblHour').textContent = this.value.padStart(2, '0') + ':00'" class="w-full">
+                  <span id="lblHour" class="mono text-xs font-bold text-indigo-400 w-12 text-right">23:00</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Day of Week</label>
+                <select id="selDayOfWeek" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-200 text-xs focus:outline-none">
+                  <option value="5" selected>Saturday (Weekend)</option>
+                  <option value="4">Friday (Weekend)</option>
+                  <option value="6">Sunday (Weekend)</option>
+                  <option value="0">Monday (Weekday)</option>
+                  <option value="1">Tuesday (Weekday)</option>
+                  <option value="2">Wednesday (Weekday)</option>
+                  <option value="3">Thursday (Weekday)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">Density (0-10)</label>
+                <input type="number" id="numDensity" value="8.5" step="0.5" min="0" max="10" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-xs">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">Light Score (1-5)</label>
+                <input type="number" id="numLight" value="2" min="1" max="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-xs">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-0.5">Patrol Score (1-5)</label>
+                <input type="number" id="numPatrol" value="2" min="1" max="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-xs">
+              </div>
+            </div>
+          </div>
+
+          <button id="runPredictBtn" onclick="runPrediction()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-500 via-indigo-600 to-purple-600 hover:from-rose-600 hover:to-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 transition-all transform active:scale-98">
+            <i class="fa-solid fa-brain"></i>
+            <span>Run Deep Learning Crime Forecaster</span>
+          </button>
         </div>
+
+      </div>
+
+      <!-- Right Panel: Model Prediction, Hourly Forecast & Telemetry (7 cols) -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- Result Card -->
+        <div id="resultCard" class="glass-card rounded-2xl p-6 shadow-2xl space-y-5 border-t-2 border-rose-500">
+          
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-700/60 gap-3">
+            <div>
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Predicted Incident Threat Level</span>
+              <div class="flex items-center gap-3 mt-1">
+                <span id="riskBadge" class="px-3.5 py-1 text-sm font-extrabold rounded-full badge-critical">CRITICAL</span>
+                <span id="predictedCrimeType" class="text-xl font-bold text-slate-200">ROBBERY</span>
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Neural Confidence</span>
+              <div id="riskConfidenceVal" class="text-2xl font-bold text-rose-400 mt-0.5">88.4%</div>
+            </div>
+          </div>
+
+          <!-- Risk Probabilities Split -->
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs text-slate-400 font-semibold">
+              <span>Threat Level Probability Distribution</span>
+              <span id="latencyDisplay" class="mono text-indigo-400">Latency: 4.2 ms</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-semibold">CRITICAL</div>
+                <div id="probCritical" class="text-sm font-bold text-rose-400 mt-0.5">62.5%</div>
+              </div>
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-semibold">HIGH</div>
+                <div id="probHigh" class="text-sm font-bold text-orange-400 mt-0.5">25.0%</div>
+              </div>
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-semibold">MODERATE</div>
+                <div id="probModerate" class="text-sm font-bold text-yellow-400 mt-0.5">10.0%</div>
+              </div>
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-semibold">LOW</div>
+                <div id="probLow" class="text-sm font-bold text-emerald-400 mt-0.5">2.5%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tactical Recommendation & Dispatch Action -->
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                <i class="fa-solid fa-tower-broadcast mr-1"></i> Tactical Command Recommendation
+              </span>
+              <span id="incidentIdBadge" class="mono text-[11px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">CR-LIVE-2026-01</span>
+            </div>
+            <p id="tacticalRecommendation" class="text-xs md:text-sm text-slate-200 leading-relaxed font-medium">
+              URGENT - CODE 3: Dispatch Immediate High-Visibility Tactical Patrol Unit to Sector Central Downtown. Activate Perimeter Street Cameras.
+            </p>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs text-slate-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-car-side text-rose-400"></i> Auto-Dispatch Status: <strong id="autoDispatchText" class="text-rose-400">TRIGGERED</strong>
+              </span>
+              <button onclick="dispatchTacticalUnit()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs shadow-md transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Dispatch Additional Patrol Unit</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 24-Hour Temporal Crime Spike Forecast -->
+        <div class="glass-card rounded-2xl p-6 shadow-xl space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-700/60">
+            <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-sky-400"></i>
+              <span>24-Hour Temporal Threat Risk Curve</span>
+            </h3>
+            <span id="peakHourBadge" class="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">
+              Peak: 23:00 (88.4%)
+            </span>
+          </div>
+
+          <!-- Dynamic Hourly Bar Graph -->
+          <div id="hourlyBarsContainer" class="flex items-end justify-between h-28 pt-2 gap-1 overflow-x-auto">
+            <!-- Rendered dynamically -->
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>00:00 (Midnight)</span>
+            <span>06:00 (Dawn)</span>
+            <span>12:00 (Noon)</span>
+            <span>18:00 (Dusk)</span>
+            <span>23:00 (Night)</span>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
-    <script>
-        async function runInference() {
-            const resultBox = document.getElementById('result');
-            const output = document.getElementById('output');
-            resultBox.style.display = 'block';
-            output.innerText = 'Transmitting features to neural inference pipeline...';
+    <!-- Bottom Section: Relational SQLite Crime & Dispatch Ledger -->
+    <div class="glass-card rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-slate-700/60">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-200">Relational SQLite Command & Audit Ledger</h3>
+            <p class="text-xs text-slate-400">Persistent incident telemetry and real-time patrol car response logs in <code class="mono text-indigo-400 text-[11px]">crime_incident.db</code></p>
+          </div>
+        </div>
 
-            try {
-                const res = await fetch('http://localhost:5013/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ features: [1.2, 0.45, 3.8, 0.91] })
-                });
-                const data = await res.json();
-                output.innerText = JSON.stringify(data, null, 2);
-            } catch (err) {
-                output.innerText = JSON.stringify({
-                    status: 'Simulation Mode (Backend Offline)',
-                    prediction: 'High Confidence Classification',
-                    confidence: 0.965,
-                    timestamp: new Date().toISOString()
-                }, null, 2);
-            }
+        <!-- Tab Switcher -->
+        <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-xl border border-slate-800">
+          <button id="tabIncidentsBtn" onclick="switchTab('incidents')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow">
+            Recent Incidents
+          </button>
+          <button id="tabDispatchesBtn" onclick="switchTab('dispatches')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
+            Patrol Dispatches
+          </button>
+        </div>
+      </div>
+
+      <!-- Incidents Table -->
+      <div id="incidentsTableContainer" class="overflow-x-auto max-h-72">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider sticky top-0">
+            <tr>
+              <th class="p-2.5">ID</th>
+              <th class="p-2.5">Timestamp</th>
+              <th class="p-2.5">District</th>
+              <th class="p-2.5">Environment</th>
+              <th class="p-2.5">Threat Level</th>
+              <th class="p-2.5">Crime Type</th>
+              <th class="p-2.5">Risk Score</th>
+              <th class="p-2.5">Patrol Unit</th>
+            </tr>
+          </thead>
+          <tbody id="incidentsTableBody" class="divide-y divide-slate-800 font-mono">
+            <!-- Populated via API -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Dispatches Table (Initially Hidden) -->
+      <div id="dispatchesTableContainer" class="hidden overflow-x-auto max-h-72">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider sticky top-0">
+            <tr>
+              <th class="p-2.5">Dispatch ID</th>
+              <th class="p-2.5">Timestamp</th>
+              <th class="p-2.5">Callsign</th>
+              <th class="p-2.5">Target District</th>
+              <th class="p-2.5">Priority</th>
+              <th class="p-2.5">Incident Type</th>
+              <th class="p-2.5">ETA</th>
+              <th class="p-2.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="dispatchesTableBody" class="divide-y divide-slate-800 font-mono">
+            <!-- Populated via API -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:5013";
+
+    async function initPage() {
+      await fetchStats();
+      await fetchHistory();
+      await fetchDispatches();
+      await runHourlyForecast();
+      await runPrediction();
+    }
+
+    async function fetchStats() {
+      try {
+        const res = await fetch(`${API_BASE}/api/stats`);
+        const data = await res.json();
+        document.getElementById('statTotalIncidents').textContent = Number(data.total_incidents).toLocaleString();
+        document.getElementById('statTotalDispatches').textContent = data.total_dispatches;
+        document.getElementById('statAvgRisk').textContent = data.avg_risk_score;
+      } catch (e) {
+        console.error("Failed fetching stats:", e);
+      }
+    }
+
+    async function fetchHistory() {
+      try {
+        const res = await fetch(`${API_BASE}/api/history?limit=20`);
+        const data = await res.json();
+        const tbody = document.getElementById('incidentsTableBody');
+        tbody.innerHTML = '';
+        data.records.forEach(r => {
+          const badgeClass = r.risk_category === 'CRITICAL' ? 'badge-critical' : (r.risk_category === 'HIGH' ? 'badge-high' : (r.risk_category === 'MODERATE' ? 'badge-mod' : 'badge-low'));
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-800/50 transition-colors";
+          tr.innerHTML = `
+            <td class="p-2.5 font-bold text-indigo-400">${r.incident_id}</td>
+            <td class="p-2.5 text-slate-400 text-[11px]">${r.timestamp}</td>
+            <td class="p-2.5 text-slate-200">${r.district}</td>
+            <td class="p-2.5 text-slate-400">${r.location_type}</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeClass}">${r.risk_category}</span></td>
+            <td class="p-2.5 font-semibold text-slate-200">${r.primary_type}</td>
+            <td class="p-2.5 font-mono text-amber-300">${(r.risk_score * 100).toFixed(1)}%</td>
+            <td class="p-2.5">${r.patrol_dispatched ? '<span class="text-rose-400 font-bold">DISPATCHED</span>' : '<span class="text-slate-500">STANDBY</span>'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Failed history:", e);
+      }
+    }
+
+    async function fetchDispatches() {
+      try {
+        const res = await fetch(`${API_BASE}/api/dispatches?limit=20`);
+        const data = await res.json();
+        const tbody = document.getElementById('dispatchesTableBody');
+        tbody.innerHTML = '';
+        data.dispatches.forEach(d => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-800/50 transition-colors";
+          tr.innerHTML = `
+            <td class="p-2.5 font-bold text-indigo-400">${d.dispatch_id}</td>
+            <td class="p-2.5 text-slate-400 text-[11px]">${d.timestamp}</td>
+            <td class="p-2.5 font-bold text-emerald-400">${d.unit_callsign}</td>
+            <td class="p-2.5 text-slate-200">${d.assigned_district}</td>
+            <td class="p-2.5 text-rose-300 font-semibold">${d.priority_level}</td>
+            <td class="p-2.5 font-semibold text-slate-300">${d.incident_type}</td>
+            <td class="p-2.5 text-amber-400">${d.eta_minutes} min</td>
+            <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">${d.status}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Failed dispatches:", e);
+      }
+    }
+
+    async function runPrediction() {
+      const payload = {
+        hour: parseInt(document.getElementById('rngHour').value),
+        day_of_week: parseInt(document.getElementById('selDayOfWeek').value),
+        month: 10,
+        is_weekend: [4, 5, 6].includes(parseInt(document.getElementById('selDayOfWeek').value)) ? 1 : 0,
+        district: document.getElementById('selDistrict').value,
+        location_type: document.getElementById('selLocationType').value,
+        historical_density: parseFloat(document.getElementById('numDensity').value),
+        ambient_light: parseInt(document.getElementById('numLight').value),
+        patrol_score: parseInt(document.getElementById('numPatrol').value),
+        latitude: 41.8825,
+        longitude: -87.6285
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/predict_risk`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        // Update UI
+        const badge = document.getElementById('riskBadge');
+        badge.textContent = data.predicted_risk;
+        badge.className = "px-3.5 py-1 text-sm font-extrabold rounded-full " + 
+          (data.predicted_risk === 'CRITICAL' ? 'badge-critical' : 
+          (data.predicted_risk === 'HIGH' ? 'badge-high' : 
+          (data.predicted_risk === 'MODERATE' ? 'badge-mod' : 'badge-low')));
+
+        document.getElementById('predictedCrimeType').textContent = data.predicted_crime_type;
+        document.getElementById('riskConfidenceVal').textContent = `${data.risk_confidence}%`;
+        document.getElementById('latencyDisplay').textContent = `Latency: ${data.inference_latency_ms} ms`;
+        document.getElementById('incidentIdBadge').textContent = data.incident_id;
+        document.getElementById('tacticalRecommendation').textContent = data.recommendation;
+        document.getElementById('autoDispatchText').textContent = data.patrol_dispatched ? 'TRIGGERED' : 'STANDBY';
+        document.getElementById('autoDispatchText').className = data.patrol_dispatched ? 'text-rose-400 font-bold' : 'text-slate-400 font-bold';
+
+        if (data.risk_probabilities) {
+          document.getElementById('probCritical').textContent = `${data.risk_probabilities['CRITICAL'] || 0}%`;
+          document.getElementById('probHigh').textContent = `${data.risk_probabilities['HIGH'] || 0}%`;
+          document.getElementById('probModerate').textContent = `${data.risk_probabilities['MODERATE'] || 0}%`;
+          document.getElementById('probLow').textContent = `${data.risk_probabilities['LOW'] || 0}%`;
         }
-    </script>
+
+        await runHourlyForecast();
+        await fetchHistory();
+        await fetchStats();
+      } catch (e) {
+        console.error("Prediction error:", e);
+      }
+    }
+
+    async function runHourlyForecast() {
+      const payload = {
+        district: document.getElementById('selDistrict').value,
+        day_of_week: parseInt(document.getElementById('selDayOfWeek').value),
+        month: 10,
+        location_type: document.getElementById('selLocationType').value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/forecast_hourly`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        document.getElementById('peakHourBadge').textContent = `Peak Threat: ${data.peak_hour}`;
+
+        const container = document.getElementById('hourlyBarsContainer');
+        container.innerHTML = '';
+        data.hourly_forecast.forEach(item => {
+          const bar = document.createElement('div');
+          bar.className = "flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer";
+          const hPct = Math.max(12, item.spike_probability);
+          const colorClass = item.risk_category === 'CRITICAL' ? 'bg-rose-500' : (item.risk_category === 'HIGH' ? 'bg-orange-500' : (item.risk_category === 'MODERATE' ? 'bg-yellow-500' : 'bg-emerald-500'));
+          
+          bar.innerHTML = `
+            <div class="w-full ${colorClass} rounded-t transition-all group-hover:brightness-125" style="height: ${hPct}%;"></div>
+            <div class="opacity-0 group-hover:opacity-100 absolute -top-8 bg-slate-900 border border-slate-700 px-1.5 py-0.5 rounded text-[10px] mono text-white z-10 whitespace-nowrap">
+              ${item.hour_label}: ${item.spike_probability}%
+            </div>
+          `;
+          container.appendChild(bar);
+        });
+      } catch (e) {
+        console.error("Hourly forecast error:", e);
+      }
+    }
+
+    async function dispatchTacticalUnit() {
+      const payload = {
+        unit_callsign: `TAC-${Math.floor(Math.random()*90 + 10)}`,
+        assigned_district: document.getElementById('selDistrict').value,
+        priority_level: "URGENT - CODE 3",
+        incident_type: document.getElementById('predictedCrimeType').textContent,
+        eta_minutes: Math.floor(Math.random() * 6 + 2)
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/dispatch_unit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        alert(data.message);
+        await fetchDispatches();
+        await fetchStats();
+      } catch (e) {
+        console.error("Dispatch error:", e);
+      }
+    }
+
+    function loadPreset(type) {
+      if (type === 'late_night_downtown') {
+        document.getElementById('selDistrict').value = 'Central Downtown';
+        document.getElementById('selLocationType').value = 'Nightclub / Bar';
+        document.getElementById('rngHour').value = 23;
+        document.getElementById('lblHour').textContent = '23:00';
+        document.getElementById('selDayOfWeek').value = '5';
+        document.getElementById('numDensity').value = 9.0;
+        document.getElementById('numLight').value = 2;
+        document.getElementById('numPatrol').value = 1;
+      } else if (type === 'transit_rush_hour') {
+        document.getElementById('selDistrict').value = 'East Commercial';
+        document.getElementById('selLocationType').value = 'Transit Hub / Station';
+        document.getElementById('rngHour').value = 18;
+        document.getElementById('lblHour').textContent = '18:00';
+        document.getElementById('selDayOfWeek').value = '4';
+        document.getElementById('numDensity').value = 7.5;
+        document.getElementById('numLight').value = 4;
+        document.getElementById('numPatrol').value = 3;
+      } else if (type === 'harbor_industrial_night') {
+        document.getElementById('selDistrict').value = 'Harbor District';
+        document.getElementById('selLocationType').value = 'Street / Sidewalk';
+        document.getElementById('rngHour').value = 2;
+        document.getElementById('lblHour').textContent = '02:00';
+        document.getElementById('selDayOfWeek').value = '6';
+        document.getElementById('numDensity').value = 8.0;
+        document.getElementById('numLight').value = 1;
+        document.getElementById('numPatrol').value = 2;
+      } else if (type === 'suburban_quiet') {
+        document.getElementById('selDistrict').value = 'Westside Residential';
+        document.getElementById('selLocationType').value = 'Residential Apartment';
+        document.getElementById('rngHour').value = 11;
+        document.getElementById('lblHour').textContent = '11:00';
+        document.getElementById('selDayOfWeek').value = '1';
+        document.getElementById('numDensity').value = 2.0;
+        document.getElementById('numLight').value = 5;
+        document.getElementById('numPatrol').value = 4;
+      }
+      runPrediction();
+    }
+
+    function switchTab(tab) {
+      if (tab === 'incidents') {
+        document.getElementById('incidentsTableContainer').classList.remove('hidden');
+        document.getElementById('dispatchesTableContainer').classList.add('hidden');
+        document.getElementById('tabIncidentsBtn').className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow";
+        document.getElementById('tabDispatchesBtn').className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white";
+      } else {
+        document.getElementById('incidentsTableContainer').classList.add('hidden');
+        document.getElementById('dispatchesTableContainer').classList.remove('hidden');
+        document.getElementById('tabDispatchesBtn').className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow";
+        document.getElementById('tabIncidentsBtn').className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initPage);
+  </script>
+
 </body>
 </html>

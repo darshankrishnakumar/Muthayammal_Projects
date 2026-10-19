@@ -1,0 +1,33 @@
+{
+  "project_id": "PROJECT-013",
+  "title": "EMPIRICAL ANALYSIS FOR CRIME PREDICTION AND FORECASTING USING MACHINE LEARNING AND DEEP LEARNING TECHNIQUES",
+  "dataset_size": 5000,
+  "dnn_risk_model": {
+    "architecture": "Deep Dense Neural Network (BatchNorm + Dropout + AdamW)",
+    "accuracy": 0.683,
+    "f1_score": 0.6672,
+    "classes": [
+      "CRITICAL",
+      "HIGH",
+      "LOW",
+      "MODERATE"
+    ]
+  },
+  "crime_type_ensemble": {
+    "algorithm": "Random Forest Multi-Class Classifier (150 Trees)",
+    "accuracy": 0.415,
+    "f1_score": 0.2904,
+    "classes": [
+      "THEFT",
+      "BATTERY",
+      "BURGLARY",
+      "ROBBERY",
+      "NARCOTICS",
+      "ASSAULT",
+      "VANDALISM",
+      "WEAPONS_VIOLATION"
+    ]
+  },
+  "feature_count": 11,
+  "inference_latency_cpu_ms": 4.2
+}
