@@ -139,7 +139,7 @@ def clear_history():
     return jsonify({"status": "success", "message": "History cleared successfully"})
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5055))
+    port = int(os.environ.get("PORT", 5005))
     print(f"\n==================================================================")
     print(f"  Career Guidance AI System running at http://127.0.0.1:{port}")
     print(f"==================================================================\n")

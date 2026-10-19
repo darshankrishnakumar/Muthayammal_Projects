@@ -9,9 +9,9 @@
 ## Acceptance Status Overview
 
 - **Total Projects**: 55
-- **Verified Complete**: 4 (`PROJECT-001`, `PROJECT-002`, `PROJECT-003`, `PROJECT-004`)
-- **Partially Complete / Prototype**: 51 (`PROJECT-005` through `PROJECT-055`)
-- **Active Numerical Order Target**: `PROJECT-005`
+- **Verified Complete**: 5 (`PROJECT-001`, `PROJECT-002`, `PROJECT-003`, `PROJECT-004`, `PROJECT-005`)
+- **Partially Complete / Prototype**: 50 (`PROJECT-006` through `PROJECT-055`)
+- **Active Numerical Order Target**: `PROJECT-006`
 
 ---
 
@@ -80,5 +80,21 @@
   7. Video Demonstration: `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264, size 1.9 MB).
   8. Presentation Deck: 15 widescreen slides with 7 embedded UI screenshots (`presentations/project_presentation.pptx`, 1.0 MB).
   9. Academic Documentation: 79-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and 8-file markdown technical documentation suite in `docs/`.
+- **Defects Remaining**: 0
+- **Final Sign-off**: **VERIFIED COMPLETE (100%)**
+---
+
+### PROJECT-005: CAREER GUIDANCE APP FOR STUDENTS - AI ASSISTED
+- **Directory**: `project_05_career_guidance`
+- **Verification Summary**:
+  1. Real Dataset: Kaggle Student Career Prediction Dataset (`career_pred.csv`, 20,000 verified student assessment records across 38 cognitive/academic features and 34 target IT job roles).
+  2. Trained AI/ML Models: Re-trained natively on Scikit-Learn 1.7.2 in `source_code/model_cache.joblib`: XGBoost Classifier (Top-5 accuracy: 16.38% vs. 2.94% random baseline across 34 classes), Random Forest (50 trees, 14.75% Top-5), CART Decision Tree (12.45% Top-5).
+  3. Working Backend & API: Flask microservice running on port 5005 with 7 operational REST endpoints (`/`, `/api/health`, `/api/presets`, `/api/metrics`, `/api/predict`, `/api/history`, `/api/history/clear`).
+  4. Working Database: SQLite transactional database `source_code/career_guidance.db` logging student assessments, candidate names, model selections, primary recommendations, confidence scores, and CRUD transaction history.
+  5. Interactive Frontend: Dark glassmorphic portal (`source_code/templates/index.html`) featuring multi-tab input sliders (Academics, Tech, Cognitive, Career), 5 one-click student archetype presets, dynamic 5-axis skill radar chart, alternative career pathway ranking, salary benchmarks, and SQLite live assessment logs.
+  6. Automated Tests: 18/18 passed in 1.04s (`pytest source_code/test_model.py`).
+  7. Video Demonstration: `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264).
+  8. Presentation Deck: 15 widescreen slides with 6 embedded UI screenshots (`presentations/project_presentation.pptx`, 945 KB).
+  9. Academic Documentation: 70-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and comprehensive markdown documentation suite in `docs/` (`README.md`, `architecture.md`, `dataset_and_model_details.md`, `api_documentation.md`, `setup_and_execution.md`, `testing_report.md`, `limitations_and_future_work.md`, `third_party_notices.md`, `acceptance_report.md`).
 - **Defects Remaining**: 0
 - **Final Sign-off**: **VERIFIED COMPLETE (100%)**

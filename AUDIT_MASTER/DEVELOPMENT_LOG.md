@@ -107,3 +107,29 @@
 - **Recorded Video Demonstration**:
   - Headless browser automation streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, Size: **1.9 MB**, 1280x800 H.264 MP4).
 - **Status**: **VERIFIED COMPLETE (100%)**.
+
+---
+
+## PROJECT-005: Career Guidance and Job Role Recommendation System
+- **Dataset Integration**:
+  - Kaggle Student Career Prediction Dataset (`source_code/career_pred.csv`, 20,000 verified student assessment records, 38 features covering academic courses, cognitive abilities, and workplace inclinations across 34 target IT roles).
+- **Trained Machine Learning Models**:
+  - Re-trained and resaved `source_code/model_cache.joblib` natively on Scikit-Learn 1.7.2:
+    - XGBoost Classifier (Top-1: 4.73%, Top-3: 11.88%, Top-5: **16.38%** vs. 2.94% random baseline across 34 classes).
+    - Random Forest Classifier (50 trees, Top-5: 14.75%).
+    - CART Decision Tree Classifier (Top-5: 12.45%).
+- **Database Subsystem**:
+  - Implemented SQLite relational database `source_code/career_guidance.db` logging student assessments, candidate names, model selections, primary recommendations, confidence scores, and CRUD transaction history.
+- **Flask REST Backend Microservice**:
+  - REST microservice running on port 5005 with 7 endpoints: `/`, `/api/health`, `/api/presets`, `/api/metrics`, `/api/predict`, `/api/history`, `/api/history/clear`.
+- **Interactive Career Intelligence Frontend**:
+  - Glassmorphic single-page web portal (`index.html`) featuring multi-tab input sliders (Academics, Tech, Cognitive, Career), 5 one-click student archetype presets, dynamic 5-axis skill radar chart, alternative career pathway ranking, salary benchmarks, and SQLite live assessment logs.
+- **Automated Test Suite**:
+  - 18 automated unit, API, integration, and ML inference tests in `source_code/test_model.py`. 100% passed (18/18 in 1.04s).
+- **Presentation Deck**:
+  - Generated 15 widescreen slides (`presentations/project_presentation.pptx`, 945 KB) embedding 6 high-resolution UI screenshots.
+- **Technical Documentation**:
+  - 70-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and comprehensive markdown documentation suite in `docs/` (`README.md`, `architecture.md`, `dataset_and_model_details.md`, `api_documentation.md`, `setup_and_execution.md`, `testing_report.md`, `limitations_and_future_work.md`, `third_party_notices.md`, `acceptance_report.md`).
+- **Recorded Video Demonstration**:
+  - Headless browser automation streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264 MP4).
+- **Status**: **VERIFIED COMPLETE (100%)**.
