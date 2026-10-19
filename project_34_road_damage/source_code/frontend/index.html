@@ -439,12 +439,42 @@ canvas#roadCanvas {
 
   </div>
 
-  <!-- Historical Surveys Ledger -->
+  <!-- Municipal Work Orders & Audit Trail Grid -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px;">
+    <!-- Municipal Work Orders -->
+    <div class="ledger-panel" style="margin-bottom:0;">
+      <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div class="panel-title">🛠️ Municipal Remediation Work Orders</div>
+          <div class="panel-sub">Asphalt milling, patch compaction, and sealing dispatches</div>
+        </div>
+        <button class="sample-chip" style="margin:0; border-color:var(--accent);" onclick="promptNewWorkOrder()">+ New MWO</button>
+      </div>
+      <div id="workOrdersList" style="max-height: 280px; overflow-y:auto; padding: 12px;">
+        <div style="color:var(--text-muted); text-align:center; padding:20px;">Loading work orders...</div>
+      </div>
+    </div>
+
+    <!-- Audit Trail -->
+    <div class="ledger-panel" style="margin-bottom:0;">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">🔒 DOT / Municipal Survey Audit Trail</div>
+          <div class="panel-sub">Immutable SQLite Write-Ahead Logging telemetry entries</div>
+        </div>
+      </div>
+      <div id="auditLogList" style="max-height: 280px; overflow-y:auto; padding: 12px; font-family:'JetBrains Mono', monospace; font-size:11px;">
+        <div style="color:var(--text-muted); text-align:center; padding:20px;">Loading audit trail...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historical Pavement Survey Ledger -->
   <div class="ledger-panel">
     <div class="panel-header">
       <div>
-        <div class="panel-title">📋 Municipal Road Survey & Work Order Log</div>
-        <div class="panel-sub">Historical survey passes with asphalt repair cost estimates</div>
+        <div class="panel-title">📋 Historical Road Damage Surveys & PCI Audit Ledger</div>
+        <div class="panel-sub">Automated UAV / sensor logging of pavement distress and remediation costs</div>
       </div>
     </div>
     <div id="historyList">
@@ -455,13 +485,17 @@ canvas#roadCanvas {
 </div>
 
 <script>
-const API = 'http://localhost:5034/api';
+const API = (window.location.origin && window.location.origin.startsWith('http'))
+  ? `${window.location.origin}/api`
+  : 'http://127.0.0.1:5034/api';
+
 let defectChartInstance = null;
 let areaChartInstance = null;
 
 // Draw Road & YOLO Bounding Boxes
 function drawRoadWithBoxes(defects) {
   const canvas = document.getElementById('roadCanvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -513,21 +547,35 @@ function drawRoadWithBoxes(defects) {
     ctx.fillText(`${d.code} ${d.confidence_pct}%`, bx + 4, by - 6);
   });
 
-  document.getElementById('canvasFps').innerText = `Detections: ${defects.length} Active Defects`;
+  const fpsEl = document.getElementById('canvasFps');
+  if (fpsEl) fpsEl.innerText = `Detections: ${defects.length} Active Defects`;
 }
 
 async function loadData() {
   try {
-    const [statsRes, historyRes] = await Promise.all([
-      fetch(`${API}/stats`).then(r => r.json()),
-      fetch(`${API}/history`).then(r => r.json())
+    const [statsRes, historyRes, sectorsRes, mwoRes, auditRes] = await Promise.all([
+      fetch(`${API}/stats`).then(r => r.json()).catch(() => ({})),
+      fetch(`${API}/history`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/sectors`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/work-orders`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/audit-logs`).then(r => r.json()).catch(() => [])
     ]);
 
-    document.getElementById('totalDefects').innerText = statsRes.total_defects_catalogued || 0;
-    document.getElementById('meanPci').innerText = statsRes.mean_pavement_condition_index || 76;
-    document.getElementById('totalBudget').innerText = '$' + (statsRes.total_repair_budget_usd || 0).toLocaleString();
+    if (document.getElementById('totalDefects')) {
+      document.getElementById('totalDefects').innerText = statsRes.total_defects_catalogued || 0;
+    }
+    if (document.getElementById('meanPci')) {
+      document.getElementById('meanPci').innerText = statsRes.mean_pavement_condition_index || 76;
+    }
+    if (document.getElementById('totalBudget')) {
+      document.getElementById('totalBudget').innerText = '$' + (statsRes.total_repair_budget_usd || 0).toLocaleString();
+    }
 
+    renderSectors(sectorsRes || []);
     renderHistory(historyRes || []);
+    renderWorkOrders(mwoRes || []);
+    renderAuditLogs(auditRes || []);
+
     if (historyRes && historyRes.length > 0) {
       displayResult(historyRes[0]);
     }
@@ -536,13 +584,37 @@ async function loadData() {
   }
 }
 
+function renderSectors(sectors) {
+  const select = document.getElementById('sectorSelect');
+  if (!select || sectors.length === 0) return;
+  const currentVal = select.value;
+  select.innerHTML = sectors.map(s => `
+    <option value="${s.sector_id}" ${s.sector_id === currentVal ? 'selected' : ''}>
+      ${s.sector_name} (${s.speed_limit_kmh} km/h)
+    </option>
+  `).join('');
+}
+
+function selectSector(sectorIdOrName) {
+  const select = document.getElementById('sectorSelect');
+  if (!select) return;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === sectorIdOrName || select.options[i].text.includes(sectorIdOrName)) {
+      select.selectedIndex = i;
+      break;
+    }
+  }
+  runInspection('auto');
+}
+
 async function runInspection(scenario) {
-  const sector = document.getElementById('sectorSelect').value;
+  const select = document.getElementById('sectorSelect');
+  const sector = select ? select.value : 'SEC-NORTH-01';
   try {
     const res = await fetch(`${API}/detect`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sector, scenario })
+      body: JSON.stringify({ sector_id: sector, scenario })
     });
     const data = await res.json();
     displayResult(data);
@@ -553,96 +625,178 @@ async function runInspection(scenario) {
 }
 
 function displayResult(data) {
-  document.getElementById('pciScore').innerText = data.pci_score;
-  document.getElementById('pciScore').style.color = data.status_color;
-  document.getElementById('pciRating').innerText = data.pci_rating;
-  document.getElementById('pciDesc').innerText = `Pavement Roughness IRI: ${data.iri_roughness_m_km} m/km • ${data.defects_found_count} defects found (${data.total_area_sqm} m²).`;
+  const pciEl = document.getElementById('pciScore');
+  if (pciEl) {
+    pciEl.innerText = data.pci_score;
+    pciEl.style.color = data.status_color;
+  }
+  const ratingEl = document.getElementById('pciRating');
+  if (ratingEl) ratingEl.innerText = data.pci_rating;
 
-  document.getElementById('repairCost').innerText = `$${data.total_repair_cost_usd.toLocaleString()}`;
+  const descEl = document.getElementById('pciDesc');
+  if (descEl) {
+    descEl.innerText = `Pavement Roughness IRI: ${data.iri_roughness_m_km} m/km • ${data.defects_found_count} defects found (${data.total_area_sqm} m²).`;
+  }
+
+  const costEl = document.getElementById('repairCost');
+  if (costEl) costEl.innerText = `$${(data.total_repair_cost_usd || 0).toLocaleString()}`;
 
   drawRoadWithBoxes(data.defects || []);
 
   // Defect list
   const container = document.getElementById('defectsList');
-  if (!data.defects || data.defects.length === 0) {
-    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:16px;">✨ Pavement is completely clear of damage.</div>`;
-  } else {
-    container.innerHTML = data.defects.map(d => `
-      <div class="defect-item">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span class="defect-tag" style="background:${d.color}22; color:${d.color}; border:1px solid ${d.color};">${d.code}</span>
-          <div>
-            <div style="font-weight:700; color:#fff; font-size:13px;">${d.defect_name}</div>
-            <div style="font-size:11px; color:var(--text-muted);">${d.recommended_action} • Area: ${d.area_sqm} m²</div>
+  if (container) {
+    if (!data.defects || data.defects.length === 0) {
+      container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:16px;">✨ Pavement is completely clear of damage.</div>`;
+    } else {
+      container.innerHTML = data.defects.map(d => `
+        <div class="defect-item">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="defect-tag" style="background:${d.color}22; color:${d.color}; border:1px solid ${d.color};">${d.code}</span>
+            <div>
+              <div style="font-weight:700; color:#fff; font-size:13px;">${d.defect_name}</div>
+              <div style="font-size:11px; color:var(--text-muted);">${d.recommended_action} • Area: ${d.area_sqm} m²</div>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'JetBrains Mono', monospace; font-weight:700; color:#f59e0b;">$${d.estimated_cost_usd}</div>
+            <div style="font-size:10px; color:#64748b;">${d.confidence_pct}% YOLO</div>
           </div>
         </div>
-        <div style="text-align:right;">
-          <div style="font-family:'JetBrains Mono', monospace; font-weight:700; color:#f59e0b;">$${d.estimated_cost_usd}</div>
-          <div style="font-size:10px; color:#64748b;">${d.confidence_pct}% YOLO</div>
-        </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
   }
 
   renderCharts(data);
 }
 
 function renderCharts(data) {
-  // Severity / Class Donut Chart
-  const ctxDefect = document.getElementById('defectChart').getContext('2d');
-  if (defectChartInstance) defectChartInstance.destroy();
+  const defectCanvas = document.getElementById('defectChart');
+  if (defectCanvas) {
+    const ctxDefect = defectCanvas.getContext('2d');
+    if (defectChartInstance) defectChartInstance.destroy();
 
-  const labels = ['Pothole (D40)', 'Alligator (D20)', 'Longitudinal (D00)', 'Transverse (D10)', 'Rutting (D43)'];
-  const defectCounts = [35, 25, 20, 12, 8];
+    const labels = ['Pothole (D40)', 'Alligator (D20)', 'Longitudinal (D00)', 'Transverse (D10)', 'Rutting (D43)'];
+    const defectCounts = [35, 25, 20, 12, 8];
 
-  defectChartInstance = new Chart(ctxDefect, {
-    type: 'doughnut',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: defectCounts,
-        backgroundColor: ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#8b5cf6'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 8 } }
+    defectChartInstance = new Chart(ctxDefect, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: defectCounts,
+          backgroundColor: ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#8b5cf6'],
+          borderWidth: 0
+        }]
       },
-      cutout: '65%'
-    }
-  });
-
-  // Damaged Area Bar Chart
-  const ctxArea = document.getElementById('areaChart').getContext('2d');
-  if (areaChartInstance) areaChartInstance.destroy();
-
-  areaChartInstance = new Chart(ctxArea, {
-    type: 'bar',
-    data: {
-      labels: ['Potholes', 'Alligator', 'Longitudinal', 'Transverse', 'Rutting'],
-      datasets: [{
-        data: [4.2, 8.5, 3.1, 2.4, 5.0],
-        backgroundColor: '#06b6d4',
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } },
-        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 8 } }
+        },
+        cutout: '65%'
       }
-    }
+    });
+  }
+
+  const areaCanvas = document.getElementById('areaChart');
+  if (areaCanvas) {
+    const ctxArea = areaCanvas.getContext('2d');
+    if (areaChartInstance) areaChartInstance.destroy();
+
+    areaChartInstance = new Chart(ctxArea, {
+      type: 'bar',
+      data: {
+        labels: ['Potholes', 'Alligator', 'Longitudinal', 'Transverse', 'Rutting'],
+        datasets: [{
+          data: [4.2, 8.5, 3.1, 2.4, 5.0],
+          backgroundColor: '#06b6d4',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } },
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#cbd5e1' } }
+        }
+      }
+    });
+  }
+}
+
+function renderWorkOrders(list) {
+  const container = document.getElementById('workOrdersList');
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:12px;">No active municipal work orders.</div>`;
+    return;
+  }
+  container.innerHTML = list.map(o => `
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-weight:700; color:#fff; font-size:12px;">
+          ${o.order_id} • <span style="color:#f59e0b;">${o.sector_name}</span>
+          <span style="font-size:10px; margin-left:6px; padding:2px 6px; border-radius:4px; background:${o.priority==='CRITICAL'?'rgba(239,68,68,0.2)':'rgba(245,158,11,0.2)'}; color:${o.priority==='CRITICAL'?'#ef4444':'#f59e0b'}; font-weight:700;">${o.priority}</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${o.remediation_scope}</div>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px; color:#10b981; font-weight:600;">$${(o.budget_allocated_usd || 0).toLocaleString()}</span>
+        <div style="font-size:10px; color:#64748b;">${o.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAuditLogs(list) {
+  const container = document.getElementById('auditLogList');
+  if (!container) return;
+  if (!list || list.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:12px;">No audit records.</div>`;
+    return;
+  }
+  container.innerHTML = list.slice(0, 15).map(a => `
+    <div style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+      <span style="color:#06b6d4;">[${a.action}]</span> <span style="color:#94a3b8;">${a.entity_id}:</span> ${a.details}
+      <span style="color:#64748b; font-size:10px; float:right;">${a.timestamp.substring(11, 19)}</span>
+    </div>
+  `).join('');
+}
+
+function promptNewWorkOrder() {
+  const select = document.getElementById('sectorSelect');
+  const sec = select ? select.value : 'SEC-NORTH-01';
+  createWorkOrder({
+    sector_id: sec,
+    priority: 'HIGH',
+    remediation_scope: 'Emergency asphalt cold patch & compactor roll on severe pothole clusters',
+    assigned_contractor: 'Apex Municipal Pavement Corp',
+    budget_allocated_usd: 7200
   });
+}
+
+async function createWorkOrder(orderData) {
+  try {
+    const res = await fetch(`${API}/work-orders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+    const data = await res.json();
+    console.log(`Work Order created: ${data.order_id}`);
+    await loadData();
+  } catch (err) {
+    console.error("Failed to create work order:", err);
+  }
 }
 
 function renderHistory(list) {
   const container = document.getElementById('historyList');
+  if (!container) return;
   if (list.length === 0) {
     container.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:20px;">No survey records.</div>`;
     return;
@@ -652,7 +806,7 @@ function renderHistory(list) {
       <div style="display:flex; align-items:center; gap:12px;">
         <span style="font-size:22px;">🛣️</span>
         <div>
-          <div style="font-weight:700; color:#fff; font-size:14px;">${item.sector}</div>
+          <div style="font-weight:700; color:#fff; font-size:14px;">${item.sector_name || item.sector}</div>
           <div style="font-size:11px; color:var(--text-muted);">${item.defects_found_count} Defects • Damaged Area: ${item.total_area_sqm} m² • IRI: ${item.iri_roughness_m_km} m/km</div>
         </div>
       </div>
@@ -663,6 +817,12 @@ function renderHistory(list) {
     </div>
   `).join('');
 }
+
+// Global exports for automation & puppeteer
+window.selectSector = selectSector;
+window.runInspection = runInspection;
+window.loadData = loadData;
+window.createWorkOrder = createWorkOrder;
 
 window.addEventListener('DOMContentLoaded', loadData);
 </script>

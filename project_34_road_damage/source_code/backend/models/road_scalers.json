@@ -1,0 +1,34 @@
+{
+  "damaged_area_sqm": {
+    "min": 0.4,
+    "max": 6.0
+  },
+  "pothole_depth_cm": {
+    "min": 0.5,
+    "max": 14.0
+  },
+  "crack_width_mm": {
+    "min": 2.0,
+    "max": 32.0
+  },
+  "traffic_volume_vpd": {
+    "min": 4.5,
+    "max": 59.0
+  },
+  "heavy_axle_pct": {
+    "min": 3.5,
+    "max": 40.5
+  },
+  "pavement_age_years": {
+    "min": 1.0,
+    "max": 15.0
+  },
+  "drainage_quality_idx": {
+    "min": 0.25,
+    "max": 0.95
+  },
+  "freeze_thaw_cycles": {
+    "min": 5.0,
+    "max": 55.0
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "project": "PROJECT-034 AI-Based Road Damage Detection and Severity Classification",
+  "n_samples": 6000,
+  "features": [
+    "damaged_area_sqm",
+    "pothole_depth_cm",
+    "crack_width_mm",
+    "traffic_volume_vpd",
+    "heavy_axle_pct",
+    "pavement_age_years",
+    "drainage_quality_idx",
+    "freeze_thaw_cycles"
+  ],
+  "classes": [
+    {
+      "code": "D40",
+      "name": "D40 - Deep Pothole",
+      "severity": "HIGH",
+      "cost_per_sqm": 140,
+      "action": "Cold/hot asphalt pothole patch & compactor roll",
+      "color": "#ef4444"
+    },
+    {
+      "code": "D20",
+      "name": "D20 - Alligator Cracking",
+      "severity": "HIGH",
+      "cost_per_sqm": 95,
+      "action": "Full-depth reclamation & asphalt overlay",
+      "color": "#f97316"
+    },
+    {
+      "code": "D00",
+      "name": "D00 - Longitudinal Crack",
+      "severity": "MEDIUM",
+      "cost_per_sqm": 45,
+      "action": "Hot-pour rubberized bitumen crack sealing",
+      "color": "#eab308"
+    },
+    {
+      "code": "D10",
+      "name": "D10 - Transverse Crack",
+      "severity": "MEDIUM",
+      "cost_per_sqm": 50,
+      "action": "Routing, clean compressed air & sealant injection",
+      "color": "#3b82f6"
+    },
+    {
+      "code": "D43",
+      "name": "D43 - Rutting & Wheel Depression",
+      "severity": "MEDIUM",
+      "cost_per_sqm": 110,
+      "action": "Surface milling and micro-surfacing levelling",
+      "color": "#8b5cf6"
+    }
+  ],
+  "sectors": {
+    "SEC-NORTH-01": {
+      "id": "SEC-NORTH-01",
+      "name": "Highway Sector A4 (Expressway Corridor)",
+      "speed_limit_kmh": 110,
+      "surface_type": "Dense Asphalt Concrete (DAC)",
+      "traffic_vpd_k": 45.0,
+      "heavy_truck_pct": 28.0
+    },
+    "SEC-URBAN-02": {
+      "id": "SEC-URBAN-02",
+      "name": "Urban Arterial Road 12 (Downtown Junction)",
+      "speed_limit_kmh": 60,
+      "surface_type": "Stone Mastic Asphalt (SMA)",
+      "traffic_vpd_k": 55.0,
+      "heavy_truck_pct": 14.0
+    },
+    "SEC-IND-03": {
+      "id": "SEC-IND-03",
+      "name": "Industrial Ring Road (Heavy Cargo Freight)",
+      "speed_limit_kmh": 80,
+      "surface_type": "Reinforced Bituminous Concrete",
+      "traffic_vpd_k": 32.0,
+      "heavy_truck_pct": 38.0
+    },
+    "SEC-RES-04": {
+      "id": "SEC-RES-04",
+      "name": "Residential Boulevard (Suburban Sector 8)",
+      "speed_limit_kmh": 40,
+      "surface_type": "Standard Flexible Pavement",
+      "traffic_vpd_k": 8.5,
+      "heavy_truck_pct": 6.0
+    },
+    "SEC-MTN-05": {
+      "id": "SEC-MTN-05",
+      "name": "Mountain Pass Highway (High Incline Zone)",
+      "speed_limit_kmh": 70,
+      "surface_type": "Polymer Modified Asphalt (PMA)",
+      "traffic_vpd_k": 12.0,
+      "heavy_truck_pct": 22.0
+    }
+  },
+  "classifier_accuracy": "76.00%",
+  "regression_pci_mae": "1.62",
+  "regression_iri_mae": "0.117 m/km",
+  "framework": "PyTorch 2.x Deep Residual MLP & Dual-Head Pavement Condition Regressor",
+  "benchmark": "Road Damage Dataset 2022 (RDD2022) Multi-Country Benchmark"
+}
