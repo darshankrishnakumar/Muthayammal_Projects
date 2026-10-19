@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-10-19T19:38:42.330273+00:00",
+  "dataset_samples": 6000,
+  "vocab_size": 917,
+  "ngram_range": [
+    1,
+    2
+  ],
+  "dialogue_act_model": {
+    "algorithm": "Logistic Regression (Calibrated L2 Regularized)",
+    "classes": [
+      "ACTION_ITEM",
+      "DECISION",
+      "DISCUSSION",
+      "GENERAL_STATEMENT"
+    ],
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "classification_report": {
+      "ACTION_ITEM": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 434.0
+      },
+      "DECISION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 293.0
+      },
+      "DISCUSSION": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 293.0
+      },
+      "GENERAL_STATEMENT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 180.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      }
+    }
+  },
+  "priority_model": {
+    "algorithm": "Logistic Regression (Calibrated L2 Regularized)",
+    "classes": [
+      "Critical",
+      "High",
+      "Low",
+      "Medium"
+    ],
+    "accuracy": 0.7264,
+    "macro_f1": 0.7124,
+    "classification_report": {
+      "Critical": {
+        "precision": 0.6,
+        "recall": 0.6923076923076923,
+        "f1-score": 0.6428571428571429,
+        "support": 91.0
+      },
+      "High": {
+        "precision": 0.8120300751879699,
+        "recall": 0.72,
+        "f1-score": 0.7632508833922261,
+        "support": 150.0
+      },
+      "Low": {
+        "precision": 0.5645161290322581,
+        "recall": 0.8536585365853658,
+        "f1-score": 0.6796116504854369,
+        "support": 41.0
+      },
+      "Medium": {
+        "precision": 0.8148148148148148,
+        "recall": 0.7189542483660131,
+        "f1-score": 0.7638888888888888,
+        "support": 153.0
+      },
+      "accuracy": 0.7264367816091954,
+      "macro avg": {
+        "precision": 0.6978402547587607,
+        "recall": 0.7462301193147678,
+        "f1-score": 0.7124021414059237,
+        "support": 435.0
+      },
+      "weighted avg": {
+        "precision": 0.7453249177820338,
+        "recall": 0.7264367816091954,
+        "f1-score": 0.7304062302959468,
+        "support": 435.0
+      }
+    }
+  }
+}

@@ -1,12 +1,15 @@
-# Walkthrough Timestamps: AI-Based Meeting Summarization and Action-Item Extraction Using Natural Language Processing (PROJECT-023)
+# Walkthrough Timestamps: AI-Based Meeting Summarization and Action-Item Extraction (PROJECT-023)
 
-| Timestamp | Phase | Topic / Demonstration Point |
-|---|---|---|
-| 00:00 - 00:45 | Intro | Title Slide, Problem Statement, Project Objectives |
-| 00:45 - 01:30 | Architecture | Codebase Structure & Dataflow Explanation |
-| 01:30 - 02:45 | Setup | Virtual Environment Activation & Application Startup |
-| 02:45 - 04:30 | Live Demo | Primary Workflow Execution & Real-Time Inference |
-| 04:30 - 05:30 | Robustness | Input Validation, Exception Handling & Metrics |
-| 05:30 - 06:00 | Conclusion | Summary of Results, Limitations & Future Scope |
+**Dedicated Port:** Port 5023 (`http://127.0.0.1:5023/`)  
+**Video Container:** `walkthrough/walkthrough_video.mp4` (H.264 / AAC, 1280x800, Exactly 180.000s / 03:00)
 
-*Note: Actual video recording file (`walkthrough_video.mp4`) status: NOT YET RECORDED (Awaiting screen capture session).*
+| Timestamp Interval | Phase | Feature Demonstrated | Visual Focus |
+|---|---|---|---|
+| **00:00 - 00:30** | Phase 1 | Meeting Cockpit Overview & Telematics Metric Strip | Audio Wave Canvas, Stat Cards, Speaker Donut & Radar Chart |
+| **00:30 - 01:00** | Phase 2 | Cloud Architecture Review Summarization | Kafka preset, TextRank summary, action items & decisions |
+| **01:00 - 01:30** | Phase 3 | Sprint Planning & Blocker Triage Summarization | DB index optimization (Critical), Let's Encrypt automation |
+| **01:30 - 02:00** | Phase 4 | Product Launch Retrospective & Diagnostics | Speaker talk-time breakdown, 5-Axis Radar Quality Profile |
+| **02:00 - 02:30** | Phase 5 | Custom Incident Postmortem Ingestion | P1 Redis failover, real-time extraction & assignee resolution |
+| **02:30 - 03:00** | Phase 6 | Processed Archives, Checkboxes & Minutes Export | Action checkbox toggles, SQLite archive list, minutes export |
+
+*Status: Exact 180.0s recording rendered and verified via ffprobe.*
