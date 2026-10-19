@@ -9,14 +9,42 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from flask import Flask, render_template, request, jsonify, send_from_directory
+import database as db
 
-app = Flask(__name__, template_folder='./templates', static_folder='./static')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'), static_folder=os.path.join(BASE_DIR, 'static'))
 
 # Load Pre-trained Artifacts
-loaded_model = pickle.load(open("model.pkl", 'rb'))
-vector = pickle.load(open("vector.pkl", 'rb'))
-lemmatizer = WordNetLemmatizer()
-stpwrds = set(stopwords.words('english'))
+model_path = os.path.join(BASE_DIR, "model.pkl")
+vector_path = os.path.join(BASE_DIR, "vector.pkl")
+
+loaded_model = pickle.load(open(model_path, 'rb'))
+vector = pickle.load(open(vector_path, 'rb'))
+
+try:
+    lemmatizer = WordNetLemmatizer()
+    lemmatizer.lemmatize("news")
+except Exception:
+    class FallbackLemmatizer:
+        def lemmatize(self, word):
+            return word.lower()
+    lemmatizer = FallbackLemmatizer()
+
+try:
+    stpwrds = set(stopwords.words('english'))
+except Exception:
+    stpwrds = {
+        'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've",
+        "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his',
+        'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself',
+        'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom',
+        'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be',
+        'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a',
+        'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at',
+        'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during',
+        'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on',
+        'off', 'over', 'under', 'again', 'further', 'then', 'once'
+    }
 
 # Pre-cache vocabulary and model weights
 vocab = vector.vocabulary_
@@ -24,7 +52,7 @@ coefs = loaded_model.coef_[0]
 intercept = float(loaded_model.intercept_[0]) if hasattr(loaded_model, 'intercept_') else 0.0
 
 # Load Measurable Experiments Benchmark Cache
-EXPERIMENTS_FILE = "experiments_results.json"
+EXPERIMENTS_FILE = os.path.join(BASE_DIR, "experiments_results.json")
 experiments_data = {}
 if os.path.exists(EXPERIMENTS_FILE):
     try:
@@ -82,7 +110,10 @@ def analyze_news(news_text, pure_language_mode=False):
     raw_tokens = working_text.split()
     review = re.sub(r'[^a-zA-Z\s]', ' ', working_text)
     review_lower = review.lower()
-    tokenized = nltk.word_tokenize(review_lower)
+    try:
+        tokenized = nltk.word_tokenize(review_lower)
+    except Exception:
+        tokenized = review_lower.split()
 
     lemmatized_tokens = []
     filtered_pairs = []
@@ -234,8 +265,9 @@ def analyze_news(news_text, pure_language_mode=False):
             risk_tier = "Moderate Credibility"
             risk_color = "text-teal-400"
 
-    return {
+    result_payload = {
         'headline': raw_input,
+
         'working_text': working_text,
         'pure_language_mode': pure_language_mode,
         'source_watermark_found': source_watermark_found,
@@ -266,6 +298,24 @@ def analyze_news(news_text, pure_language_mode=False):
         'risk_tier': risk_tier,
         'risk_color': risk_color
     }
+
+    try:
+        db.log_verification(
+            headline_preview=working_text,
+            classification="FAKE" if is_fake else "REAL",
+            confidence=fake_pct if is_fake else real_pct,
+            decision_score=decision_score,
+            sensationalism_score=sensational_score,
+            speculative_score=len(detected_speculative) * 20.0,
+            objective_score=len(detected_objective) * 20.0,
+            source_watermark_detected=source_watermark_found,
+            pure_language_mode=pure_language_mode
+        )
+    except Exception as e:
+        print(f"[App] SQLite log error: {e}")
+
+    return result_payload
+
 
 @app.route('/')
 def home():
@@ -321,6 +371,36 @@ def api_predict():
     analysis = analyze_news(news, pure_language_mode=pure_mode)
     return jsonify(analysis)
 
+@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
+def health():
+    db_stats = db.get_stats()
+    return jsonify({
+        'status': 'healthy',
+        'service': 'Fake News Detection & Explainable Stylometry Subsystem',
+        'port': 5014,
+        'model': {
+            'classifier': 'PassiveAggressiveClassifier (TF-IDF Vectorizer)',
+            'vocabulary_size': len(vocab),
+            'source_watermark_filter': True
+        },
+        'database': {
+            'status': db_stats['status'],
+            'total_verifications': db_stats['total_verifications']
+        }
+    })
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    limit = request.args.get('limit', default=25, type=int)
+    records = db.get_recent_verifications(limit=limit)
+    return jsonify({'success': True, 'records': records, 'count': len(records)})
+
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    return jsonify({'success': True, 'stats': db.get_stats()})
+
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5005))
-    app.run(debug=True, port=port)
+    port = int(os.environ.get('PORT', 5014))
+    print(f"[*] Starting Fake News Detection Server on http://localhost:{port}")
+    app.run(debug=False, port=port)
