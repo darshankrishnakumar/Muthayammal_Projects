@@ -16,14 +16,14 @@ if sys.platform.startswith('win'):
 from PIL import Image
 from egg_engine import EggPredictionEngine
 
-def test_single_image(image_path):
+def evaluate_single_image(image_path):
     print(f"\n==================================================")
     print(f"Testing Single Egg: {os.path.basename(image_path)}")
     print(f"==================================================")
     
     if not os.path.exists(image_path):
         print(f"Error: File not found at {image_path}")
-        return
+        return None
 
     engine = EggPredictionEngine()
     img = Image.open(image_path)
@@ -40,6 +40,17 @@ def test_single_image(image_path):
     print(f"Asymmetry Index    : {res['morphology']['asymmetry_index']}")
     print(f"Roundness Coeff    : {res['morphology']['roundness']}")
     print(f"\nRecommendation     : {res['recommendation']}\n")
+    return res
+
+def test_single_sample_image():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    sample_path = os.path.join(base_dir, "grayscale", "F01_standard_female.png")
+    res = evaluate_single_image(sample_path)
+    assert res is not None
+    assert "prediction" in res
+    assert "Female" in res["prediction"]
+
+
 
 def test_all_samples():
     print(f"\n==================================================")
@@ -85,6 +96,7 @@ def test_all_samples():
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        test_single_image(sys.argv[1])
+        evaluate_single_image(sys.argv[1])
     else:
         test_all_samples()
+

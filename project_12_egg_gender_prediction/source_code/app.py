@@ -124,8 +124,10 @@ def predict():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route("/api/submit_all", methods=["POST"])
+@app.route("/api/submit_all", methods=["POST", "GET"])
+@app.route("/api/evaluate_dataset", methods=["POST", "GET"])
 def submit_all():
+
     """
     Submits and evaluates all eggs in the dataset.
     Computes overall accuracy, cross-validation metrics, confusion matrix, and logs to database.
@@ -250,6 +252,7 @@ def clear_history():
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5050))
+    port = int(os.environ.get("PORT", 5012))
     print(f"[*] Starting Egg Prediction Server on http://localhost:{port}")
     app.run(host="0.0.0.0", port=port, debug=False)
+

@@ -1,7 +1,8 @@
 @echo off
 title Egg Sex Prediction AI
 echo ============================================================
-echo Starting Egg Sex Prediction AI (Port 5050)...
+echo Starting Egg Sex Prediction AI (Port 5012)...
 echo ============================================================
-"D:\vicky folder\cropai-main\.venv\Scripts\python.exe" app.py
+python app.py
 pause
+
