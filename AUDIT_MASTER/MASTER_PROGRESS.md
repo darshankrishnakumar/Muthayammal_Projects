@@ -10,13 +10,13 @@
 | Metric | Target | Current Status | % Complete |
 |---|:---:|:---:|:---:|
 | **Total Projects** | 55 | 55 | 100% |
-| **Fully Verified Complete (15/15 Criteria)** | 55 | **7** | 12.7% |
-| **Active In-Progress Project** | — | **PROJECT-008** | — |
-| **Trained ML Models Available** | 55 | 7 Projects (BiLSTM, RF, Extra Trees, MobileNet, Decision Trees, XGBoost, Tuned RF, Crop RF Cache) | 12.7% |
-| **Real Datasets Acquired** | 55 | 7 Projects (Flight Fare, NSL-KDD, PlantVillage, Used Cars, Student Career, SimTK Gait, FAO Crop Yield) | 12.7% |
-| **Automated Tests Passing** | 55 Suites | 7 Suites (148 tests passed) | 12.7% |
-| **Walkthrough Videos Recorded (2.5–3.5m)** | 55 | 7 (`02:37`, `03:00`, `03:00`, `03:00`, `03:00`, `03:00`, `03:00`) | 12.7% |
-| **Updated Presentations with Screenshots** | 55 | 7 (105 total slides) | 12.7% |
+| **Fully Verified Complete (15/15 Criteria)** | 55 | **8** | 14.5% |
+| **Active In-Progress Project** | — | **PROJECT-009** | — |
+| **Trained ML Models Available** | 55 | 8 Projects (BiLSTM, RF, Extra Trees, MobileNet, Decision Trees, XGBoost, Tuned RF, Crop RF, Churn RF & Cox) | 14.5% |
+| **Real Datasets Acquired** | 55 | 8 Projects (Flight Fare, NSL-KDD, PlantVillage, Used Cars, Student Career, SimTK Gait, FAO Crop Yield, IBM Telco Churn) | 14.5% |
+| **Automated Tests Passing** | 55 Suites | 8 Suites (171 tests passed) | 14.5% |
+| **Walkthrough Videos Recorded (2.5–3.5m)** | 55 | 8 (`02:37`, `03:00`, `03:00`, `03:00`, `03:00`, `03:00`, `03:00`, `03:00`) | 14.5% |
+| **Updated Presentations with Screenshots** | 55 | 8 (120 total slides) | 14.5% |
 
 ---
 
@@ -31,7 +31,7 @@
 | **005** | **Career Guidance App for Students (AI Assisted)** | `project_05_career_guidance` | **XGBoost (16.4%) + RF + CART** | **18 / 18** | **03:00 (180s)** | **VERIFIED COMPLETE** |
 | **006** | **Child Gait Prediction using ML & Streamlit** | `project_06_child_gait_prediction` | **Tuned RF (ROC-AUC 1.0) + Scaler** | **23 / 23** | **03:00 (180s)** | **VERIFIED COMPLETE** |
 | **007** | **Crop Yield Prediction using ML Algorithms** | `project_07_crop_yield_prediction` | **Random Forest (R² 0.985) + 5 Models** | **28 / 28** | **03:00 (180s)** | **VERIFIED COMPLETE** |
-| 008 | Customer Churn Prediction | `project_08_customer_churn_prediction` | Pending | Pending | Pending | In Progress / Active |
-| 009 | Cyberbullying Detection DEA-RNN | `project_09_cyberbullying_detection_dea_rnn` | Pending | Pending | Pending | In Queue |
+| **008** | **Customer Churn Prediction** | `project_08_customer_churn_prediction` | **Random Forest (1k Trees) + Cox Model** | **23 / 23** | **03:00 (180s)** | **VERIFIED COMPLETE** |
+| 009 | Cyberbullying Detection DEA-RNN | `project_09_cyberbullying_detection_dea_rnn` | Pending | Pending | Pending | In Progress / Active |
 | 010 | Deepfake Detection System | `project_10_deepfake_detector` | Pending | Pending | Pending | In Queue |
 | ... | *Projects 011 through 055 tracked in project_inventory.json* | ... | ... | ... | ... | In Queue |

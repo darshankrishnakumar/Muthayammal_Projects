@@ -48,7 +48,8 @@ class _CustomUnpickler(pickle.Unpickler):
         return super().find_class(module, name)
 
 # --- Flask App Initialization ---
-app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(BASE_DIR, 'templates'), static_folder=os.path.join(BASE_DIR, 'static'))
 
 @app.template_filter('number_format')
 def number_format_filter(value):
@@ -58,7 +59,8 @@ def number_format_filter(value):
         return value
 
 # --- Load Trained Models ---
-with open('model.pkl', 'rb') as f:
+model_path = os.path.join(BASE_DIR, 'model.pkl')
+with open(model_path, 'rb') as f:
     model = _CustomUnpickler(f).load()
 
 model.estimator = getattr(model, 'base_estimator_', None) or model.estimators_[0]
@@ -68,9 +70,18 @@ for est in model.estimators_:
     if not hasattr(est, 'monotonic_cst'):
         est.monotonic_cst = None
 
+_orig_predict_proba = model.predict_proba
+def _normalized_predict_proba(X):
+    p = _orig_predict_proba(X)
+    s = np.sum(p, axis=1, keepdims=True)
+    s[s == 0] = 1.0
+    return p / s
+model.predict_proba = _normalized_predict_proba
+
 explainer = shap.TreeExplainer(model)
 
-survmodel = pickle.load(open('survivemodel.pkl', 'rb'))
+surv_path = os.path.join(BASE_DIR, 'survivemodel.pkl')
+survmodel = pickle.load(open(surv_path, 'rb'))
 
 def _predict_cumulative_hazard(self, feats):
     xb = np.dot(feats, self.hazards_.values)
@@ -204,8 +215,10 @@ def home():
 def predict_page():
     return render_template('predict.html', active_page='predict', has_prediction=False, form_data={})
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
+    if request.method == 'GET':
+        return render_template('predict.html', active_page='predict', has_prediction=False, form_data={})
     try:
         gender = int(request.form.get("gender", 0))
         SeniorCitizen = 1 if 'SeniorCitizen' in request.form else 0
@@ -422,4 +435,5 @@ def api_stats():
     return jsonify(get_prediction_stats())
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 5008))
+    app.run(host="127.0.0.1", port=port, debug=False)
