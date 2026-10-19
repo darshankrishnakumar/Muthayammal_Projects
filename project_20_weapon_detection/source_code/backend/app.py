@@ -9,8 +9,20 @@ from PIL import Image
 import numpy as np
 import cv2
 
+import json
 from flask import Flask, request, jsonify, send_from_directory, Response
 from flask_cors import CORS
+
+from database import (
+    init_db,
+    add_incident,
+    get_all_incidents,
+    get_cctv_cameras as db_get_cctv_cameras,
+    log_audit,
+    get_audit_logs,
+    get_threat_definitions,
+    update_incident_status as db_update_incident_status
+)
 
 # Ultralytics YOLOv8
 try:
@@ -24,6 +36,8 @@ CORS(app)
 
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
 MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'yolov8n.pt'))
+DATA_SAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'samples'))
+MANIFEST_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'dataset_manifest.json'))
 
 # Load YOLOv8 model if available
 yolo_model = None
@@ -47,8 +61,9 @@ WEAPON_CLASSES = {
     'holster': {'category': 'Tactical Gear', 'threat': 'MEDIUM', 'color': '#ffd600'}
 }
 
-# In-memory incident and log storage
-incident_log = []
+# SQLite transactional initialization & incident cache
+init_db()
+incident_log = get_all_incidents()
 lockdown_active = False
 
 CCTV_CAMERAS = [
@@ -90,42 +105,6 @@ CCTV_CAMERAS = [
     }
 ]
 
-# Populate initial historical log entries for realistic dashboard analytics
-def init_mock_history():
-    sample_scenarios = [
-        ('CAM-01', 'knife', 0.932, 'Bladed Weapon', 'HIGH', 'RESOLVED', 'Confiscated at security bag check', -75),
-        ('CAM-03', 'handgun', 0.965, 'Firearm', 'CRITICAL', 'SECURITY_DISPATCHED', 'Armed patrol interdicted suspect at gate', -45),
-        ('CAM-02', 'explosive', 0.887, 'IED / Explosive', 'CRITICAL', 'UNDER_REVIEW', 'Bomb disposal unit deployed to cargo scanner', -25),
-        ('CAM-04', 'holster', 0.741, 'Tactical Gear', 'MEDIUM', 'RESOLVED', 'Authorized diplomat security escort confirmed', -15),
-        ('CAM-01', None, 0.0, 'None', 'SAFE', 'RESOLVED', 'Routine civilian passenger clearance', -8),
-    ]
-    now = datetime.now(timezone.utc).timestamp()
-    for cam, w_class, conf, cat, sev, status, notes, min_offset in sample_scenarios:
-        t_stamp = datetime.fromtimestamp(now + min_offset * 60, tz=timezone.utc).isoformat()
-        dets = []
-        if w_class:
-            dets.append({
-                'id': f"det-{uuid.uuid4().hex[:6]}",
-                'class': w_class,
-                'category': cat,
-                'confidence': conf,
-                'severity': sev,
-                'bbox': {'x': 180, 'y': 110, 'width': 120, 'height': 150}
-            })
-        incident_log.append({
-            'id': f"INC-{len(incident_log) + 1:04d}",
-            'timestamp': t_stamp,
-            'camera_id': cam,
-            'detections': dets,
-            'weapon_detected': len(dets) > 0,
-            'alert_level': sev,
-            'status': status,
-            'notes': notes,
-            'image_metrics': {'sharpness': 184.2, 'contrast': 64.1, 'brightness': 128.5}
-        })
-
-init_mock_history()
-
 def decode_image(b64_str):
     """Safely decode base64 image data URL or raw string to numpy BGR image."""
     if ',' in b64_str:
@@ -152,6 +131,7 @@ def analyze_image_forensics(cv_img):
     edge_density = round(float(np.sum(edges > 0) / (h * w) * 100), 2)
     
     return {
+        'resolution': f"{w}x{h}",
         'width': w,
         'height': h,
         'channels': c,
@@ -297,25 +277,9 @@ def health():
         'server_time': datetime.now(timezone.utc).isoformat()
     })
 
-@app.route('/api/detect', methods=['POST'])
-def detect_weapon():
-    data = request.json
-    if not data or 'image' not in data:
-        return jsonify({'error': 'No image provided. Please supply base64 encoded image.'}), 400
-
-    conf_threshold = float(data.get('confidence_threshold', 0.45))
-    iou_threshold = float(data.get('iou_threshold', 0.45))
-    camera_id = data.get('camera_id', 'WEB-SCAN')
-
-    try:
-        cv_img, pil_img = decode_image(data['image'])
-    except Exception as e:
-        return jsonify({'error': f'Failed to decode image: {str(e)}'}), 400
-
-    # Image telemetry & forensics
+def perform_detection(cv_img, camera_id='CAM-01', conf_threshold=0.45, iou_threshold=0.45, notes=''):
+    """Core detection pipeline executing forensics, YOLO/CV inference, and persisting to SQLite."""
     forensics = analyze_image_forensics(cv_img)
-    
-    # Run vision & YOLOv8 inference
     detections, inference_time_ms = run_vision_inference(
         cv_img,
         conf_threshold=conf_threshold,
@@ -342,7 +306,6 @@ def detect_weapon():
         detected_types = list(set(d['class'].replace('_', ' ').title() for d in detections))
         summary_msg = f"THREAT DETECTED: {len(detections)} weapon signature(s) identified ({', '.join(detected_types)})."
 
-    # Log incident
     incident_id = f"INC-{len(incident_log) + 1:04d}"
     incident_record = {
         'id': incident_id,
@@ -355,11 +318,15 @@ def detect_weapon():
         'recommended_action': recommended_action,
         'summary': summary_msg,
         'inference_time_ms': inference_time_ms,
-        'forensics': forensics
+        'forensics': forensics,
+        'notes': notes,
+        'image_metrics': forensics
     }
     incident_log.insert(0, incident_record)
+    add_incident(incident_record)
+    log_audit(f"DETECTION_RUN: {incident_id}", f"Camera: {camera_id}, Threat: {alert_level}, Detections: {len(detections)}")
 
-    return jsonify({
+    return {
         'success': True,
         'incident_id': incident_id,
         'detections': detections,
@@ -371,7 +338,75 @@ def detect_weapon():
         'forensics': forensics,
         'lockdown_active': lockdown_active,
         'timestamp': incident_record['timestamp']
-    })
+    }
+
+@app.route('/api/detect', methods=['POST'])
+def detect_weapon():
+    data = request.json
+    if not data or 'image' not in data:
+        return jsonify({'error': 'No image provided. Please supply base64 encoded image.'}), 400
+
+    conf_threshold = float(data.get('confidence_threshold', 0.45))
+    iou_threshold = float(data.get('iou_threshold', 0.45))
+    camera_id = data.get('camera_id', 'WEB-SCAN')
+
+    try:
+        cv_img, pil_img = decode_image(data['image'])
+    except Exception as e:
+        return jsonify({'error': f'Failed to decode image: {str(e)}'}), 400
+
+    res = perform_detection(
+        cv_img,
+        camera_id=camera_id,
+        conf_threshold=conf_threshold,
+        iou_threshold=iou_threshold
+    )
+    return jsonify(res)
+
+@app.route('/api/samples', methods=['GET'])
+def get_samples():
+    """Return test surveillance samples manifest for automated testing and demonstrations."""
+    if os.path.exists(MANIFEST_PATH):
+        try:
+            with open(MANIFEST_PATH, 'r') as f:
+                manifest = json.load(f)
+            return jsonify(manifest)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    return jsonify([])
+
+@app.route('/api/samples/test/<sample_id>', methods=['POST'])
+def test_sample(sample_id):
+    """Run real YOLOv8 and computer vision inference on a curated surveillance sample."""
+    if not os.path.exists(MANIFEST_PATH):
+        return jsonify({'error': 'Manifest not found'}), 404
+    try:
+        with open(MANIFEST_PATH, 'r') as f:
+            manifest = json.load(f)
+    except Exception as e:
+        return jsonify({'error': f'Failed to read manifest: {e}'}), 500
+        
+    sample = next((s for s in manifest if s['id'] == sample_id), None)
+    if not sample:
+        return jsonify({'error': f'Sample ID {sample_id} not found'}), 404
+    
+    img_path = os.path.join(DATA_SAMPLES_DIR, sample['filename'])
+    if not os.path.exists(img_path):
+        return jsonify({'error': f"Sample image file {sample['filename']} not found"}), 404
+    
+    cv_img = cv2.imread(img_path)
+    if cv_img is None:
+        return jsonify({'error': 'Could not read sample image from disk'}), 500
+        
+    res = perform_detection(
+        cv_img,
+        camera_id=sample.get('camera_id', 'CAM-01'),
+        conf_threshold=0.35,
+        iou_threshold=0.45,
+        notes=f"Surveillance Sample Evaluation: {sample.get('name')}"
+    )
+    res['sample_meta'] = sample
+    return jsonify(res)
 
 @app.route('/api/detections/history', methods=['GET'])
 def get_history():
@@ -387,21 +422,54 @@ def get_history():
         
     return jsonify(filtered[:limit])
 
+@app.route('/api/incidents', methods=['GET'])
+def get_all_db_incidents():
+    """Retrieve all logged security incidents from the SQLite database."""
+    incidents = get_all_incidents()
+    return jsonify(incidents)
+
 @app.route('/api/incidents/<incident_id>/status', methods=['PATCH'])
-def update_incident_status(incident_id):
+def update_incident_status_route(incident_id):
     data = request.json or {}
     new_status = data.get('status')
     notes = data.get('notes', '')
     
+    matched = None
     for inc in incident_log:
         if inc['id'] == incident_id:
             inc['status'] = new_status
             if notes:
                 inc['notes'] = notes
             inc['updated_at'] = datetime.now(timezone.utc).isoformat()
-            return jsonify({'success': True, 'incident': inc})
+            matched = inc
+            break
+
+    # Also update in SQLite
+    db_update_incident_status(incident_id, new_status, notes)
+    log_audit(f"STATUS_UPDATED: {incident_id}", f"Status changed to {new_status}")
+
+    if not matched:
+        # Check if exists in SQLite DB
+        all_db = get_all_incidents()
+        matched = next((i for i in all_db if i['id'] == incident_id), None)
+        if matched:
+            incident_log.insert(0, matched)
+
+    if matched:
+        return jsonify({'success': True, 'incident': matched})
             
     return jsonify({'error': 'Incident ID not found'}), 404
+
+@app.route('/api/threats', methods=['GET'])
+def get_threats():
+    """Return weapon threat taxonomy definitions and tactical protocols."""
+    return jsonify(get_threat_definitions())
+
+@app.route('/api/audit', methods=['GET'])
+def get_audit():
+    """Return immutable system audit events from SQLite."""
+    limit = int(request.args.get('limit', 50))
+    return jsonify(get_audit_logs(limit))
 
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
@@ -424,7 +492,7 @@ def get_stats():
         if lvl in severity_counts:
             severity_counts[lvl] += 1
 
-    # Simulated hourly activity (past 8 hours)
+    # Hourly activity
     hourly = [
         {'hour': '11:00', 'scans': 28, 'threats': 1},
         {'hour': '12:00', 'scans': 45, 'threats': 2},
@@ -491,9 +559,14 @@ def get_model_metrics():
         ]
     })
 
+@app.route('/api/benchmarks', methods=['GET'])
+def get_benchmarks():
+    return get_model_metrics()
+
 @app.route('/api/cctv/cameras', methods=['GET'])
-def get_cctv_cameras():
-    return jsonify(CCTV_CAMERAS)
+def get_cctv_cameras_route():
+    cams = db_get_cctv_cameras()
+    return jsonify(cams if cams else CCTV_CAMERAS)
 
 @app.route('/api/emergency/lockdown', methods=['POST'])
 def toggle_lockdown():
@@ -512,9 +585,12 @@ def toggle_lockdown():
         'status': 'LOCKDOWN_ENGAGED' if lockdown_active else 'LOCKDOWN_LIFTED',
         'recommended_action': 'SITE LOCKDOWN ACTIVATED: All automated access gates sealed.' if lockdown_active else 'Lockdown disengaged by security command center.',
         'summary': 'MANUAL PROTOCOL: Security Lockdown Triggered' if lockdown_active else 'Lockdown Released',
-        'notes': data.get('reason', 'Operator initiated from Security Console')
+        'notes': data.get('reason', 'Operator initiated from Security Console'),
+        'image_metrics': {}
     }
     incident_log.insert(0, incident_record)
+    add_incident(incident_record)
+    log_audit("LOCKDOWN_TOGGLED", f"Active: {lockdown_active}, Reason: {incident_record['notes']}")
     
     return jsonify({
         'success': True,
