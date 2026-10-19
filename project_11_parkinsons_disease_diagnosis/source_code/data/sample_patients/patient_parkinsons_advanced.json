@@ -1,0 +1,18 @@
+{
+  "patient_id": "PD-8820",
+  "description": "Parkinson's Advanced - Severe Micro-Vascular Tremor & High Dysphonia",
+  "features": {
+    "MDVP:Fo(Hz)": 116.682,
+    "MDVP:Fhi(Hz)": 131.111,
+    "MDVP:Flo(Hz)": 95.244,
+    "MDVP:Jitter(%)": 0.00994,
+    "MDVP:Shimmer": 0.05432,
+    "NHR": 0.0487,
+    "HNR": 17.2,
+    "RPDE": 0.643,
+    "DFA": 0.789,
+    "spread1": -4.12,
+    "spread2": 0.345,
+    "PPE": 0.312
+  }
+}

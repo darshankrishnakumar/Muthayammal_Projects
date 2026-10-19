@@ -1,0 +1,18 @@
+{
+  "patient_id": "PD-3041",
+  "description": "Parkinson's Early Stage - Mild Vocal Flutter & Jitter Elevation",
+  "features": {
+    "MDVP:Fo(Hz)": 152.845,
+    "MDVP:Fhi(Hz)": 163.305,
+    "MDVP:Flo(Hz)": 129.443,
+    "MDVP:Jitter(%)": 0.00582,
+    "MDVP:Shimmer": 0.0285,
+    "NHR": 0.0214,
+    "HNR": 21.43,
+    "RPDE": 0.512,
+    "DFA": 0.724,
+    "spread1": -5.62,
+    "spread2": 0.224,
+    "PPE": 0.198
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "patient_id": "HC-0192",
+  "description": "Healthy Control - Natural Acoustic Harmonics",
+  "features": {
+    "MDVP:Fo(Hz)": 197.076,
+    "MDVP:Fhi(Hz)": 206.896,
+    "MDVP:Flo(Hz)": 192.055,
+    "MDVP:Jitter(%)": 0.00289,
+    "MDVP:Shimmer": 0.01689,
+    "NHR": 0.00798,
+    "HNR": 26.875,
+    "RPDE": 0.4276,
+    "DFA": 0.6971,
+    "spread1": -7.153,
+    "spread2": 0.1752,
+    "PPE": 0.1147
+  }
+}
