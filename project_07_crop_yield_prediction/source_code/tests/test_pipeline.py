@@ -7,8 +7,13 @@ mathematical conversions, and database operations.
 import pytest
 import numpy as np
 import pandas as pd
-import tempfile
+import os
+import sys
 from pathlib import Path
+
+SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
 
 import backend_api
 import database

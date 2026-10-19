@@ -1031,7 +1031,7 @@ def static_proxy(path):
 
 # ─────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5001))
+    port = int(os.environ.get("PORT", 5007))
     print(f"\n→ Serving frontend at http://localhost:{port}")
     print(f"→ API base at      http://localhost:{port}/api")
     print("\nPress Ctrl+C to stop.\n")
