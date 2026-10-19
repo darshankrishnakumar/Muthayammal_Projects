@@ -508,7 +508,7 @@ canvas#spectrogramCanvas {
 </div>
 
 <script>
-const API_BASE = 'http://localhost:5025/api';
+const API_BASE = (window.location.origin && window.location.origin.startsWith('http')) ? (window.location.origin + '/api') : 'http://localhost:5025/api';
 let radarChartInstance = null;
 let mfccChartInstance = null;
 let currentPresetEmotion = null;
@@ -720,6 +720,11 @@ function renderHistory(list) {
     </div>
   `).join('');
 }
+
+window.setScenario = setScenario;
+window.runAudioAnalysis = runAudioAnalysis;
+window.simulateMicRecord = simulateMicRecord;
+window.loadData = loadData;
 
 window.addEventListener('DOMContentLoaded', () => {
   initSpectrogram();
