@@ -456,8 +456,8 @@ body {
 </div>
 
 <script>
-const API_BASE = 'http://localhost:5029'; // Wait, Project 30 is port 5030!
-const API = 'http://localhost:5030/api';
+const API = window.location.origin.includes('5030') ? `${window.location.origin}/api` : 'http://127.0.0.1:5030/api';
+const API_BASE = API;
 
 let selectedDevice = 'Smart IP Camera';
 let lossChartInstance = null;
@@ -644,6 +644,11 @@ function renderLedger(list) {
 }
 
 window.addEventListener('DOMContentLoaded', loadData);
+
+// Expose automation helpers for test suite & puppeteer recording
+window.runInspection = runInspection;
+window.selectDev = selectDev;
+window.loadData = loadData;
 </script>
 
 </body>

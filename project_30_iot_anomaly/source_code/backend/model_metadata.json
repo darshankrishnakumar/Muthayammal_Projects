@@ -1,0 +1,50 @@
+{
+  "project_id": "PROJECT-030",
+  "domain": "IoT Telematics & Edge Anomaly Detection",
+  "classes": [
+    "Normal Baseline Traffic",
+    "Mirai Botnet C&C",
+    "SYN Flood DDoS",
+    "External Port Scan",
+    "Covert Data Exfiltration",
+    "Brute-Force SSH Auth"
+  ],
+  "class_count": 6,
+  "devices": [
+    "Smart IP Camera",
+    "Smart Thermostat",
+    "Smart Lock",
+    "Smart TV 4K",
+    "Edge Wi-Fi Router",
+    "Smart Voice Assistant"
+  ],
+  "device_count": 6,
+  "dataset_volume": 5500,
+  "features": [
+    "packet_size_bytes",
+    "packet_rate_pps",
+    "syn_ratio",
+    "payload_entropy",
+    "conn_freq_hz",
+    "byte_rate_bps",
+    "port_diversity",
+    "retransmission_rate"
+  ],
+  "feature_count": 8,
+  "models": {
+    "IoTAnomalyAutoencoder": {
+      "architecture": "Deep Bottleneck Autoencoder (8 -> 16 -> 8 -> 4 -> 8 -> 16 -> 8)",
+      "weights_file": "iot_autoencoder_weights.pt",
+      "file_size_bytes": 10183,
+      "anomaly_threshold": 0.35,
+      "parameters_count": 732
+    },
+    "IoTThreatClassifier": {
+      "architecture": "Deep Residual Threat Classifier (9 -> 64 -> 64 -> 32 -> 6)",
+      "weights_file": "iot_classifier_weights.pt",
+      "file_size_bytes": 54509,
+      "test_accuracy_pct": 100.0,
+      "parameters_count": 11494
+    }
+  }
+}
