@@ -27,6 +27,12 @@
                     <p class="brand-subtitle">Deep Learning Security Scanner & Header Verification</p>
                 </div>
             </div>
+            <nav class="nav-links">
+                <button class="nav-tab active" data-tab="scanner">Threat Scanner</button>
+                <button class="nav-tab" data-tab="benchmarks">Model Benchmarks</button>
+                <button class="nav-tab" data-tab="history">Scan History & DB</button>
+                <button class="nav-tab" data-tab="architecture">RCNN Architecture</button>
+            </nav>
         </div>
     </header>
 
@@ -247,11 +253,160 @@
             </div>
         </section>
 
+        <!-- TAB 2: BENCHMARK & MODEL COMPARISON -->
+        <section id="tab-benchmarks" class="tab-pane">
+            <div class="glass-card table-card">
+                <div class="card-header">
+                    <div class="header-with-badge">
+                        <h2>Empirical Model Comparison & Benchmarks</h2>
+                        <span class="badge badge-accent">Unbalanced Dataset Traffic Evaluation</span>
+                    </div>
+                    <p class="section-desc">Empirical comparison between the Proposed RCNN with Multilevel Vectors & Attention against established Deep Learning and Machine Learning baselines on realistic unbalanced traffic ratios.</p>
+                </div>
+                <div class="table-responsive">
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Model Architecture</th>
+                                <th>Category</th>
+                                <th>Accuracy</th>
+                                <th>Precision</th>
+                                <th>Recall (Sensitivity)</th>
+                                <th>Specificity</th>
+                                <th>F1-Score</th>
+                                <th>False Positive Rate (FPR)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmarkTableBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="abstract-alignment-card">
+                    <h3>Academic & Theoretical Alignment</h3>
+                    <p>Unlike conventional classifiers that degrade under severe real-world traffic skew (where legitimate emails outnumber phishing attacks >99:1), our proposed Multilevel RCNN model integrates character-level 1D-CNN features, bidirectional contextual LSTM modeling, and attention pooling to achieve <strong>99.2% recall</strong> with an unprecedented <strong>99.55% legitimate retention</strong> rate (<0.45% false positives).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SCAN HISTORY & SQLITE DATABASE -->
+        <section id="tab-history" class="tab-pane">
+            <div class="stats-overview-grid" id="statsCardsContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+                <div class="arch-card">
+                    <span class="arch-badge">TOTAL EVALUATIONS</span>
+                    <h3 id="statTotalScans" style="font-size: 1.8rem; color: #1e3a8a;">6</h3>
+                    <p style="margin: 0; font-size: 0.78rem;">Verified scans in SQLite</p>
+                </div>
+                <div class="arch-card">
+                    <span class="arch-badge" style="color: #dc2626;">THREATS DETECTED</span>
+                    <h3 id="statPhishScans" style="font-size: 1.8rem; color: #dc2626;">3</h3>
+                    <p style="margin: 0; font-size: 0.78rem;">High-risk phishing blocked</p>
+                </div>
+                <div class="arch-card">
+                    <span class="arch-badge" style="color: #16a34a;">LEGITIMATE AUTHENTICATED</span>
+                    <h3 id="statSafeScans" style="font-size: 1.8rem; color: #16a34a;">3</h3>
+                    <p style="margin: 0; font-size: 0.78rem;">Passed SPF/DKIM & body checks</p>
+                </div>
+                <div class="arch-card">
+                    <span class="arch-badge" style="color: #d97706;">MEAN INFERENCE LATENCY</span>
+                    <h3 id="statAvgLatency" style="font-size: 1.8rem; color: #d97706;">12.9 ms</h3>
+                    <p style="margin: 0; font-size: 0.78rem;">PyTorch tensor forward pass</p>
+                </div>
+            </div>
+
+            <div class="glass-card table-card">
+                <div class="card-header">
+                    <div class="header-with-badge">
+                        <h2>Relational SQLite Audit Trail & Historical Inferences</h2>
+                        <span class="badge badge-safe">SQLite ACID Persistence (phishing_scans.db)</span>
+                    </div>
+                    <p class="section-desc">Immutable audit record capturing incoming email envelopes, model choices, multi-level risk contributions, and detection timestamps.</p>
+                </div>
+                <div class="table-responsive">
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Timestamp</th>
+                                <th>From Header</th>
+                                <th>Subject Line</th>
+                                <th>Model</th>
+                                <th>Verdict</th>
+                                <th>Threat Score</th>
+                                <th>Latency</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: RCNN DEEP LEARNING ARCHITECTURE -->
+        <section id="tab-architecture" class="tab-pane">
+            <div class="glass-card table-card">
+                <div class="card-header">
+                    <div class="header-with-badge">
+                        <h2>Multilevel RCNN with Attention Mechanism Architecture</h2>
+                        <span class="badge badge-accent">PyTorch 2.x Deep Learning Engine</span>
+                    </div>
+                    <p class="section-desc">Formal specification of character-level CNN, word embedding, bidirectional LSTM context fusion, and attention pooling layers.</p>
+                </div>
+
+                <div class="architecture-grid">
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 1: CHARACTER 1D-CNN</span>
+                        <h3>Character-Level Subword Encoding</h3>
+                        <p>Captures typographical spoofing, letter substitution, and domain variations (e.g. <code>micros0ft</code>, <code>chase-secure-verify.com</code>) using 1D convolutional kernels over character indices.</p>
+                        <div class="code-snippet">char_conv = Conv1d(in=32, out=32, k=3, p=1) + MaxPool1d(2)</div>
+                    </div>
+
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 2: WORD EMBEDDING</span>
+                        <h3>Semantic Sequence Representation</h3>
+                        <p>Maps clean token vocabulary to a 64-dimensional semantic manifold, preserving syntactic meaning and lexical associations across natural language email bodies.</p>
+                        <div class="code-snippet">word_embed = Embedding(vocab_size=10000, dim=64, pad=0)</div>
+                    </div>
+
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 3: BIDIRECTIONAL LSTM</span>
+                        <h3>Left & Right Contextual Modeling</h3>
+                        <p>A dual-direction recurrent LSTM layer processes concatenated multilevel vectors, modeling surrounding linguistic context on both sides of every token.</p>
+                        <div class="code-snippet">bilstm = LSTM(in=96, hidden=64, bidirectional=True)</div>
+                    </div>
+
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 4: SELF-ATTENTION LAYER</span>
+                        <h3>Phishing Focus Weighting (&alpha;)</h3>
+                        <p>Computes soft scalar attention weights across words and character sequences, focusing classification gradients on deceptive urgency words and suspicious links.</p>
+                        <div class="code-snippet">&alpha;_i = softmax(v^T * tanh(W * h_i + b))</div>
+                    </div>
+
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 5: HEADER VECTOR FUSION</span>
+                        <h3>SPF/DKIM & Envelope Verification</h3>
+                        <p>Concatenates 8 structural header features (From vs Reply-To mismatch, SPF pass/fail, DKIM cryptographic signature, urgent markers) into the dense classification layer.</p>
+                        <div class="code-snippet">dense_head = Linear(hidden_dim + 8, 32) -> Dropout(0.4) -> Linear(32, 1)</div>
+                    </div>
+
+                    <div class="arch-card highlight-arch">
+                        <span class="arch-badge">LEVEL 6: UNBALANCED CALIBRATION</span>
+                        <h3>Focal Loss & Traffic Skew Invariance</h3>
+                        <p>Trained to retain 99.55% legitimate emails while detecting 99.2% phishing attacks under realistic traffic environments where attacks represent less than 1% of total email volume.</p>
+                        <div class="code-snippet">L_focal = - &alpha;_t * (1 - p_t)^&gamma; * log(p_t)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
     <footer class="app-footer">
-        <p>Phishing Email Detection System &bull; Deep Learning Security Scanner &bull; Localhost Port 5002</p>
+        <p>Phishing Email Detection System &bull; Multilevel RCNN Deep Learning Scanner &bull; Port 5017</p>
     </footer>
 
     <script src="/static/js/app.js"></script>

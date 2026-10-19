@@ -386,6 +386,8 @@ class PhishingEngine:
         self._initialize_and_train()
 
     def _initialize_and_train(self):
+        torch.manual_seed(42)
+        np.random.seed(42)
         safe_samples = [
             ("engineering-sync@techcorp.internal", "Weekly Sprint Standup & Architecture Review", "none", "pass",
              "Hi team, quick reminder that our engineering sync is scheduled for 2 PM today. Please update Jira tickets before the call."),
@@ -528,7 +530,7 @@ class PhishingEngine:
         # Prepare PyTorch Tensors
         word_t = self._texts_to_padded_tensor([cleaned])
         char_t = self._texts_to_char_tensor([cleaned])
-        hdr_t = torch.tensor([header_feats], dtype=torch.float32)
+        hdr_t = torch.tensor(np.array([header_feats]), dtype=torch.float32)
 
         # Run RCNN + Multilevel Attention Inference
         with torch.no_grad():

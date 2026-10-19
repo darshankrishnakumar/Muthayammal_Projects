@@ -167,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = await res.json();
             if (json.status === 'success') {
                 renderResults(json.data);
+                window.dispatchEvent(new Event('scanComplete'));
             } else {
                 alert('Analysis error: ' + (json.error || 'Unknown error'));
             }
@@ -335,4 +336,75 @@ document.addEventListener('DOMContentLoaded', () => {
             benchmarkTableBody.appendChild(tr);
         });
     }
+
+    // --- Load History & Stats ---
+    const historyTableBody = document.getElementById('historyTableBody');
+    const statTotalScans = document.getElementById('statTotalScans');
+    const statPhishScans = document.getElementById('statPhishScans');
+    const statSafeScans = document.getElementById('statSafeScans');
+    const statAvgLatency = document.getElementById('statAvgLatency');
+
+    async function loadStats() {
+        try {
+            const res = await fetch('/api/stats');
+            const data = await res.json();
+            if (data.status === 'success' && data.stats) {
+                if (statTotalScans) statTotalScans.textContent = data.stats.total_scans;
+                if (statPhishScans) statPhishScans.textContent = data.stats.phishing_detected;
+                if (statSafeScans) statSafeScans.textContent = data.stats.legitimate_verified;
+                if (statAvgLatency) statAvgLatency.textContent = `${data.stats.avg_latency_ms} ms`;
+            }
+        } catch (err) {
+            console.error('Failed to load stats:', err);
+        }
+    }
+
+    async function loadHistory() {
+        try {
+            const res = await fetch('/api/history');
+            const data = await res.json();
+            if (data.status === 'success' && historyTableBody) {
+                historyTableBody.innerHTML = '';
+                data.history.forEach(row => {
+                    const tr = document.createElement('tr');
+                    const isPhish = row.is_phishing === 1;
+                    const badgeClass = isPhish ? 'badge-danger' : 'badge-safe';
+                    tr.innerHTML = `
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem; color: #64748b;">#${row.id}</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.78rem;">${row.timestamp}</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.8rem; color: #1e3a8a;">${row.from_hdr || '—'}</td>
+                        <td style="font-weight: 500;">${row.subject_hdr || '—'}</td>
+                        <td><span class="badge badge-accent">${row.selected_model}</span></td>
+                        <td><span class="badge ${badgeClass}" style="${isPhish ? 'background: #fee2e2; color: #991b1b;' : 'background: #dcfce7; color: #166534;'}">${isPhish ? 'PHISHING' : 'LEGITIMATE'}</span></td>
+                        <td class="metric-val" style="font-weight: 600; color: ${isPhish ? '#dc2626' : '#16a34a'};">${row.phishing_probability.toFixed(1)}%</td>
+                        <td style="font-family: var(--font-mono); font-size: 0.78rem;">${row.latency_ms.toFixed(1)} ms</td>
+                    `;
+                    historyTableBody.appendChild(tr);
+                });
+            }
+        } catch (err) {
+            console.error('Failed to load history:', err);
+        }
+    }
+
+    loadStats();
+    loadHistory();
+
+    // Hook into analyzeEmail to reload history and stats after successful scan
+    const originalAnalyze = analyzeEmail;
+    // (analyzeEmail already triggers UI update, reload history too)
+    window.addEventListener('scanComplete', () => {
+        loadStats();
+        loadHistory();
+    });
+
+    // Also reload history when history tab is clicked
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            if (tab.getAttribute('data-tab') === 'history') {
+                loadStats();
+                loadHistory();
+            }
+        });
+    });
 });

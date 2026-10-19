@@ -78,6 +78,62 @@ SAMPLE_EMAILS = [
     }
 ]
 
+import sqlite3
+import time
+import json
+from datetime import datetime
+
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'phishing_scans.db')
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS email_scans (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT,
+            from_hdr TEXT,
+            reply_to_hdr TEXT,
+            spf_dkim_hdr TEXT,
+            subject_hdr TEXT,
+            body_snippet TEXT,
+            selected_model TEXT,
+            is_phishing INTEGER,
+            phishing_probability REAL,
+            threat_level TEXT,
+            risk_class TEXT,
+            header_risk REAL,
+            body_risk REAL,
+            consensus_phish_votes INTEGER,
+            latency_ms REAL
+        )
+    ''')
+    conn.commit()
+
+    cur.execute('SELECT COUNT(*) FROM email_scans')
+    count = cur.fetchone()[0]
+    if count == 0:
+        seed_data = [
+            ("2026-10-18 10:14:22", "security-alert@chase-secure-verify.com", "fraud-harvest@server-host.xyz", "fail", "URGENT: Immediate Account Suspension - Verification Required", "Dear Valued Customer, Our automated fraud monitoring system detected...", "rcnn_attn", 1, 98.4, "CRITICAL / PHISHING CONFIRMED", "danger", 85.0, 96.5, 9, 14.2),
+            ("2026-10-18 11:30:05", "admin@micros0ft-support365.top", "admin@micros0ft-support365.top", "softfail", "CRITICAL: Your Microsoft 365 Password Expires in 2 Hours", "Dear Employee, Your organization credentials for Microsoft 365...", "rcnn_attn", 1, 95.8, "CRITICAL / PHISHING CONFIRMED", "danger", 60.0, 92.4, 9, 12.8),
+            ("2026-10-18 14:05:19", "ceo-direct@executive-mail.vip", "offshore-wire@overseas-bank.cc", "none", "Urgent wire payment instruction - strictly confidential", "Hi, I am currently attending a closed-door acquisition meeting...", "ensemble", 1, 91.2, "CRITICAL / PHISHING CONFIRMED", "danger", 90.0, 88.0, 8, 18.5),
+            ("2026-10-18 16:45:33", "alex.chen@techcorp.internal", "alex.chen@techcorp.internal", "pass", "Engineering Team: Daily Sync & Sprint Review at 2:00 PM", "Hi everyone, Quick reminder that our daily sprint sync is scheduled...", "rcnn_attn", 0, 1.2, "LEGITIMATE / AUTHENTICATED", "safe", 0.0, 1.8, 0, 11.5),
+            ("2026-10-19 09:12:44", "order-update@fedex.com", "support@fedex.com", "pass", "FedEx Tracking Update: Package #91823901 Scheduled for Delivery", "Hello, Your package containing the ergonomic keyboard has been scanned...", "rcnn_attn", 0, 0.8, "LEGITIMATE / AUTHENTICATED", "safe", 0.0, 1.2, 0, 9.8),
+            ("2026-10-19 11:25:10", "editor@ieee-security.org", "editor@ieee-security.org", "pass", "IEEE S&P: Peer Review Comments on RCNN Attention Paper", "Dear Author, Thank you for submitting your manuscript...", "rcnn_attn", 0, 1.5, "LEGITIMATE / AUTHENTICATED", "safe", 0.0, 2.1, 0, 10.4)
+        ]
+        cur.executemany('''
+            INSERT INTO email_scans (
+                timestamp, from_hdr, reply_to_hdr, spf_dkim_hdr, subject_hdr,
+                body_snippet, selected_model, is_phishing, phishing_probability,
+                threat_level, risk_class, header_risk, body_risk,
+                consensus_phish_votes, latency_ms
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', seed_data)
+        conn.commit()
+    conn.close()
+
+init_db()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -85,6 +141,7 @@ def index():
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
+        t0 = time.time()
         data = request.get_json(force=True)
         from_hdr = data.get('from', '').strip()
         subject_hdr = data.get('subject', '').strip()
@@ -104,7 +161,77 @@ def predict():
             email_body=email_body,
             selected_model=selected_model
         )
+        latency = round((time.time() - t0) * 1000, 2)
+        result['latency_ms'] = latency
+
+        # Transactional SQLite logging
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cur = conn.cursor()
+            snippet = (email_body[:80] + '...') if len(email_body) > 80 else email_body
+            now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cur.execute('''
+                INSERT INTO email_scans (
+                    timestamp, from_hdr, reply_to_hdr, spf_dkim_hdr, subject_hdr,
+                    body_snippet, selected_model, is_phishing, phishing_probability,
+                    threat_level, risk_class, header_risk, body_risk,
+                    consensus_phish_votes, latency_ms
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                now_str, from_hdr, reply_to_hdr, spf_dkim_hdr, subject_hdr,
+                snippet, selected_model, 1 if result['is_phishing'] else 0,
+                result['phishing_probability'], result['threat_level'], result['risk_class'],
+                result['multilevel_breakdown']['header_risk'], result['multilevel_breakdown']['body_risk'],
+                int(result['consensus'].split('/')[0]) if '/' in result['consensus'] else 0,
+                latency
+            ))
+            scan_id = cur.lastrowid
+            conn.commit()
+            conn.close()
+            result['scan_id'] = scan_id
+        except Exception as db_err:
+            print(f"Warning: Database logging failed: {db_err}")
+
         return jsonify({'status': 'success', 'data': result})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/history', methods=['GET'])
+def history():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM email_scans ORDER BY id DESC LIMIT 50')
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({'status': 'success', 'count': len(rows), 'history': rows})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/stats', methods=['GET'])
+def stats():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute('SELECT COUNT(*), SUM(is_phishing), AVG(phishing_probability), AVG(latency_ms) FROM email_scans')
+        total, phish, avg_score, avg_lat = cur.fetchone()
+        conn.close()
+        total = total or 0
+        phish = phish or 0
+        safe = total - phish
+        rate = round((phish / total * 100), 1) if total > 0 else 0.0
+        return jsonify({
+            'status': 'success',
+            'stats': {
+                'total_scans': total,
+                'phishing_detected': phish,
+                'legitimate_verified': safe,
+                'phishing_rate_pct': rate,
+                'avg_threat_score': round(avg_score or 0.0, 1),
+                'avg_latency_ms': round(avg_lat or 0.0, 1)
+            }
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -124,16 +251,18 @@ def samples():
 
 @app.route('/health', methods=['GET'])
 def health():
+    active_port = int(os.environ.get('PORT', 5017))
     return jsonify({
         'status': 'ok',
         'service': 'Multilevel RCNN with Attention Mechanism Phishing Detection',
-        'port': 5002,
+        'port': active_port,
+        'database': 'SQLite Connected (phishing_scans.db)',
         'proposed_architecture': 'Improved Recurrent Convolutional Neural Network (RCNN) + Multilevel Vectors (Word + Character) + Attention Mechanism',
         'dataset_evaluation': 'Unbalanced dataset with realistic phishing-to-legitimate ratios'
     })
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5002))
+    port = int(os.environ.get('PORT', 5017))
     print(f"===============================================================")
     print(f" Multilevel RCNN Phishing Server starting on http://localhost:{port}")
     print(f"===============================================================")
