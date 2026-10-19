@@ -133,3 +133,31 @@
 - **Recorded Video Demonstration**:
   - Headless browser automation streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264 MP4).
 - **Status**: **VERIFIED COMPLETE (100%)**.
+
+---
+
+## PROJECT-006: Child Gait Prediction Using Machine Learning and Streamlit / Modern Web Architecture
+- **Dataset Integration**:
+  - SimTK Pediatric Gait Repository (`real_child_gait_features.csv`, 21 clinical motion capture trials across 14 children) + Augmented synthetic pediatric clinical records (`synthetic_child_gait.csv`, 33 records).
+  - Captures 7 kinematic and kinetic features: walking speed, stride length, step duration, cadence, pelvic tilt angle, step asymmetry, and body-weight normalized vertical ground reaction force.
+- **Trained Machine Learning Models**:
+  - Executed zero-leakage participant-level split training pipeline (`run_real_pipeline.py`) natively on Scikit-Learn 1.7.2:
+    - Tuned Random Forest Classifier (50 trees, max depth 3, min_samples_split 2): **66.67%** test accuracy, **1.0000** Macro One-vs-Rest ROC-AUC.
+    - Baseline Random Forest Classifier (100 trees).
+    - Multi-model evaluation against Decision Trees, KNN, SVM, and GBDT.
+    - Model artifacts serialized to `source_code/ml-service/models/gait_final_model.joblib` and `gait_preprocessor.joblib`.
+- **Database Subsystem**:
+  - SQLite relational database `source_code/backend/database/gait_database.db` with indexed `gait_records` table, automatic initial dataset seeding, and full CRUD transactional operations.
+- **FastAPI REST Backend Microservice**:
+  - Unified FastAPI microservice running on port 5006 with endpoints: `/`, `/index.html`, `/api`, `/api/health`, `/api/predict`, `/api/records`, `/api/records/{id}`, `/api/import-csv`.
+- **Interactive Clinical Decision Support Frontend**:
+  - Tailwind CSS clinical dashboard (`source_code/public/index.html`) featuring multi-tab navigation (Home, Assessment, History, Reports, Guidelines), one-click presets for Diplegic, Hemiplegic, and Normal gaits, dynamic Chart.js longitudinal progression graphs, and automated physical therapy advisories.
+- **Automated Test Suite**:
+  - 23 automated unit, integration, API, boundary validation, and bioethical disclaimer tests in `source_code/tests/test_gait_pipeline.py` & `test_audit_verification.py`. 100% passed (23/23 in 1.05s).
+- **Presentation Deck**:
+  - Generated 15 widescreen slides (`presentations/project_presentation.pptx`, 1.2 MB) embedding 7 high-resolution clinical UI screenshots.
+- **Technical Documentation**:
+  - 99-paragraph formal academic DOCX (`docs/technical_documentation.docx`) and comprehensive 8-file markdown documentation suite in `docs/` (`README.md`, `architecture.md`, `dataset_and_model_details.md`, `api_documentation.md`, `setup_and_execution.md`, `testing_report.md`, `limitations_and_future_work.md`, `third_party_notices.md`, `acceptance_report.md`).
+- **Recorded Video Demonstration**:
+  - Headless browser automation streaming to FFmpeg producing `walkthrough/walkthrough_video.mp4` (Duration: **03:00 / 180.0s**, 1280x800 H.264 MP4).
+- **Status**: **VERIFIED COMPLETE (100%)**.

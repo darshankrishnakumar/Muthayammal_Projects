@@ -70,6 +70,7 @@ class PredictionResultResponse(BaseModel):
     prediction: str
     confidence: Optional[float] = None
     assessmentId: str
+    recommendations: Optional[List[str]] = Field(default_factory=list)
     record: Dict[str, Any]
     disclaimer: str = (
         "This application is a college-level machine learning prototype intended for "

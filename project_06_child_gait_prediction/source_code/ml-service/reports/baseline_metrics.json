@@ -2,7 +2,7 @@
   "model": "Random Forest Baseline",
   "n_estimators": 100,
   "random_state": 42,
-  "training_time_seconds": 0.0322,
+  "training_time_seconds": 0.0314,
   "test_accuracy": 0.6666666666666666,
   "test_precision_macro": 0.5,
   "test_recall_macro": 0.6666666666666666,

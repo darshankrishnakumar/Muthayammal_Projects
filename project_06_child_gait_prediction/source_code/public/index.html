@@ -548,11 +548,13 @@
 
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-    Child Gait Prediction System &bull; Active on <span class="font-mono text-slate-600">http://localhost:8080</span> (Frontend) and <span class="font-mono text-slate-600">http://localhost:8000</span> (API)
+    Child Gait Prediction System &bull; Active on <span class="font-mono text-slate-600">http://127.0.0.1:5006</span>
   </footer>
 
   <script>
-    const API_URL = 'http://localhost:8000/api';
+    const API_URL = (typeof window !== 'undefined' && window.location.origin && window.location.origin !== 'null')
+      ? (window.location.origin + '/api')
+      : 'http://127.0.0.1:5006/api';
     let currentRecords = [];
     let selectedChildId = 'C-101';
     let currentChartMetric = 'speed';

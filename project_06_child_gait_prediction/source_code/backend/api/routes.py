@@ -102,6 +102,29 @@ def create_gait_record(payload: GaitRecordCreate):
     return GaitRecordResponse(**record)
 
 
+def get_clinical_recommendations(prediction: str) -> List[str]:
+    if prediction == "Diplegic":
+        return [
+            "Bilateral spasticity or crouch gait features detected across lower limbs.",
+            "Recommend pediatric physical therapy evaluation for lower limb motor tone.",
+            "Assess sagittal joint kinematics (hip flexion, knee extension, ankle equinus).",
+            "Consider gait laboratory biomechanical evaluation and AFO orthotic suitability."
+        ]
+    elif prediction == "Hemiplegic":
+        return [
+            "Asymmetrical gait characteristics identified with unilateral bias.",
+            "Pediatric neurological consultation advised to examine hemiparetic signs.",
+            "Assess unilateral drop-foot, circumduction, or asymmetric weight acceptance.",
+            "Targeted physical therapy focusing on single-limb stance balance and symmetry."
+        ]
+    else:
+        return [
+            "Symmetric bilateral gait pattern observed within normative thresholds.",
+            "Continue routine developmental pediatric observation.",
+            "Maintain age-appropriate physical play and recreational activities."
+        ]
+
+
 @router.post("/predict", response_model=PredictionResultResponse)
 def predict_and_store_gait(payload: GaitRecordCreate):
     """
@@ -115,11 +138,13 @@ def predict_and_store_gait(payload: GaitRecordCreate):
     data["confidence"] = confidence
 
     saved_record = insert_gait_record(data)
+    recs = get_clinical_recommendations(prediction)
 
     return PredictionResultResponse(
         prediction=prediction,
         confidence=confidence,
         assessmentId=saved_record["id"],
+        recommendations=recs,
         record=saved_record,
     )
 
