@@ -1,0 +1,28 @@
+{
+  "model_name": "DeepResidualWasteClassificationAndRecyclabilityNet",
+  "benchmark": "EPA / ASTM D5231 Solid Waste Sorting Benchmark",
+  "records_count": 6000,
+  "categories_count": 6,
+  "classifier_accuracy": "98.83%",
+  "recyclability_mae": "4.76%",
+  "contamination_mae": "0.0546",
+  "categories": [
+    "Plastic",
+    "Glass",
+    "Metal",
+    "Paper",
+    "Cardboard",
+    "Organic"
+  ],
+  "input_features": [
+    "density_g_cm3",
+    "spectral_reflectance_nir",
+    "opacity_pct",
+    "surface_roughness_um",
+    "moisture_content_pct",
+    "rigidity_modulus_gpa",
+    "magnetic_susceptibility",
+    "carbon_footprint_kg_co2"
+  ],
+  "framework": "PyTorch 2.x"
+}

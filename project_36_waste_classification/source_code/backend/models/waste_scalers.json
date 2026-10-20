@@ -1,0 +1,40 @@
+{
+  "feature_cols": [
+    "density_g_cm3",
+    "spectral_reflectance_nir",
+    "opacity_pct",
+    "surface_roughness_um",
+    "moisture_content_pct",
+    "rigidity_modulus_gpa",
+    "magnetic_susceptibility",
+    "carbon_footprint_kg_co2"
+  ],
+  "means": {
+    "density_g_cm3": 1.6680927276611328,
+    "spectral_reflectance_nir": 0.6839125156402588,
+    "opacity_pct": 74.17280578613281,
+    "surface_roughness_um": 11.174408912658691,
+    "moisture_content_pct": 12.715150833129883,
+    "rigidity_modulus_gpa": 23.820232391357422,
+    "magnetic_susceptibility": 0.08685044199228287,
+    "carbon_footprint_kg_co2": 2.601761817932129
+  },
+  "stds": {
+    "density_g_cm3": 1.4846030473709106,
+    "spectral_reflectance_nir": 0.19463331997394562,
+    "opacity_pct": 31.74854278564453,
+    "surface_roughness_um": 12.15044116973877,
+    "moisture_content_pct": 20.088930130004883,
+    "rigidity_modulus_gpa": 31.447547912597656,
+    "magnetic_susceptibility": 0.21098339557647705,
+    "carbon_footprint_kg_co2": 2.8936755657196045
+  },
+  "categories": [
+    "Plastic",
+    "Glass",
+    "Metal",
+    "Paper",
+    "Cardboard",
+    "Organic"
+  ]
+}

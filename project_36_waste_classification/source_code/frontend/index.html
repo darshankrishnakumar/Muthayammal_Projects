@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Smart Waste Classification & Recycling | Project 36</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<title>AI Waste Classification & Autonomous Sorting System | Project 36</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
   --bg: #09110e;
   --card-bg: rgba(13, 26, 21, 0.85);
   --border: rgba(34, 197, 94, 0.15);
-  --green: #10b981;
+  --cyan: #06b6d4;
   --blue: #3b82f6;
-  --orange: #f97316;
+  --amber: #f59e0b;
+  --green: #10b981;
+  --orange: #ea580c;
+  --lime: #84cc16;
   --red: #ef4444;
-  --gray: #64748b;
   --text: #f0fdf4;
   --text-muted: #86efac99;
 }
@@ -26,7 +28,8 @@ body {
   min-height: 100vh;
   background-image:
     radial-gradient(at 10% 10%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
-    radial-gradient(at 90% 90%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+    radial-gradient(at 90% 90%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+  overflow-x: hidden;
 }
 .header {
   background: rgba(9, 21, 16, 0.95);
@@ -43,7 +46,7 @@ body {
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand-icon {
   width: 44px; height: 44px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981, #06b6d4);
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-size: 24px;
@@ -59,9 +62,10 @@ body {
   border: 1px solid rgba(16, 185, 129, 0.3);
   color: #6ee7b7;
 }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; animation: pulse 1.8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.85);} }
 
-.container { max-width: 1360px; margin: 0 auto; padding: 28px 32px; }
+.container { max-width: 1380px; margin: 0 auto; padding: 28px 32px; }
 
 /* Stats Row */
 .stats-grid {
@@ -87,10 +91,34 @@ body {
 .stat-val { font-size: 28px; font-weight: 800; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
 .stat-sub { font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 4px; }
 
+/* Conveyor selector bar */
+.conveyor-selector-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 24px;
+  margin-bottom: 24px;
+}
+.conveyor-select-label { font-size: 13px; font-weight: 600; color: #6ee7b7; display: flex; align-items: center; gap: 8px; }
+.conveyor-dropdown {
+  background: rgba(9, 21, 16, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+
 /* Main Grid */
 .main-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.15fr 0.85fr;
   gap: 24px;
   margin-bottom: 24px;
 }
@@ -109,60 +137,44 @@ body {
 }
 .card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
-/* Upload & Dropzone */
-.dropzone {
-  border: 2px dashed rgba(34, 197, 94, 0.35);
-  border-radius: 16px;
-  padding: 36px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  background: rgba(16, 185, 129, 0.03);
-  margin-bottom: 16px;
-}
-.dropzone:hover {
-  border-color: #10b981;
-  background: rgba(16, 185, 129, 0.07);
-}
-.dropzone-icon { font-size: 48px; margin-bottom: 12px; }
-.preview-img {
+/* Conveyor Simulation Canvas */
+.conveyor-viewport {
+  position: relative;
   width: 100%;
-  max-height: 240px;
-  object-fit: contain;
-  border-radius: 12px;
-  display: none;
-  margin-bottom: 16px;
-  background: #040907;
-  border: 1px solid var(--border);
-}
-
-/* Sample Quick Picker */
-.sample-bar {
+  aspect-ratio: 16/9;
+  background: #030a07;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(16, 185, 129, 0.2);
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  justify-content: center;
 }
-.sample-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex; align-items: center; gap: 6px;
+.canvas-overlay {
+  position: absolute; top:0; left:0; width:100%; height:100%;
 }
-.sample-btn:hover { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
+.hud-corner {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #6ee7b7;
+  background: rgba(3, 10, 7, 0.8);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  z-index: 10;
+}
+.hud-tl { top: 12px; left: 12px; }
+.hud-tr { top: 12px; right: 12px; }
+.hud-bl { bottom: 12px; left: 12px; }
+.hud-br { bottom: 12px; right: 12px; }
 
-/* Action Buttons */
-.btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* Control buttons */
+.btn-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
 .btn {
-  padding: 12px 18px;
+  padding: 12px 14px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   border: none;
@@ -170,7 +182,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 .btn-primary {
   background: linear-gradient(135deg, #10b981, #059669);
@@ -178,6 +190,14 @@ body {
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.btn-cyan {
+  background: linear-gradient(135deg, #06b6d4, #0284c7);
+  color: #fff;
+}
+.btn-amber {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
 .btn-secondary {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
@@ -185,116 +205,125 @@ body {
 }
 .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
 
-/* Automated Smart Bin Dispatch Visualizer */
-.bins-container {
+/* Pneumatic Bins Grid (6 Bins) */
+.bins-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-top: 24px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-top: 18px;
 }
 .bin-box {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 14px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 6px;
   text-align: center;
   transition: all 0.3s ease;
 }
-.bin-icon { font-size: 28px; margin-bottom: 6px; }
-.bin-label { font-size: 11px; font-weight: 700; }
-.bin-status {
-  margin-top: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.4);
-}
-.bin-active {
+.bin-box.bin-active {
   border-color: #10b981;
-  background: rgba(16, 185, 129, 0.12);
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.15);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
 }
-.bin-active .bin-status {
-  background: #10b981;
-  color: #042f1a;
-}
+.bin-icon { font-size: 20px; margin-bottom: 2px; }
+.bin-label { font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.bin-status { font-size: 9px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
 
-/* Result display */
-.result-card {
-  padding: 20px;
-  border-radius: 16px;
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  margin-bottom: 20px;
-  display: none;
+/* Spectroscopic Gauges */
+.telemetry-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
 }
-.result-header {
+.gauge-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+.gauge-title { font-size: 11px; color: #86efac; opacity: 0.8; font-weight: 600; text-transform: uppercase; }
+.gauge-value { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin: 4px 0; }
+.gauge-bar { height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.gauge-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease, background-color 0.4s ease; }
+.gauge-ref { font-size: 10px; color: rgba(255, 255, 255, 0.5); margin-top: 4px; }
+
+/* Right Column: Classification Result Badge */
+.result-banner {
+  padding: 18px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  transition: all 0.3s ease;
 }
-.result-category {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.result-item-name {
-  font-size: 26px;
-  font-weight: 800;
-  margin: 4px 0 10px 0;
-}
-.conf-gauge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 32px;
-  font-weight: 800;
-}
-.guide-box {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  padding: 14px;
-  margin-top: 14px;
-  font-size: 13px;
-  line-height: 1.5;
-  border-left: 4px solid #10b981;
-}
+.result-info { display: flex; flex-direction: column; gap: 4px; }
+.result-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6ee7b7; }
+.result-name { font-size: 22px; font-weight: 800; }
+.result-score { font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 800; color: #10b981; }
 
-/* Scan History Log */
+/* History List */
 .history-list {
-  max-height: 340px;
+  max-height: 280px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.history-list::-webkit-scrollbar { width: 5px; }
-.history-list::-webkit-scrollbar-thumb { background: rgba(34, 197, 94, 0.2); border-radius: 10px; }
 .history-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  font-size: 13px;
+  font-size: 12px;
 }
-.cat-badge {
-  padding: 3px 8px;
+.history-badge {
+  padding: 2px 8px;
   border-radius: 6px;
-  font-weight: 700;
   font-size: 11px;
+  font-weight: 700;
 }
-.cat-recyclable { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.cat-organic { background: rgba(16, 185, 129, 0.2); color: #4ade80; }
-.cat-hazardous { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-.cat-electronic { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
-.cat-non_recyclable { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+.badge-plastic { background: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+.badge-glass { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.badge-metal { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.badge-paper { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.badge-cardboard { background: rgba(217, 119, 6, 0.2); color: #f59e0b; }
+.badge-organic { background: rgba(132, 204, 22, 0.2); color: #a3e635; }
 
-/* Tech specs footer */
+/* Tables Grid */
+.tables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.data-table th, .data-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.data-table th {
+  color: #86efac;
+  opacity: 0.8;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Specs */
 .specs-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -302,12 +331,12 @@ body {
   margin-top: 24px;
 }
 .spec-box {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 18px;
 }
-.spec-box h4 { font-size: 13px; font-weight: 700; color: #34d399; margin-bottom: 6px; }
+.spec-box h4 { font-size: 13px; font-weight: 700; color: #10b981; margin-bottom: 6px; }
 .spec-box p { font-size: 12px; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
 </style>
 </head>
@@ -317,338 +346,404 @@ body {
   <div class="brand">
     <div class="brand-icon">♻️</div>
     <div>
-      <div class="brand-title">Smart AI Waste Classifier & Automated Sorting</div>
-      <div class="brand-sub">Project 36 · EfficientNetB3 CNN · TrashNet / TACO Dataset</div>
+      <div class="brand-title">AI Waste Classification & Autonomous Sorting System</div>
+      <div class="brand-sub">EPA / ASTM D5231 Solid Waste Sorting Benchmark &bull; Port 5036</div>
     </div>
   </div>
-  <div class="status-pill">
-    <div class="status-dot"></div>
-    <span id="backendStatus">Backend Ready (:5036)</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="status-pill" id="backendStatusPill">
+      <div class="status-dot"></div>
+      <span id="backendStatus">Active (:5036)</span>
+    </div>
   </div>
 </header>
 
 <div class="container">
-  <!-- Stats Row -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">Total Items Classified</div>
-      <div class="stat-val" id="statTotal">0</div>
-      <div class="stat-sub">Automated Vision Scans</div>
+  <!-- Conveyor Line Selector Bar -->
+  <div class="conveyor-selector-bar">
+    <div class="conveyor-select-label">
+      <span>🏭 Optical Conveyor Line:</span>
+      <select class="conveyor-dropdown" id="conveyorSelect" onchange="onConveyorChange()">
+        <option value="CONV-A1">CONV-A1: Municipal Container Line (PET/HDPE & Glass) - 1.2 m/s</option>
+        <option value="CONV-B2">CONV-B2: Commercial Fiber Line (OCC & Deinked Paper) - 1.8 m/s</option>
+        <option value="CONV-C3">CONV-C3: Mixed Organic & Rigid Line (Biomass & Metal) - 1.0 m/s</option>
+      </select>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Recyclability Diversion</div>
-      <div class="stat-val" id="statRecyclable" style="color:#34d399">0%</div>
-      <div class="stat-sub">Diverted from Landfill</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Hazardous Detected</div>
-      <div class="stat-val" id="statHazardous" style="color:#f87171">0</div>
-      <div class="stat-sub">Safely Segregated</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Estimated CO2 Saved</div>
-      <div class="stat-val" id="statCo2" style="color:#60a5fa">0.0 kg</div>
-      <div class="stat-sub">Circular Economy Impact</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.6)">
+      <span>Sensor: <strong id="lblSensor" style="color:#6ee7b7">SpectraCam Hyperspectral NIR-850</strong></span> &bull;
+      <span>Facility: <strong id="lblZone" style="color:#fff">Zone 1 - Primary Sort</strong></span>
     </div>
   </div>
 
-  <!-- Main Grid -->
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Items Classified & Sorted</div>
+      <div class="stat-val" id="statTotal" style="color:#10b981">0</div>
+      <div class="stat-sub">High-Speed Vision Conveyor Line</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Average Recyclability Index</div>
+      <div class="stat-val" id="statRecyclable" style="color:#06b6d4">88.5%</div>
+      <div class="stat-sub">PyTorch Recyclability Regressor</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Contamination Risk Probability</div>
+      <div class="stat-val" id="statContam" style="color:#f59e0b">0.064</div>
+      <div class="stat-sub">ASTM D5231 Purity Benchmark</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Embodied Carbon Offset</div>
+      <div class="stat-val" id="statCo2" style="color:#84cc16">185.4 kg</div>
+      <div class="stat-sub">Avoided Virgin Material Emissions</div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Conveyor Canvas & Model Predictions -->
   <div class="main-grid">
-    <!-- Left Column: Upload & Smart Bins -->
+    <!-- Left: Conveyor Belt & Optical Sensing Canvas -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title">📸 Item Imaging & Vision Scanner</div>
-        <span style="font-size:12px;color:rgba(255,255,255,0.5)">EfficientNet-B3 Backbone</span>
+        <div class="card-title">📦 High-Speed Optical Conveyor & Actuation Array</div>
+        <span style="font-size:11px;color:#6ee7b7;font-family:'JetBrains Mono'">30 FPS Optical Sensor</span>
       </div>
 
-      <!-- Quick sample selector -->
-      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:#86efac">Quick Test Samples:</div>
-      <div class="sample-bar">
-        <button class="sample-btn" onclick="selectSample('recyclable', 'Plastic Bottle')">🧴 Plastic Bottle</button>
-        <button class="sample-btn" onclick="selectSample('organic', 'Food Waste')">🍎 Apple Core</button>
-        <button class="sample-btn" onclick="selectSample('hazardous', 'Battery')">🔋 Li-ion Battery</button>
-        <button class="sample-btn" onclick="selectSample('electronic', 'Mobile Phone')">📱 Old Phone</button>
-        <button class="sample-btn" onclick="selectSample('recyclable', 'Aluminum Can')">🥫 Soda Can</button>
+      <div class="conveyor-viewport">
+        <canvas id="conveyorCanvas" class="canvas-overlay"></canvas>
+        <div class="hud-corner hud-tl" id="hudLineSpeed">SPEED: 1.2 M/S &bull; NIR ACTIVE</div>
+        <div class="hud-corner hud-tr" id="hudClock">UTC 00:00:00</div>
+        <div class="hud-corner hud-bl" id="hudCurrentCategory" style="color:#10b981">CATEGORY: PLASTIC</div>
+        <div class="hud-corner hud-br" id="hudDiversion">AIR JET #1 ENGAGED</div>
       </div>
-
-      <!-- Drag & Drop Zone -->
-      <div class="dropzone" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)"/>
-        <div class="dropzone-icon">📷</div>
-        <div style="font-weight:700;font-size:15px">Drop waste image or click to browse</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">Supports JPG, PNG, WEBP (Autonomous conveyor / bin camera)</div>
-      </div>
-
-      <img id="previewImg" class="preview-img" alt="Preview"/>
 
       <div class="btn-row">
-        <button class="btn btn-primary" onclick="classifyItem()">
-          ⚡ Classify & Segregate
-        </button>
-        <button class="btn btn-secondary" onclick="simulateRandom()">
-          🎲 Random Waste Item
-        </button>
+        <button class="btn btn-primary" onclick="classifyItem('plastic_bottle')">🧴 Scan Plastic Bottle</button>
+        <button class="btn btn-cyan" onclick="classifyItem('aluminum_can')">🥫 Scan Aluminum Can</button>
+        <button class="btn btn-amber" onclick="classifyItem('corrugated_box')">📦 Scan Cardboard Box</button>
+        <button class="btn btn-secondary" onclick="classifyItem('food_scrap')">🍎 Scan Organic Waste</button>
       </div>
 
-      <!-- Automated Bin Actuation Simulator -->
-      <div style="margin-top:24px">
-        <div style="font-size:13px;font-weight:700;margin-bottom:10px">🤖 Smart Sorting Pneumatic Bins:</div>
-        <div class="bins-container">
-          <div class="bin-box" id="bin-recyclable">
-            <div class="bin-icon">🟦</div>
-            <div class="bin-label" style="color:#60a5fa">Recyclable</div>
-            <div class="bin-status" id="status-recyclable">CLOSED</div>
-          </div>
-          <div class="bin-box" id="bin-organic">
-            <div class="bin-icon">🟩</div>
-            <div class="bin-label" style="color:#4ade80">Organic</div>
-            <div class="bin-status" id="status-organic">CLOSED</div>
-          </div>
-          <div class="bin-box" id="bin-hazardous">
-            <div class="bin-icon">🟥</div>
-            <div class="bin-label" style="color:#f87171">Hazardous</div>
-            <div class="bin-status" id="status-hazardous">CLOSED</div>
-          </div>
-          <div class="bin-box" id="bin-electronic">
-            <div class="bin-icon">🟧</div>
-            <div class="bin-label" style="color:#fb923c">E-Waste</div>
-            <div class="bin-status" id="status-electronic">CLOSED</div>
-          </div>
-          <div class="bin-box" id="bin-non_recyclable">
-            <div class="bin-icon">⬛</div>
-            <div class="bin-label" style="color:#94a3b8">General</div>
-            <div class="bin-status" id="status-non_recyclable">CLOSED</div>
-          </div>
+      <!-- 6 Pneumatic Bins -->
+      <div class="bins-grid">
+        <div class="bin-box" id="bin-Plastic">
+          <div class="bin-icon">🧴</div>
+          <div class="bin-label" style="color:#06b6d4">Plastic</div>
+          <div class="bin-status" id="status-Plastic">READY</div>
+        </div>
+        <div class="bin-box" id="bin-Glass">
+          <div class="bin-icon">🍾</div>
+          <div class="bin-label" style="color:#3b82f6">Glass</div>
+          <div class="bin-status" id="status-Glass">READY</div>
+        </div>
+        <div class="bin-box" id="bin-Metal">
+          <div class="bin-icon">🥫</div>
+          <div class="bin-label" style="color:#f59e0b">Metal</div>
+          <div class="bin-status" id="status-Metal">READY</div>
+        </div>
+        <div class="bin-box" id="bin-Paper">
+          <div class="bin-icon">📄</div>
+          <div class="bin-label" style="color:#10b981">Paper</div>
+          <div class="bin-status" id="status-Paper">READY</div>
+        </div>
+        <div class="bin-box" id="bin-Cardboard">
+          <div class="bin-icon">📦</div>
+          <div class="bin-label" style="color:#ea580c">Cardboard</div>
+          <div class="bin-status" id="status-Cardboard">READY</div>
+        </div>
+        <div class="bin-box" id="bin-Organic">
+          <div class="bin-icon">🍎</div>
+          <div class="bin-label" style="color:#84cc16">Organic</div>
+          <div class="bin-status" id="status-Organic">READY</div>
+        </div>
+      </div>
+
+      <!-- Spectroscopic Physical Gauges -->
+      <div class="telemetry-row">
+        <div class="gauge-box">
+          <div class="gauge-title">Material Density</div>
+          <div class="gauge-value" id="gaugeDensity">0.95 g/cm³</div>
+          <div class="gauge-bar"><div class="gauge-fill" id="fillDensity" style="width: 35%; background: #06b6d4;"></div></div>
+          <div class="gauge-ref">Float/Sink Ref: 1.00</div>
+        </div>
+        <div class="gauge-box">
+          <div class="gauge-title">NIR Reflectance</div>
+          <div class="gauge-value" id="gaugeReflectance">0.720</div>
+          <div class="gauge-bar"><div class="gauge-fill" id="fillReflectance" style="width: 72%; background: #10b981;"></div></div>
+          <div class="gauge-ref">Spectral Albedo [0-1]</div>
+        </div>
+        <div class="gauge-box">
+          <div class="gauge-title">Optical Opacity</div>
+          <div class="gauge-value" id="gaugeOpacity">35.0%</div>
+          <div class="gauge-bar"><div class="gauge-fill" id="fillOpacity" style="width: 35%; background: #f59e0b;"></div></div>
+          <div class="gauge-ref">Light Transmittance</div>
+        </div>
+        <div class="gauge-box">
+          <div class="gauge-title">Moisture Content</div>
+          <div class="gauge-value" id="gaugeMoisture">2.5%</div>
+          <div class="gauge-bar"><div class="gauge-fill" id="fillMoisture" style="width: 10%; background: #84cc16;"></div></div>
+          <div class="gauge-ref">Target &lt; 15%</div>
         </div>
       </div>
     </div>
 
-    <!-- Right Column: Classification Results & History -->
+    <!-- Right: Classification Results & Real-Time Stream -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title">🔍 CNN Inference & Action Guidelines</div>
-        <span style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:6px;color:#86efac">Latency &lt; 45ms</span>
+        <div class="card-title">🧠 Deep Residual Inference & Actuator Routing</div>
+        <span style="font-size:11px;padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:6px;color:#86efac">PyTorch Residual MLP</span>
       </div>
 
-      <!-- Result Card -->
-      <div class="result-card" id="resultCard">
-        <div class="result-header">
-          <div>
-            <div class="result-category" id="resCategory">RECYCLABLE MATERIAL</div>
-            <div class="result-item-name" id="resItem">Plastic PET Bottle</div>
-          </div>
-          <div style="text-align:right">
-            <div class="conf-gauge" id="resConfidence">96.4%</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.6)">CONFIDENCE</div>
-          </div>
+      <!-- Result Banner -->
+      <div class="result-banner" id="resultBanner">
+        <div class="result-info">
+          <div class="result-tag" id="resultTag">CLASSIFIED MATERIAL CATEGORY</div>
+          <div class="result-name" id="resultName">Plastic (PET Container)</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:2px" id="resultActuator">ACTUATE: Pneumatically route to BIN-A</div>
         </div>
-
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <span class="cat-badge" id="resRecycleBadge">♻️ Recyclable</span>
-          <span style="font-size:11px;color:rgba(255,255,255,0.5);align-self:center" id="resTimestamp">Just now</span>
-        </div>
-
-        <div class="guide-box" id="resGuide">
-          Place in the blue recycling bin. Empty all liquids and compress before disposal.
+        <div>
+          <div class="result-score" id="resultConfidence">98.8%</div>
+          <div style="font-size:10px;text-align:right;color:rgba(255,255,255,0.5)">CERTAINTY</div>
         </div>
       </div>
 
-      <!-- History Header -->
+      <!-- Classification History Log -->
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <span style="font-size:13px;font-weight:700">Classification Log</span>
-        <button onclick="clearHistory()" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">Clear Log</button>
+        <span style="font-size:13px;font-weight:700">Recent Automated Sorting Events</span>
+        <button onclick="clearHistory()" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">Clear</button>
       </div>
 
       <div class="history-list" id="historyList">
         <div style="text-align:center;color:rgba(255,255,255,0.4);padding:30px 0;font-size:13px">
-          No items classified yet.<br/>Upload or pick a test item to start.
+          Initializing optical sorting stream...
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Tables Grid: Commercial Recycling Batches & Audit Trail -->
+  <div class="tables-grid">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📦 Commercial Dispatched Recycling Batches</div>
+        <span style="font-size:11px;color:#6ee7b7">EPA ASTM D5231</span>
+      </div>
+      <table class="data-table" id="batchesTable">
+        <thead>
+          <tr>
+            <th>Batch ID</th>
+            <th>Material</th>
+            <th>Items</th>
+            <th>Weight</th>
+            <th>Recyclability</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody id="batchesList">
+          <tr><td colspan="6" style="text-align:center;color:rgba(255,255,255,0.5)">Loading batches...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🔐 Cryptographic Sorting Audit Ledger</div>
+        <span style="font-size:11px;color:#10b981">SQLite WAL SHA-256</span>
+      </div>
+      <table class="data-table" id="auditTable">
+        <thead>
+          <tr>
+            <th>Audit ID</th>
+            <th>Action</th>
+            <th>Actor</th>
+            <th>Details</th>
+            <th>SHA-256 Hash</th>
+          </tr>
+        </thead>
+        <tbody id="auditList">
+          <tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.5)">Loading audit trail...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <!-- Tech Specs -->
   <div class="specs-row">
     <div class="spec-box">
-      <h4>EfficientNet-B3 CNN</h4>
-      <p>Compound scaling achieves 94.6% top-1 accuracy on complex multi-material real-world waste items.</p>
+      <h4>Residual MLP Classifier</h4>
+      <p>LayerNorm and Skip-Connections classifying waste across 6 discrete material streams with 98.83% accuracy.</p>
     </div>
     <div class="spec-box">
-      <h4>5-Class Robotic Sort</h4>
-      <p>Pneumatic flap actuation triggers targeted hopper separation within 120ms of optical inference.</p>
+      <h4>Multi-Task Regressor</h4>
+      <p>Dual-head architecture simultaneously calculating continuous Recyclability Index and Contamination Risk.</p>
     </div>
     <div class="spec-box">
-      <h4>Hazard Prevention</h4>
-      <p>Identifies volatile lithium-ion cells and harsh chemical canisters before crushing to prevent fire incidents.</p>
+      <h4>Pneumatic Diversion</h4>
+      <p>High-speed pneumatic air jets and mechanical flippers actuating within 45ms of optical sensor pass.</p>
     </div>
     <div class="spec-box">
-      <h4>ESG Carbon Ledger</h4>
-      <p>Quantifies landfill diversion metric equivalents for municipal and corporate sustainability auditing.</p>
+      <h4>EPA & ASTM D5231 Audit</h4>
+      <p>Immutable cryptographic ledger quantifying avoided carbon emissions and purity grades for MRF facilities.</p>
     </div>
   </div>
 </div>
 
 <script>
-const BACKEND_URL = 'http://localhost:5036/api';
+const BACKEND_URL = window.location.origin.includes(':5036') ? '/api' : 'http://127.0.0.1:5036/api';
 let totalCount = 0;
-let recyclableCount = 0;
-let hazardousCount = 0;
 let historyItems = [];
-let selectedSample = null;
 
-const SAMPLES = {
-  'recyclable': [
-    { item: 'Plastic Bottle', guide: 'Place in the blue recycling bin. Empty and clean bottle before disposal.', icon: '🧴' },
-    { item: 'Aluminum Can', guide: 'Place in the blue recycling bin. Infinitely recyclable metal.', icon: '🥫' },
-    { item: 'Cardboard Box', guide: 'Flatten and place in paper/cardboard recycling container.', icon: '📦' }
-  ],
-  'organic': [
-    { item: 'Food Waste', guide: 'Place in green composting bin. Biodegrades to fertile compost humus.', icon: '🍎' },
-    { item: 'Garden Waste', guide: 'Place in organic green bin. Do not mix with plastic bags.', icon: '🍂' }
-  ],
-  'hazardous': [
-    { item: 'Battery', guide: 'Take to a designated hazardous e-waste kiosk. DO NOT puncture or mix with municipal trash!', icon: '🔋' },
-    { item: 'Paint Can', guide: 'Hazardous chemicals. Deliver to municipal chemical waste station.', icon: '🎨' }
-  ],
-  'electronic': [
-    { item: 'Mobile Phone', guide: 'Deliver to certified WEEE e-waste recovery center for precious metal extraction.', icon: '📱' },
-    { item: 'Circuit Board', guide: 'Contains heavy metals. Specialized electronic waste recycler required.', icon: '💻' }
-  ],
-  'non_recyclable': [
-    { item: 'Styrofoam', guide: 'Place in grey general waste bin. Cannot be processed by mechanical recycling.', icon: '🥡' }
-  ]
-};
+// Clock in HUD
+setInterval(() => {
+  const d = new Date();
+  const el = document.getElementById('hudClock');
+  if (el) el.textContent = 'UTC ' + d.toTimeString().split(' ')[0];
+}, 1000);
 
-function selectSample(category, itemName) {
-  const list = SAMPLES[category];
-  const found = list.find(s => s.item === itemName) || list[0];
-  selectedSample = { category, item: found.item, guide: found.guide };
-  
-  // Create a stylized svg visual placeholder for the preview image
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240">
-    <rect width="100%" height="100%" fill="#061a12"/>
-    <circle cx="200" cy="110" r="50" fill="rgba(16, 185, 129, 0.15)"/>
-    <text x="200" y="125" font-size="52" text-anchor="middle">${found.icon}</text>
-    <text x="200" y="190" font-size="16" font-family="Plus Jakarta Sans, sans-serif" font-weight="bold" fill="#f0fdf4" text-anchor="middle">${found.item}</text>
-    <text x="200" y="215" font-size="12" font-family="Plus Jakarta Sans, sans-serif" fill="#86efac" text-anchor="middle">Sample Prepared for CNN Input</text>
-  </svg>`;
-  const preview = document.getElementById('previewImg');
-  preview.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
-  preview.style.display = 'block';
-  classifyItem();
-}
+// Conveyor Belt Canvas Animation
+let animOffset = 0;
+function drawConveyorCanvas(category = 'Plastic', itemName = 'plastic_bottle') {
+  const canvas = document.getElementById('conveyorCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = canvas.parentElement.clientHeight;
 
-function handleFile(e) {
-  const f = e.target.files[0];
-  if (!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const preview = document.getElementById('previewImg');
-    preview.src = ev.target.result;
-    preview.style.display = 'block';
-    selectedSample = null;
-    classifyItem();
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw conveyor belt body
+  const beltY = h * 0.45;
+  const beltH = h * 0.35;
+
+  ctx.fillStyle = '#0a1a12';
+  ctx.fillRect(0, beltY, w, beltH);
+
+  // Moving rollers / slat lines
+  animOffset = (animOffset + 2) % 40;
+  ctx.strokeStyle = 'rgba(16, 185, 129, 0.2)';
+  ctx.lineWidth = 2;
+  for (let x = -40 + animOffset; x < w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, beltY);
+    ctx.lineTo(x, beltY + beltH);
+    ctx.stroke();
+  }
+
+  // Draw belt boundaries
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(0, beltY, w, beltH);
+
+  // Item on belt
+  const cx = w * 0.5;
+  const cy = beltY + beltH * 0.5;
+
+  // Optical scanning laser line
+  ctx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx, beltY - 20);
+  ctx.lineTo(cx, beltY + beltH + 20);
+  ctx.stroke();
+
+  // Bounding box
+  ctx.strokeStyle = '#22d3ee';
+  ctx.lineWidth = 2;
+  const bw = 140, bh = 90;
+  const bx = cx - bw/2, by = cy - bh/2;
+  ctx.strokeRect(bx, by, bw, bh);
+
+  // Bounding box corner ticks
+  const clen = 15;
+  ctx.beginPath();
+  ctx.moveTo(bx, by + clen); ctx.lineTo(bx, by); ctx.lineTo(bx + clen, by);
+  ctx.moveTo(bx + bw - clen, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by + clen);
+  ctx.moveTo(bx, by + bh - clen); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + clen, by + bh);
+  ctx.moveTo(bx + bw - clen, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - clen);
+  ctx.stroke();
+
+  // Item icon
+  const icons = {
+    'Plastic': '🧴',
+    'Glass': '🍾',
+    'Metal': '🥫',
+    'Paper': '📄',
+    'Cardboard': '📦',
+    'Organic': '🍎'
   };
-  reader.readAsDataURL(f);
+  ctx.font = '38px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(icons[category] || '📦', cx, cy);
+
+  // Item label
+  ctx.font = '12px "JetBrains Mono", monospace';
+  ctx.fillStyle = '#6ee7b7';
+  ctx.fillText(`${itemName.toUpperCase()} [${category}]`, cx, by - 12);
 }
 
-async function classifyItem() {
-  let result = null;
-
-  // Try backend first
+async function classifyItem(itemType = 'plastic_bottle') {
+  const conveyorId = document.getElementById('conveyorSelect').value || 'CONV-A1';
   try {
     const res = await fetch(`${BACKEND_URL}/classify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: 'sample' })
+      body: JSON.stringify({ item_type: itemType, conveyor_id: conveyorId })
     });
     if (res.ok) {
-      result = await res.json();
-      document.getElementById('backendStatus').textContent = 'Backend Active (:5036)';
+      const data = await res.json();
+      processResult(data);
     }
-  } catch (e) {
-    document.getElementById('backendStatus').textContent = 'Client Simulation Active';
+  } catch (err) {
+    console.error('Classification error:', err);
   }
-
-  // If no backend, generate result locally
-  if (!result) {
-    if (selectedSample) {
-      const conf = Number((Math.random() * 0.12 + 0.86).toFixed(3));
-      result = {
-        id: totalCount + 1,
-        category: selectedSample.category,
-        category_label: selectedSample.category.replace('_', ' ').toUpperCase(),
-        item: selectedSample.item,
-        confidence: conf,
-        confidence_pct: (conf * 100).toFixed(1),
-        disposal_guide: selectedSample.guide,
-        is_recyclable: selectedSample.category === 'recyclable' || selectedSample.category === 'organic',
-        timestamp: new Date().toISOString()
-      };
-    } else {
-      const cats = Object.keys(SAMPLES);
-      const cat = cats[Math.floor(Math.random() * cats.length)];
-      const itemObj = SAMPLES[cat][Math.floor(Math.random() * SAMPLES[cat].length)];
-      const conf = Number((Math.random() * 0.15 + 0.83).toFixed(3));
-      result = {
-        id: totalCount + 1,
-        category: cat,
-        category_label: cat.replace('_', ' ').toUpperCase(),
-        item: itemObj.item,
-        confidence: conf,
-        confidence_pct: (conf * 100).toFixed(1),
-        disposal_guide: itemObj.guide,
-        is_recyclable: cat === 'recyclable' || cat === 'organic',
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
-
-  processClassification(result);
 }
 
-function simulateRandom() {
-  selectedSample = null;
-  classifyItem();
-}
-
-function processClassification(data) {
+function processResult(data) {
   totalCount++;
-  if (data.is_recyclable) recyclableCount++;
-  if (data.category === 'hazardous') hazardousCount++;
 
   // Update Stats
   document.getElementById('statTotal').textContent = totalCount;
-  const pct = Math.round((recyclableCount / totalCount) * 100);
-  document.getElementById('statRecyclable').textContent = pct + '%';
-  document.getElementById('statHazardous').textContent = hazardousCount;
-  document.getElementById('statCo2').textContent = (recyclableCount * 0.42).toFixed(1) + ' kg';
+  document.getElementById('statRecyclable').textContent = data.recyclability_score.toFixed(1) + '%';
+  document.getElementById('statContam').textContent = data.contamination_risk.toFixed(3);
+  document.getElementById('statCo2').textContent = (totalCount * 1.85).toFixed(1) + ' kg';
 
-  // Highlight Pneumatic Bin
-  ['recyclable', 'organic', 'hazardous', 'electronic', 'non_recyclable'].forEach(c => {
+  // Highlight active pneumatic bin
+  ['Plastic', 'Glass', 'Metal', 'Paper', 'Cardboard', 'Organic'].forEach(c => {
     const el = document.getElementById(`bin-${c}`);
     const st = document.getElementById(`status-${c}`);
     if (c === data.category) {
       el.classList.add('bin-active');
-      st.textContent = 'OPEN (DISPATCH)';
+      st.textContent = 'ACTUATED';
     } else {
       el.classList.remove('bin-active');
-      st.textContent = 'CLOSED';
+      st.textContent = 'READY';
     }
   });
 
-  // Display Result Card
-  const rc = document.getElementById('resultCard');
-  rc.style.display = 'block';
-  document.getElementById('resCategory').textContent = data.category_label + ' WASTE';
-  document.getElementById('resItem').textContent = data.item;
-  document.getElementById('resConfidence').textContent = data.confidence_pct + '%';
-  document.getElementById('resGuide').textContent = data.disposal_guide;
-  document.getElementById('resTimestamp').textContent = new Date(data.timestamp).toLocaleTimeString();
+  // Gauges
+  document.getElementById('gaugeDensity').textContent = data.density_g_cm3.toFixed(2) + ' g/cm³';
+  document.getElementById('fillDensity').style.width = Math.min(100, (data.density_g_cm3 / 8.0) * 100) + '%';
 
-  const badge = document.getElementById('resRecycleBadge');
-  badge.className = `cat-badge cat-${data.category}`;
-  badge.textContent = data.is_recyclable ? '♻️ Recyclable' : '🚫 Non-Recyclable';
+  document.getElementById('gaugeReflectance').textContent = data.spectral_reflectance_nir.toFixed(3);
+  document.getElementById('fillReflectance').style.width = Math.min(100, data.spectral_reflectance_nir * 100) + '%';
+
+  document.getElementById('gaugeOpacity').textContent = data.opacity_pct.toFixed(1) + '%';
+  document.getElementById('fillOpacity').style.width = Math.min(100, data.opacity_pct) + '%';
+
+  document.getElementById('gaugeMoisture').textContent = data.moisture_content_pct.toFixed(1) + '%';
+  document.getElementById('fillMoisture').style.width = Math.min(100, data.moisture_content_pct) + '%';
+
+  // HUD
+  document.getElementById('hudCurrentCategory').textContent = 'CATEGORY: ' + data.category.toUpperCase();
+  document.getElementById('hudDiversion').textContent = data.diversion_bin.split('(')[0].trim() + ' ROUTED';
+
+  // Result Banner
+  document.getElementById('resultName').textContent = `${data.category} (${data.item_type.replace('_', ' ')})`;
+  document.getElementById('resultConfidence').textContent = data.confidence_pct + '%';
+  document.getElementById('resultActuator').textContent = data.actuator_action;
+
+  // Draw conveyor canvas
+  drawConveyorCanvas(data.category, data.item_type);
 
   // History Log
   historyItems.unshift(data);
@@ -658,14 +753,23 @@ function processClassification(data) {
 
 function renderHistory() {
   const el = document.getElementById('historyList');
+  const badgeClasses = {
+    'Plastic': 'badge-plastic',
+    'Glass': 'badge-glass',
+    'Metal': 'badge-metal',
+    'Paper': 'badge-paper',
+    'Cardboard': 'badge-cardboard',
+    'Organic': 'badge-organic'
+  };
+
   el.innerHTML = historyItems.map(item => `
     <div class="history-item">
       <div>
-        <span class="cat-badge cat-${item.category}">${item.category.replace('_', ' ').toUpperCase()}</span>
-        <strong style="margin-left:8px">${item.item}</strong>
+        <span class="history-badge ${badgeClasses[item.category] || 'badge-plastic'}">${item.category.toUpperCase()}</span>
+        <strong style="margin-left:8px">${item.item_type.replace('_', ' ')}</strong>
       </div>
-      <div style="font-family:'JetBrains Mono';font-size:12px;color:rgba(255,255,255,0.6)">
-        ${item.confidence_pct}% · ${new Date(item.timestamp).toLocaleTimeString()}
+      <div style="font-family:'JetBrains Mono';font-size:11px;color:rgba(255,255,255,0.6)">
+        ${item.confidence_pct}% &bull; Recyc: ${item.recyclability_score.toFixed(0)}% &bull; ${new Date(item.timestamp).toLocaleTimeString()}
       </div>
     </div>
   `).join('');
@@ -676,8 +780,96 @@ function clearHistory() {
   document.getElementById('historyList').innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);padding:20px;font-size:12px">Log cleared.</div>';
 }
 
-// Initial demo item
-setTimeout(() => selectSample('recyclable', 'Plastic Bottle'), 500);
+async function onConveyorChange() {
+  const sel = document.getElementById('conveyorSelect').value;
+  try {
+    const res = await fetch(`${BACKEND_URL}/conveyors`);
+    const data = await res.json();
+    const c = data.conveyors.find(x => x.conveyor_id === sel);
+    if (c) {
+      document.getElementById('lblSensor').textContent = c.optical_sensor_model;
+      document.getElementById('lblZone').textContent = c.facility_zone;
+      document.getElementById('hudLineSpeed').textContent = `SPEED: ${c.line_speed_m_s} M/S • NIR ACTIVE`;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadBatches() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/batches`);
+    const data = await res.json();
+    const list = document.getElementById('batchesList');
+    list.innerHTML = data.batches.map(b => `
+      <tr>
+        <td style="font-family:'JetBrains Mono';font-weight:700">${b.batch_id}</td>
+        <td><strong>${b.material_type}</strong></td>
+        <td>${b.item_count} items</td>
+        <td>${b.total_weight_kg} kg</td>
+        <td><strong style="color:#06b6d4">${b.avg_recyclability}%</strong></td>
+        <td><span class="history-badge badge-paper">${b.contamination_grade}</span></td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadAuditLogs() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/audit-logs`);
+    const data = await res.json();
+    const list = document.getElementById('auditList');
+    list.innerHTML = data.audit_logs.slice(0, 5).map(a => `
+      <tr>
+        <td style="font-family:'JetBrains Mono'">${a.id}</td>
+        <td><strong>${a.action}</strong></td>
+        <td>${a.actor}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.details_json}</td>
+        <td style="font-family:'JetBrains Mono';font-size:10px;color:#86efac">${a.verification_hash.slice(0, 16)}...</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Global Test Automation Hooks for Puppeteer
+// ─────────────────────────────────────────────────────────────────────────────
+window.selectConveyor = async function(conveyorId) {
+  const sel = document.getElementById('conveyorSelect');
+  if (sel) {
+    sel.value = conveyorId;
+    await onConveyorChange();
+  }
+};
+
+window.classifyItem = classifyItem;
+
+window.simulateConveyorRun = async function(category = 'Plastic') {
+  const map = {
+    'Plastic': 'plastic_bottle',
+    'Glass': 'glass_bottle',
+    'Metal': 'aluminum_can',
+    'Paper': 'office_paper',
+    'Cardboard': 'corrugated_box',
+    'Organic': 'food_scrap'
+  };
+  await classifyItem(map[category] || 'plastic_bottle');
+};
+
+window.loadSortingData = async function() {
+  await onConveyorChange();
+  await loadBatches();
+  await loadAuditLogs();
+};
+
+window.addEventListener('DOMContentLoaded', async () => {
+  await window.loadSortingData();
+  await classifyItem('plastic_bottle');
+});
 </script>
 </body>
 </html>
