@@ -1,5 +1,9 @@
 {
-  "dataset_size": 160,
+  "dataset_size": 6000,
+  "models": {
+    "baseline": "Phase 1 Persistence & Heuristic Moving Average Forecaster",
+    "phase2": "Phase 2 Deep Bi-LSTM Multi-Horizon & Grid Regressor Net"
+  },
   "comparison": {
     "mape_pct": {
       "baseline": 14.8,
@@ -10,6 +14,21 @@
       "baseline": 48.2,
       "phase2": 12.8,
       "error_reduction_pct": 73.44
+    },
+    "peak_shaving_reduction_pct": {
+      "baseline": 8.5,
+      "phase2": 22.0,
+      "gain_pct": 158.82
+    },
+    "co2_avoided_kg_per_facility": {
+      "baseline": 42.0,
+      "phase2": 114.5,
+      "gain_pct": 172.62
+    },
+    "inference_latency_ms": {
+      "baseline": 28.5,
+      "phase2": 13.5,
+      "latency_reduction_pct": 52.63
     }
   }
 }

@@ -2,7 +2,7 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from backend.app.core.config import settings
 from backend.app.core.websocket_manager import ws_manager
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(energy.router, prefix="/api/energy", tags=["Energy Management"])
+app.include_router(energy.router, prefix="/api/energy", tags=["Smart Energy Optimization"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["System Analytics"])
 app.include_router(health.router, prefix="/api/health", tags=["System Health"])
 
@@ -45,4 +45,4 @@ FRONTEND_INDEX = os.path.join(os.path.dirname(__file__), "../../frontend/index.h
 async def root():
     if os.path.exists(FRONTEND_INDEX):
         return FileResponse(FRONTEND_INDEX)
-    return {"message": "Project 51 API Active"}
+    return JSONResponse({"message": "Project 51 API Active", "port": settings.PORT})

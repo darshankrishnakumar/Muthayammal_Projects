@@ -15,13 +15,15 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 51 Platform")
-    parser.add_argument("--port", type=int, default=8051)
+    parser.add_argument("--port", type=int, default=5051)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
     port = find_available_port(args.port)
+    settings.PORT = port
     print("=" * 70)
-    print("   PROJECT 51 — SMART ENERGY FORECASTING & OPTIMIZATION")
+    print("   PROJECT 51 — SMART ENERGY FORECASTING & DYNAMIC PEAK SHAVING")
+    print(f"   Assigned Port: {port} | Mode: Production SOTA Microservice")
     print("=" * 70)
     init_db()
     print(f"Server starting on http://localhost:{port}")

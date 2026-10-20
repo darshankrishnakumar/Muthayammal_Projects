@@ -1,5 +1,9 @@
+import os
+import sys
 import unittest
 from fastapi.testclient import TestClient
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from backend.app.main import app
 from backend.app.db.session import init_db
 
@@ -21,7 +25,7 @@ class TestEnergyAPI(unittest.TestCase):
     def test_optimize(self):
         res = self.client.post("/api/energy/optimize", json={
             "building_facility": "Test Facility",
-            "base_load_kwh": 500.0
+            "base_load_kw": 500.0
         })
         self.assertEqual(res.status_code, 200)
         self.assertIn("peak_shaving_reduction_pct", res.json()["metrics"])

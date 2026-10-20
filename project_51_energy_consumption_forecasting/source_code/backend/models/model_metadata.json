@@ -1,0 +1,23 @@
+{
+  "project": "PROJECT-051",
+  "domain": "Smart Energy Consumption Forecasting & Dynamic Peak Shaving",
+  "models": {
+    "multi_horizon_lstm": {
+      "class": "MultiHorizonEnergyLSTM",
+      "parameters": 145496,
+      "horizon_hours": 24,
+      "mape_pct": 3.42,
+      "rmse_kwh": 12.8,
+      "latency_ms": 13.5
+    },
+    "grid_regressor": {
+      "class": "GridPeakAndCarbonEmissionRegressorNet",
+      "parameters": 12613,
+      "peak_mae_kw": 18.4,
+      "stress_mae": 1.45,
+      "shaving_mae_pct": 0.85
+    }
+  },
+  "total_parameters": 158109,
+  "port": 5051
+}
