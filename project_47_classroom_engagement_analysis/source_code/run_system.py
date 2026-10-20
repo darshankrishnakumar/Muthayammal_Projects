@@ -15,13 +15,13 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 47 Platform")
-    parser.add_argument("--port", type=int, default=8047)
+    parser.add_argument("--port", type=int, default=5047)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
     port = find_available_port(args.port)
     print("=" * 70)
-    print("   PROJECT 47 — CLASSROOM ENGAGEMENT ANALYTICS")
+    print("   PROJECT 47 — CLASSROOM ENGAGEMENT ANALYTICS (PORT 5047)")
     print("=" * 70)
     init_db()
     print(f"Server starting on http://localhost:{port}")

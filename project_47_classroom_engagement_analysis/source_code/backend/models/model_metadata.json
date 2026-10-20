@@ -1,0 +1,21 @@
+{
+  "model_name": "MultimodalEngagementNet + AttentionForecastRegressorNet",
+  "dataset_records": 6000,
+  "models": {
+    "multimodal_engagement_net": {
+      "parameters": 3669,
+      "engagement_score_mae": 4.22,
+      "action_accuracy_pct": 100.0,
+      "status": "TRAINED_SERIALIZED"
+    },
+    "attention_forecast_regressor": {
+      "parameters": 18500,
+      "attention_score_mae": 0.39,
+      "drowsiness_risk_mae": 3.2,
+      "intervention_urgency_mae": 4.69,
+      "participation_rate_mae": 5.03,
+      "status": "TRAINED_SERIALIZED"
+    }
+  },
+  "status": "TRAINED_SERIALIZED"
+}
