@@ -1,0 +1,44 @@
+{
+  "features": [
+    "ambient_temp_c",
+    "ir_thermal_radiation_kw_m2",
+    "smoke_obscuration_pct_m",
+    "flicker_frequency_hz",
+    "flame_pixel_area_ratio",
+    "plume_expansion_m_s",
+    "co_concentration_ppm",
+    "airflow_velocity_m_s",
+    "zone_occupancy_persons",
+    "structural_thermal_strain"
+  ],
+  "mean": [
+    301.0470886230469,
+    14.019866943359375,
+    34.65163803100586,
+    7.995978355407715,
+    0.23163260519504547,
+    2.47813081741333,
+    214.815673828125,
+    1.796584963798523,
+    11.618332862854004,
+    0.3158233165740967
+  ],
+  "std": [
+    298.52142333984375,
+    14.841991424560547,
+    30.914072036743164,
+    6.637721061706543,
+    0.24322068691253662,
+    2.018446922302246,
+    213.17161560058594,
+    0.7928613424301147,
+    5.8327531814575195,
+    0.31363576650619507
+  ],
+  "targets": [
+    "ambient_temp_c",
+    "plume_expansion_m_s",
+    "evacuation_urgency_index",
+    "co_concentration_ppm"
+  ]
+}

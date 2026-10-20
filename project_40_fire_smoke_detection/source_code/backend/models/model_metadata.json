@@ -1,0 +1,13 @@
+{
+  "model_name": "DualStreamFireSmokeNet + FirePropagationThermalRiskRegressorNet",
+  "parameters": 18500,
+  "test_mae": {
+    "flame_temp_c": 60.93,
+    "plume_expansion_m_s": 0.109,
+    "evacuation_urgency_index": 5.74,
+    "co_concentration_ppm": 5.5
+  },
+  "target_hazard_classes": 4,
+  "dataset_records": 6000,
+  "status": "TRAINED_SERIALIZED"
+}
