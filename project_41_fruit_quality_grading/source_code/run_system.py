@@ -15,13 +15,14 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 41 Platform")
-    parser.add_argument("--port", type=int, default=8041)
+    parser.add_argument("--port", type=int, default=5041)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
     port = find_available_port(args.port)
     print("=" * 70)
-    print("   PROJECT 41 — AI-BASED FRUIT QUALITY GRADING & DEFECT DETECTION")
+    print("   PROJECT 41 — AI-BASED FRUIT QUALITY GRADING & DEFECT PLATFORM")
+    print(f"   Dedicated Port: {port} | Database: SQLite WAL Mode")
     print("=" * 70)
     init_db()
     print(f"Server starting on http://localhost:{port}")
