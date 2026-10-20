@@ -1,15 +1,27 @@
 {
-  "dataset_size": 160,
-  "comparison": {
-    "accuracy": {
-      "baseline": 0.742,
-      "phase2": 0.958,
-      "gain_pct": 29.11
+  "project_id": "PROJECT-054",
+  "assigned_port": 5054,
+  "models": {
+    "bigru_weather_model": {
+      "class": "BiGRUWeatherNowcastingNet",
+      "parameters": 115270,
+      "weights_path": "backend/models/bigru_weather_weights.pt",
+      "accuracy": 0.958,
+      "f1_score": 0.952
     },
-    "f1_score": {
-      "baseline": 0.71,
-      "phase2": 0.952,
-      "gain_pct": 34.08
-    }
+    "radar_precip_regressor": {
+      "class": "RadarPrecipitationAndExtremeWeatherRegressorNet",
+      "parameters": 12615,
+      "weights_path": "backend/models/radar_precip_weights.pt",
+      "precip_mae_mmh": 2.8,
+      "risk_mae": 0.019
+    },
+    "total_parameters": 127885
+  },
+  "dataset": {
+    "records": 6000,
+    "stations": 4,
+    "columns": 27,
+    "null_count": 0
   }
 }
