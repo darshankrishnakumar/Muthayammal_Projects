@@ -1,0 +1,44 @@
+{
+  "features": [
+    "pupil_interocular_dist_px",
+    "face_pitch_deg",
+    "face_yaw_deg",
+    "specular_reflection_ratio",
+    "fft_high_freq_energy",
+    "micro_tremor_score",
+    "ambient_lux",
+    "color_gamut_std",
+    "face_match_confidence",
+    "spoof_risk_pct"
+  ],
+  "mean": [
+    63.41231918334961,
+    -0.02870377153158188,
+    -0.03961027413606644,
+    0.26075926423072815,
+    0.5594648122787476,
+    0.31823551654815674,
+    467.71600341796875,
+    0.17282353341579437,
+    0.8777036666870117,
+    0.75
+  ],
+  "std": [
+    4.976510047912598,
+    6.965752601623535,
+    8.698015213012695,
+    0.20362047851085663,
+    0.28611716628074646,
+    0.302343487739563,
+    106.41796112060547,
+    0.0809163749217987,
+    0.06108279526233673,
+    0.4330137073993683
+  ],
+  "targets": [
+    "spoof_risk_pct",
+    "micro_tremor_score",
+    "illumination_entropy",
+    "attendance_score"
+  ]
+}

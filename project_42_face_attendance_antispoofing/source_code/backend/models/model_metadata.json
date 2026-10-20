@@ -1,0 +1,19 @@
+{
+  "model_name": "DeepAntiSpoofFaceNet + BiometricLivenessQualityRegressorNet",
+  "arcface_antispoof": {
+    "parameters": 389317,
+    "embedding_dim": 512,
+    "validation_accuracy": 1.0,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "liveness_regressor": {
+    "parameters": 18500,
+    "spoof_risk_mae": 2.35,
+    "micro_tremor_mae": 0.046,
+    "entropy_mae": 0.58,
+    "attendance_score_mae": 4.43,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "dataset_records": 6000,
+  "status": "TRAINED_SERIALIZED"
+}
