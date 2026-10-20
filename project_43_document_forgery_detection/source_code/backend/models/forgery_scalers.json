@@ -1,0 +1,44 @@
+{
+  "features": [
+    "ela_residual_mean",
+    "ela_variance",
+    "dct_high_pass_energy",
+    "quantization_error",
+    "noise_variance",
+    "laplacian_edge_sharpness",
+    "color_histogram_divergence",
+    "text_alignment_delta",
+    "copy_move_keypoints",
+    "forgery_risk_pct"
+  ],
+  "mean": [
+    0.27032995223999023,
+    0.1937408447265625,
+    0.4771253168582916,
+    0.3917691111564636,
+    0.2347324639558792,
+    0.5679914355278015,
+    0.2668648660182953,
+    2.2890071868896484,
+    16.046499252319336,
+    0.75
+  ],
+  "std": [
+    0.1713978350162506,
+    0.13178934156894684,
+    0.2333720475435257,
+    0.22457420825958252,
+    0.1603354811668396,
+    0.20030148327350616,
+    0.19744880497455597,
+    1.8013486862182617,
+    25.838363647460938,
+    0.4330137073993683
+  ],
+  "targets": [
+    "forgery_risk_pct",
+    "tampered_area_pct",
+    "ela_discrepancy_score",
+    "spectral_dct_noise"
+  ]
+}

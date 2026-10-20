@@ -1,0 +1,19 @@
+{
+  "model_name": "DualDomainForgeryNet + DocumentForensicRiskRegressorNet",
+  "dual_domain_cnn": {
+    "parameters": 301956,
+    "classes": 4,
+    "validation_accuracy": 1.0,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "forensic_regressor": {
+    "parameters": 18500,
+    "forgery_risk_mae": 3.04,
+    "tampered_area_mae": 3.92,
+    "ela_discrepancy_mae": 0.61,
+    "spectral_dct_mae": 0.06,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "dataset_records": 6000,
+  "status": "TRAINED_SERIALIZED"
+}

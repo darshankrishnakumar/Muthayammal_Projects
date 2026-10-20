@@ -15,7 +15,7 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 43 Platform")
-    parser.add_argument("--port", type=int, default=8043)
+    parser.add_argument("--port", type=int, default=5043)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
