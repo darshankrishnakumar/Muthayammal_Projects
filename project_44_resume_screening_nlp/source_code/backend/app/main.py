@@ -24,7 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Endpoints
 app.include_router(screening.router, prefix="/api/screening", tags=["Resume Screening"])
+app.include_router(screening.router, prefix="/api/resume", tags=["Resume Alias"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["System Analytics"])
 app.include_router(health.router, prefix="/api/health", tags=["System Health"])
 
@@ -45,4 +47,4 @@ FRONTEND_INDEX = os.path.join(os.path.dirname(__file__), "../../frontend/index.h
 async def root():
     if os.path.exists(FRONTEND_INDEX):
         return FileResponse(FRONTEND_INDEX)
-    return {"message": "Project 44 API Active"}
+    return {"message": "Project 44 API Active on Port 5044"}

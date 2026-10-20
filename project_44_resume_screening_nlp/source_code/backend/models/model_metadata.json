@@ -1,0 +1,19 @@
+{
+  "model_name": "TransformerSemanticMatcherNet + CandidateCompetencyRegressorNet",
+  "transformer_semantic_matcher": {
+    "parameters": 58241,
+    "embedding_dim": 128,
+    "validation_match_mae": 16.26,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "competency_regressor": {
+    "parameters": 18500,
+    "match_score_mae": 0.44,
+    "skill_overlap_mae": 0.029,
+    "experience_fit_mae": 0.08,
+    "seniority_mae": 5.83,
+    "status": "TRAINED_SERIALIZED"
+  },
+  "dataset_records": 6000,
+  "status": "TRAINED_SERIALIZED"
+}

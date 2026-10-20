@@ -1,0 +1,44 @@
+{
+  "features": [
+    "candidate_experience_years",
+    "min_years_required",
+    "skill_coverage_pct",
+    "semantic_similarity",
+    "experience_fit_score",
+    "certification_count",
+    "education_level_index",
+    "github_contributions",
+    "soft_skills_score",
+    "overall_match_score"
+  ],
+  "mean": [
+    4.032222747802734,
+    4.125,
+    66.23077392578125,
+    0.7008787989616394,
+    7.703367710113525,
+    2.1391665935516357,
+    2.508333444595337,
+    30.06766700744629,
+    7.183195114135742,
+    67.81017303466797
+  ],
+  "std": [
+    2.2827398777008057,
+    0.5448634028434753,
+    21.797664642333984,
+    0.1941375434398651,
+    2.839885950088501,
+    1.6689043045043945,
+    0.91227126121521,
+    32.70641326904297,
+    1.5231671333312988,
+    20.21635627746582
+  ],
+  "targets": [
+    "overall_match_score",
+    "skill_overlap_ratio",
+    "experience_fit_score",
+    "seniority_compatibility"
+  ]
+}

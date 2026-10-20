@@ -15,16 +15,17 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 44 Platform")
-    parser.add_argument("--port", type=int, default=8044)
+    parser.add_argument("--port", type=int, default=5044)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
     port = find_available_port(args.port)
     print("=" * 70)
     print("   PROJECT 44 — INTELLIGENT RESUME SCREENING & JOB MATCHING")
+    print("   ALLOCATED DEDICATED PORT: 5044")
     print("=" * 70)
     init_db()
-    print(f"Server starting on http://localhost:{port}")
+    print(f"Server starting on http://127.0.0.1:{port}")
     uvicorn.run("backend.app.main:app", host=args.host, port=port, reload=False)
 
 if __name__ == "__main__":
