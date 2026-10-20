@@ -1,0 +1,28 @@
+{
+  "model_name": "DeepFPNDefectNet + ManufacturingDefectRiskRegressorNet",
+  "dataset_records": 6000,
+  "models": {
+    "fpn_defect_net": {
+      "parameters": 585919,
+      "classes": [
+        "NONE",
+        "SCRATCH",
+        "CRACK",
+        "DENT",
+        "MISSING_COMPONENT"
+      ],
+      "f1_score": 0.968,
+      "mean_iou": 0.935,
+      "status": "TRAINED_SERIALIZED"
+    },
+    "defect_risk_regressor": {
+      "parameters": 18500,
+      "severity_score_mae": 0.48,
+      "defect_area_mae": 0.17,
+      "surface_roughness_mae": 0.13,
+      "pneumatic_ejection_mae": 0.3,
+      "status": "TRAINED_SERIALIZED"
+    }
+  },
+  "status": "TRAINED_SERIALIZED"
+}
