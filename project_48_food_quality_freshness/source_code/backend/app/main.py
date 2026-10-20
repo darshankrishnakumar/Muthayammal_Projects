@@ -24,7 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Freshness routes + Food alias routes for seamless frontend/backend parity
 app.include_router(freshness.router, prefix="/api/freshness", tags=["Food Freshness"])
+app.include_router(freshness.router, prefix="/api/food", tags=["Food API Alias"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["System Analytics"])
 app.include_router(health.router, prefix="/api/health", tags=["System Health"])
 
@@ -45,4 +47,4 @@ FRONTEND_INDEX = os.path.join(os.path.dirname(__file__), "../../frontend/index.h
 async def root():
     if os.path.exists(FRONTEND_INDEX):
         return FileResponse(FRONTEND_INDEX)
-    return {"message": "Project 48 API Active"}
+    return {"message": "Project 48 API Active", "port": settings.PORT}

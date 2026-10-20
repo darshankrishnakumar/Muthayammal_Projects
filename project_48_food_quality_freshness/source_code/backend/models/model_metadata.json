@@ -1,0 +1,55 @@
+{
+  "project": "PROJECT-048",
+  "name": "Food Quality & Freshness Detection Platform",
+  "port": 5048,
+  "cnn_model": {
+    "architecture": "SpectralFreshnessCNN",
+    "parameters": 20869,
+    "input_shape": [
+      3,
+      64,
+      64
+    ],
+    "val_score_mae": 1.237,
+    "val_stage_acc": 98.28,
+    "weights_path": "backend/models/food_freshness_cnn_weights.pt"
+  },
+  "regressor_model": {
+    "architecture": "ShelfLifeForecastRegressorNet",
+    "parameters": 18052,
+    "features": [
+      "storage_temp_c",
+      "relative_humidity_pct",
+      "storage_duration_hours",
+      "browning_index",
+      "tvbn_mg_per_100g",
+      "ph_level",
+      "ethylene_concentration_ppm",
+      "moisture_content_pct",
+      "bacterial_log_cfu_g",
+      "reflectance_ratio_650_850"
+    ],
+    "targets": [
+      "remaining_shelf_life_days",
+      "spoilage_risk_pct",
+      "microbial_risk_pct",
+      "cold_chain_compliance_score"
+    ],
+    "val_shelf_life_mae_days": 0.474,
+    "val_shelf_life_r2": 0.9776,
+    "val_spoilage_mae_pct": 2.086,
+    "val_microbial_mae_pct": 0.813,
+    "val_cold_chain_mae_pct": 1.372,
+    "weights_path": "backend/models/food_shelflife_regressor_weights.pt"
+  },
+  "dataset": {
+    "csv_path": "data/food_telemetry_6000.csv",
+    "total_records": 6000,
+    "food_categories": [
+      "MEAT_POULTRY",
+      "FRESH_PRODUCE",
+      "DAIRY",
+      "BAKERY"
+    ]
+  }
+}

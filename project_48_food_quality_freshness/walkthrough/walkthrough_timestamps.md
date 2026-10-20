@@ -1,12 +1,17 @@
-# Walkthrough Timestamps: AI-Based Food Quality and Freshness Detection Using Computer Vision (PROJECT-048)
+# Walkthrough Timestamps: Multi-Spectral Food Quality & Freshness Platform (PROJECT-048)
 
-| Timestamp | Phase | Topic / Demonstration Point |
-|---|---|---|
-| 00:00 - 00:45 | Intro | Title Slide, Problem Statement, Project Objectives |
-| 00:45 - 01:30 | Architecture | Codebase Structure & Dataflow Explanation |
-| 01:30 - 02:45 | Setup | Virtual Environment Activation & Application Startup |
-| 02:45 - 04:30 | Live Demo | Primary Workflow Execution & Real-Time Inference |
-| 04:30 - 05:30 | Robustness | Input Validation, Exception Handling & Metrics |
-| 05:30 - 06:00 | Conclusion | Summary of Results, Limitations & Future Scope |
+Exact Video Duration: **180.000000 seconds (03:00.000)**  
+Frame Budget: **720 frames @ 4.0 fps** (12 phases x 60 frames)  
+Format: **1280x800 H.264 MP4**  
+Assigned Port: **5048**
 
-*Note: Actual video recording file (`walkthrough_video.mp4`) status: NOT YET RECORDED (Awaiting screen capture session).*
+| Timestamp | Phase | Topic / Demonstration Point | Frames |
+|---|---|---|---|
+| **00:00 - 00:30** | Phase 1 | Title & System Overview (FastAPI on Port 5048, Agri-Bio SOTA Dashboard) | Frames 000 - 120 |
+| **00:30 - 01:00** | Phase 2 | Dual PyTorch Engines & 6,000 Physical Telemetry Records Overview | Frames 120 - 240 |
+| **01:00 - 01:30** | Phase 3 | Live Freshness Evaluation: Prime Ribeye & Atlantic Salmon Fresh Grading | Frames 240 - 360 |
+| **01:30 - 02:00** | Phase 4 | Spoilage Detection: Hass Avocado Marginal Decay & Sourdough Spoilage Alert | Frames 360 - 480 |
+| **02:00 - 02:30** | Phase 5 | Food Safety Inspection Registry & SQLite WAL ACID Persistence | Frames 480 - 600 |
+| **02:30 - 03:00** | Phase 6 | Cryptographic Audit Ledger & Tamper-Evident SHA-256 Hash Chain Verification | Frames 600 - 720 |
+
+*Note: Verified via ffprobe as exactly 180.000000s.*

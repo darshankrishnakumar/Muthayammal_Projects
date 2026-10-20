@@ -15,7 +15,7 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 48 Platform")
-    parser.add_argument("--port", type=int, default=8048)
+    parser.add_argument("--port", type=int, default=5048)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
@@ -24,7 +24,7 @@ def main():
     print("   PROJECT 48 — AI-BASED FOOD QUALITY & FRESHNESS DETECTION")
     print("=" * 70)
     init_db()
-    print(f"Server starting on http://localhost:{port}")
+    print(f"Server starting on http://localhost:{port} (Port {port})")
     uvicorn.run("backend.app.main:app", host=args.host, port=port, reload=False)
 
 if __name__ == "__main__":

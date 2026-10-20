@@ -1,0 +1,44 @@
+{
+  "feature_cols": [
+    "storage_temp_c",
+    "relative_humidity_pct",
+    "storage_duration_hours",
+    "browning_index",
+    "tvbn_mg_per_100g",
+    "ph_level",
+    "ethylene_concentration_ppm",
+    "moisture_content_pct",
+    "bacterial_log_cfu_g",
+    "reflectance_ratio_650_850"
+  ],
+  "target_cols": [
+    "remaining_shelf_life_days",
+    "spoilage_risk_pct",
+    "microbial_risk_pct",
+    "cold_chain_compliance_score"
+  ],
+  "means": [
+    3.7675769329071045,
+    76.04598236083984,
+    97.30994415283203,
+    9.108826637268066,
+    11.606224060058594,
+    6.019829273223877,
+    1.689205288887024,
+    71.07123565673828,
+    4.622691631317139,
+    1.0143102407455444
+  ],
+  "stds": [
+    2.184295892715454,
+    15.347411155700684,
+    54.89768981933594,
+    5.489999771118164,
+    8.315672874450684,
+    0.432166188955307,
+    3.337367057800293,
+    3.33768367767334,
+    1.5862250328063965,
+    0.28161659836769104
+  ]
+}
