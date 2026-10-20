@@ -1,0 +1,20 @@
+{
+  "model_name": "CareerTrajectoryForecastNet + CompetencyEmbeddingNet",
+  "dataset_records": 6000,
+  "models": {
+    "trajectory_forecast_net": {
+      "parameters": 18500,
+      "readiness_score_mae": 2.77,
+      "gap_score_mae": 2.81,
+      "weeks_mae": 0.78,
+      "salary_growth_mae": 2.75,
+      "status": "TRAINED_SERIALIZED"
+    },
+    "competency_embedding_net": {
+      "parameters": 25000,
+      "latent_dim": 64,
+      "status": "TRAINED_SERIALIZED"
+    }
+  },
+  "status": "TRAINED_SERIALIZED"
+}

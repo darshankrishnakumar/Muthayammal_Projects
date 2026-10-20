@@ -1,0 +1,44 @@
+{
+  "features": [
+    "years_experience",
+    "certifications_count",
+    "completed_projects",
+    "weekly_learning_hours",
+    "learning_budget_usd",
+    "target_role_index",
+    "current_skills_count",
+    "missing_skills_count",
+    "base_readiness",
+    "base_gap"
+  ],
+  "mean": [
+    3.762908458709717,
+    2.177999973297119,
+    4.394833564758301,
+    12.22166633605957,
+    1171.0673828125,
+    1.506500005722046,
+    6.640666484832764,
+    2.992833375930786,
+    57.243228912353516,
+    42.75654602050781
+  ],
+  "std": [
+    2.2105696201324463,
+    1.4394428730010986,
+    2.4600043296813965,
+    3.669311285018921,
+    742.8242797851562,
+    1.124698281288147,
+    2.329533338546753,
+    2.090315818786621,
+    29.848854064941406,
+    29.84884262084961
+  ],
+  "targets": [
+    "readiness_score",
+    "gap_score",
+    "estimated_weeks",
+    "salary_growth_potential"
+  ]
+}
