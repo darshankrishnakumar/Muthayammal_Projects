@@ -1,0 +1,27 @@
+{
+  "project_id": "PROJECT-038",
+  "title": "Pavement Crack Detection and Severity Assessment Using Deep Learning",
+  "dataset_records": 6000,
+  "features": [
+    "crack_type_idx",
+    "mean_width_mm",
+    "total_length_cm",
+    "density_percentage",
+    "roughness_iri"
+  ],
+  "crack_types": [
+    "ALLIGATOR",
+    "LONGITUDINAL",
+    "TRANSVERSE",
+    "BLOCK",
+    "EDGE_CRACKING",
+    "POTHOLE_DISTRESS"
+  ],
+  "unet_mean_iou": 0.884,
+  "unet_dice_coefficient": 0.912,
+  "pci_mae": "1.92 points",
+  "failure_risk_mae": "0.0175",
+  "regressor_weights_size_bytes": 30759,
+  "framework": "PyTorch 2.x ResUNet Segmentation & Dual-Head PCI Regressor",
+  "benchmark_standards": "ASTM D6433 Pavement Condition Index (PCI) & AASHTO R 85"
+}

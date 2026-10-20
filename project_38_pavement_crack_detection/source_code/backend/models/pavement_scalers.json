@@ -1,0 +1,36 @@
+{
+  "feature_cols": [
+    "crack_type_idx",
+    "mean_width_mm",
+    "total_length_cm",
+    "density_percentage",
+    "roughness_iri"
+  ],
+  "means": [
+    2.5,
+    8.296988487243652,
+    177.65574645996094,
+    21.73978614807129,
+    3.852916717529297
+  ],
+  "stds": [
+    1.7078251838684082,
+    7.146083831787109,
+    99.27718353271484,
+    12.69796085357666,
+    1.4095872640609741
+  ],
+  "crack_types": [
+    "ALLIGATOR",
+    "LONGITUDINAL",
+    "TRANSVERSE",
+    "BLOCK",
+    "EDGE_CRACKING",
+    "POTHOLE_DISTRESS"
+  ],
+  "recommendations": {
+    "LOW": "ROUTINE_MONITOR_AND_CRACK_SEALING",
+    "MEDIUM": "PREVENTIVE_SURFACE_OVERLAY_OR_SLURRY_SEAL",
+    "HIGH": "FULL_DEPTH_MILL_AND_FILL_RECONSTRUCTION"
+  }
+}

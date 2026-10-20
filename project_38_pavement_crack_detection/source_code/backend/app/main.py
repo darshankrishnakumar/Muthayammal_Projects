@@ -1,6 +1,6 @@
 import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
@@ -28,6 +28,14 @@ app.add_middleware(
 app.include_router(cracks.router, prefix="/api/cracks", tags=["Pavement Cracks"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Infrastructure Analytics"])
 app.include_router(health.router, prefix="/api/health", tags=["System Health"])
+
+@app.get("/api/audit-logs")
+def get_audit_logs(limit: int = 25, db = Depends(cracks.get_db)):
+    return cracks.list_audit_logs(limit=limit, db=db)
+
+@app.get("/api/model/info")
+def get_model_information():
+    return cracks.get_model_info()
 
 @app.websocket("/api/ws")
 async def websocket_endpoint(websocket: WebSocket):

@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project 38 | Pavement Crack Detection & Severity Assessment</title>
+  <title>Project 38 | Pavement Crack Detection & ASTM D6433 PCI Rating</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-600 selection:text-white">
   <!-- Clean Bright Enterprise Header -->
@@ -27,12 +32,29 @@
       <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Segmenter Active
       </span>
-      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8038</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium" id="portIndicator">Port: 5038</span>
       <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">mIoU: 88.4%</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">Dice: 0.912</span>
     </div>
   </header>
 
   <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <!-- Corridor Selectors -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1" id="roadTabs">
+      <button onclick="selectRoadSegment('State Route 17 Mile 22', 22.4)" class="road-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-sm flex items-center gap-2">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> State Route 17 (Mile 22)
+      </button>
+      <button onclick="selectRoadSegment('Interstate 80 Westbound', 114.2)" class="road-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-2">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Interstate 80 Westbound
+      </button>
+      <button onclick="selectRoadSegment('Broadway Boulevard', 18.2)" class="road-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-2">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Broadway Boulevard
+      </button>
+      <button onclick="selectRoadSegment('Pacific Coast Highway', 42.8)" class="road-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-2">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Pacific Coast Highway
+      </button>
+    </div>
+
     <!-- Stat Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
@@ -40,7 +62,7 @@
           <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Distress Logs</span>
           <span class="p-2 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="file-text" class="w-4 h-4"></i></span>
         </div>
-        <p id="total-logs" class="text-3xl font-extrabold text-slate-900 mt-2">10</p>
+        <p id="total-logs" class="text-3xl font-extrabold text-slate-900 mt-2">15</p>
         <span class="text-xs text-emerald-600 font-medium flex items-center gap-1 mt-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Continuous Road Audit</span>
       </div>
 
@@ -50,7 +72,7 @@
           <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="activity" class="w-4 h-4"></i></span>
         </div>
         <p id="avg-pci" class="text-3xl font-extrabold text-emerald-600 mt-2">72.4 / 100</p>
-        <span class="text-xs text-slate-500 mt-1">ASTM D6433 Standard: Satisfactory</span>
+        <span class="text-xs text-slate-500 mt-1" id="pci-grade">ASTM D6433: Satisfactory</span>
       </div>
 
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
@@ -58,7 +80,7 @@
           <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Mean Crack Width</span>
           <span class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="ruler" class="w-4 h-4"></i></span>
         </div>
-        <p class="text-3xl font-extrabold text-amber-600 mt-2">2.4 mm</p>
+        <p id="stat-mean-width" class="text-3xl font-extrabold text-amber-600 mt-2">2.4 mm</p>
         <span class="text-xs text-slate-500 mt-1">Sub-pixel precision calibrated</span>
       </div>
 
@@ -72,7 +94,7 @@
       </div>
     </div>
 
-    <!-- Main Grid: Controls & Severity Chart -->
+    <!-- Main Grid: Controls & Optical Scan Canvas -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
         <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
@@ -81,37 +103,86 @@
         <form id="inspect-form" class="space-y-4 text-sm">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Roadway Segment Name</label>
-            <input type="text" id="road-name" value="State Route 17 Westbound" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-amber-500 transition">
+            <input type="text" id="road-name" value="State Route 17 Mile 22" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-amber-500 transition">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Chainage Marker (km)</label>
-            <input type="number" id="chainage" value="38.4" step="0.1" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-amber-500 transition">
+            <input type="number" id="chainage" value="22.4" step="0.1" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-amber-500 transition">
           </div>
           <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-amber-600/20">
             <i data-lucide="play" class="w-4 h-4"></i> Execute ResUNet Segmentation
           </button>
         </form>
 
+        <!-- Scenario Injection Buttons -->
+        <div class="border-t border-slate-100 pt-3 space-y-2">
+          <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Inject Distress Scenario:</span>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="runCrackAnalysis('ALLIGATOR', 'HIGH')" class="px-2.5 py-1.5 rounded-lg border border-red-200 bg-red-50 text-red-700 font-semibold hover:bg-red-100 transition text-left">
+              ⚡ Alligator Fatigue
+            </button>
+            <button onclick="runCrackAnalysis('LONGITUDINAL', 'MEDIUM')" class="px-2.5 py-1.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-700 font-semibold hover:bg-amber-100 transition text-left">
+              📏 Longitudinal Crack
+            </button>
+            <button onclick="runCrackAnalysis('TRANSVERSE', 'MEDIUM')" class="px-2.5 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 font-semibold hover:bg-blue-100 transition text-left">
+              📐 Transverse Crack
+            </button>
+            <button onclick="runCrackAnalysis('POTHOLE', 'HIGH')" class="px-2.5 py-1.5 rounded-lg border border-purple-200 bg-purple-50 text-purple-700 font-semibold hover:bg-purple-100 transition text-left">
+              🕳️ Pothole Distress
+            </button>
+          </div>
+        </div>
+
         <div id="result-box" class="hidden p-4 bg-slate-50 border border-amber-200 rounded-xl text-xs space-y-2">
           <div class="font-bold text-amber-700 text-sm" id="res-sev"></div>
           <div class="text-slate-700">Distress Pattern: <span id="res-type" class="font-bold text-slate-900"></span></div>
           <div class="text-slate-700">PCI Condition Score: <span id="res-pci" class="font-bold text-emerald-600"></span></div>
           <div class="text-slate-700">Maintenance Directive: <span id="res-rec" class="font-bold text-blue-600"></span></div>
+          <div class="text-slate-700" id="res-wo-block">Work Order: <span id="res-wo" class="font-bold text-amber-600 font-mono"></span></div>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
-        <div class="flex justify-between items-center mb-2">
-          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-600"></i> Pavement Distress Severity Breakdown</h2>
-          <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-medium">Road Network Audit</span>
+      <!-- Center & Right: Canvas Optical Scan Viewport & Severity Chart -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="video" class="w-4 h-4 text-blue-600"></i> Pavement Optical Telemetry & Crack Mask Canvas
+          </h2>
+          <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-mono" id="canvasStatus">Scan Stream: ResUNet 64x64</span>
         </div>
-        <div class="flex-1 min-h-[250px] flex items-center justify-center">
-          <canvas id="sevChart"></canvas>
+
+        <!-- Canvas Scanner -->
+        <div class="relative w-full h-48 bg-slate-900 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+          <canvas id="pavementCanvas" class="w-full h-full block"></canvas>
+          <div class="absolute top-2 left-2 bg-slate-900/80 px-2.5 py-1 rounded border border-slate-700 text-[11px] font-mono text-amber-400">
+            RADAR-SCAN: ACTIVE · 50 Hz
+          </div>
+          <div class="absolute bottom-2 right-2 bg-slate-900/80 px-2.5 py-1 rounded border border-slate-700 text-[11px] font-mono text-emerald-400" id="scanCoords">
+            SR-17 · Chainage: 22.4 km
+          </div>
+        </div>
+
+        <!-- Severity Breakdown Chart -->
+        <div class="min-h-[160px] flex items-center justify-center">
+          <canvas id="sevChart" class="w-full h-40"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Table -->
+    <!-- Active Maintenance Work Orders Section -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4" id="workOrdersSection">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="wrench" class="w-4 h-4 text-amber-600"></i> Dispatched Maintenance Work Orders
+        </h2>
+        <span class="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full font-semibold">ASTM D6433 Directives</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="workOrdersGrid">
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 text-center">Loading dispatched work orders...</div>
+      </div>
+    </div>
+
+    <!-- Pavement Distress Inspection Register Table -->
     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -120,7 +191,7 @@
         <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-medium">ASTM D6433 Ledger</span>
       </div>
       <div class="overflow-x-auto border border-slate-200 rounded-lg">
-        <table class="w-full text-left text-xs text-slate-700">
+        <table class="w-full text-left text-xs text-slate-700" id="incidentsTable">
           <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
             <tr>
               <th class="p-3">Incident ID</th>
@@ -137,86 +208,269 @@
         </table>
       </div>
     </div>
+
+    <!-- Cryptographic Audit Ledger Table -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4" id="auditLedgerSection">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i> Cryptographic Audit Ledger & Chain of Custody
+        </h2>
+        <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono font-semibold">SHA-256 HASH CHAIN VERIFIED</span>
+      </div>
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700" id="auditTable">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Block ID</th>
+              <th class="p-3">Timestamp (UTC)</th>
+              <th class="p-3">Action</th>
+              <th class="p-3">Event Details</th>
+              <th class="p-3">Block Hash (SHA-256)</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body" class="divide-y divide-slate-100 bg-white font-mono text-[11px]">
+            <tr><td colspan="5" class="p-3 text-center text-slate-400">Loading audit ledger...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </main>
 
   <script>
     lucide.createIcons();
     let sevChart = null;
 
-    async function loadData() {
-      const [cRes, aRes] = await Promise.all([fetch('/api/cracks/'), fetch('/api/analytics/summary')]);
-      const cracks = await cRes.json();
-      const stats = await aRes.json();
+    // Canvas simulation
+    const canvas = document.getElementById('pavementCanvas');
+    const ctx = canvas.getContext('2d');
 
-      document.getElementById('total-logs').innerText = stats.total_distress_records;
-      document.getElementById('avg-pci').innerText = stats.network_average_pci + ' / 100';
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      const tbody = document.getElementById('incidents-body');
-      tbody.innerHTML = '';
-      (cracks.incidents || []).slice(0, 8).forEach(i => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition';
-        const badgeCol = i.severity_level === 'HIGH' ? 'bg-red-50 text-red-700 border-red-200' :
-                         (i.severity_level === 'MEDIUM' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200');
-        tr.innerHTML = `
-          <td class="p-3 font-mono font-bold text-blue-600">${i.incident_id}</td>
-          <td class="p-3 font-semibold text-slate-900">${i.road_name}</td>
-          <td class="p-3 font-mono text-slate-600">${i.chainage_km} km</td>
-          <td class="p-3 font-medium text-slate-800">${i.crack_type}</td>
-          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badgeCol}">${i.severity_level}</span></td>
-          <td class="p-3 font-medium text-slate-700">${i.mean_width_mm} mm</td>
-          <td class="p-3 font-bold text-emerald-600">${i.pci_score}</td>
-          <td class="p-3 text-slate-600 font-medium">${i.recommendation}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+    function drawPavementScene(crackType = 'LONGITUDINAL') {
+      resizeCanvas();
+      const w = canvas.width;
+      const h = canvas.height;
 
-      const ctx = document.getElementById('sevChart').getContext('2d');
-      const dist = stats.severity_distribution || { LOW: 4, MEDIUM: 3, HIGH: 3 };
-      if (sevChart) sevChart.destroy();
-      sevChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(dist),
-          datasets: [{
-            label: 'Inspected Road Segments',
-            data: Object.values(dist),
-            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } },
-            x: { grid: { display: false }, ticks: { color: '#64748b', font: { weight: 'bold' } } }
-          },
-          plugins: { legend: { display: false } }
+      // Dark asphalt texture
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(0, 0, w, h);
+
+      // Aggregate speckling
+      ctx.fillStyle = '#334155';
+      for (let i = 0; i < 180; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const r = Math.random() * 2 + 1;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Draw Crack Mask
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+
+      if (crackType === 'ALLIGATOR') {
+        // Interconnected web
+        for (let x = w * 0.3; x < w * 0.7; x += 35) {
+          ctx.moveTo(x, h * 0.2);
+          ctx.lineTo(x + 20, h * 0.8);
+          ctx.moveTo(w * 0.25, h * 0.35 + (x % 30));
+          ctx.lineTo(w * 0.75, h * 0.45 + (x % 25));
         }
+      } else if (crackType === 'TRANSVERSE') {
+        // Horizontal across lane
+        ctx.moveTo(w * 0.1, h * 0.5);
+        ctx.bezierCurveTo(w * 0.3, h * 0.45, w * 0.7, h * 0.55, w * 0.9, h * 0.48);
+      } else if (crackType === 'POTHOLE') {
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+        ctx.beginPath();
+        ctx.ellipse(w * 0.5, h * 0.5, 60, 35, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        // Default longitudinal
+        ctx.moveTo(w * 0.48, h * 0.1);
+        ctx.bezierCurveTo(w * 0.52, h * 0.4, w * 0.46, h * 0.7, w * 0.5, h * 0.9);
+      }
+      ctx.stroke();
+
+      // Scanline effect
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+      ctx.fillRect(0, h * 0.45, w, 4);
+    }
+
+    async function loadData() {
+      try {
+        const [cRes, aRes, wRes, audRes] = await Promise.all([
+          fetch('/api/cracks/?limit=8'),
+          fetch('/api/analytics/summary'),
+          fetch('/api/cracks/work-orders?limit=3'),
+          fetch('/api/cracks/audit-logs?limit=6')
+        ]);
+        const cracks = await cRes.json();
+        const stats = await aRes.json();
+        const workOrders = await wRes.json();
+        const auditLogs = await audRes.json();
+
+        document.getElementById('total-logs').innerText = stats.total_distress_records;
+        document.getElementById('avg-pci').innerText = stats.network_average_pci + ' / 100';
+
+        const tbody = document.getElementById('incidents-body');
+        tbody.innerHTML = '';
+        (cracks.incidents || []).slice(0, 8).forEach(i => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          const badgeCol = i.severity_level === 'HIGH' ? 'bg-red-50 text-red-700 border-red-200' :
+                           (i.severity_level === 'MEDIUM' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200');
+          tr.innerHTML = `
+            <td class="p-3 font-mono font-bold text-blue-600">${i.incident_id}</td>
+            <td class="p-3 font-semibold text-slate-900">${i.road_name}</td>
+            <td class="p-3 font-mono text-slate-600">${i.chainage_km} km</td>
+            <td class="p-3 font-medium text-slate-800">${i.crack_type}</td>
+            <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badgeCol}">${i.severity_level}</span></td>
+            <td class="p-3 font-medium text-slate-700">${i.mean_width_mm} mm</td>
+            <td class="p-3 font-bold text-emerald-600">${i.pci_score}</td>
+            <td class="p-3 text-slate-600 font-medium">${i.recommendation}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Render Work Orders
+        const woGrid = document.getElementById('workOrdersGrid');
+        if (workOrders.work_orders && workOrders.work_orders.length > 0) {
+          woGrid.innerHTML = workOrders.work_orders.map(wo => `
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="font-mono font-bold text-blue-600 text-xs">${wo.order_id}</span>
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${wo.priority_tier === 'URGENT' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}">${wo.priority_tier}</span>
+              </div>
+              <div class="text-xs font-semibold text-slate-900">${wo.road_name} (km ${wo.chainage_km})</div>
+              <div class="text-[11px] text-slate-600">${wo.treatment_type}</div>
+              <div class="flex justify-between items-center pt-2 border-t border-slate-200 text-xs">
+                <span class="font-bold text-slate-900">$${wo.estimated_cost_usd ? wo.estimated_cost_usd.toLocaleString() : '1,500'}</span>
+                <span class="text-emerald-600 font-semibold text-[11px]">Status: ${wo.status}</span>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Render Audit Logs
+        const audBody = document.getElementById('audit-body');
+        if (auditLogs && auditLogs.length > 0) {
+          audBody.innerHTML = auditLogs.map(l => `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-3 font-bold text-blue-600">#${l.id}</td>
+              <td class="p-3 text-slate-600">${l.timestamp.substring(11, 19)}</td>
+              <td class="p-3 text-slate-900 font-bold">${l.action}</td>
+              <td class="p-3 text-slate-600">${l.details}</td>
+              <td class="p-3 text-emerald-600">${l.record_hash.substring(0, 16)}...</td>
+            </tr>
+          `).join('');
+        }
+
+        // Chart
+        const ctx = document.getElementById('sevChart').getContext('2d');
+        const dist = stats.severity_distribution || { LOW: 6, MEDIUM: 5, HIGH: 4 };
+        if (sevChart) sevChart.destroy();
+        sevChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(dist),
+            datasets: [{
+              label: 'Inspected Road Segments',
+              data: Object.values(dist),
+              backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } },
+              x: { grid: { display: false }, ticks: { color: '#64748b', font: { weight: 'bold' } } }
+            },
+            plugins: { legend: { display: false } }
+          }
+        });
+      } catch (err) {
+        console.error('Error loading data:', err);
+      }
+    }
+
+    async function selectRoadSegment(road, km) {
+      document.getElementById('road-name').value = road;
+      document.getElementById('chainage').value = km;
+      document.getElementById('scanCoords').innerText = `${road} · Chainage: ${km} km`;
+
+      const buttons = document.querySelectorAll('#roadTabs .road-btn');
+      buttons.forEach(btn => {
+        const isMatch = btn.innerText.includes(road.split(' ')[0]);
+        btn.className = isMatch ?
+          'road-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white shadow-sm flex items-center gap-2' :
+          'road-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition flex items-center gap-2';
       });
+
+      await runCrackAnalysis('LONGITUDINAL', 'LOW');
+    }
+
+    async function runCrackAnalysis(crackType = 'LONGITUDINAL', severity = 'MEDIUM') {
+      const road = document.getElementById('road-name').value;
+      const km = parseFloat(document.getElementById('chainage').value);
+
+      drawPavementScene(crackType);
+
+      try {
+        const res = await fetch('/api/cracks/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            road_name: road,
+            chainage_km: km,
+            crack_type: crackType,
+            severity: severity
+          })
+        });
+        const data = await res.json();
+        const m = data.metrics || data;
+        const b = document.getElementById('result-box');
+        b.classList.remove('hidden');
+        document.getElementById('res-sev').innerText = m.severity_level + ' SEVERITY DISTRESS DETECTED';
+        document.getElementById('res-type').innerText = m.crack_type + ' (' + m.mean_width_mm + ' mm)';
+        document.getElementById('res-pci').innerText = m.pci_score + ' / 100';
+        document.getElementById('res-rec').innerText = m.recommendation;
+
+        if (data.work_order) {
+          document.getElementById('res-wo-block').style.display = 'block';
+          document.getElementById('res-wo').innerText = `${data.work_order.order_id} ($${data.work_order.estimated_cost_usd})`;
+        } else {
+          document.getElementById('res-wo-block').style.display = 'none';
+        }
+
+        loadData();
+      } catch (err) {
+        console.error('Analysis error:', err);
+      }
     }
 
     document.getElementById('inspect-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const res = await fetch('/api/cracks/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          road_name: document.getElementById('road-name').value,
-          chainage_km: parseFloat(document.getElementById('chainage').value)
-        })
-      });
-      const data = await res.json();
-      const b = document.getElementById('result-box');
-      b.classList.remove('hidden');
-      document.getElementById('res-sev').innerText = data.severity_level + ' SEVERITY DISTRESS DETECTED';
-      document.getElementById('res-type').innerText = data.crack_type + ' (' + data.mean_width_mm + ' mm)';
-      document.getElementById('res-pci').innerText = data.pci_score + ' / 100';
-      document.getElementById('res-rec').innerText = data.recommendation;
-      loadData();
+      await runCrackAnalysis('LONGITUDINAL', 'MEDIUM');
     });
 
+    // Global window hooks for testing & Puppeteer recording
+    window.selectRoadSegment = selectRoadSegment;
+    window.runCrackAnalysis = runCrackAnalysis;
+    window.loadData = loadData;
+
+    drawPavementScene('LONGITUDINAL');
     loadData();
   </script>
 </body>
