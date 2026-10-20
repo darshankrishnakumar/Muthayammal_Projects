@@ -1,4 +1,8 @@
 flask
 flask-cors
 numpy
+torch
 scikit-learn
+python-docx
+python-pptx
+openpyxl

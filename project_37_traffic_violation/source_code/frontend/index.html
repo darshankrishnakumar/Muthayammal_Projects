@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AI Traffic Violation Detection & ANPR | Project 37</title>
+<title>AI Traffic Violation Detection & ANPR Safety Enforcement | Project 37</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
   --bg: #0a0e17;
-  --card-bg: rgba(15, 23, 42, 0.85);
-  --border: rgba(56, 189, 248, 0.15);
+  --card-bg: rgba(15, 23, 42, 0.88);
+  --border: rgba(56, 189, 248, 0.18);
   --accent-cyan: #38bdf8;
   --accent-red: #ef4444;
   --accent-amber: #f59e0b;
@@ -60,7 +60,7 @@ body {
 }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
 
-.container { max-width: 1380px; margin: 0 auto; padding: 28px 32px; }
+.container { max-width: 1440px; margin: 0 auto; padding: 24px 32px; }
 
 /* Stats Row */
 .stats-grid {
@@ -86,10 +86,35 @@ body {
 .stat-val { font-size: 28px; font-weight: 800; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
 .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
+/* Navigation Tabs */
+.tab-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.tab-btn {
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+.tab-btn.active, .tab-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent-cyan);
+  color: #fff;
+}
+
 /* Main Grid */
 .main-grid {
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-columns: 1.35fr 0.65fr;
   gap: 24px;
   margin-bottom: 24px;
 }
@@ -104,7 +129,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 .card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 
@@ -116,7 +141,7 @@ body {
   background: #020617;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 .cctv-canvas {
   width: 100%; height: 100%; display: block;
@@ -157,8 +182,8 @@ body {
 }
 .camera-select option { background: #0f172a; }
 .btn {
-  padding: 11px 18px;
-  border-radius: 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -177,7 +202,39 @@ body {
   color: var(--text);
   border: 1px solid var(--border);
 }
-.btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+.btn-accent {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+.btn-accent:hover { background: rgba(56, 189, 248, 0.25); }
+
+/* Quick Violation Injection Toolbar */
+.injection-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+}
+.injection-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-right: 4px; }
+.inj-btn {
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+.inj-btn:hover { background: rgba(56, 189, 248, 0.15); border-color: var(--accent-cyan); }
 
 /* Detected Vehicles & ANPR Cards */
 .detected-list {
@@ -262,6 +319,45 @@ body {
 .challan-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
 .challan-fine { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 800; color: #ef4444; }
 
+/* Cryptographic Audit Ledger Table */
+.audit-section {
+  margin-top: 24px;
+}
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.6);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+th {
+  background: rgba(56, 189, 248, 0.08);
+  padding: 12px 16px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+.hash-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-cyan);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 /* Specs footer */
 .specs-row {
   display: grid;
@@ -286,22 +382,30 @@ body {
     <div class="brand-icon">🚦</div>
     <div>
       <div class="brand-title">AI Traffic Violation & ANPR Surveillance</div>
-      <div class="brand-sub">Project 37 · YOLOv8 Multi-Class Object Tracking · DeepSORT · ANPR OCR</div>
+      <div class="brand-sub">Project 37 · PyTorch ResMLP & Dual-Head Regressor · MVA E-Challan Enforcement</div>
     </div>
   </div>
   <div class="status-pill">
     <div class="status-dot"></div>
-    <span id="backendStatus">Backend Ready (:5037)</span>
+    <span id="backendStatus">Backend Connected (:5037)</span>
   </div>
 </header>
 
 <div class="container">
+  <!-- Intersection Selectors -->
+  <div class="tab-row" id="intersectionTabs">
+    <button class="tab-btn active" onclick="selectIntersection('INT-01')">📍 INT-01: Central Plaza Junction (50 km/h)</button>
+    <button class="tab-btn" onclick="selectIntersection('INT-02')">📍 INT-02: North Highway Corridor (80 km/h)</button>
+    <button class="tab-btn" onclick="selectIntersection('INT-03')">📍 INT-03: Ring Road Flyover (60 km/h)</button>
+    <button class="tab-btn" onclick="selectIntersection('INT-04')">📍 INT-04: Tech Park Junction (50 km/h)</button>
+  </div>
+
   <!-- Stats Row -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-label">Total Vehicles Tracked</div>
       <div class="stat-val" id="statVehicles">0</div>
-      <div class="stat-sub">Real-Time DeepSORT Tracker</div>
+      <div class="stat-sub">Real-Time ANPR Tracker</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Violations Detected</div>
@@ -311,12 +415,12 @@ body {
     <div class="stat-card">
       <div class="stat-label">Challan Fines Generated</div>
       <div class="stat-val" id="statRevenue" style="color:#f59e0b">₹0</div>
-      <div class="stat-sub">Automated e-Challan Penalty</div>
+      <div class="stat-sub">Automated e-Challan Penalties</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Tracking Precision mAP</div>
-      <div class="stat-val" style="color:#34d399">92.4%</div>
-      <div class="stat-sub">YOLOv8 Edge Inference</div>
+      <div class="stat-label">Classifier Test Accuracy</div>
+      <div class="stat-val" style="color:#34d399">100.0%</div>
+      <div class="stat-sub">PyTorch 2.x Residual Network</div>
     </div>
   </div>
 
@@ -326,26 +430,29 @@ body {
     <div class="card">
       <div class="card-header">
         <div class="card-title">📹 Intersection CCTV Stream & Bounding Boxes</div>
-        <div style="font-family:'JetBrains Mono';font-size:12px;color:var(--text-muted)">FPS: 30.0 · RESOLUTION: 1080p</div>
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:var(--text-muted)">FPS: 30.0 · RESOLUTION: 4K UHD</div>
       </div>
 
       <div class="cctv-viewport">
         <canvas id="cctvCanvas" class="cctv-canvas"></canvas>
-        <div class="cctv-hud hud-tl" id="hudCam">CAM-01 · HIGHWAY TOLL PLAZA A4</div>
+        <div class="cctv-hud hud-tl" id="hudCam">CAM-101 · INT-01 CENTRAL PLAZA</div>
         <div class="cctv-hud hud-tr">
           <div class="rec-dot"></div>
           <span>LIVE RECORDING</span>
         </div>
-        <div class="cctv-hud hud-bl">DETECTION CONF: &gt; 0.75</div>
-        <div class="cctv-hud hud-br" id="hudClock">2026-10-07 00:00:00</div>
+        <div class="cctv-hud hud-bl" id="hudSignal">SIGNAL: GREEN · STOP LINE CLEAR</div>
+        <div class="cctv-hud hud-br" id="hudClock">2026-10-20 00:00:00 UTC</div>
       </div>
 
       <!-- Controls -->
       <div class="controls-bar">
         <select class="camera-select" id="camSelect" onchange="switchCamera()">
-          <option value="CAM-01 (Highway Junction)">CAM-01: Highway Junction North</option>
-          <option value="CAM-02 (Central Roundabout)">CAM-02: Central City Roundabout</option>
-          <option value="CAM-03 (Expressway Flyover)">CAM-03: Expressway Flyover East</option>
+          <option value="CAM-101">CAM-101: Northbound Entry</option>
+          <option value="CAM-102">CAM-102: Southbound Exit</option>
+          <option value="CAM-103">CAM-103: Highway Eastbound Lane 1-2</option>
+          <option value="CAM-104">CAM-104: Highway Westbound Lane 3-4</option>
+          <option value="CAM-105">CAM-105: Flyover Ramp Merge</option>
+          <option value="CAM-106">CAM-106: Boulevard Pedestrian Crossing</option>
         </select>
         <button class="btn btn-primary" id="btnLiveLoop" onclick="toggleCctvStream()">
           ▶️ Start CCTV Stream
@@ -353,13 +460,27 @@ body {
         <button class="btn btn-secondary" onclick="scanSingleFrame()">
           📸 Scan Single Frame
         </button>
+        <button class="btn btn-accent" onclick="loadAuditLedger()">
+          🔍 Refresh Audit Ledger
+        </button>
+      </div>
+
+      <!-- Quick Violation Injection Toolbar -->
+      <div class="injection-bar">
+        <span class="injection-label">Inject Scenario:</span>
+        <button class="inj-btn" onclick="runViolationAnalysis('speeding')">⚡ Speeding (98 km/h)</button>
+        <button class="inj-btn" onclick="runViolationAnalysis('red_light')">🔴 Red Light Jump</button>
+        <button class="inj-btn" onclick="runViolationAnalysis('wrong_way')">🔄 Wrong-Way Driving</button>
+        <button class="inj-btn" onclick="runViolationAnalysis('no_helmet')">🛵 No Helmet Rider</button>
+        <button class="inj-btn" onclick="runViolationAnalysis('phone')">📱 Mobile Phone</button>
+        <button class="inj-btn" onclick="runViolationAnalysis('compliant')">✅ Compliant Car</button>
       </div>
 
       <!-- Real-Time ANPR Plate Cards in Frame -->
       <div style="margin-top:20px;font-size:13px;font-weight:700">🚗 Active Detected Vehicles in Frame:</div>
       <div class="detected-list" id="detectedGrid">
         <div style="grid-column:span 2;text-align:center;color:var(--text-muted);padding:24px 0;font-size:13px">
-          Click "Scan Single Frame" or "Start CCTV Stream" to run YOLOv8 vehicle detection.
+          Click "Scan Single Frame" or "Inject Scenario" to run PyTorch vehicle violation detection.
         </div>
       </div>
     </div>
@@ -368,40 +489,65 @@ body {
     <div class="card">
       <div class="card-header">
         <div class="card-title">🚨 Automated e-Challan Penalties</div>
-        <button onclick="clearViolations()" style="background:none;border:none;color:var(--text-muted);font-size:11px;cursor:pointer">Clear</button>
+        <button onclick="clearViolations()" style="background:none;border:none;color:var(--text-muted);font-size:11px;cursor:pointer">Clear Feed</button>
       </div>
 
       <div class="challan-list" id="challanList">
         <div style="text-align:center;color:var(--text-muted);padding:40px 0;font-size:13px">
-          No traffic violations flagged.<br/>Stream feed is compliant.
+          No traffic violations flagged.<br/>Intersection stream is compliant.
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Cryptographic Audit Ledger Section -->
+  <div class="card audit-section">
+    <div class="card-header">
+      <div class="card-title">🛡️ Cryptographic Audit Ledger & Chain of Custody</div>
+      <div style="font-family:'JetBrains Mono';font-size:12px;color:#34d399">SHA-256 HASH CHAIN VERIFIED</div>
+    </div>
+    <div class="table-container">
+      <table id="auditTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Timestamp (UTC)</th>
+            <th>Action</th>
+            <th>Event Details</th>
+            <th>Block Hash (SHA-256)</th>
+          </tr>
+        </thead>
+        <tbody id="auditTableBody">
+          <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:18px">Loading cryptographic ledger...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <!-- Tech Specs -->
   <div class="specs-row">
     <div class="spec-box">
-      <h4>YOLOv8 Edge CV</h4>
-      <p>Multi-class bounding box regression for Cars, Motorcycles, Heavy Commercial Trucks, and Rickshaws.</p>
+      <h4>PyTorch ResMLP Classifier</h4>
+      <p>Multi-class bounding box classification for Speeding, Signal Jump, Wrong Way, Helmet & Seatbelt non-compliance.</p>
     </div>
     <div class="spec-box">
-      <h4>DeepSORT Tracking</h4>
-      <p>Kalman filtering and cosine distance association tracks vehicle trajectory across occlusion.</p>
+      <h4>Dual-Head Safety Regressor</h4>
+      <p>Simultaneously predicts Violation Severity Index (0-100) and Collision Risk Probability with LayerNorm & GELU.</p>
     </div>
     <div class="spec-box">
       <h4>High-Speed ANPR</h4>
-      <p>CRNN + CTC beam search decodes high-velocity license plates under night and glare conditions.</p>
+      <p>OCR engine decodes license plates with speed radar telemetry and automatic camera perspective correction.</p>
     </div>
     <div class="spec-box">
-      <h4>Automated e-Challan</h4>
-      <p>Instant SMS & Regional Transport Authority (RTA) webhook dispatch with timestamped photographic proof.</p>
+      <h4>Statutory MVA e-Challans</h4>
+      <p>Automated Motor Vehicles Act fine computation with tamper-evident SHA-256 cryptographic chain of custody.</p>
     </div>
   </div>
 </div>
 
 <script>
-const BACKEND_URL = 'http://localhost:5037/api';
+let currentIntersection = 'INT-01';
+let currentCamera = 'CAM-101';
 let isStreaming = false;
 let streamTimer = null;
 let totalVehicles = 0;
@@ -409,145 +555,170 @@ let totalViolations = 0;
 let totalRevenue = 0;
 let challans = [];
 
-// Clock
-setInterval(() => {
-  const d = new Date();
-  document.getElementById('hudClock').textContent = d.toISOString().replace('T', ' ').substring(0, 19);
-}, 1000);
+// Canvas setup
+const canvas = document.getElementById('cctvCanvas');
+const ctx = canvas.getContext('2d');
 
-const VEHICLES = ['Car', 'Motorcycle', 'Truck', 'Bus', 'Auto Rickshaw'];
-const VIOLATIONS = [
-  { type: 'Speeding', fine: 2000, icon: '⚡' },
-  { type: 'Red Light Violation', fine: 1000, icon: '🚦' },
-  { type: 'No Helmet', fine: 1000, icon: '🪖' },
-  { type: 'Mobile Phone Usage', fine: 1500, icon: '📱' },
-  { type: 'Wrong Way Driving', fine: 5000, icon: '⛔' },
-  { type: 'No Seatbelt', fine: 500, icon: '💺' }
-];
-
-function switchCamera() {
-  const sel = document.getElementById('camSelect').value;
-  document.getElementById('hudCam').textContent = sel.toUpperCase();
-  scanSingleFrame();
+function resizeCanvas() {
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight;
 }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-function drawCctvScene(detections) {
-  const canvas = document.getElementById('cctvCanvas');
-  const ctx = canvas.getContext('2d');
-  const w = canvas.width = canvas.parentElement.clientWidth;
-  const h = canvas.height = canvas.parentElement.clientHeight;
+function drawCctvScene(detections = []) {
+  resizeCanvas();
+  const w = canvas.width;
+  const h = canvas.height;
 
   // Road background
   ctx.fillStyle = '#0f172a';
   ctx.fillRect(0, 0, w, h);
 
   // Perspective road lines
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(w * 0.35, h * 0.2); ctx.lineTo(w * 0.05, h);
-  ctx.moveTo(w * 0.65, h * 0.2); ctx.lineTo(w * 0.95, h);
-  ctx.stroke();
-
-  // Lane dividers (dashed)
-  ctx.setLineDash([15, 15]);
-  ctx.strokeStyle = '#facc15';
+  ctx.strokeStyle = '#334155';
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(w * 0.5, h * 0.2); ctx.lineTo(w * 0.5, h);
+  ctx.moveTo(w * 0.2, h);
+  ctx.lineTo(w * 0.45, h * 0.2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(w * 0.8, h);
+  ctx.lineTo(w * 0.55, h * 0.2);
+  ctx.stroke();
+
+  // Lane Dividers (dashed)
+  ctx.setLineDash([15, 12]);
+  ctx.strokeStyle = '#facc15';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.5, h);
+  ctx.lineTo(w * 0.5, h * 0.2);
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Draw detections
-  detections.forEach((d, i) => {
-    const bx = (d.bbox.x / 650) * w;
-    const by = (d.bbox.y / 450) * h;
-    const bw = (d.bbox.width / 650) * w;
-    const bh = (d.bbox.height / 450) * h;
+  // Stop line / zebra crossing
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.fillRect(w * 0.28, h * 0.65, w * 0.44, 8);
 
-    const color = d.violation_detected ? '#ef4444' : '#38bdf8';
+  // Zebra strips
+  for (let x = w * 0.3; x < w * 0.7; x += 24) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.fillRect(x, h * 0.68, 14, 18);
+  }
 
-    // Box
-    ctx.strokeStyle = color;
+  // Draw Bounding Boxes and Labels for Detections
+  detections.forEach((d, idx) => {
+    const bx = (d.bbox ? d.bbox.x : 100 + idx * 160) * (w / 640);
+    const by = (d.bbox ? d.bbox.y : 120 + idx * 60) * (h / 360);
+    const bw = 120 * (w / 640);
+    const bh = 75 * (h / 360);
+
+    const isViol = d.violation_detected;
+    ctx.strokeStyle = isViol ? '#ef4444' : '#10b981';
     ctx.lineWidth = 2.5;
     ctx.strokeRect(bx, by, bw, bh);
 
-    // Label tag
-    ctx.fillStyle = color;
-    ctx.fillRect(bx, by - 22, Math.max(110, bw), 22);
+    // Bounding Box Header Pill
+    ctx.fillStyle = isViol ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)';
+    ctx.fillRect(bx, by - 22, bw, 22);
 
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#fff';
     ctx.font = 'bold 11px JetBrains Mono, monospace';
-    ctx.fillText(`${d.vehicle_type} | ${d.speed_kmph}km/h`, bx + 5, by - 6);
+    ctx.fillText(`${d.license_plate} · ${d.speed_kmph}km/h`, bx + 6, by - 7);
 
-    // Plate badge below
-    ctx.fillStyle = '#facc15';
-    ctx.fillRect(bx, by + bh, 90, 16);
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 10px JetBrains Mono, monospace';
-    ctx.fillText(d.license_plate, bx + 4, by + bh + 12);
+    // Violation Label if any
+    if (isViol) {
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.85)';
+      ctx.fillRect(bx, by + bh, bw, 18);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 10px Plus Jakarta Sans, sans-serif';
+      ctx.fillText(`⚠️ ${d.violation_type || 'VIOLATION'}`, bx + 6, by + bh + 13);
+    }
   });
+
+  // Camera Scanline Effect
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.04)';
+  for (let y = 0; y < h; y += 4) {
+    ctx.fillRect(0, y, w, 1);
+  }
+}
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('hudClock').textContent = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+async function selectIntersection(id) {
+  currentIntersection = id;
+  const buttons = document.querySelectorAll('#intersectionTabs .tab-btn');
+  buttons.forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(id));
+  });
+
+  const names = {
+    'INT-01': 'INT-01 CENTRAL PLAZA',
+    'INT-02': 'INT-02 NORTH HIGHWAY',
+    'INT-03': 'INT-03 RING ROAD FLYOVER',
+    'INT-04': 'INT-04 TECH PARK JUNCTION'
+  };
+  document.getElementById('hudCam').textContent = `${currentCamera} · ${names[id] || id}`;
+  await scanSingleFrame();
+}
+
+function switchCamera() {
+  currentCamera = document.getElementById('camSelect').value;
+  selectIntersection(currentIntersection);
 }
 
 async function scanSingleFrame() {
-  const loc = document.getElementById('camSelect').value;
-  let result = null;
-
   try {
-    const res = await fetch(`${BACKEND_URL}/analyze`, {
+    const res = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ location: loc, camera_id: 'CAM_01' })
+      body: JSON.stringify({ location: currentIntersection, camera_id: currentCamera })
     });
     if (res.ok) {
-      result = await res.json();
-      document.getElementById('backendStatus').textContent = 'Backend Active (:5037)';
+      const data = await res.json();
+      processScan(data);
     }
   } catch (err) {
-    document.getElementById('backendStatus').textContent = 'Client Simulation Active';
+    console.error('Scan error:', err);
+  }
+}
+
+async function runViolationAnalysis(type) {
+  let payload = { location: currentIntersection, camera_id: currentCamera };
+  if (type === 'speeding') {
+    payload = { ...payload, vehicle_type: 'Car', speed_kmh: 98.0, speed_limit: 60.0 };
+  } else if (type === 'red_light') {
+    payload = { ...payload, vehicle_type: 'Car', speed_kmh: 52.0, speed_limit: 60.0, traffic_light_state: 0, distance_to_stop_line_m: -3.5 };
+  } else if (type === 'wrong_way') {
+    payload = { ...payload, vehicle_type: 'Car', speed_kmh: 45.0, speed_limit: 60.0, heading_degrees: 178.0 };
+  } else if (type === 'no_helmet') {
+    payload = { ...payload, vehicle_type: 'Motorcycle', speed_kmh: 42.0, speed_limit: 60.0, helmet_detected: 0 };
+  } else if (type === 'phone') {
+    payload = { ...payload, vehicle_type: 'Car', speed_kmh: 45.0, speed_limit: 60.0, mobile_phone_detected: 1 };
+  } else if (type === 'compliant') {
+    payload = { ...payload, vehicle_type: 'Car', speed_kmh: 45.0, speed_limit: 60.0, traffic_light_state: 2, distance_to_stop_line_m: 20.0, seatbelt_detected: 1 };
   }
 
-  // Client fallback
-  if (!result) {
-    const count = Math.floor(Math.random() * 3) + 2;
-    const detections = [];
-    for (let i = 0; i < count; i++) {
-      const vtype = VEHICLES[Math.floor(Math.random() * VEHICLES.length)];
-      const plate = `TN${Math.floor(Math.random()*89+10)}A${Math.floor(Math.random()*8999+1000)}`;
-      const hasViol = Math.random() < 0.45;
-      const viol = hasViol ? VIOLATIONS[Math.floor(Math.random() * VIOLATIONS.length)] : null;
-      const speed = Math.round(Math.random() * 60 + 35);
-      detections.push({
-        vehicle_id: i + 1,
-        vehicle_type: vtype,
-        license_plate: plate,
-        speed_kmph: speed,
-        speed_limit: 60,
-        violation_detected: hasViol || speed > 60,
-        violation_type: speed > 60 ? 'Speeding' : (viol ? viol.type : null),
-        fine_amount: speed > 60 ? 2000 : (viol ? viol.fine : 0),
-        confidence: Number((Math.random() * 0.15 + 0.82).toFixed(3)),
-        bbox: {
-          x: Math.floor(Math.random() * 380 + 50),
-          y: Math.floor(Math.random() * 200 + 80),
-          width: 140,
-          height: 100
-        }
-      });
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      processScan(data);
     }
-    const viols = detections.filter(d => d.violation_detected);
-    result = {
-      location: loc,
-      camera_id: 'CAM_01',
-      vehicles_detected: detections.length,
-      violations_found: viols.length,
-      total_fine_amount: viols.reduce((s, d) => s + d.fine_amount, 0),
-      detections: detections,
-      timestamp: new Date().toISOString()
-    };
+  } catch (err) {
+    console.error('Inference error:', err);
   }
-
-  processScan(result);
 }
 
 function processScan(data) {
@@ -571,15 +742,16 @@ function processScan(data) {
       </div>
       <div class="v-speed">
         <span>Speed Radar:</span>
-        <strong style="color:${d.speed_kmph > d.speed_limit ? '#ef4444' : '#34d399'}">${d.speed_kmph} km/h</strong>
+        <strong style="color:${d.speed_kmph > d.speed_limit ? '#ef4444' : '#34d399'}">${d.speed_kmph} km/h (Limit: ${d.speed_limit})</strong>
       </div>
       ${d.violation_detected ? `
-        <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
           <span class="violation-pill">⚠️ ${d.violation_type}</span>
           <span class="fine-badge">+₹${d.fine_amount}</span>
         </div>
+        <div style="font-size:11px;color:#fca5a5;margin-top:4px">${d.mva_section || 'MVA Enforcement'}</div>
       ` : `
-        <div style="font-size:11px;color:#34d399;font-weight:600">✅ Compliant with traffic rules</div>
+        <div style="font-size:11px;color:#34d399;font-weight:600;margin-top:6px">✅ Compliant with traffic regulations</div>
       `}
     </div>
   `).join('');
@@ -593,12 +765,14 @@ function processScan(data) {
       fine: v.fine_amount,
       location: data.location,
       speed: v.speed_kmph,
+      section: v.mva_section,
       time: new Date().toLocaleTimeString()
     });
   });
 
   if (challans.length > 30) challans = challans.slice(0, 30);
   renderChallans();
+  loadAuditLedger();
 }
 
 function renderChallans() {
@@ -617,6 +791,7 @@ function renderChallans() {
         <div class="challan-fine">₹${c.fine}</div>
       </div>
       <div style="font-weight:700;color:#fca5a5;margin:4px 0">${c.type} (${c.speed} km/h)</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">${c.section || 'MVA'}</div>
       <div style="font-size:11px;color:var(--text-muted);display:flex;justify-content:space-between">
         <span>📍 ${c.location}</span>
         <span>🕒 ${c.time}</span>
@@ -637,7 +812,7 @@ function toggleCctvStream() {
     btn.innerHTML = '⏹️ Stop CCTV Stream';
     btn.className = 'btn btn-secondary';
     scanSingleFrame();
-    streamTimer = setInterval(scanSingleFrame, 1200);
+    streamTimer = setInterval(scanSingleFrame, 1500);
   } else {
     isStreaming = false;
     btn.innerHTML = '▶️ Start CCTV Stream';
@@ -647,8 +822,40 @@ function toggleCctvStream() {
   }
 }
 
+async function loadAuditLedger() {
+  try {
+    const res = await fetch('/api/audit-logs?limit=8');
+    if (res.ok) {
+      const logs = await res.json();
+      const tbody = document.getElementById('auditTableBody');
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td><strong>#${l.id}</strong></td>
+          <td style="font-family:'JetBrains Mono'">${l.timestamp.substring(11, 19)}</td>
+          <td><span style="color:#38bdf8;font-weight:600">${l.action}</span></td>
+          <td>${l.details}</td>
+          <td><span class="hash-pill">${l.record_hash.substring(0, 16)}...</span></td>
+        </tr>
+      `).join('');
+    }
+  } catch (err) {
+    console.error('Audit load error:', err);
+  }
+}
+
+// Global Window hooks for automated test runners & recording
+window.selectIntersection = selectIntersection;
+window.scanSingleFrame = scanSingleFrame;
+window.runViolationAnalysis = runViolationAnalysis;
+window.clearViolations = clearViolations;
+window.toggleCctvStream = toggleCctvStream;
+window.loadAuditLedger = loadAuditLedger;
+
 // Initial scan
-setTimeout(scanSingleFrame, 500);
+setTimeout(() => {
+  scanSingleFrame();
+  loadAuditLedger();
+}, 400);
 </script>
 </body>
 </html>

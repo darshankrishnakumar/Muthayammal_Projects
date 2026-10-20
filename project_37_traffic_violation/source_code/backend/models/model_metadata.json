@@ -1,0 +1,37 @@
+{
+  "project_id": "PROJECT-037",
+  "title": "AI Traffic Violation Detection & ANPR Safety Enforcement System",
+  "dataset_records": 6000,
+  "features": [
+    "vehicle_type_idx",
+    "speed_kmh",
+    "speed_limit",
+    "speed_delta",
+    "traffic_light_state",
+    "distance_to_stop_line_m",
+    "lane_position_offset_m",
+    "helmet_detected",
+    "seatbelt_detected",
+    "mobile_phone_detected",
+    "heading_degrees",
+    "traffic_density",
+    "optical_visibility"
+  ],
+  "classes": [
+    "Normal / Compliant",
+    "Speeding",
+    "Red Light Violation",
+    "Wrong Way Driving",
+    "No Helmet / Two-Wheeler",
+    "Mobile Phone Usage",
+    "Lane Intrusion / Stop Line Cross",
+    "Seatbelt Non-Compliance"
+  ],
+  "classifier_accuracy": "100.00%",
+  "severity_mae": "5.23 points",
+  "collision_risk_mae": "0.0556",
+  "classifier_weights_size_bytes": 332921,
+  "regressor_weights_size_bytes": 54889,
+  "framework": "PyTorch 2.x Deep Residual MLP & Dual-Head Multi-Target Regressor",
+  "benchmark_standards": "IRC (Indian Roads Congress) SP:90 & ISO 39001 Road Traffic Safety"
+}

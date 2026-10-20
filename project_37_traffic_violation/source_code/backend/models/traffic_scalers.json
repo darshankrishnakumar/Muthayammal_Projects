@@ -1,0 +1,75 @@
+{
+  "feature_cols": [
+    "vehicle_type_idx",
+    "speed_kmh",
+    "speed_limit",
+    "speed_delta",
+    "traffic_light_state",
+    "distance_to_stop_line_m",
+    "lane_position_offset_m",
+    "helmet_detected",
+    "seatbelt_detected",
+    "mobile_phone_detected",
+    "heading_degrees",
+    "traffic_density",
+    "optical_visibility"
+  ],
+  "means": [
+    2.3488333225250244,
+    54.87507247924805,
+    63.28499984741211,
+    -8.409939765930176,
+    1.312999963760376,
+    20.654836654663086,
+    -0.00035166784073226154,
+    0.15649999678134918,
+    0.429833322763443,
+    0.125,
+    27.54824447631836,
+    49.50966262817383,
+    0.8235801458358765
+  ],
+  "stds": [
+    1.7168196439743042,
+    20.464441299438477,
+    12.408133506774902,
+    22.605262756347656,
+    0.6819218993186951,
+    14.061807632446289,
+    0.6589096784591675,
+    0.3633251488208771,
+    0.4950573444366455,
+    0.33071890473365784,
+    53.030052185058594,
+    20.1690673828125,
+    0.10174808651208878
+  ],
+  "classes": [
+    "Normal / Compliant",
+    "Speeding",
+    "Red Light Violation",
+    "Wrong Way Driving",
+    "No Helmet / Two-Wheeler",
+    "Mobile Phone Usage",
+    "Lane Intrusion / Stop Line Cross",
+    "Seatbelt Non-Compliance"
+  ],
+  "vehicle_types": [
+    "Car",
+    "Motorcycle",
+    "Bus",
+    "Truck",
+    "Auto Rickshaw",
+    "Delivery Van"
+  ],
+  "fine_map": {
+    "Normal / Compliant": 0,
+    "Speeding": 2000,
+    "Red Light Violation": 1000,
+    "Wrong Way Driving": 5000,
+    "No Helmet / Two-Wheeler": 1000,
+    "Mobile Phone Usage": 1500,
+    "Lane Intrusion / Stop Line Cross": 500,
+    "Seatbelt Non-Compliance": 1000
+  }
+}
