@@ -1,0 +1,44 @@
+{
+  "features": [
+    "hand_velocity_px_s",
+    "hand_acceleration_px_s2",
+    "palm_orientation_pitch",
+    "palm_orientation_roll",
+    "palm_orientation_yaw",
+    "finger_flexion_thumb",
+    "finger_flexion_index",
+    "finger_flexion_middle",
+    "finger_flexion_ring",
+    "two_handed_sync_ratio"
+  ],
+  "mean": [
+    387.30450439453125,
+    988.3512573242188,
+    11.896890640258789,
+    -4.988046646118164,
+    8.27662181854248,
+    0.3219153583049774,
+    0.4160737991333008,
+    0.4343796372413635,
+    0.4564080834388733,
+    0.30825918912887573
+  ],
+  "std": [
+    62.27360534667969,
+    148.6715850830078,
+    15.028633117675781,
+    19.6475887298584,
+    17.995874404907227,
+    0.24881431460380554,
+    0.2967500388622284,
+    0.2996358871459961,
+    0.3065239191055298,
+    0.38022923469543457
+  ],
+  "targets": [
+    "target_pitch_hz",
+    "target_duration_s",
+    "target_energy_db",
+    "prosody_quality_score"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "model_name": "SpeechProsodyAcousticRegressorNet",
+  "parameters": 18500,
+  "test_mae": {
+    "pitch_hz": 14.11,
+    "duration_s": 0.15,
+    "energy_db": 3.22,
+    "quality_score": 2.87
+  },
+  "target_vocabulary_classes": 10,
+  "dataset_records": 6000,
+  "status": "TRAINED_SERIALIZED"
+}

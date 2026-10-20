@@ -12,6 +12,10 @@ class TranslationLog(Base):
     spoken_sentence = Column(Text)
     confidence = Column(Float)
     latency_ms = Column(Float)
+    pitch_hz = Column(Float, nullable=True)
+    duration_s = Column(Float, nullable=True)
+    energy_db = Column(Float, nullable=True)
+    evidence_hash = Column(String(64), nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 class GestureVocabulary(Base):
@@ -20,3 +24,13 @@ class GestureVocabulary(Base):
     sign_label = Column(String(50), unique=True)
     category = Column(String(50)) # GREETING, COURTESY, EMERGENCY, MEDICAL, DAILY
     description = Column(String(200))
+
+class AuditLedger(Base):
+    __tablename__ = "audit_ledger"
+    id = Column(Integer, primary_key=True, index=True)
+    block_index = Column(Integer, nullable=False)
+    timestamp = Column(String(50), nullable=False)
+    action_type = Column(String(64), nullable=False)
+    details = Column(Text, nullable=False)
+    previous_hash = Column(String(64), nullable=False)
+    current_hash = Column(String(64), nullable=False)
