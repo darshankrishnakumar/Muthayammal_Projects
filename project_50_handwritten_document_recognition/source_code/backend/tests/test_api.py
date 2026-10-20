@@ -1,5 +1,9 @@
+import os
+import sys
 import unittest
 from fastapi.testclient import TestClient
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from backend.app.main import app
 from backend.app.db.session import init_db
 
@@ -20,7 +24,7 @@ class TestIDPAPI(unittest.TestCase):
 
     def test_process(self):
         res = self.client.post("/api/idp/process", json={
-            "document_type": "MEDICAL_INTAKE_FORM",
+            "document_type": "HOSPITAL_CLINICAL_INTAKE",
             "simulate_cursive_unclear": False
         })
         self.assertEqual(res.status_code, 200)

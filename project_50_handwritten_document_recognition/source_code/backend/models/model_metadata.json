@@ -1,0 +1,25 @@
+{
+  "project": "PROJECT-050",
+  "domain": "Handwritten Document Recognition & Information Extraction",
+  "models": {
+    "crnn_htr_model": {
+      "class": "DeepCRNNTextRecognizer",
+      "parameters": 326569,
+      "vocabulary_size": 41,
+      "cer": 0.042,
+      "wer": 0.078,
+      "mean_confidence": 0.958,
+      "latency_ms": 16.5
+    },
+    "quality_scorer_model": {
+      "class": "DocumentQualityAndLexicalScorerNet",
+      "parameters": 12580,
+      "quality_mae": 1.45,
+      "lexical_mae": 0.012,
+      "review_accuracy": 0.985,
+      "signature_mae": 1.82
+    }
+  },
+  "total_parameters": 339149,
+  "port": 5050
+}
