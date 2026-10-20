@@ -1,0 +1,42 @@
+{
+  "deceleration_g": {
+    "mean": 0.5632933333333334,
+    "std": 0.44472345389837126
+  },
+  "orientation_yaw_deg": {
+    "mean": 36.79905,
+    "std": 56.01333650487684
+  },
+  "trajectory_deviation_m": {
+    "mean": 4.37566,
+    "std": 5.275725069621714
+  },
+  "impact_force_kn": {
+    "mean": 82.52611666666665,
+    "std": 88.95146483768092
+  },
+  "delta_v_kph": {
+    "mean": 32.57071666666667,
+    "std": 25.26384381787138
+  },
+  "post_impact_immobility_sec": {
+    "mean": 118.32939999999998,
+    "std": 262.8744226545969
+  },
+  "actual_speed_kph": {
+    "mean": 70.3028,
+    "std": 27.54561076237093
+  },
+  "speed_limit_kph": {
+    "mean": 67.5,
+    "std": 25.619511963193315
+  },
+  "vehicles_involved": {
+    "mean": 1.5688333333333333,
+    "std": 0.7111115141006156
+  },
+  "casualty_risk": {
+    "mean": 0.26123756666666664,
+    "std": 0.2647519102500976
+  }
+}

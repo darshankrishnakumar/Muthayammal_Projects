@@ -48,6 +48,7 @@ class Incident(Base):
     multi_cues = Column(JSON, nullable=True)
     snapshot_path = Column(String(256), nullable=True)
     video_clip_path = Column(String(256), nullable=True)
+    evidence_hash = Column(String(64), nullable=True)
 
     camera = relationship("Camera", back_populates="incidents")
     dispatches = relationship("DispatchAlert", back_populates="incident", cascade="all, delete-orphan")
@@ -81,3 +82,16 @@ class AuditLog(Base):
     details = Column(Text, nullable=True)
 
     incident = relationship("Incident", back_populates="audit_logs")
+
+
+class AuditLedger(Base):
+    __tablename__ = "audit_ledger"
+
+    id = Column(Integer, primary_key=True, index=True)
+    block_index = Column(Integer, unique=True, nullable=False)
+    timestamp = Column(String(64), nullable=False)
+    event_type = Column(String(64), nullable=False)
+    record_id = Column(String(64), nullable=False)
+    evidence_hash = Column(String(64), nullable=False)
+    previous_hash = Column(String(64), nullable=False)
+    block_hash = Column(String(64), nullable=False)

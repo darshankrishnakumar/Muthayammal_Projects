@@ -1,0 +1,28 @@
+{
+  "project_id": "PROJECT-055",
+  "assigned_port": 5055,
+  "models": {
+    "temporal_fusion_model": {
+      "class": "MultiCueTemporalFusionModel",
+      "parameters": 185990,
+      "weights_path": "backend/models/temporal_fusion_weights.pt",
+      "accuracy": 1.0,
+      "f1_score": 1.0,
+      "mttd_sec": 1.15
+    },
+    "crash_severity_regressor": {
+      "class": "CrashSeverityAndDispatchNeuralNet",
+      "parameters": 12648,
+      "weights_path": "backend/models/crash_severity_weights.pt",
+      "severity_mae": 2.1,
+      "casualty_risk_mae": 0.016
+    },
+    "total_parameters": 198638
+  },
+  "dataset": {
+    "records": 6000,
+    "cameras": 4,
+    "columns": 27,
+    "null_count": 0
+  }
+}

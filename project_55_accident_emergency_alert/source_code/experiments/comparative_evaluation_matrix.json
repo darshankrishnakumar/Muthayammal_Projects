@@ -1,123 +1,28 @@
 {
-  "evaluation_timestamp": "2026-10-05 17:58:07 UTC",
-  "device": "mps",
-  "total_test_scenarios": 5,
-  "model_comparison": {
-    "phase1_baseline": {
-      "accuracy": 0.8,
-      "precision": 0.75,
-      "recall": 1.0,
-      "f1_score": 0.8571,
-      "false_alarm_rate": 0.5,
-      "confusion_matrix": {
-        "tp": 3,
-        "fp": 1,
-        "tn": 1,
-        "fn": 0
-      },
-      "avg_inference_ms": 13.18
-    },
-    "phase2_multi_cue_attention": {
+  "project_id": "PROJECT-055",
+  "assigned_port": 5055,
+  "models": {
+    "temporal_fusion_model": {
+      "class": "MultiCueTemporalFusionModel",
+      "parameters": 185990,
+      "weights_path": "backend/models/temporal_fusion_weights.pt",
       "accuracy": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
       "f1_score": 1.0,
-      "false_alarm_rate": 0.0,
-      "confusion_matrix": {
-        "tp": 3,
-        "fp": 0,
-        "tn": 2,
-        "fn": 0
-      },
-      "avg_inference_ms": 10.16
-    }
+      "mttd_sec": 1.15
+    },
+    "crash_severity_regressor": {
+      "class": "CrashSeverityAndDispatchNeuralNet",
+      "parameters": 12648,
+      "weights_path": "backend/models/crash_severity_weights.pt",
+      "severity_mae": 2.1,
+      "casualty_risk_mae": 0.016
+    },
+    "total_parameters": 198638
   },
-  "scenario_breakdown": [
-    {
-      "category": "Normal Traffic",
-      "weather": "clear",
-      "ground_truth_accident": false,
-      "baseline": {
-        "detected": false,
-        "total_alerts": 0,
-        "is_correct": true,
-        "avg_inference_latency_ms": 45.39
-      },
-      "phase2_multi_cue": {
-        "detected": false,
-        "total_alerts": 0,
-        "is_correct": true,
-        "avg_inference_latency_ms": 29.15
-      }
-    },
-    {
-      "category": "Sudden Braking (False Alarm Test)",
-      "weather": "clear",
-      "ground_truth_accident": false,
-      "baseline": {
-        "detected": true,
-        "total_alerts": 14,
-        "is_correct": false,
-        "avg_inference_latency_ms": 5.08
-      },
-      "phase2_multi_cue": {
-        "detected": false,
-        "total_alerts": 0,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.05
-      }
-    },
-    {
-      "category": "High Speed Collision",
-      "weather": "clear",
-      "ground_truth_accident": true,
-      "baseline": {
-        "detected": true,
-        "total_alerts": 23,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.19
-      },
-      "phase2_multi_cue": {
-        "detected": true,
-        "total_alerts": 25,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.32
-      }
-    },
-    {
-      "category": "Rollover & Spinout",
-      "weather": "clear",
-      "ground_truth_accident": true,
-      "baseline": {
-        "detected": true,
-        "total_alerts": 17,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.1
-      },
-      "phase2_multi_cue": {
-        "detected": true,
-        "total_alerts": 29,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.45
-      }
-    },
-    {
-      "category": "Adverse Weather Skid",
-      "weather": "rain",
-      "ground_truth_accident": true,
-      "baseline": {
-        "detected": true,
-        "total_alerts": 24,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.16
-      },
-      "phase2_multi_cue": {
-        "detected": true,
-        "total_alerts": 26,
-        "is_correct": true,
-        "avg_inference_latency_ms": 5.84
-      }
-    }
-  ],
-  "key_takeaway": "Phase 1 Baseline triggers a false positive on sudden braking because it cannot decouple deceleration from orientation and immobility. Phase 2 Multi-Cue Attention Network successfully suppresses the false positive while retaining 100% recall on high-speed collisions, rollovers, and adverse weather skids."
+  "dataset": {
+    "records": 6000,
+    "cameras": 4,
+    "columns": 27,
+    "null_count": 0
+  }
 }

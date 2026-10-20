@@ -28,7 +28,7 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 55 Enterprise Platform")
-    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8080)), help="Port to bind server (default: 8080)")
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 5055)), help="Port to bind server (default: 5055)")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host interface (default: 0.0.0.0)")
     args = parser.parse_args()
 
