@@ -1,0 +1,50 @@
+{
+  "flow_velocity_mps": {
+    "mean": 0.8764516666666666,
+    "std": 0.2495920508489615
+  },
+  "optical_flow_turbulence": {
+    "mean": 0.44621156666666667,
+    "std": 0.20625430284113971
+  },
+  "spatial_divergence": {
+    "mean": 0.026945000000000004,
+    "std": 0.1980470139504622
+  },
+  "kinetic_energy_entropy": {
+    "mean": 2.97313,
+    "std": 1.038630306554236
+  },
+  "density_ratio_sqm": {
+    "mean": 1.6401983333333332,
+    "std": 0.903764322998462
+  },
+  "bottleneck_pressure_psi": {
+    "mean": 35.47996666666666,
+    "std": 19.58807786661001
+  },
+  "directional_coherence": {
+    "mean": 0.6654191666666667,
+    "std": 0.1623334853481445
+  },
+  "velocity_variance": {
+    "mean": 0.3504063333333334,
+    "std": 0.17297391761011477
+  },
+  "occlusion_ratio": {
+    "mean": 0.42325450000000003,
+    "std": 0.15653593453459516
+  },
+  "ambient_lighting_lux": {
+    "mean": 725.8115166666666,
+    "std": 272.55868243520894
+  },
+  "estimated_headcount": {
+    "mean": 196.82633333333334,
+    "std": 108.45253519456008
+  },
+  "panic_index": {
+    "mean": 0.4392078333333333,
+    "std": 0.17025140765092328
+  }
+}

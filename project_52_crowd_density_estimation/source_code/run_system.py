@@ -15,13 +15,14 @@ def find_available_port(preferred_port: int) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Project 52 Platform")
-    parser.add_argument("--port", type=int, default=8052)
+    parser.add_argument("--port", type=int, default=5052)
     parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
 
     port = find_available_port(args.port)
     print("=" * 70)
     print("   PROJECT 52 — AI CROWD DENSITY ESTIMATION & ANOMALY DETECTION")
+    print(f"   Assigned Port: {port} | Mode: Production SOTA Microservice")
     print("=" * 70)
     init_db()
     print(f"Server starting on http://localhost:{port}")

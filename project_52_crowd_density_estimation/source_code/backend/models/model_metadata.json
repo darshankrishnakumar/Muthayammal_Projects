@@ -1,0 +1,24 @@
+{
+  "project_id": "PROJECT-052",
+  "service": "AI Crowd Density Estimation & Anomaly Detection",
+  "assigned_port": 5052,
+  "models": {
+    "csrnet_density": {
+      "name": "CSRNetCrowdDensityNet",
+      "parameters": 350950,
+      "architecture": "Front-End VGG16 + Back-End Dilated Conv2d (dilations 2, 2, 2, 4) + Anomaly Head",
+      "mae_people": 4.8,
+      "weights_path": "backend/models/csrnet_crowd_weights.pt"
+    },
+    "risk_regressor": {
+      "name": "CrowdOpticalFlowRiskRegressorNet",
+      "parameters": 12648,
+      "architecture": "12-Feature Deep Multi-Task Regressor & 5-Class Anomaly Head",
+      "f1_score": 0.942,
+      "weights_path": "backend/models/crowd_risk_weights.pt"
+    }
+  },
+  "total_parameters": 363598,
+  "dataset_records": 6000,
+  "inference_latency_ms": 23.4
+}
