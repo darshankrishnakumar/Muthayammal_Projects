@@ -1,0 +1,50 @@
+{
+  "cant_deficiency_mm": {
+    "mean": 2.6876783333333334,
+    "std": 2.6553662843247805
+  },
+  "gauge_deviation_mm": {
+    "mean": 1.9151749999999998,
+    "std": 3.2569116071104154
+  },
+  "vertical_profile_roughness": {
+    "mean": 2.5202283333333333,
+    "std": 1.1588855921246382
+  },
+  "alignment_deviation_mm": {
+    "mean": 2.130663333333333,
+    "std": 1.8693369052496571
+  },
+  "sleeper_ballast_void_depth": {
+    "mean": 0.5793983333333333,
+    "std": 0.8162461355631809
+  },
+  "rail_temperature_c": {
+    "mean": 30.192833333333333,
+    "std": 10.421415266094384
+  },
+  "fastener_torque_loss_pct": {
+    "mean": 19.856716666666664,
+    "std": 15.897988342838575
+  },
+  "vibration_acceleration_g": {
+    "mean": 0.3257116666666667,
+    "std": 0.2580500202730653
+  },
+  "axle_load_tons": {
+    "mean": 22.4855,
+    "std": 2.862124876308175
+  },
+  "acoustic_emission_db": {
+    "mean": 73.15378333333332,
+    "std": 6.744089202743859
+  },
+  "track_curvature_rad": {
+    "mean": 0.013003183333333333,
+    "std": 0.006913319306840665
+  },
+  "chainage_numeric_km": {
+    "mean": 183.225,
+    "std": 102.92199715080669
+  }
+}

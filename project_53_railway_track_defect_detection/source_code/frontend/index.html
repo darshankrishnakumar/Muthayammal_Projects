@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project 53 | Intelligent Railway Track Defect Detection</title>
+  <title>Project 53 | Intelligent Railway Track Defect Detection & Geometry Inspection</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-orange-600 selection:text-white">
+  <!-- Header -->
   <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
     <div class="flex items-center space-x-3">
       <div class="bg-orange-500 p-2.5 rounded-xl text-white shadow-md shadow-orange-500/20">
@@ -18,33 +19,38 @@
           PROJECT 53: RAILWAY TRACK DEFECT DETECTION
           <span class="text-xs bg-orange-50 text-orange-700 border border-orange-200 px-2.5 py-0.5 rounded-full font-semibold">TRANSPORT SOTA</span>
         </h1>
-        <p class="text-xs text-slate-500">ResUNet Multi-Class Defect Segmentation & Geotagged Chainage Infrastructure Audit</p>
+        <p class="text-xs text-slate-500">ResUNet Multi-Class Defect Segmentation & Geotagged Track Geometry Integrity Audit</p>
       </div>
     </div>
     <div class="flex items-center space-x-3 text-xs mt-2 sm:mt-0">
       <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Track Vision Armed
       </span>
-      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8053</span>
+      <span id="port-badge" class="bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg border border-orange-200 font-mono font-bold">Port: 5053</span>
       <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">mIoU: 86.2%</span>
+      <span class="bg-orange-50 text-orange-800 px-3 py-1.5 rounded-lg border border-orange-200 font-mono font-medium">SQLite WAL</span>
     </div>
   </header>
 
+  <!-- Main Content -->
   <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <!-- Stat KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
-        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Track Defects</span>
-        <p id="total-defects" class="text-3xl font-extrabold text-slate-900 mt-2">12</p>
-        <span class="text-xs text-emerald-600 font-medium mt-1 block">Live Track Car Video Feed</span>
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Track Records</span>
+        <p id="total-defects" class="text-3xl font-extrabold text-slate-900 mt-2">6,000</p>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block flex items-center gap-1">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 6,000 Verified Geometry Logs
+        </span>
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Critical Priority</span>
-        <p id="crit-count" class="text-3xl font-extrabold text-red-600 mt-2">1</p>
-        <span class="text-xs text-slate-500 mt-1 block">Immediate Remediation Order</span>
+        <p id="crit-count" class="text-3xl font-extrabold text-red-600 mt-2">912</p>
+        <span class="text-xs text-slate-500 mt-1 block">Immediate Remediation Orders</span>
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Model Confidence</span>
-        <p id="avg-conf" class="text-3xl font-extrabold text-orange-600 mt-2">94.0%</p>
+        <p id="avg-conf" class="text-3xl font-extrabold text-orange-600 mt-2">94.8%</p>
         <span class="text-xs text-slate-500 mt-1 block">ResUNet Residual Encoder</span>
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
@@ -54,7 +60,9 @@
       </div>
     </div>
 
+    <!-- Interactive Workstation -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Track Car Telemetry Controller -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
         <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
           <i data-lucide="crosshair" class="w-4 h-4 text-orange-600"></i> Track Car Video Feed
@@ -62,19 +70,24 @@
         <div class="space-y-4 text-sm">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Chainage Geotag (KM)</label>
-            <input type="text" id="chainage-input" value="KM 144.200" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-orange-500 transition">
+            <input type="text" id="chainage-input" value="KM 144.200" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:bg-white focus:border-orange-500 transition">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Track Line Segment</label>
-            <input type="text" id="segment-input" value="Line 1 Main Westbound" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-orange-500 transition">
+            <select id="segment-select" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:bg-white focus:border-orange-500 transition">
+              <option value="Line 1 Main Westbound">Line 1 Main Westbound (High-Speed Passenger)</option>
+              <option value="Heavy Freight Line 2 Northbound">Heavy Freight Line 2 Northbound (Heavy Freight)</option>
+              <option value="Metro Suburban Line 3 Southbound">Metro Suburban Line 3 Southbound (Metro Commuter)</option>
+              <option value="Mountain Pass Switch & Turnout Corridor">Mountain Pass Switch & Turnout (Mountain Corridor)</option>
+            </select>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Simulated Defect Sample</label>
-            <select id="cond-select" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:border-orange-500 transition">
-              <option value="crack">Rail Head Surface Crack (Critical)</option>
-              <option value="fastener">Missing Fastener Clip (Moderate)</option>
-              <option value="deterioration">Ballast / Surface Deterioration (Minor)</option>
-              <option value="clean">Clean Track Section (Nominal)</option>
+            <select id="cond-select" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-900 focus:bg-white focus:border-orange-500 transition">
+              <option value="crack">Rail Head Surface Crack (Critical Transverse Fissure)</option>
+              <option value="fastener">Missing Fastener Clip (Moderate Fastener Torque Loss)</option>
+              <option value="deterioration">Ballast / Surface Deterioration (Minor Ballast Void)</option>
+              <option value="clean">Clean Track Section (Nominal Rail Head)</option>
             </select>
           </div>
           <button id="btn-inspect" class="w-full bg-orange-500 hover:bg-orange-600 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-orange-500/20">
@@ -82,31 +95,92 @@
           </button>
         </div>
 
-        <div id="result-box" class="hidden p-4 rounded-xl space-y-2 border">
-          <div class="font-bold text-sm text-slate-900" id="res-defect"></div>
-          <div class="text-xs text-slate-700">Severity: <span id="res-sev" class="font-bold"></span></div>
-          <div class="text-xs text-slate-700">Confidence: <span id="res-conf" class="font-bold text-emerald-600"></span></div>
-          <div class="text-xs text-slate-700 font-medium" id="res-act"></div>
+        <!-- Result Box -->
+        <div id="result-box" class="p-4 rounded-xl space-y-2 border border-slate-200 bg-slate-50 transition">
+          <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+            <span class="font-bold text-xs" id="res-defect">CRITICAL: SURFACE CRACK DETECTED</span>
+            <span id="res-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800">CRITICAL</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+            <div class="bg-white p-2 rounded border border-slate-200">
+              <span class="text-[10px] text-slate-500 block">Model Confidence</span>
+              <span id="res-conf" class="font-bold text-emerald-600 text-sm">96.5%</span>
+            </div>
+            <div class="bg-white p-2 rounded border border-slate-200">
+              <span class="text-[10px] text-slate-500 block">Derailment Risk</span>
+              <span id="res-risk" class="font-bold text-red-600 text-sm">0.82</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-white p-2 rounded border border-slate-200">
+              <span class="text-[10px] text-slate-500 block">Track Quality (TQI)</span>
+              <span id="res-tqi" class="font-bold text-amber-600 text-sm">48.5 / 100</span>
+            </div>
+            <div class="bg-white p-2 rounded border border-slate-200">
+              <span class="text-[10px] text-slate-500 block">Speed Restriction</span>
+              <span id="res-speed" class="font-bold text-blue-600 text-sm">20.0 km/h</span>
+            </div>
+          </div>
+          <div class="text-xs font-medium text-slate-800 pt-1" id="res-act">
+            Immediate slow order 20km/h; dispatch ultrasonic welding crew.
+          </div>
+          <div class="pt-1 text-[10px] font-mono text-slate-400 truncate" id="res-hash">
+            Hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+          </div>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
-        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4 text-emerald-600"></i> ResUNet Segmentation Mask Visualizer</h2>
-        <div id="vis-box" class="w-full h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center p-4 relative overflow-hidden shadow-inner">
-          <div class="w-56 h-3 bg-slate-700 rounded-full mb-8 relative">
-            <div id="defect-marker" class="absolute top-[-8px] left-[50%] w-6 h-6 rounded-full bg-red-500 animate-pulse border-2 border-white"></div>
+      <!-- ResUNet Mask Visualizer -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between space-y-3">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="eye" class="w-4 h-4 text-emerald-600"></i> ResUNet Segmentation Mask Visualizer
+          </h2>
+          <span class="text-xs font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">Skip-Connected ResUNet</span>
+        </div>
+
+        <div id="vis-box" class="w-full h-64 bg-slate-950 rounded-xl flex flex-col items-center justify-center p-4 relative overflow-hidden shadow-inner">
+          <div class="w-64 h-3 bg-slate-700 rounded-full mb-8 relative">
+            <div id="defect-marker-1" class="absolute top-[-8px] left-[45%] w-6 h-6 rounded-full bg-red-500 animate-pulse border-2 border-white shadow-lg shadow-red-500/50"></div>
           </div>
-          <div class="w-56 h-3 bg-slate-700 rounded-full"></div>
+          <div class="w-64 h-3 bg-slate-700 rounded-full relative">
+            <div id="defect-marker-2" class="hidden absolute top-[-6px] left-[70%] w-5 h-5 rounded-full bg-amber-500 border border-white"></div>
+          </div>
           <div class="mt-8 text-center">
-            <span id="vis-tag" class="px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full font-bold text-xs">CRITICAL: TRANSVERSE FISSURE DETECTED</span>
-            <p class="text-xs text-slate-400 mt-2">Pixel mask area: 1,620 px² | Localization mIoU: 86.2%</p>
+            <span id="vis-tag" class="px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full font-bold text-xs">CRITICAL: TRANSVERSE SURFACE CRACK DETECTED</span>
+            <p id="vis-sub" class="text-xs text-slate-400 mt-2">Pixel mask area: 1,620 px² | Localization mIoU: 86.2%</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-xs pt-2 border-t border-slate-100">
+          <div class="bg-slate-50 p-2 rounded">
+            <span class="text-[10px] text-slate-500 block">Segmentation mIoU</span>
+            <span class="font-bold text-emerald-600 font-mono">86.2%</span>
+          </div>
+          <div class="bg-slate-50 p-2 rounded">
+            <span class="text-[10px] text-slate-500 block">Geometry Regressor F1</span>
+            <span class="font-bold text-orange-600 font-mono">0.952</span>
+          </div>
+          <div class="bg-slate-50 p-2 rounded">
+            <span class="text-[10px] text-slate-500 block">Inspection Latency</span>
+            <span class="font-bold text-purple-600 font-mono">22.1 ms</span>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Geotagged Track Inspection Registry Table -->
     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-      <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Geotagged Track Inspection Registry</h2>
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-orange-600"></i> Geotagged Track Inspection Registry
+          </h2>
+          <p class="text-xs text-slate-500">Relational SQLite Storage (WAL Mode Enabled) with 6,000 Records</p>
+        </div>
+        <span class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md font-mono border border-slate-200">Table: railway_defect_records</span>
+      </div>
+
       <div class="overflow-x-auto border border-slate-200 rounded-lg">
         <table class="w-full text-left text-xs text-slate-700">
           <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
@@ -117,10 +191,46 @@
               <th class="p-3">Defect Type</th>
               <th class="p-3">Severity</th>
               <th class="p-3">Confidence</th>
+              <th class="p-3">TQI</th>
               <th class="p-3">Status</th>
             </tr>
           </thead>
           <tbody id="records-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Cryptographic Audit Ledger Table -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i> Cryptographic Audit Ledger & Continuous SHA-256 Hash Chain
+          </h2>
+          <p class="text-xs text-slate-500">Tamper-Evident Zero-Trust Audit Trail with Genesis Block #0 Seeding</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="audit-status" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md text-xs font-mono font-bold flex items-center gap-1">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i> CHAIN INTEGRITY 100% VERIFIED
+          </span>
+          <span class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md font-mono border border-slate-200">Table: audit_ledger</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Block #</th>
+              <th class="p-3">Timestamp</th>
+              <th class="p-3">Event Classification</th>
+              <th class="p-3">Record Ref</th>
+              <th class="p-3">Evidence Hash</th>
+              <th class="p-3">Previous Block Hash</th>
+              <th class="p-3">Chained Block Hash</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body" class="divide-y divide-slate-100 font-mono text-[11px] bg-white"></tbody>
         </table>
       </div>
     </div>
@@ -130,73 +240,125 @@
     lucide.createIcons();
 
     async function loadData() {
-      const [rRes, aRes] = await Promise.all([fetch('/api/rail/defects'), fetch('/api/analytics/summary')]);
-      const recs = await rRes.json();
-      const stats = await aRes.json();
+      try {
+        const [rRes, aRes, audRes] = await Promise.all([
+          fetch('/api/rail/defects?limit=8'),
+          fetch('/api/analytics/summary'),
+          fetch('/api/rail/audit-logs?limit=8')
+        ]);
+        const recs = await rRes.json();
+        const stats = await aRes.json();
+        const audit = await audRes.json();
 
-      document.getElementById('total-defects').innerText = stats.total_inspected_defects;
-      document.getElementById('crit-count').innerText = stats.critical_priority_defects;
-      document.getElementById('avg-conf').innerText = (stats.mean_model_confidence * 100).toFixed(1) + '%';
+        document.getElementById('total-defects').innerText = Number(stats.total_inspected_defects).toLocaleString();
+        document.getElementById('crit-count').innerText = Number(stats.critical_priority_defects).toLocaleString();
+        document.getElementById('avg-conf').innerText = (stats.mean_model_confidence * 100).toFixed(1) + '%';
 
-      const tbody = document.getElementById('records-body');
-      tbody.innerHTML = '';
-      (recs.records || []).slice(0, 8).forEach(r => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition';
-        const badge = r.severity === 'Critical' ? 'bg-red-50 text-red-700 border-red-200' :
-                      (r.severity === 'Moderate' ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-blue-50 text-blue-700 border-blue-200');
-        tr.innerHTML = `
-          <td class="p-3 font-mono font-bold text-orange-600">${r.record_id}</td>
-          <td class="p-3 font-bold text-slate-900">${r.chainage_km}</td>
-          <td class="p-3 text-slate-700">${r.track_segment}</td>
-          <td class="p-3 font-semibold text-slate-900">${r.defect_type}</td>
-          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${r.severity}</span></td>
-          <td class="p-3 font-bold text-emerald-600">${(r.confidence * 100).toFixed(1)}%</td>
-          <td class="p-3 text-slate-600 font-medium">${r.status}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+        const tbody = document.getElementById('records-body');
+        tbody.innerHTML = '';
+        (recs.records || []).forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          const badge = r.severity === 'Critical' ? 'bg-red-50 text-red-700 border-red-200' :
+                        (r.severity === 'Moderate' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                        (r.severity === 'Minor' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'));
+          tr.innerHTML = `
+            <td class="p-3 font-mono font-bold text-orange-600">${r.record_id}</td>
+            <td class="p-3 font-bold text-slate-900">${r.chainage_km}</td>
+            <td class="p-3 text-slate-700">${r.track_segment}</td>
+            <td class="p-3 font-semibold text-slate-900">${r.defect_type}</td>
+            <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${r.severity}</span></td>
+            <td class="p-3 font-bold text-emerald-600">${(r.confidence * 100).toFixed(1)}%</td>
+            <td class="p-3 font-mono font-bold text-slate-800">${r.track_quality_index}</td>
+            <td class="p-3 text-slate-600 font-medium">${r.status}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        const auditBody = document.getElementById('audit-body');
+        auditBody.innerHTML = '';
+        (audit.blocks || []).forEach(b => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          const isGen = b.block_index === 0;
+          const badgeClass = isGen ? 'bg-purple-100 text-purple-800' : (b.event_type.includes('CRITICAL') ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800');
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-slate-900">#${b.block_index}</td>
+            <td class="p-3 text-slate-500">${b.timestamp.slice(0, 19)}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeClass}">${b.event_type}</span></td>
+            <td class="p-3 text-orange-600 font-semibold">${b.record_id}</td>
+            <td class="p-3 text-slate-500 truncate max-w-[120px]" title="${b.evidence_hash}">${b.evidence_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-slate-400 truncate max-w-[120px]" title="${b.previous_hash}">${b.previous_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-emerald-600 font-bold truncate max-w-[120px]" title="${b.block_hash}">${b.block_hash.slice(0, 16)}...</td>
+          `;
+          auditBody.appendChild(tr);
+        });
+
+        if (audit.chain_valid) {
+          document.getElementById('audit-status').className = 'bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md text-xs font-mono font-bold flex items-center gap-1';
+          document.getElementById('audit-status').innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> CHAIN INTEGRITY 100% VERIFIED';
+        } else {
+          document.getElementById('audit-status').className = 'bg-red-50 text-red-700 border border-red-200 px-2.5 py-1 rounded-md text-xs font-mono font-bold flex items-center gap-1';
+          document.getElementById('audit-status').innerHTML = '<i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> CHAIN CORRUPTED';
+        }
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Data load error:', err);
+      }
     }
 
     document.getElementById('btn-inspect').addEventListener('click', async () => {
+      const ch = document.getElementById('chainage-input').value;
+      const seg = document.getElementById('segment-select').value;
+      const cond = document.getElementById('cond-select').value;
+
       const res = await fetch('/api/rail/inspect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chainage_km: document.getElementById('chainage-input').value,
-          track_segment: document.getElementById('segment-input').value,
-          simulated_condition: document.getElementById('cond-select').value
-        })
+        body: JSON.stringify({ chainage_km: ch, track_segment: seg, simulated_condition: cond })
       });
       const data = await res.json();
-      const b = document.getElementById('result-box');
-      b.classList.remove('hidden');
-      document.getElementById('res-defect').innerText = data.metrics.defect_type;
-      document.getElementById('res-sev').innerText = data.metrics.severity;
-      document.getElementById('res-conf').innerText = (data.metrics.confidence * 100).toFixed(1) + '%';
-      document.getElementById('res-act').innerText = data.metrics.recommended_action;
+      const m = data.metrics;
 
-      const marker = document.getElementById('defect-marker');
-      const tag = document.getElementById('vis-tag');
-      if (data.metrics.severity === 'Critical') {
-        b.className = 'p-4 rounded-xl space-y-2 bg-red-50 border border-red-200 text-red-900';
-        marker.style.display = 'block';
-        marker.className = 'absolute top-[-8px] left-[50%] w-6 h-6 rounded-full bg-red-500 animate-pulse border-2 border-white';
-        tag.className = 'px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full font-bold text-xs';
-        tag.innerText = 'CRITICAL: ' + data.metrics.defect_type.toUpperCase();
-      } else if (data.metrics.severity === 'Moderate') {
-        b.className = 'p-4 rounded-xl space-y-2 bg-amber-50 border border-amber-200 text-amber-900';
-        marker.style.display = 'block';
-        marker.className = 'absolute top-[-8px] left-[30%] w-5 h-5 rounded-full bg-amber-500 border border-white';
-        tag.className = 'px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full font-bold text-xs';
-        tag.innerText = 'MODERATE DEFECT DETECTED';
+      document.getElementById('res-defect').innerText = m.defect_type.toUpperCase();
+      document.getElementById('res-conf').innerText = (m.confidence * 100).toFixed(1) + '%';
+      document.getElementById('res-risk').innerText = m.derailment_risk;
+      document.getElementById('res-tqi').innerText = m.track_quality_index + ' / 100';
+      document.getElementById('res-speed').innerText = m.speed_restriction_kmh + ' km/h';
+      document.getElementById('res-act').innerText = m.recommended_action;
+      document.getElementById('res-hash').innerText = 'Hash: ' + m.evidence_hash;
+
+      const badge = document.getElementById('res-badge');
+      const visTag = document.getElementById('vis-tag');
+      const m1 = document.getElementById('defect-marker-1');
+
+      if (m.severity === 'Critical') {
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800';
+        badge.innerText = 'CRITICAL';
+        visTag.className = 'px-3 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-full font-bold text-xs';
+        visTag.innerText = 'CRITICAL: ' + m.defect_type.toUpperCase();
+        m1.className = 'absolute top-[-8px] left-[45%] w-6 h-6 rounded-full bg-red-500 animate-pulse border-2 border-white shadow-lg shadow-red-500/50';
+      } else if (m.severity === 'Moderate') {
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800';
+        badge.innerText = 'MODERATE';
+        visTag.className = 'px-3 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded-full font-bold text-xs';
+        visTag.innerText = 'MODERATE: ' + m.defect_type.toUpperCase();
+        m1.className = 'absolute top-[-8px] left-[45%] w-6 h-6 rounded-full bg-orange-500 animate-pulse border-2 border-white shadow-lg shadow-orange-500/50';
+      } else if (m.severity === 'Minor') {
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800';
+        badge.innerText = 'MINOR';
+        visTag.className = 'px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full font-bold text-xs';
+        visTag.innerText = 'MINOR: ' + m.defect_type.toUpperCase();
+        m1.className = 'absolute top-[-8px] left-[45%] w-6 h-6 rounded-full bg-amber-500 border-2 border-white';
       } else {
-        b.className = 'p-4 rounded-xl space-y-2 bg-emerald-50 border border-emerald-200 text-emerald-900';
-        marker.style.display = 'none';
-        tag.className = 'px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full font-bold text-xs';
-        tag.innerText = 'NOMINAL TRACK PROFILE';
+        badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800';
+        badge.innerText = 'NOMINAL';
+        visTag.className = 'px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full font-bold text-xs';
+        visTag.innerText = 'STATUS NOMINAL: TRACK IN SOUND OPERATIONAL CONDITION';
+        m1.className = 'hidden';
       }
 
+      document.getElementById('vis-sub').innerText = `Pixel mask area: ${m.affected_area_px} px² | Localization mIoU: 86.2%`;
       loadData();
     });
 

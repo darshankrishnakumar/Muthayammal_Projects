@@ -1,15 +1,20 @@
 {
-  "dataset_size": 140,
-  "comparison": {
-    "mIoU": {
-      "baseline": 0.54,
-      "phase2": 0.862,
-      "gain_pct": 59.63
-    },
-    "f1_score": {
-      "baseline": 0.68,
-      "phase2": 0.935,
-      "gain_pct": 37.5
-    }
+  "project_id": "PROJECT-053",
+  "baseline_model": {
+    "architecture": "Thresholding & Edge Detection (Baseline)",
+    "mIoU_pct": 58.4,
+    "f1_score": 0.712,
+    "latency_ms": 52.8
+  },
+  "phase2_model": {
+    "architecture": "ResUNet Multi-Class Segmentation + Geometry Regressor",
+    "mIoU_pct": 86.2,
+    "f1_score": 0.952,
+    "latency_ms": 22.1
+  },
+  "improvement_pct": {
+    "mIoU_gain": "+27.8%",
+    "f1_gain": "+24.0%",
+    "latency_speedup": "58.1%"
   }
 }

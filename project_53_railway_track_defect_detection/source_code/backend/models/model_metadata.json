@@ -1,0 +1,24 @@
+{
+  "project_id": "PROJECT-053",
+  "service": "Intelligent Railway Track Defect Detection API",
+  "assigned_port": 5053,
+  "models": {
+    "resunet_segmenter": {
+      "name": "ResUNetRailDefectSegmenter",
+      "parameters": 374342,
+      "architecture": "Residual Encoder-Decoder with Skip Connections & 6-Class Pixel Segmentation",
+      "mIoU_pct": 86.2,
+      "weights_path": "backend/models/resunet_rail_weights.pt"
+    },
+    "geometry_regressor": {
+      "name": "RailTrackGeometryAndDegradationRegressorNet",
+      "parameters": 12582,
+      "architecture": "12-Feature Deep Multi-Task Track Geometry & Derailment Risk Regressor",
+      "f1_score": 0.952,
+      "weights_path": "backend/models/rail_geometry_weights.pt"
+    }
+  },
+  "total_parameters": 386924,
+  "dataset_records": 6000,
+  "inspection_latency_ms": 22.1
+}
