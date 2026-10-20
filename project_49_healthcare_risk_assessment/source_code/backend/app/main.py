@@ -24,7 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Patient Risk endpoints + Health-Risk alias endpoints for seamless UI/API parity
 app.include_router(patients.router, prefix="/api/patients", tags=["Patient Risk Profiles"])
+app.include_router(patients.router, prefix="/api/health-risk", tags=["Health Risk API Alias"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Clinical Analytics"])
 app.include_router(health.router, prefix="/api/health", tags=["System Health"])
 
@@ -45,4 +47,4 @@ FRONTEND_INDEX = os.path.join(os.path.dirname(__file__), "../../frontend/index.h
 async def root():
     if os.path.exists(FRONTEND_INDEX):
         return FileResponse(FRONTEND_INDEX)
-    return {"message": "Project 49 API Active"}
+    return {"message": "Project 49 API Active", "port": settings.PORT}

@@ -1,0 +1,59 @@
+{
+  "project": "PROJECT-049",
+  "name": "Personalized Healthcare Risk Assessment Platform",
+  "port": 5049,
+  "risk_model": {
+    "architecture": "LongitudinalHealthRiskNet",
+    "parameters": 3044,
+    "features": [
+      "age",
+      "systolic_bp",
+      "diastolic_bp",
+      "hba1c",
+      "fasting_glucose",
+      "total_cholesterol",
+      "hdl_cholesterol",
+      "ldl_cholesterol",
+      "egfr",
+      "bmi"
+    ],
+    "targets": [
+      "cardiovascular_risk_pct",
+      "type2_diabetes_risk_pct",
+      "hypertension_risk_pct",
+      "ckd_risk_pct"
+    ],
+    "val_cvd_mae": 1.27,
+    "val_t2d_mae": 1.87,
+    "val_htn_mae": 1.11,
+    "val_ckd_mae": 2.53,
+    "val_r2": 0.9929,
+    "weights_path": "backend/models/healthcare_risk_net_weights.pt"
+  },
+  "comorbidity_model": {
+    "architecture": "ClinicalComorbidityForecastNet",
+    "parameters": 18308,
+    "targets": [
+      "ten_year_mortality_risk_pct",
+      "hospital_readmission_risk_pct",
+      "polypharmacy_complexity_index",
+      "renal_progression_hazard_pct"
+    ],
+    "val_mortality_mae": 1.16,
+    "val_readmission_mae": 1.02,
+    "val_polypharmacy_mae": 0.86,
+    "val_renal_hazard_mae": 0.94,
+    "val_r2": 0.9973,
+    "weights_path": "backend/models/comorbidity_regressor_weights.pt"
+  },
+  "dataset": {
+    "csv_path": "data/patient_telemetry_6000.csv",
+    "total_records": 6000,
+    "cohorts": [
+      "DIABETIC_METABOLIC",
+      "HYPERTENSIVE_CVD",
+      "RENAL_CKD",
+      "NORMOTENSIVE_CONTROL"
+    ]
+  }
+}

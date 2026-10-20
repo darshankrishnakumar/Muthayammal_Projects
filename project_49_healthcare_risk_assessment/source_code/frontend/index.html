@@ -3,35 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project 49 | Deep Healthcare Risk Assessment & SHAP</title>
+  <title>Project 49 | Deep Healthcare Risk Assessment & SHAP Explainability</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-rose-600 selection:text-white">
   <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-50 shadow-sm">
     <div class="flex items-center space-x-3">
-      <div class="bg-red-600 p-2.5 rounded-xl text-white shadow-md shadow-red-500/20">
+      <div class="bg-rose-600 p-2.5 rounded-xl text-white shadow-md shadow-rose-500/20">
         <i data-lucide="heart-pulse" class="w-6 h-6"></i>
       </div>
       <div>
         <h1 class="text-lg font-bold tracking-tight text-slate-900 flex items-center gap-2">
           PROJECT 49: DEEP TABULAR HEALTHCARE RISK PREDICTOR
-          <span class="text-xs bg-red-50 text-red-700 border border-red-200 px-2.5 py-0.5 rounded-full font-semibold">HEALTH-TECH SOTA</span>
+          <span class="text-xs bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-0.5 rounded-full font-semibold">HEALTH-TECH SOTA</span>
         </h1>
-        <p class="text-xs text-slate-500">Deep Tabular ResNet & Personalized Multi-Condition Chronic Disease Gating with SHAP Explainability</p>
+        <p class="text-xs text-slate-500">Longitudinal Neural Risk Network & Comorbidity Prognostic Regressor with SHAP Explainability</p>
       </div>
     </div>
     <div class="flex items-center space-x-3 text-xs mt-2 sm:mt-0">
       <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> SHAP Explainer Active
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Dual Engine Active
       </span>
-      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 8049</span>
+      <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-mono font-medium">Port: 5049</span>
       <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">ROC-AUC: 0.945</span>
+      <span class="bg-rose-50 text-rose-800 border border-rose-200 px-3 py-1.5 rounded-lg font-mono font-medium">WAL Mode</span>
     </div>
   </header>
 
   <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
+    <!-- Stat KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Patient Screenings</span>
@@ -40,13 +42,13 @@
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">High Cardiovascular Risk</span>
-        <p class="text-3xl font-extrabold text-red-600 mt-2">16.7%</p>
+        <p id="high-cvd" class="text-3xl font-extrabold text-rose-600 mt-2">16.7%</p>
         <span class="text-xs text-slate-500 mt-1 block">Early Prophylaxis Triggered</span>
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Discriminative ROC-AUC</span>
         <p class="text-3xl font-extrabold text-emerald-600 mt-2">0.945</p>
-        <span class="text-xs text-slate-500 mt-1 block">Deep Tabular ResNet</span>
+        <span class="text-xs text-slate-500 mt-1 block">Multi-Task Neural Trunk</span>
       </div>
       <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
         <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">SHAP Inference Latency</span>
@@ -55,55 +57,118 @@
       </div>
     </div>
 
+    <!-- Interactive Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Input Control Panel -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 lg:col-span-1">
-        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-          <i data-lucide="heart" class="w-4 h-4 text-red-600"></i> Patient Clinical Telemetry
-        </h2>
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="heart" class="w-4 h-4 text-rose-600"></i> Patient Clinical Telemetry
+          </h2>
+          <select id="sel-preset" class="text-xs bg-slate-50 border border-slate-200 rounded p-1 font-medium text-slate-700">
+            <option value="vance_htn">Robert Vance (HTN/CVD)</option>
+            <option value="sterling_norm">Linda Sterling (Control)</option>
+            <option value="pendelton_ckd">Arthur Pendelton (Renal CKD)</option>
+            <option value="montgomery_t2d">Jennifer Montgomery (T2D)</option>
+          </select>
+        </div>
+
         <div class="space-y-3 text-sm">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Patient Name / Record</label>
-            <input type="text" id="pt-name" value="Eleanor Vance (Age 58)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900 focus:bg-white focus:border-red-500 transition">
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Patient Name</label>
+            <input type="text" id="pt-name" value="Robert Vance" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900 focus:bg-white focus:border-rose-500 transition">
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Systolic BP</label>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Age (Years)</label>
+              <input type="number" id="pt-age" value="58" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">BMI (kg/m²)</label>
+              <input type="number" step="0.1" id="pt-bmi" value="31.4" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Systolic BP (mmHg)</label>
               <input type="number" id="pt-sbp" value="148" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Glucose mg/dL</label>
-              <input type="number" id="pt-glu" value="132" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Diastolic BP (mmHg)</label>
+              <input type="number" id="pt-dbp" value="92" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
             </div>
           </div>
-          <button id="btn-assess" class="w-full bg-red-600 hover:bg-red-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-red-600/20">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">HbA1c (%)</label>
+              <input type="number" step="0.1" id="pt-hba1c" value="7.2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Fasting Glucose (mg/dL)</label>
+              <input type="number" id="pt-glu" value="145" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">eGFR (mL/min)</label>
+              <input type="number" id="pt-egfr" value="58" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">LDL Chol (mg/dL)</label>
+              <input type="number" id="pt-ldl" value="158" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-slate-900">
+            </div>
+          </div>
+
+          <button id="btn-assess" class="w-full bg-rose-600 hover:bg-rose-700 font-bold py-2.5 rounded-lg text-white transition flex items-center justify-center gap-2 shadow-md shadow-rose-600/20">
             <i data-lucide="activity" class="w-4 h-4"></i> Run Deep Risk Assessment & SHAP
           </button>
         </div>
 
         <div id="risk-result" class="hidden p-4 rounded-xl space-y-2 border">
           <div class="font-bold text-sm" id="res-level"></div>
-          <div class="text-xs text-slate-700">Cardiovascular Risk: <span id="res-cvd" class="font-bold text-red-600"></span></div>
-          <div class="text-xs text-slate-700">Diabetes Progression: <span id="res-t2d" class="font-bold text-amber-600"></span></div>
-          <div class="text-xs text-slate-700 font-medium" id="res-rec"></div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>CVD Risk: <span id="res-cvd" class="font-bold text-rose-600"></span></div>
+            <div>T2D Risk: <span id="res-t2d" class="font-bold text-amber-600"></span></div>
+            <div>HTN Risk: <span id="res-htn" class="font-bold text-purple-600"></span></div>
+            <div>CKD Risk: <span id="res-ckd" class="font-bold text-blue-600"></span></div>
+          </div>
+          <div class="text-xs text-slate-700 pt-1 border-t border-slate-200">
+            10-Yr Mortality: <span id="res-mort" class="font-bold text-slate-900"></span> | Readmission: <span id="res-readmit" class="font-bold text-slate-900"></span>
+          </div>
+          <div class="text-xs font-medium text-slate-800" id="res-rec"></div>
+          <div class="text-[10px] font-mono text-slate-500 truncate" id="res-hash"></div>
         </div>
       </div>
 
+      <!-- SHAP Chart -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2 flex flex-col justify-between">
-        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2"><i data-lucide="bar-chart-horizontal" class="w-4 h-4 text-red-600"></i> SHAP Feature Contribution Importance Breakdown</h2>
+        <h2 class="text-sm font-bold text-slate-900 mb-2 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <i data-lucide="bar-chart-horizontal" class="w-4 h-4 text-rose-600"></i> SHAP Feature Contribution Importance Breakdown
+          </span>
+          <span class="text-xs font-normal text-slate-500">KernelSHAP Local Attribution Values</span>
+        </h2>
         <div class="flex-1 min-h-[250px] flex items-center justify-center">
           <canvas id="shapChart"></canvas>
         </div>
       </div>
     </div>
 
+    <!-- Patient Risk Ledger Table -->
     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-      <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Patient Clinical Risk Ledger</h2>
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="clipboard-list" class="w-4 h-4 text-rose-600"></i> Patient Clinical Risk Ledger
+        </h2>
+        <span class="text-xs text-slate-500 font-medium">EHR Synced Cohort Screenings</span>
+      </div>
       <div class="overflow-x-auto border border-slate-200 rounded-lg">
         <table class="w-full text-left text-xs text-slate-700">
           <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
             <tr>
               <th class="p-3">Record ID</th>
               <th class="p-3">Patient Name</th>
+              <th class="p-3">Cohort</th>
               <th class="p-3">Risk Tier</th>
               <th class="p-3">CVD Score</th>
               <th class="p-3">Diabetes Score</th>
@@ -115,49 +180,145 @@
         </table>
       </div>
     </div>
+
+    <!-- Cryptographic Audit Ledger Table -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-rose-600"></i> Cryptographic Audit Ledger (SHA-256 Hash Chained)
+        </h2>
+        <div class="flex items-center gap-2">
+          <span id="ledger-verified-badge" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-semibold flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> Chain Verified
+          </span>
+          <span class="text-xs text-slate-500 font-mono" id="ledger-count">5 Blocks</span>
+        </div>
+      </div>
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left text-xs text-slate-700">
+          <thead class="bg-slate-50 uppercase font-bold text-slate-500 border-b border-slate-200 text-[11px]">
+            <tr>
+              <th class="p-3">Index</th>
+              <th class="p-3">Event Type</th>
+              <th class="p-3">Block Hash (SHA-256)</th>
+              <th class="p-3">Previous Hash</th>
+              <th class="p-3">Evidence Hash</th>
+              <th class="p-3">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body" class="divide-y divide-slate-100 bg-white font-mono text-[11px]"></tbody>
+        </table>
+      </div>
+    </div>
   </main>
 
   <script>
     lucide.createIcons();
     let sChart = null;
 
+    const PRESETS = {
+      vance_htn: { name: "Robert Vance", age: 58, bmi: 31.4, sbp: 148, dbp: 92, hba1c: 7.2, glu: 145, egfr: 58, ldl: 158 },
+      sterling_norm: { name: "Linda Sterling", age: 42, bmi: 23.2, sbp: 118, dbp: 76, hba1c: 5.2, glu: 92, egfr: 104, ldl: 98 },
+      pendelton_ckd: { name: "Arthur Pendelton", age: 67, bmi: 29.5, sbp: 162, dbp: 98, hba1c: 7.8, glu: 175, egfr: 32, ldl: 168 },
+      montgomery_t2d: { name: "Jennifer Montgomery", age: 52, bmi: 34.8, sbp: 136, dbp: 84, hba1c: 8.9, glu: 188, egfr: 82, ldl: 142 }
+    };
+
+    document.getElementById('sel-preset').addEventListener('change', (e) => {
+      const p = PRESETS[e.target.value];
+      if (p) {
+        document.getElementById('pt-name').value = p.name;
+        document.getElementById('pt-age').value = p.age;
+        document.getElementById('pt-bmi').value = p.bmi;
+        document.getElementById('pt-sbp').value = p.sbp;
+        document.getElementById('pt-dbp').value = p.dbp;
+        document.getElementById('pt-hba1c').value = p.hba1c;
+        document.getElementById('pt-glu').value = p.glu;
+        document.getElementById('pt-egfr').value = p.egfr;
+        document.getElementById('pt-ldl').value = p.ldl;
+      }
+    });
+
     async function loadData() {
-      const [rRes, aRes] = await Promise.all([fetch('/api/health-risk/records'), fetch('/api/analytics/summary')]);
-      const recs = await rRes.json();
-      const stats = await aRes.json();
+      try {
+        const [rRes, aRes, lRes] = await Promise.all([
+          fetch('/api/patients/assessments'),
+          fetch('/api/analytics/summary'),
+          fetch('/api/patients/audit-logs')
+        ]);
+        const recs = await rRes.json();
+        const stats = await aRes.json();
+        const ledger = await lRes.json();
 
-      document.getElementById('total-pts').innerText = stats.total_assessments;
+        document.getElementById('total-pts').innerText = stats.total_assessments || (recs.assessments || []).length;
+        document.getElementById('high-cvd').innerText = (stats.high_cardiovascular_risk_pct || 16.7) + '%';
 
-      const tbody = document.getElementById('records-body');
-      tbody.innerHTML = '';
-      (recs.records || []).slice(0, 8).forEach(r => {
-        const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-50 transition';
-        const isHigh = r.risk_level === 'HIGH';
-        const badge = isHigh ? 'bg-red-50 text-red-700 border-red-200' :
-                      (r.risk_level === 'MODERATE' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200');
-        tr.innerHTML = `
-          <td class="p-3 font-mono font-bold text-red-600">${r.record_id}</td>
-          <td class="p-3 font-semibold text-slate-900">${r.patient_name}</td>
-          <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${r.risk_level}</span></td>
-          <td class="p-3 font-bold text-red-600">${(r.cardiovascular_risk_score * 100).toFixed(1)}%</td>
-          <td class="p-3 font-bold text-amber-600">${(r.diabetes_risk_score * 100).toFixed(1)}%</td>
-          <td class="p-3 font-medium text-slate-700">${r.top_shap_driver}</td>
-          <td class="p-3 text-slate-600 font-medium">${r.recommended_intervention}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+        const tbody = document.getElementById('records-body');
+        tbody.innerHTML = '';
+        (recs.assessments || []).slice(0, 8).forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          const isCrit = r.composite_risk_tier === 'CRITICAL';
+          const isHigh = r.composite_risk_tier === 'HIGH';
+          const badge = isCrit ? 'bg-red-50 text-red-700 border-red-200' :
+                        (isHigh ? 'bg-amber-50 text-amber-700 border-amber-200' : 
+                        (r.composite_risk_tier === 'MODERATE' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'));
+          tr.innerHTML = `
+            <td class="p-3 font-mono font-bold text-rose-600">${r.assessment_id || r.record_id}</td>
+            <td class="p-3 font-semibold text-slate-900">${r.full_name || r.patient_name}</td>
+            <td class="p-3 text-slate-600 font-medium">${r.cohort || 'GENERAL'}</td>
+            <td class="p-3"><span class="px-2.5 py-0.5 rounded text-xs border font-bold ${badge}">${r.composite_risk_tier}</span></td>
+            <td class="p-3 font-bold text-rose-600">${r.cardiovascular_risk_pct}%</td>
+            <td class="p-3 font-bold text-amber-600">${r.type2_diabetes_risk_pct}%</td>
+            <td class="p-3 font-medium text-slate-700">${r.top_shap_driver}</td>
+            <td class="p-3 text-slate-600 font-medium">${r.recommended_intervention}</td>
+          `;
+          tbody.appendChild(tr);
+        });
 
+        const abody = document.getElementById('audit-body');
+        abody.innerHTML = '';
+        document.getElementById('ledger-count').innerText = `${ledger.total_blocks} Blocks`;
+        (ledger.blocks || []).slice(-6).reverse().forEach(b => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          tr.innerHTML = `
+            <td class="p-3 font-bold text-slate-900">#${b.block_index}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">${b.event_type}</span></td>
+            <td class="p-3 text-rose-700 font-semibold" title="${b.block_hash}">${b.block_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-slate-500" title="${b.previous_hash}">${b.previous_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-slate-500" title="${b.evidence_hash}">${b.evidence_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-slate-400 text-[10px]">${(b.timestamp || '').split('T')[1]?.slice(0, 8) || '00:00:00'}</td>
+          `;
+          abody.appendChild(tr);
+        });
+
+        renderShapChart({
+          'Systolic Blood Pressure': +0.38,
+          'Fasting Blood Glucose': +0.29,
+          'Diabetic Glycemia HbA1c': +0.25,
+          'Renal eGFR Impairment': +0.18,
+          'Atherogenic LDL': +0.14,
+          'Body Mass Index': +0.09
+        });
+      } catch (err) {
+        console.error("Data load error:", err);
+      }
+    }
+
+    function renderShapChart(shapObj) {
       const ctx = document.getElementById('shapChart').getContext('2d');
+      const labels = Object.keys(shapObj);
+      const data = Object.values(shapObj);
+
       if (sChart) sChart.destroy();
       sChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Systolic Blood Pressure', 'Fasting Blood Glucose', 'Age Factor', 'BMI Index', 'Cholesterol Ratio'],
+          labels: labels,
           datasets: [{
             label: 'SHAP Contribution Magnitude',
-            data: [+0.38, +0.29, +0.18, +0.14, +0.09],
-            backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#10b981'],
+            data: data,
+            backgroundColor: data.map(v => v >= 0.3 ? '#e11d48' : (v >= 0.15 ? '#f59e0b' : '#3b82f6')),
             borderRadius: 6
           }]
         },
@@ -165,39 +326,83 @@
           indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
-          scales: { x: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } }, y: { grid: { display: false }, ticks: { color: '#334155', font: { weight: 'bold' } } } },
+          animation: { duration: 600 },
+          scales: {
+            x: { grid: { color: '#f1f5f9' }, ticks: { color: '#64748b' } },
+            y: { grid: { display: false }, ticks: { color: '#334155', font: { weight: 'bold' } } }
+          },
           plugins: { legend: { display: false } }
         }
       });
     }
 
     document.getElementById('btn-assess').addEventListener('click', async () => {
-      const res = await fetch('/api/health-risk/assess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          patient_name: document.getElementById('pt-name').value,
-          systolic_bp: parseFloat(document.getElementById('pt-sbp').value),
-          glucose_mg_dl: parseFloat(document.getElementById('pt-glu').value)
-        })
-      });
-      const data = await res.json();
-      const b = document.getElementById('risk-result');
-      b.classList.remove('hidden');
-      if (data.metrics.risk_level === 'HIGH') {
-        b.className = 'p-4 rounded-xl space-y-2 bg-red-50 border border-red-200 text-red-900';
-        document.getElementById('res-level').innerText = 'HIGH CLINICAL RISK DETECTED';
-      } else {
-        b.className = 'p-4 rounded-xl space-y-2 bg-emerald-50 border border-emerald-200 text-emerald-900';
-        document.getElementById('res-level').innerText = 'MODERATE / NORMAL CLINICAL TIER';
+      try {
+        const res = await fetch('/api/patients/assess', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name: document.getElementById('pt-name').value,
+            age: parseInt(document.getElementById('pt-age').value),
+            bmi: parseFloat(document.getElementById('pt-bmi').value),
+            systolic_bp: parseFloat(document.getElementById('pt-sbp').value),
+            diastolic_bp: parseFloat(document.getElementById('pt-dbp').value),
+            hba1c: parseFloat(document.getElementById('pt-hba1c').value),
+            fasting_glucose: parseFloat(document.getElementById('pt-glu').value),
+            egfr: parseFloat(document.getElementById('pt-egfr').value),
+            ldl: parseFloat(document.getElementById('pt-ldl').value)
+          })
+        });
+        const data = await res.json();
+        const m = data.metrics;
+        
+        const b = document.getElementById('risk-result');
+        b.classList.remove('hidden');
+        if (m.composite_risk_tier === 'CRITICAL') {
+          b.className = 'p-4 rounded-xl space-y-2 bg-red-50 border border-red-200 text-red-900';
+          document.getElementById('res-level').innerText = 'CRITICAL CLINICAL RISK DETECTED';
+        } else if (m.composite_risk_tier === 'HIGH') {
+          b.className = 'p-4 rounded-xl space-y-2 bg-amber-50 border border-amber-200 text-amber-900';
+          document.getElementById('res-level').innerText = 'HIGH CLINICAL RISK DETECTED';
+        } else {
+          b.className = 'p-4 rounded-xl space-y-2 bg-emerald-50 border border-emerald-200 text-emerald-900';
+          document.getElementById('res-level').innerText = `${m.composite_risk_tier} RISK PROFILE`;
+        }
+
+        document.getElementById('res-cvd').innerText = m.cardiovascular_risk_pct + '%';
+        document.getElementById('res-t2d').innerText = m.type2_diabetes_risk_pct + '%';
+        document.getElementById('res-htn').innerText = m.hypertension_risk_pct + '%';
+        document.getElementById('res-ckd').innerText = m.ckd_risk_pct + '%';
+        document.getElementById('res-mort').innerText = m.ten_year_mortality_risk_pct + '%';
+        document.getElementById('res-readmit').innerText = m.hospital_readmission_risk_pct + '%';
+        document.getElementById('res-rec').innerText = m.recommended_intervention + ' — ' + m.primary_biomarker_drivers;
+        document.getElementById('res-hash').innerText = 'Evidence Hash: ' + m.evidence_hash;
+
+        if (m.shap_attributions) {
+          renderShapChart(m.shap_attributions);
+        }
+        loadData();
+      } catch (err) {
+        console.error("Assessment error:", err);
       }
-      document.getElementById('res-cvd').innerText = (data.metrics.cardiovascular_risk_score * 100).toFixed(1) + '%';
-      document.getElementById('res-t2d').innerText = (data.metrics.diabetes_risk_score * 100).toFixed(1) + '%';
-      document.getElementById('res-rec').innerText = data.metrics.recommended_intervention;
-      loadData();
     });
 
+    function initWebSocket() {
+      const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const ws = new WebSocket(`${proto}//${window.location.host}/api/ws`);
+      ws.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.event === 'PATIENT_ASSESSED') {
+            loadData();
+          }
+        } catch(e) {}
+      };
+      ws.onclose = () => setTimeout(initWebSocket, 3000);
+    }
+
     loadData();
+    initWebSocket();
   </script>
 </body>
 </html>

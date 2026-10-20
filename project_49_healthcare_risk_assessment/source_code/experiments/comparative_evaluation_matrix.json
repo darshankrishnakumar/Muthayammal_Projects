@@ -1,15 +1,15 @@
 {
-  "dataset_size": 160,
+  "dataset_size": 6000,
   "comparison": {
-    "c_index": {
-      "baseline": 0.718,
-      "phase2": 0.892,
-      "improvement_pct": 24.23
-    },
-    "risk_mae": {
+    "cvd_risk_mae": {
       "baseline": 14.8,
-      "phase2": 3.6,
-      "error_reduction_pct": 75.68
+      "phase2": 1.27,
+      "error_reduction_pct": 91.39
+    },
+    "r2_score": {
+      "baseline": 0.692,
+      "phase2": 0.993,
+      "improvement_pct": 43.48
     }
   }
 }

@@ -1,0 +1,50 @@
+{
+  "feature_cols": [
+    "age",
+    "systolic_bp",
+    "diastolic_bp",
+    "hba1c",
+    "fasting_glucose",
+    "total_cholesterol",
+    "hdl_cholesterol",
+    "ldl_cholesterol",
+    "egfr",
+    "bmi"
+  ],
+  "target_cols_m1": [
+    "cardiovascular_risk_pct",
+    "type2_diabetes_risk_pct",
+    "hypertension_risk_pct",
+    "ckd_risk_pct"
+  ],
+  "target_cols_m2": [
+    "ten_year_mortality_risk_pct",
+    "hospital_readmission_risk_pct",
+    "polypharmacy_complexity_index",
+    "renal_progression_hazard_pct"
+  ],
+  "means": [
+    56.12116622924805,
+    141.67764282226562,
+    87.65845489501953,
+    6.611082077026367,
+    126.81024932861328,
+    214.50804138183594,
+    42.365081787109375,
+    137.85086059570312,
+    72.95863342285156,
+    28.765974044799805
+  ],
+  "stds": [
+    12.960111618041992,
+    19.273035049438477,
+    11.222084045410156,
+    1.5317882299423218,
+    37.341800689697266,
+    35.672481536865234,
+    11.448452949523926,
+    33.31189727783203,
+    26.39779281616211,
+    4.99685525894165
+  ]
+}
