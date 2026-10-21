@@ -46,3 +46,9 @@ College_55/data/processed/evidence_snapshots/evidence_INC-[0-9A-Fa-f]*.jpg
 
 # Root temporary data
 /data/project55_enterprise.db
+
+# SQLite WAL and shared memory temporary files
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
