@@ -1,0 +1,15 @@
+package com.academic.model;
+
+public enum RequirementStatus {
+    DRAFT,
+    SUBMITTED,
+    ADVANCE_PAYMENT_PENDING,
+    ADVANCE_PAYMENT_COMPLETED,
+    SUPER_ADMIN_REVIEW,
+    CHANGES_REQUESTED,
+    APPROVED,
+    REJECTED,
+    IN_PROGRESS,
+    COMPLETED,
+    INACTIVE
+}

@@ -1,0 +1,317 @@
+{
+  "info": {
+    "name": "Academic Integration Tool - Project & Assignment API (Developer 3)",
+    "description": "Postman Collection for testing Project Management, State Machine status transitions, and User-Project Assignments.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@academic.com\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Get All / Search Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects?search=&status=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects"],
+              "query": [
+                { "key": "search", "value": "" },
+                { "key": "status", "value": "" },
+                { "key": "techStack", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Project Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Create Project (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectName\": \"Quantum Computing Research Portal\",\n  \"description\": \"Platform for quantum algorithm simulations and academic benchmarks.\",\n  \"budget\": 35000.00,\n  \"technologyStack\": \"Python, Qiskit, React, Spring Boot\",\n  \"status\": \"DRAFT\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Create Project (From Approved Requirement)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"linkedRequirementId\": 101,\n  \"status\": \"APPROVED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Project Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectName\": \"Updated Evaluation Portal\",\n  \"budget\": 18000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1"]
+            }
+          }
+        },
+        {
+          "name": "Change Project Status (State Machine Validation)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assignments",
+      "item": [
+        {
+          "name": "List Project Assignments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/assignments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "assignments"]
+            }
+          }
+        },
+        {
+          "name": "Assign User to Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 3,\n  \"notes\": \"Lead Researcher\",\n  \"expiredAt\": \"2026-12-31T23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/assignments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "assignments"]
+            }
+          }
+        },
+        {
+          "name": "Update Assignment Expiry",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated Senior Researcher\",\n  \"expiredAt\": \"2027-06-30T23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/assignments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "assignments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Revoke Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/1/assignments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "projects", "1", "assignments", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mock Requirement Integration",
+      "item": [
+        {
+          "name": "Get Approved Requirements Stub",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/requirements/approved",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "requirements", "approved"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ]
+}

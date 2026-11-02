@@ -1,0 +1,40 @@
+package com.academic.repository;
+
+import com.academic.model.Role;
+import com.academic.model.User;
+import com.academic.model.UserStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmailAndDeletedFalse(String email);
+
+    Optional<User> findByEmail(String email);
+
+    boolean existsByEmailAndDeletedFalse(String email);
+
+    boolean existsByEmail(String email);
+
+    List<User> findByRoleAndDeletedFalse(Role role);
+
+    // Fetch only regular users (role = USER) from user_management table
+    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.role = com.academic.model.Role.USER " +
+           "AND (:status IS NULL OR u.status = :status) " +
+           "AND (:query IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%')))")
+    List<User> searchUsersOnly(@Param("status") UserStatus status,
+                               @Param("query") String query);
+
+    // Fetch only admin users (role = ADMIN or SUPER_ADMIN) from user_management table
+    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.role IN (com.academic.model.Role.ADMIN, com.academic.model.Role.SUPER_ADMIN) " +
+           "AND (:status IS NULL OR u.status = :status) " +
+           "AND (:query IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%')))")
+    List<User> searchAdminsOnly(@Param("status") UserStatus status,
+                                @Param("query") String query);
+}

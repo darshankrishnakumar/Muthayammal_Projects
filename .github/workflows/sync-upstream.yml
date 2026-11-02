@@ -1,0 +1,36 @@
+name: Sync Upstream (Parvathy Repo)
+
+on:
+  schedule:
+    # Runs automatically every hour (at minute 0)
+    - cron: '0 * * * *'
+  # Allows you to manually trigger the sync anytime with 1 click in GitHub Actions
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync latest commits from Upstream
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git Identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync with Upstream repository
+        run: |
+          git remote add upstream https://github.com/parvathy-25cs/ACADEMIC_INTEGRATION_TOOL.git || true
+          git fetch upstream
+          git checkout main
+          git merge upstream/main --ff-only || git merge upstream/main -m "chore: auto-sync with upstream"
+          git push origin main

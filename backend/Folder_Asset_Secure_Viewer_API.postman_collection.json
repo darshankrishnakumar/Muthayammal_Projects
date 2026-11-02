@@ -1,0 +1,310 @@
+{
+  "info": {
+    "name": "Academic Integration Tool - Folder, Asset & Secure Viewer API (Developer 4)",
+    "description": "Comprehensive Postman test collection for Developer 4: Folder Management, File Upload, File Metadata & Versioning, Private Storage Integration, and Secure File Viewer.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "userToken", "value": "", "type": "string" },
+    { "key": "unassignedUserToken", "value": "", "type": "string" },
+    { "key": "projectId", "value": "1", "type": "string" },
+    { "key": "folderId", "value": "1", "type": "string" },
+    { "key": "assetId", "value": "1", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication (Prerequisite)",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@academic.com\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login as Assigned User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@academic.com\",\n  \"password\": \"User123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Folder Management",
+      "item": [
+        {
+          "name": "GET /api/projects/{id}/folders (List Project Hierarchy)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/folders",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "folders"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/projects/{id}/folders (Create Root Folder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Research Papers\",\n  \"parentFolderId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/folders",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "folders"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/projects/{id}/folders (Create Nested Folder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Literature Review\",\n  \"parentFolderId\": {{folderId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/folders",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "folders"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/projects/{id}/folders (Reject Duplicate Folder Name in Parent)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Literature Review\",\n  \"parentFolderId\": {{folderId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}/folders",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}", "folders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. File Upload & Backend Validations",
+      "item": [
+        {
+          "name": "POST /api/assets/upload (Upload Valid File)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "projectId", "value": "{{projectId}}", "type": "text" },
+                { "key": "folderId", "value": "{{folderId}}", "type": "text" },
+                { "key": "description", "value": "Academic System Architecture Specification", "type": "text" },
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assets/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "upload"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/assets/upload (Reject Unsupported File Extension)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "projectId", "value": "{{projectId}}", "type": "text" },
+                { "key": "folderId", "value": "{{folderId}}", "type": "text" },
+                { "key": "description", "value": "Executable binary rejection test", "type": "text" },
+                { "key": "file", "type": "file", "src": "malicious_script.exe" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assets/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "upload"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/assets/upload (Reject Duplicate File in Same Folder)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "projectId", "value": "{{projectId}}", "type": "text" },
+                { "key": "folderId", "value": "{{folderId}}", "type": "text" },
+                { "key": "description", "value": "Duplicate upload attempt", "type": "text" },
+                { "key": "file", "type": "file", "src": "System_Architecture.pdf" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assets/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "upload"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Secure File Viewer & 4-Tier Access Check Chain",
+      "item": [
+        {
+          "name": "GET /api/assets/{id}/view (Authorized View Inline Stream)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/view",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "view"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/assets/{id}/view (Assigned User View Stream)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/view",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "view"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/assets/{id}/view (Access Denied: Unassigned User 403)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{unassignedUserToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/view",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "view"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. File Versioning & Replacement",
+      "item": [
+        {
+          "name": "PUT /api/assets/{id}/replace (Upload New Version v2)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "changeNotes", "value": "Updated system diagrams and revised section 3", "type": "text" },
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/replace",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "replace"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/assets/{id}/versions (View Version History)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/versions",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "versions"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/assets/{id}/restore/{versionNo} (Restore Previous Version)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/assets/{{assetId}}/restore/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["assets", "{{assetId}}", "restore", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
