@@ -124,7 +124,8 @@ public class LibraryController {
         BigDecimal price = body != null && body.get("defaultPrice") != null && !body.get("defaultPrice").toString().isBlank()
                 ? new BigDecimal(body.get("defaultPrice").toString()) : null;
         boolean publish = body != null && Boolean.parseBoolean(String.valueOf(body.get("publish")));
-        return importService.start(dirs, price, publish, actorEmail());
+        boolean refresh = body != null && Boolean.parseBoolean(String.valueOf(body.get("refreshMetadata")));
+        return importService.start(dirs, price, publish, refresh, actorEmail());
     }
 
     @GetMapping("/import/status")

@@ -91,13 +91,30 @@ Every step is a git commit on top of `Baseline snapshot before platform enhancem
 
 **Frontend:** `npm run build` passes. `oxlint`: 0 errors, 2 fast-refresh style warnings.
 
+**Full library import (55 projects):** imported from a clone of `darshankrishnakumar/Muthayammal_Projects` into the docker-compose MySQL (`academic_db`, port 3308).
+- **Result:** 55/55 imported, 0 failures; 1,521 files, 724 MB of private storage.
+- **Contents:** every project has a source archive, a database file, slides, documentation, screenshots and one demo video. 425 screenshots and 55 videos are marked as previews.
+- **Metadata:** all 55 have a title from the master catalogue and an abstract with markdown removed. Domains are spread across 8 categories.
+- **Re-runs:** adding 0 files on a re-run confirms idempotency. The "refresh metadata" mode keeps codes, prices and status.
+- **Spot check:** a real 3-minute demo video streamed through the protected endpoint and played as a pre-purchase preview for a student.
+- **Pricing guard:** publishing without a price was refused.
+- **Final state:** all 55 are unpriced drafts, so none is visible to students until priced and published.
+
+**Importer fixes found during the real import:**
+- Titles now come from the master README's catalogue table; emoji and `PROJECT-NN:` prefixes are removed, and acronyms are cased correctly.
+- Abstracts fall back through Abstract → Overview → tagline → first paragraph → `docs/README.md` / `architecture.md`, and skip candidates that are empty once cleaned.
+- Walkthrough scripts are filed as documentation, not video.
+- Added an Agriculture domain; face recognition counts as Computer Vision; gait analysis counts as Healthcare.
+- **Pricing guard:** unpriced projects can't be published, and purchase refuses a missing price. Previously a missing price meant a ₹0, i.e. free, purchase.
+
 ---
 
 ## 3. Still open
 
 | Item | Why it's open |
 |---|---|
-| ⛔ Import the full 55-project library | Needs the ~600 MB repository cloned on the backend machine and `LIBRARY_IMPORT_ROOT` set. The importer is built and tested against a fixture made from that repository's own READMEs. |
+| ⛔ Set prices and publish the 55 library projects | They were imported as unpriced drafts. Publishing now requires a price (₹0 is allowed for free projects). |
+| ⛔ Restore project 17's phishing dataset | `Phishing_Email.csv` (52 MB) is missing from the upstream repository's Git LFS storage (GitHub returns 404), so project 17's source archive contains only the LFS pointer file. |
 | ⛔ Real payment gateway | Needs merchant credentials. The integration point is ready (`PaymentGateway`); see the README. |
 | ⛔ Email/OTP verification | Needs mail infrastructure. |
 | ⛔ Rotate the leaked JWT secret and MySQL password | Must be done by the owner on their servers. |

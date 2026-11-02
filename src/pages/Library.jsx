@@ -146,7 +146,7 @@ export default function Library() {
                     <th className="hide-lg">Domain</th>
                     <th className="hide-lg">Deliverables</th>
                     <th className="cell-num">Price</th>
-                    <th className="cell-num">Colleges</th>
+                    <th className="cell-num hide-md">Colleges</th>
                     <th>Status</th>
                     <th />
                   </tr>
@@ -170,7 +170,7 @@ export default function Library() {
                         <div className="text-xs text-subtle">{bytes(r.totalBytes)}</div>
                       </td>
                       <td className="cell-num">{r.price != null ? money(r.price) : <span className="text-subtle">Not set</span>}</td>
-                      <td className="cell-num">{r.allocatedColleges}</td>
+                      <td className="cell-num hide-md">{r.allocatedColleges}</td>
                       <td><StatusBadge status={r.catalogStatus} /></td>
                       <td>
                         <div className="flex items-center gap-1 justify-end">
@@ -339,6 +339,7 @@ function ImportDialog({ open, onClose, onFinished }) {
   const [chosen, setChosen] = useState(new Set());
   const [price, setPrice] = useState('');
   const [publish, setPublish] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [job, setJob] = useState(null);
   const timer = useRef(null);
 
@@ -384,7 +385,7 @@ function ImportDialog({ open, onClose, onFinished }) {
 
   const start = async () => {
     try {
-      const res = await api.startLibraryImport({ directories: [...chosen], defaultPrice: price === '' ? null : price, publish });
+      const res = await api.startLibraryImport({ directories: [...chosen], defaultPrice: price === '' ? null : price, publish: publish && price !== '', refreshMetadata: refresh });
       setJob(res);
       timer.current = setInterval(poll, 2000);
     } catch (e) {
@@ -454,12 +455,17 @@ function ImportDialog({ open, onClose, onFinished }) {
             <Field label="Default price for new projects (INR)" hint="Leave empty to set prices later">
               <input className="input" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} />
             </Field>
-            <Field label="After import">
+            <Field label="After import" hint={price === '' ? 'Set a default price to publish on import; unpriced projects stay as drafts.' : undefined}>
               <label className="checkbox" style={{ height: 36 }}>
-                <input type="checkbox" checked={publish} onChange={(e) => setPublish(e.target.checked)} /> Publish new projects immediately
+                <input type="checkbox" checked={publish && price !== ''} disabled={price === ''} onChange={(e) => setPublish(e.target.checked)} /> Publish new projects immediately
               </label>
             </Field>
           </div>
+
+          <label className="checkbox mb-4">
+            <input type="checkbox" checked={refresh} onChange={(e) => setRefresh(e.target.checked)} />
+            Refresh titles, abstracts and other details of already-imported projects from the repository (prices and status are kept)
+          </label>
 
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted">{projects.length} projects found · {pending} not yet imported</span>

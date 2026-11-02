@@ -209,6 +209,34 @@ class PlatformIntegrationTest {
     }
 
     @Test
+    @DisplayName("Unpriced library projects cannot be published or bought")
+    void unpricedProjectsCannotBePublishedOrBought() throws Exception {
+        mvc.perform(as(superAdmin(), post("/api/library")).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Unpriced " + run + "\",\"catalogStatus\":\"PUBLISHED\"}"))
+                .andExpect(status().isBadRequest());
+
+        JsonNode draft = body(mvc.perform(as(superAdmin(), post("/api/library")).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Draft " + run + "\"}"))
+                .andExpect(status().isCreated()).andReturn());
+        long id = draft.path("id").asLong();
+        mvc.perform(as(superAdmin(), patch("/api/library/" + id + "/catalog-status")).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"status\":\"PUBLISHED\"}"))
+                .andExpect(status().isBadRequest());
+
+        // Even if it slipped through (legacy data), purchase refuses a missing price.
+        Project legacy = projects.findById(id).orElseThrow();
+        legacy.setCatalogStatus(CatalogStatus.PUBLISHED);
+        projects.save(legacy);
+        CollegeProjectAllocation a = new CollegeProjectAllocation();
+        a.setCollege(collegeA);
+        a.setProject(legacy);
+        a.setAllocatedBy("test");
+        allocations.save(a);
+        mvc.perform(as(studentA, post("/api/marketplace/" + id + "/purchase"))).andExpect(status().isBadRequest());
+        assertFalse(entitlements.hasActive(studentA.getId(), id));
+    }
+
+    @Test
     @DisplayName("Without an enabled gateway, purchases fail with 503 and grant nothing")
     void paymentsDisabled() throws Exception {
         ReflectionTestUtils.setField(simulatedGateway, "enabled", false);

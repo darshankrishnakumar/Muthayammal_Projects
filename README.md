@@ -117,9 +117,18 @@ To import:
 3. Open **Project library → Import from repository**.
 4. Pick the projects, an optional default price, and whether to publish them.
 
+For example, the 55-project master repository:
+
+```bash
+git clone --depth 1 https://github.com/darshankrishnakumar/Muthayammal_Projects.git
+# one LFS object is missing upstream; check out everything else with:
+cd Muthayammal_Projects && GIT_LFS_SKIP_SMUDGE=1 git restore --source=HEAD --staged --worktree :/
+```
+
 How the import behaves:
 - It is **idempotent**. Projects are matched by folder name, and files already present are skipped.
-- Metadata edited in the UI is never overwritten.
+- Metadata edited in the UI is never overwritten, unless you tick **Refresh titles, abstracts and other details**. That option re-reads them from the repository but keeps codes, prices and status.
+- Projects without a price are imported as drafts. A project can't be published until it has a price (₹0 is allowed for a free project).
 - Screenshots, abstract PDFs and demo videos are marked as previews, so students see them before purchase. Everything else unlocks only after payment.
 
 ## Payments

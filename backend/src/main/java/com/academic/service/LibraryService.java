@@ -104,6 +104,7 @@ public class LibraryService {
         p.setCreatedBy(actorEmail);
         apply(p, req);
         p.setCatalogStatus(parseStatus(req.getCatalogStatus(), false) != null ? parseStatus(req.getCatalogStatus(), false) : CatalogStatus.DRAFT);
+        requirePriceToPublish(p, p.getCatalogStatus());
         Project saved = projectRepository.save(p);
         ensureCategoryFolders(saved, actorEmail);
         auditLogService.log(actorEmail, "LIBRARY_PROJECT_CREATED", "Added " + saved.getProjectCode() + " (" + saved.getProjectName() + ") to the library");
@@ -125,6 +126,7 @@ public class LibraryService {
         if (status != null) {
             p.setCatalogStatus(status);
         }
+        requirePriceToPublish(p, p.getCatalogStatus());
         p.setUpdatedBy(actorEmail);
         Project saved = projectRepository.save(p);
         auditLogService.log(actorEmail, "LIBRARY_PROJECT_UPDATED", "Updated " + saved.getProjectCode());
@@ -138,6 +140,7 @@ public class LibraryService {
         if (next == null) {
             throw new IllegalArgumentException("Catalog status is required (DRAFT, PUBLISHED or ARCHIVED).");
         }
+        requirePriceToPublish(p, next);
         CatalogStatus previous = p.getCatalogStatus();
         p.setCatalogStatus(next);
         p.setUpdatedBy(actorEmail);
@@ -183,6 +186,13 @@ public class LibraryService {
             folders.put(e.getKey(), folder);
         }
         return folders;
+    }
+
+    /** A published project without a price would be purchasable for free; require an explicit price (0 is allowed). */
+    private static void requirePriceToPublish(Project p, CatalogStatus target) {
+        if (target == CatalogStatus.PUBLISHED && p.getPrice() == null) {
+            throw new IllegalStateException(p.getProjectCode() + " has no price. Set a price (0 for a free project) before publishing.");
+        }
     }
 
     public Project getLibraryProject(Long id) {

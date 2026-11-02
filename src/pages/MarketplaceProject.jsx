@@ -53,6 +53,7 @@ export default function MarketplaceProject() {
   const images = (p.previewAssets || []).filter((a) => a.category === 'SCREENSHOT' || (a.mimeType || '').startsWith('image/'));
   const docs = (p.previewAssets || []).filter((a) => !videos.includes(a) && !images.includes(a));
   const techs = (p.technologyStack || '').split(',').map((t) => t.trim()).filter(Boolean);
+  const previewCategories = new Set((p.previewAssets || []).map((a) => a.category));
 
   return (
     <>
@@ -138,7 +139,8 @@ export default function MarketplaceProject() {
                     <meta.icon size={15} className="text-subtle" />
                     <span className="flex-1">{meta.label}</span>
                     <span className="text-subtle tabular">{count}</span>
-                    {!p.owned && <Lock size={13} className="text-subtle" aria-label="Locked" />}
+                    {!p.owned && !previewCategories.has(cat) && <Lock size={13} className="text-subtle" aria-label="Locked until purchase" />}
+                    {!p.owned && previewCategories.has(cat) && <span className="text-xs text-subtle">Preview</span>}
                   </li>
                 );
               })}

@@ -51,6 +51,7 @@ public class LibraryImportService {
     private static final Set<String> SKIP_DIRS = Set.of("__pycache__", ".git", ".venv", "venv", "node_modules", ".idea", ".pytest_cache", ".mypy_cache");
     private static final Set<String> IMAGE_EXT = Set.of("png", "jpg", "jpeg", "gif", "webp", "svg");
     private static final Set<String> DATABASE_EXT = Set.of("db", "sqlite", "sqlite3", "sql");
+    private static final Set<String> VIDEO_EXT = Set.of("mp4", "webm", "mov");
     private static final String IMPORT_ACTOR = "library-import";
 
     @Value("${academic.library.import-root:}")
@@ -128,7 +129,7 @@ public class LibraryImportService {
     // Import job
     // ------------------------------------------------------------------
 
-    public synchronized Map<String, Object> start(List<String> directories, BigDecimal defaultPrice, boolean publish, String actorEmail) {
+    public synchronized Map<String, Object> start(List<String> directories, BigDecimal defaultPrice, boolean publish, boolean refreshMetadata, String actorEmail) {
         if (!isConfigured()) {
             throw new IllegalStateException("Library import root is not configured on the server.");
         }
@@ -154,7 +155,7 @@ public class LibraryImportService {
 
         ImportJob job = new ImportJob(selected.size(), actorEmail);
         currentJob = job;
-        executor.submit(() -> runJob(job, selected, defaultPrice, publish));
+        executor.submit(() -> runJob(job, selected, defaultPrice, publish, refreshMetadata));
         auditLogService.log(actorEmail, "LIBRARY_IMPORT_STARTED", "Importing " + selected.size() + " project(s) into the library");
         return job.snapshot();
     }
@@ -164,13 +165,13 @@ public class LibraryImportService {
         return job == null ? Map.of("running", false, "total", 0, "completed", 0) : job.snapshot();
     }
 
-    private void runJob(ImportJob job, List<Path> dirs, BigDecimal defaultPrice, boolean publish) {
+    private void runJob(ImportJob job, List<Path> dirs, BigDecimal defaultPrice, boolean publish, boolean refreshMetadata) {
         try {
             for (Path dir : dirs) {
                 String name = dir.getFileName().toString();
                 job.current = name;
                 try {
-                    int files = importOne(dir, defaultPrice, publish, job.actorEmail);
+                    int files = importOne(dir, defaultPrice, publish, refreshMetadata, job.actorEmail);
                     job.log.add(Map.of("directory", name, "status", "OK", "files", files));
                 } catch (Exception e) {
                     logger.error("Library import failed for {}", name, e);
@@ -187,8 +188,12 @@ public class LibraryImportService {
         }
     }
 
-    /** Imports or refreshes one project folder; returns the number of files added. */
-    int importOne(Path dir, BigDecimal defaultPrice, boolean publish, String actorEmail) throws IOException {
+    /**
+     * Imports or refreshes one project folder; returns the number of files added.
+     * With {@code refreshMetadata}, descriptive fields are re-read from the repository even if set;
+     * code, price and catalogue status are never changed.
+     */
+    int importOne(Path dir, BigDecimal defaultPrice, boolean publish, boolean refreshMetadata, String actorEmail) throws IOException {
         ParsedProject parsed = parse(dir);
         String sourceRef = dir.getFileName().toString();
 
@@ -207,16 +212,18 @@ public class LibraryImportService {
                 p.setStatus(ProjectStatus.COMPLETED);
                 p.setLifecycleStatus(ProjectStatus.COMPLETED);
                 p.setProgressPercent(100);
-                p.setCatalogStatus(publish ? CatalogStatus.PUBLISHED : CatalogStatus.DRAFT);
+                // Never publish without a price: an unpriced published project would be free to buy.
+                p.setCatalogStatus(publish && defaultPrice != null ? CatalogStatus.PUBLISHED : CatalogStatus.DRAFT);
                 p.setCreatedBy(actorEmail);
             }
-            if (isBlank(p.getProjectName())) p.setProjectName(parsed.title);
-            if (isBlank(p.getAbstractText())) p.setAbstractText(parsed.abstractText);
-            if (isBlank(p.getDescription())) p.setDescription(parsed.description);
-            if (isBlank(p.getTechnologyStack())) p.setTechnologyStack(parsed.technologyStack);
-            if (isBlank(p.getDomain())) p.setDomain(parsed.domain);
-            if (isBlank(p.getTags())) p.setTags(parsed.tags);
-            if (isBlank(p.getInstallationInstructions())) p.setInstallationInstructions(parsed.installation);
+            boolean overwrite = refreshMetadata;
+            if (overwrite || isBlank(p.getProjectName())) p.setProjectName(parsed.title);
+            if (overwrite || isBlank(p.getAbstractText())) p.setAbstractText(parsed.abstractText);
+            if (overwrite || isBlank(p.getDescription())) p.setDescription(parsed.description);
+            if (overwrite || isBlank(p.getTechnologyStack())) p.setTechnologyStack(parsed.technologyStack);
+            if (overwrite || isBlank(p.getDomain())) p.setDomain(parsed.domain);
+            if (overwrite || isBlank(p.getTags())) p.setTags(parsed.tags);
+            if (overwrite || isBlank(p.getInstallationInstructions())) p.setInstallationInstructions(parsed.installation);
             if (p.getPrice() == null && defaultPrice != null) {
                 p.setPrice(defaultPrice);
                 p.setBudget(defaultPrice);
@@ -237,7 +244,12 @@ public class LibraryImportService {
         added += importFiles(dir, 1, folders.get(AssetCategory.PRESENTATION), AssetCategory.PRESENTATION, project,
                 f -> ext(f).equals("pptx"), f -> false);
         added += importFiles(dir.resolve("walkthrough"), 1, folders.get(AssetCategory.VIDEO), AssetCategory.VIDEO, project,
-                f -> true, f -> ext(f).equals("mp4") || ext(f).equals("webm"));
+                f -> VIDEO_EXT.contains(ext(f)), f -> true);
+        added += importFiles(dir.resolve("walkthrough"), 1, folders.get(AssetCategory.VIDEO), AssetCategory.DOCUMENTATION, project,
+                f -> !VIDEO_EXT.contains(ext(f)), f -> false);
+        if (refreshMetadata) {
+            fixImportedCategories(folders.get(AssetCategory.VIDEO));
+        }
         added += importFiles(dir, 1, folders.get(AssetCategory.OTHER), AssetCategory.OTHER, project,
                 f -> Set.of("README.md", "requirements.txt", ".env.example").contains(f.getFileName().toString()), f -> false);
 
@@ -315,6 +327,19 @@ public class LibraryImportService {
         }
     }
 
+    /** Earlier imports filed walkthrough scripts as VIDEO; re-label imported non-video files. */
+    private void fixImportedCategories(Folder videoFolder) {
+        transactionTemplate.executeWithoutResult(status -> {
+            for (Asset a : assetRepository.findByFolderIdAndIsCurrentVersionTrueAndActiveTrue(videoFolder.getId())) {
+                if (IMPORT_ACTOR.equals(a.getUploadedBy()) && a.getCategory() == AssetCategory.VIDEO && !VIDEO_EXT.contains(a.getExtension())) {
+                    a.setCategory(AssetCategory.DOCUMENTATION);
+                    a.setPreviewable(false);
+                    assetRepository.save(a);
+                }
+            }
+        });
+    }
+
     private boolean exists(Folder folder, String name) {
         return assetRepository.findActiveInFolderByOriginalFileName(folder.getId(), name).isPresent();
     }
@@ -341,10 +366,32 @@ public class LibraryImportService {
             p.number = Integer.parseInt(m.group(1));
         }
         String readme = read(dir.resolve("README.md"));
-        p.title = titleFrom(readme, dir.getFileName().toString());
-        p.abstractText = section(readme, "abstract");
-        String overview = section(readme, "overview");
-        p.description = overview != null ? overview : p.abstractText;
+        String catalogTitle = p.number != null ? catalogTitles().get(p.number) : null;
+        p.title = catalogTitle != null ? truncate(prettify(cleanTitle(catalogTitle)), 255) : titleFrom(readme, dir.getFileName().toString());
+
+        String overview = firstSection(readme, "overview", "introduction", "about", "description", "summary");
+        Path docs = dir.resolve("docs");
+        List<java.util.function.Supplier<String>> candidates = new ArrayList<>(List.of(
+                () -> section(readme, "abstract"),
+                () -> overview,
+                () -> tagline(readme),
+                () -> firstParagraph(readme)));
+        for (String docName : List.of("README.md", "architecture.md")) {
+            String doc = read(docs.resolve(docName));
+            candidates.add(() -> firstSection(doc, "abstract", "overview", "introduction", "purpose", "summary"));
+            candidates.add(() -> firstParagraph(doc));
+        }
+        // First candidate that still reads as prose once markdown, code and tables are removed.
+        p.abstractText = candidates.stream()
+                .map(java.util.function.Supplier::get)
+                .filter(Objects::nonNull)
+                .map(LibraryImportService::cleanProse)
+                .filter(text -> text.length() >= 60)
+                .findFirst()
+                .map(text -> truncate(text, 4000))
+                .orElse(null);
+        String description = overview != null ? cleanProse(overview) : null;
+        p.description = description != null && description.length() >= 60 ? description : p.abstractText;
         String install = section(readme, "quickstart");
         if (install == null) install = section(readme, "setup");
         if (install == null) install = section(readme, "running");
@@ -376,12 +423,35 @@ public class LibraryImportService {
         return p;
     }
 
+    private Map<Integer, String> catalogTitles;
+
+    /** Canonical titles from the master README's catalogue table: | **NN** | [Title](project_NN_x/) | ... */
+    private synchronized Map<Integer, String> catalogTitles() {
+        if (catalogTitles == null) {
+            Map<Integer, String> titles = new HashMap<>();
+            Matcher m = Pattern.compile("(?m)^\\|\\s*\\*\\*(\\d{1,4})\\*\\*\\s*\\|\\s*\\[([^\\]]+)\\]\\(project_")
+                    .matcher(read(Paths.get(importRoot).resolve("README.md")));
+            while (m.find()) {
+                titles.put(Integer.parseInt(m.group(1)), m.group(2).trim());
+            }
+            catalogTitles = titles;
+        }
+        return catalogTitles;
+    }
+
+    private static String cleanTitle(String t) {
+        String s = t.replaceFirst("(?i)^project[\\s_-]*\\d+\\s*[:\\-–]\\s*", "");
+        s = s.replaceFirst("(?i)^extended abstract:\\s*", "");
+        s = s.replaceAll("[*_`]", "");
+        // Drop emoji and other symbols outside letters, digits, punctuation and spaces.
+        s = s.replaceAll("[^\\p{L}\\p{N}\\p{P}\\p{Zs}+&]", "");
+        return s.replaceAll("\\s{2,}", " ").trim();
+    }
+
     private static String titleFrom(String readme, String fallback) {
         for (String line : readme.split("\\R")) {
             if (line.startsWith("# ")) {
-                String t = line.substring(2).trim();
-                t = t.replaceFirst("(?i)^project\\s*\\d+\\s*[:\\-–]\\s*", "");
-                t = t.replaceAll("[*_`]", "").trim();
+                String t = cleanTitle(line.substring(2).trim());
                 if (!t.isEmpty()) {
                     return truncate(prettify(t), 255);
                 }
@@ -390,6 +460,9 @@ public class LibraryImportService {
         String base = fallback.replaceFirst("^project_\\d+_", "").replace('_', ' ');
         return prettify(base);
     }
+
+    private static final Set<String> ACRONYMS = Set.of("ai", "ml", "iot", "nlp", "cnn", "rnn", "lstm", "yolo", "yolov8", "gnn", "rag",
+            "rul", "dea", "anpr", "api", "gps", "ui", "dl");
 
     /** Converts SHOUTED titles to title case; leaves mixed-case titles alone. */
     private static String prettify(String t) {
@@ -400,12 +473,20 @@ public class LibraryImportService {
         for (String w : t.toLowerCase().split(" ")) {
             if (w.isEmpty()) continue;
             if (sb.length() > 0) sb.append(' ');
-            if (Set.of("ai", "ml", "iot", "nlp", "cnn", "rnn", "lstm", "yolo", "gnn", "rag", "rul").contains(w.replaceAll("[^a-z]", ""))) {
-                sb.append(w.toUpperCase());
-            } else if (sb.length() > 0 && Set.of("and", "of", "for", "using", "with", "the", "in", "on", "a", "an", "to", "from").contains(w)) {
+            if (sb.length() > 0 && Set.of("and", "of", "for", "using", "with", "the", "in", "on", "a", "an", "to", "from", "through").contains(w)) {
                 sb.append(w);
-            } else {
-                sb.append(Character.toUpperCase(w.charAt(0))).append(w.substring(1));
+                continue;
+            }
+            String[] parts = w.split("-", -1);
+            for (int i = 0; i < parts.length; i++) {
+                if (i > 0) sb.append('-');
+                String part = parts[i];
+                if (part.isEmpty()) continue;
+                if (ACRONYMS.contains(part.replaceAll("[^a-z0-9]", ""))) {
+                    sb.append(part.toUpperCase());
+                } else {
+                    sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1));
+                }
             }
         }
         return sb.toString();
@@ -433,10 +514,89 @@ public class LibraryImportService {
         return s.isEmpty() ? null : truncate(s, 20000);
     }
 
+    private static String firstSection(String markdown, String... keywords) {
+        for (String k : keywords) {
+            String s = section(markdown, k);
+            if (s != null) return s;
+        }
+        return null;
+    }
+
+    /** The "> ..." tagline that some READMEs put under the title. */
+    private static String tagline(String readme) {
+        for (String line : readme.split("\\R")) {
+            if (line.startsWith("## ")) break;
+            if (line.startsWith(">")) {
+                String t = stripInline(line.substring(1));
+                if (t.length() > 40) return t;
+            }
+        }
+        return null;
+    }
+
+    /** First prose paragraph (skipping headings, badges, tables, quotes, lists and code). */
+    static String firstParagraph(String markdown) {
+        StringBuilder para = new StringBuilder();
+        boolean inCode = false;
+        for (String raw : markdown.split("\\R")) {
+            String line = raw.trim();
+            if (line.startsWith("```")) {
+                inCode = !inCode;
+                if (para.length() > 0) break;
+                continue;
+            }
+            if (inCode) continue;
+            boolean prose = !line.isEmpty() && !line.startsWith("#") && !line.startsWith("|") && !line.startsWith(">")
+                    && !line.startsWith("[![") && !line.startsWith("!") && !line.startsWith("-") && !line.startsWith("*")
+                    && !line.matches("^\\d+\\..*") && !line.equals("---");
+            if (prose) {
+                para.append(para.length() > 0 ? " " : "").append(stripInline(line));
+            } else if (para.length() > 0) {
+                break;
+            }
+        }
+        String s = para.toString().trim();
+        return s.length() >= 60 ? truncate(s, 4000) : null;
+    }
+
+    /**
+     * Turns a markdown fragment into plain prose for display: drops fenced code (ASCII diagrams),
+     * tables, badges and images, unwraps headings, links and emphasis, and collapses blank lines.
+     */
+    static String cleanProse(String markdown) {
+        StringBuilder out = new StringBuilder();
+        boolean inCode = false;
+        for (String raw : markdown.split("\\R")) {
+            String line = raw.strip();
+            if (line.startsWith("```")) {
+                inCode = !inCode;
+                continue;
+            }
+            if (inCode || line.startsWith("|") || line.startsWith("[![") || line.startsWith("![") || line.equals("---")) {
+                continue;
+            }
+            line = line.replaceFirst("^#{1,6}\\s*", "").replaceFirst("^>\\s*", "");
+            line = stripInline(line);
+            if (line.isEmpty()) {
+                if (out.length() > 0 && !out.toString().endsWith("\n\n")) out.append("\n\n");
+                continue;
+            }
+            if (out.length() > 0 && !out.toString().endsWith("\n")) out.append('\n');
+            out.append(line);
+        }
+        return out.toString().strip();
+    }
+
+    private static String stripInline(String s) {
+        return s.replaceAll("\\[([^\\]]+)\\]\\([^)]*\\)", "$1").replaceAll("[*_`]", "").trim();
+    }
+
     static String inferDomain(String title) {
         String t = title.toLowerCase();
-        if (containsAny(t, "disease", "medical", "health", "heart", "parkinson", "patient", "diagnosis")) return "Healthcare";
-        if (containsAny(t, "intrusion", "phishing", "fraud", "forgery", "deepfake", "deep fake", "cyber", "spoof", "security")) return "Cybersecurity";
+        if (containsAny(t, "crop", "apple", "plant", "agricultur", "egg ")) return "Agriculture";
+        if (containsAny(t, "disease", "medical", "health", "heart", "parkinson", "patient", "diagnosis", "gait")) return "Healthcare";
+        if (containsAny(t, "face recognition", "attendance")) return "Computer Vision";
+        if (containsAny(t, "intrusion", "phishing", "fraud", "forgery", "deepfake", "deep fake", "cyber", "security")) return "Cybersecurity";
         if (containsAny(t, "news", "text", "nlp", "natural language", "summariz", "resume", "complaint", "question answering", "speech", "emotion", "sign language", "handwritten")) return "Natural Language & Speech";
         if (containsAny(t, "detection", "image", "vision", "yolo", "face", "crack", "damage", "classification", "grading", "weapon", "drowsiness", "crowd", "waste", "engagement", "freshness", "egg")) return "Computer Vision";
         if (containsAny(t, "iot", "sensor", "maintenance", "useful life", "railway", "manufacturing", "energy")) return "IoT & Industrial AI";

@@ -185,6 +185,9 @@ public class OrderService {
             throw new IllegalStateException("You already have access to this project.");
         }
 
+        if (allocation.getEffectivePrice() == null) {
+            throw new IllegalStateException("This project has no price yet and cannot be purchased.");
+        }
         BigDecimal amount = normalize(allocation.getEffectivePrice());
         Order order = newOrder(actor, "Library project: " + project.getProjectName(), ItemType.PROJECT,
                 "Purchase of library project " + project.getProjectCode() + " for " + college.getName(),
