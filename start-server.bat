@@ -5,6 +5,16 @@ echo   Starting Academic Integration Tool Server Stack
 echo ===================================================
 echo.
 
+:: 0. Local secrets (DB password, JWT secret) live in a git-ignored file
+if not exist "%~dp0backend\src\main\resources\application-local.properties" (
+    echo [!] backend\src\main\resources\application-local.properties is missing.
+    echo     Copy application-local.properties.example next to it, rename it to
+    echo     application-local.properties and fill in your MySQL password and a JWT secret.
+    echo     See README.md, section "Configuration".
+    pause
+    exit /b 1
+)
+
 :: 1. Check if MySQL Service is running
 echo [1/3] Checking MySQL Service...
 sc query MySQL80 | find "RUNNING" >nul

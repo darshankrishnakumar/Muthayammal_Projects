@@ -119,6 +119,18 @@ class PlatformIntegrationTest {
     }
 
     @Test
+    @DisplayName("College admins only see audit entries from their own college")
+    void auditLogIsCollegeScoped() throws Exception {
+        mvc.perform(as(studentA, post("/api/marketplace/" + library.getId() + "/purchase"))).andExpect(status().isOk());
+        mvc.perform(as(studentB, get("/api/marketplace"))).andExpect(status().isOk());
+        String a = body(mvc.perform(as(adminA, get("/api/audit-logs"))).andExpect(status().isOk()).andReturn()).toString();
+        assertTrue(a.contains(studentA.getEmail()));
+        String b = body(mvc.perform(as(adminB, get("/api/audit-logs"))).andExpect(status().isOk()).andReturn()).toString();
+        assertFalse(b.contains(studentA.getEmail()));
+        mvc.perform(as(developer, get("/api/audit-logs"))).andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("Only the Super Admin can grant roles; nobody can mint a Super Admin")
     void privilegeEscalationBlocked() throws Exception {
         String superAdminBody = "{\"email\":\"x" + run + "@t.dev\",\"password\":\"Password123\",\"fullName\":\"X\",\"role\":\"SUPER_ADMIN\"}";

@@ -24,6 +24,9 @@ import java.util.Map;
 public class AuditLogController {
 
     @Autowired
+    private com.academic.repository.UserRepository userRepository;
+
+    @Autowired
     private AuditLogService auditLogService;
 
     @Autowired
@@ -61,7 +64,17 @@ public class AuditLogController {
         if (actor.getRole() == Role.SUPER_ADMIN) {
             logs = auditLogService.getAllLogs(startDate, endDate);
         } else {
-            logs = auditLogService.getRestrictedLogs(startDate, endDate);
+            // College isolation: an admin sees only actions taken by members of their own college.
+            if (actor.getCollege() == null) {
+                return ResponseEntity.ok(List.of());
+            }
+            java.util.Set<String> members = userRepository.findAll().stream()
+                    .filter(u -> u.getCollege() != null && u.getCollege().getId().equals(actor.getCollege().getId()))
+                    .map(u -> u.getEmail().toLowerCase())
+                    .collect(java.util.stream.Collectors.toSet());
+            logs = auditLogService.getRestrictedLogs(startDate, endDate).stream()
+                    .filter(l -> l.getActorEmail() != null && members.contains(l.getActorEmail().toLowerCase()))
+                    .toList();
         }
 
         return ResponseEntity.ok(logs);

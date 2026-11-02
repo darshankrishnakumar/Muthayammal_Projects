@@ -8,5 +8,8 @@ academic.flyway.repair-on-start=true
 academic.payments.simulation-enabled=true
 academic.seed.demo-accounts=true
 
+# Browser origins allowed to call the API (add your Vercel domain when the frontend is hosted there)
+academic.cors.allowed-origins=http://localhost:5173,http://127.0.0.1:5173,https://academic-integration-tool.vercel.app
+
 # Optional: local checkout of the master project repository for the library importer
 # academic.library.import-root=/absolute/path/to/Muthayammal_Projects

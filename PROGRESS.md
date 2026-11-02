@@ -1,130 +1,108 @@
-# Platform Enhancement — Progress Log
+# Platform Enhancement: Progress Log
 
-This file tracks the transformation of the existing app into a multi-college academic
-project distribution and development platform. It records what was inspected, what changed,
-what was verified, and what is still open. Status markers: ✅ done and verified · 🟡 done, not
-fully verified · ⬜ not started · ⛔ blocked on a human.
+This log tracks how the existing app was turned into a multi-college platform for distributing and developing academic projects. It records what was inspected, what changed, how it was verified, and what is still open.
 
-A baseline git commit (`Baseline snapshot before platform enhancement`) was made before any
-change, so every step below can be diffed or reverted.
+| Marker | Meaning |
+|---|---|
+| ✅ | done and verified |
+| 🟡 | done, partly verified |
+| ⬜ | not done |
+| ⛔ | needs a person or external setup |
+
+Every step is a git commit on top of `Baseline snapshot before platform enhancement`, so each change can be diffed or reverted.
 
 ---
 
-## 1. Audit findings (Phase 1)
+## 1. Audit findings and their resolution
 
-### Build / repository
-| # | Finding | Severity |
+### Build and repository
+| # | Finding | Status |
 |---|---|---|
-| B1 | Backend did not compile: `com.academic.service.storage.FileStorageService` was missing. Root cause: `.gitignore` rule `storage/` also matched `src/main/java/.../service/storage/`, so the package was never committed upstream. | Blocker |
-| B2 | `src/utils/api.js` defines the same keys twice inside one object literal (`getRequirements`, `getRequirementById`, `getRequirementStats`, `createRequirement`, `updateRequirement`, `submitRequirement`, `approveRequirement`, `rejectRequirement`, `getApprovedRequirements`, `getProjectByRequirementId`, `getDevelopers`, `getDeveloperProjects`, `assignDeveloperToProject`, `getAdminPermissions`, `updateAdminPermissions`, `applyAdminPreset`, `getAssignedUsers`, `assignUsersToAdmin`, `getAccessControlOverview`). The later definition silently wins; `assignDeveloperToProject` has two incompatible signatures. | High |
-| B3 | Integration tests run against the real local MySQL `academic_db` with the root password. | High |
-| B4 | Production frontend falls back to a hard-coded, already-dead Cloudflare tunnel URL. | Medium |
-| B5 | README is the Vite template; setup docs are Windows-only. | Low |
+| B1 | Backend did not compile: `service/storage/FileStorageService` was missing. The `.gitignore` rule `storage/` also matched the Java package, so it was never committed. | ✅ Recreated. The ignore rule is now anchored to the repo root. |
+| B2 | `api.js` defined ~19 methods twice; the later definition silently won, and the two `assignDeveloperToProject` versions took different arguments. "Live" mode also fell back to fake localStorage data whenever the backend errored. | ✅ Rewritten as a live-only client with one definition per method and typed errors. |
+| B3 | Integration tests ran against the real local MySQL, using the root password. | ✅ Tests now use in-memory H2. |
+| B4 | The production frontend fell back to a hard-coded, already-dead tunnel URL. | ✅ Production builds now require `VITE_API_URL`; the URL override is dev-only. |
+| B5 | The README was the Vite template; setup docs covered Windows only. | ✅ Rewritten. |
+| B6 | *(found during verification)* A bean cycle between `SecurityConfig`, the JWT filter, the repositories and Flyway would stop production startup. H2 tests couldn't catch it because Flyway is off there. | ✅ Flyway strategy moved to its own `FlywayConfig`. |
+| B7 | *(found during verification)* Migrations V1–V12 did not match the entities. `ddl-auto=update` had been hiding missing columns, and `user_management.status` was VARCHAR while the entity stores INT. | ✅ V14 adds the columns and aligns the types, mapping existing status values. |
 
 ### Security
-| # | Finding | Severity |
+| # | Finding | Status |
 |---|---|---|
-| S1 | **Payment bypass**: `POST /api/projects/{id}/pay-remaining` has no ownership or state check and accepts a client-chosen amount. Any user can unlock any project for ₹0.01 and is recorded as its owner. | Critical |
-| S2 | **Purchase hijack**: `POST /api/projects/{id}/purchase-marketplace` works on any project (not only marketplace items), overwrites `purchasedByUserId`, and sets status `ACCESS_GRANTED`. | Critical |
-| S3 | **Privilege escalation**: `POST /api/users` only blocks role `USER`; an `ADMIN` or `PROJECT_DEVELOPER` can create a `SUPER_ADMIN`. `PUT /api/users/{id}` lets an ADMIN promote a user to `SUPER_ADMIN`. | Critical |
-| S4 | `/api/orders/checkout` trusts client-supplied item name and amount and marks it `COMPLETED`. | High |
-| S5 | Hard-coded DB root password and JWT signing secret in `application.properties` (and test config); seeded accounts with known passwords. | High |
-| S6 | JWT filter trusts the role claim in the token; role changes, deactivation and deletion do not take effect until the token expires (24 h). | High |
-| S7 | IDOR: `GET /api/projects/by-requirement/{id}`, `GET /api/projects/{id}/assignments` have no access check. `PROJECT_DEVELOPER` can change any project's status and assign users to any project. | High |
-| S8 | Idempotency keys are global; replaying another user's key returns their order. | Medium |
-| S9 | CORS allows `*` origins with credentials; `@CrossOrigin("*")` on controllers. | Medium |
-| S10 | Registration skips OTP (`emailVerified=true` immediately). OTP exists but is never sent. | Medium (needs mail infra) |
-| S11 | Flyway `repair()` runs on every boot, which hides migration checksum drift. | Low |
-| S12 | Frontend mock mode (localStorage fake DB, fake logins) can be switched on in production builds. | Medium |
+| S1 | Payment bypass: `pay-remaining` unlocked any project for any amount. | ✅ Checks ownership and project state; the server prices it from the remaining balance. |
+| S2 | `purchase-marketplace` worked on any project and overwrote the buyer. | ✅ Requires a published library project allocated to the buyer's college. Access is granted per user through entitlements. |
+| S3 | Privilege escalation: ADMIN or DEVELOPER could create a SUPER_ADMIN; ADMIN could promote users. | ✅ Explicit role matrix. Nobody can mint a SUPER_ADMIN through the API. |
+| S4 | Checkout trusted the item and amount sent by the client. | ✅ The generic checkout and the fake catalogue are removed. |
+| S5 | DB root password and JWT secret were committed. | ✅ Moved to env or the git-ignored `application-local.properties`. The leaked JWT secret is rejected in `prod`. ⛔ **Rotate both.** |
+| S6 | The JWT role claim was trusted; deactivation took up to 24 h to apply. | ✅ The filter reloads the account on every request. |
+| S7 | IDOR in `/by-requirement`, `/assignments`, project status changes and project assignment. | ✅ Every endpoint checks access in the service layer. |
+| S8 | Idempotency keys were global; replaying one returned another user's order. | ✅ Keys are scoped per user. |
+| S9 | CORS allowed `*` with credentials. | ✅ Explicit allow-list. |
+| S10 | OTP was never sent; registration is immediate. | ⛔ Needs SMTP or an SMS provider. Registration still requires choosing a valid college. |
+| S11 | Flyway `repair()` ran on every boot. | ✅ Opt-in only. |
+| S12 | Mock mode could be enabled in production. | ✅ Removed. |
+| S13 | *(new)* Every boot reactivated all deactivated users. | ✅ Removed. |
+| S14 | *(new)* The `/api/permissions` endpoints had no role check. | ✅ Super Admin only. |
+| S15 | *(new)* Some checks treated anyone with the email `superadmin@academic.com` as Super Admin. | ✅ Removed; the role alone decides. |
+| S16 | *(new)* No brute-force protection on login. | ✅ Locks for 15 min after 5 failures per email and IP (in-memory, per instance). |
+| S17 | *(new)* "Delete all" endpoints for projects and requirements; project deletion used concatenated SQL. | ✅ Delete-all removed. Deletion is parameterized and refuses projects with orders or entitlements. |
+| S18 | *(new)* The audit log wasn't scoped by college for college admins. | ✅ Scoped to their college's members. |
 
-### Business model gaps
-| # | Gap |
+### Business gaps
+| # | Gap | Status |
+|---|---|---|
+| G1 | No colleges | ✅ `colleges` table, college admins, student membership, activate/deactivate |
+| G2 | One buyer per project | ✅ `project_entitlements`; existing buyers backfilled by V13 |
+| G3 | No allocations | ✅ `college_project_allocations` with per-college price; allocate, revoke, edit price |
+| G4 | Fake hard-coded catalogue | ✅ College-scoped marketplace backed by allocations |
+| G5 | Library metadata missing | ✅ Abstract, domain, tags, price, install steps, publish/archive, file categories, preview flag, repository importer |
+| G6 | Development workflow incomplete | ✅ College forwarding, quote, developer acceptance, progress, review loop, status history |
+| G7 | Payments were inline fakes | ✅ `PaymentGateway` abstraction, `payment_transactions`, labelled simulation, 503 when no gateway |
+| G8 | Dashboards not role-specific | ✅ Live dashboards per role |
+
+---
+
+## 2. Verification
+
+**Backend tests** (`mvn test`, H2): 54 pass. `PlatformIntegrationTest` covers:
+- college isolation for users, allocations, requirements and the audit log
+- privilege escalation
+- revoked access for deactivated tokens
+- marketplace scoping
+- server-side pricing and idempotency
+- 503 when no gateway is enabled
+- preview vs. full file access and audited downloads
+- permission endpoints locked down
+- the full custom-development lifecycle through final payment
+- dashboards for each role
+
+**Migrations on real MySQL 8.0** (throwaway Docker container, never the developer's database):
+- Fresh install: V1–V14 apply and Hibernate `validate` passes.
+- V12-shaped legacy database upgrade: status values mapped, marketplace projects turned into library projects, buyers carried over as entitlements, `validate` passes.
+
+**Browser end-to-end** (Vite dev server + backend on the MySQL container, light/dark and 375px mobile):
+1. Super Admin registers a college and creates its admin.
+2. Imports 3 projects from a fixture built from the real repository READMEs.
+3. Allocates 2 of them at a college price.
+4. A student registers into the college and sees only the 2 allocated projects.
+5. The student buys one (simulated payment, clearly labelled), gets full access, and downloads a valid ZIP. The unallocated project returns 403.
+6. Custom flow: student submits → admin forwards → Super Admin quotes → student pays the advance → Super Admin assigns developer and reviewer → developer accepts and uploads → reviewer approves.
+7. Deliverable returns 403 before the final payment and 200 after it. The requirement completes, and the timeline and orders are correct.
+
+**Frontend:** `npm run build` passes. `oxlint`: 0 errors, 2 fast-refresh style warnings.
+
+---
+
+## 3. Still open
+
+| Item | Why it's open |
 |---|---|
-| G1 | No **College** concept at all. ADMINs are global, not college-scoped. |
-| G2 | A project can have only one buyer (`projects.purchased_by_user_id`), so one library project cannot be distributed to many students or colleges. |
-| G3 | No college → project **allocation**. |
-| G4 | Marketplace catalog is a hard-coded list of 6 fake items in `OrderService.getCatalog()`. |
-| G5 | Library metadata missing: abstract, domain, tags, price, publish/archive state, install instructions, file categories, preview assets. |
-| G6 | Custom development flow has no "college admin forwards" step, no developer acceptance, no progress tracking, no status history/timeline. |
-| G7 | Payments are simulated inline with no provider abstraction and no transaction records. |
-| G8 | Dashboards are not role-specific and do not reflect colleges. |
-
----
-
-## 2. Target architecture (decisions)
-
-* **One central library.** Library projects live once in `projects` (`project_type = LIBRARY`).
-  Files are stored once (existing folder/asset storage). Colleges get access through
-  `college_project_allocations`, never through copies.
-* **Colleges.** New `colleges` table; `user_management.college_id` (required for ADMIN and USER,
-  null for SUPER_ADMIN and PROJECT_DEVELOPER).
-* **USER = student account** belonging to exactly one college.
-* **Entitlements.** New `project_entitlements` (user, project, source, order) replaces the single
-  `purchased_by_user_id` as the access grant. The old column is kept and back-filled for
-  compatibility.
-* **College isolation is enforced in services** through one `CollegeScopeService`; every
-  ADMIN/USER query is filtered by the actor's college; deny by default.
-* **Payments.** `PaymentGateway` interface; `SimulatedPaymentGateway` is active only when
-  `academic.payments.simulation-enabled=true` and every transaction it records is labelled
-  `SIMULATED`. The server always computes the amount. Access is granted only from a
-  verified payment transaction.
-* **Custom development flow.** Requirement: `DRAFT → SUBMITTED → (college admin forwards)
-  SUPER_ADMIN_REVIEW → (super admin quotes) ADVANCE_PAYMENT_PENDING → (paid)
-  ADVANCE_PAYMENT_COMPLETED → (project created, developer assigned) IN_PROGRESS → COMPLETED`.
-  Project: `DEVELOPER_ASSIGNED → (developer accepts) IN_PROGRESS → READY_FOR_REVIEW →
-  CHANGES_REQUESTED | REVIEW_APPROVED → READY_FOR_FINAL_PAYMENT → ACCESS_GRANTED`.
-  Every transition is written to `status_history` for the timeline.
-* **Config.** Secrets come from environment variables; a git-ignored
-  `application-local.properties` holds local values; tests use an in-memory H2 database.
-* **Frontend.** Keep React/Vite/plain CSS. Add a token-based design system, a reusable component
-  set, and a small set of ReactBits-style effects (reveal, count-up, spotlight card) written
-  in-house with `prefers-reduced-motion` respected, without pulling in an animation framework.
-
----
-
-## 3. Implementation checklist
-
-### Phase 0 — Stabilise
-- ✅ Baseline git commit
-- ✅ Restore `FileStorageService` (B1); anchor `.gitignore` storage rules
-- ⬜ Isolated H2 test profile (B3)
-- ⬜ Secrets to env / local profile (S5), CORS allow-list (S9), Flyway repair opt-in (S11)
-
-### Phase 1 — Backend domain
-- ⬜ Migration V13: colleges, allocations, entitlements, payment transactions, status history, library metadata columns
-- ⬜ College CRUD + college admin assignment
-- ⬜ Library management (metadata, publish/archive, file categories, preview flag)
-- ⬜ Allocation APIs (bulk allocate, revoke, price override)
-- ⬜ Marketplace API backed by allocations
-- ⬜ Payment gateway abstraction + verified purchase/advance/final flows
-- ⬜ Custom development workflow + status history
-- ⬜ Role dashboards API
-
-### Phase 2 — Security hardening
-- ⬜ JWT filter reloads user (S6)
-- ⬜ Role-creation matrix (S3)
-- ⬜ Payment endpoints (S1, S2, S4, S8)
-- ⬜ IDOR fixes (S7) and college isolation in user/requirement/order/project queries
-- ⬜ Entitlement-based file access
-
-### Phase 3 — Frontend
-- ⬜ Design tokens + component library
-- ⬜ App shell: collapsible sidebar, top bar, breadcrumbs, role navigation, mobile nav
-- ⬜ API layer cleanup (B2, B4, S12)
-- ⬜ Pages: dashboards, library, colleges, allocations, marketplace, project detail, orders, development workflow
-
-### Phase 4 — Verification
-- ⬜ Backend unit + integration tests (college isolation, payments, transitions, file access)
-- ⬜ Frontend build + lint
-- ⬜ End-to-end walk-through of all four roles against a local backend
-
-### Phase 5 — Deployment readiness
-- ⬜ `.env.example`, `application-local.properties.example`, README rewrite
-
----
-
-## 4. Session log
-
-*(newest last)*
-
-1. Audit completed; findings above.
+| ⛔ Import the full 55-project library | Needs the ~600 MB repository cloned on the backend machine and `LIBRARY_IMPORT_ROOT` set. The importer is built and tested against a fixture made from that repository's own READMEs. |
+| ⛔ Real payment gateway | Needs merchant credentials. The integration point is ready (`PaymentGateway`); see the README. |
+| ⛔ Email/OTP verification | Needs mail infrastructure. |
+| ⛔ Rotate the leaked JWT secret and MySQL password | Must be done by the owner on their servers. |
+| ⬜ Refund workflow | Statuses exist (`REFUNDED`); there is no refund action or UI yet. |
+| ⬜ "Recent downloads" on the student dashboard | Downloads are audited (`FILE_DOWNLOADED`) but not yet shown on the dashboard. |
+| ⬜ Platform settings screen | Settings are environment-based today. |
+| ⬜ Login lockout across instances | In-memory, so it doesn't share state between instances. Use Redis or the database for multi-node deployments. |
+| 🟡 Retained admin screens (users, admins, developers, audit log, profile, file explorer and modals) | Adapted and smoke-tested in the browser (they render with live data); not every edit form was clicked through. |
