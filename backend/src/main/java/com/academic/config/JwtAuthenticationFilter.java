@@ -1,5 +1,8 @@
 package com.academic.config;
 
+import com.academic.model.User;
+import com.academic.model.UserStatus;
+import com.academic.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,12 +18,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
+/**
+ * Authenticates requests from the bearer token, then re-loads the account so that
+ * deactivation, deletion and role changes take effect immediately instead of when the
+ * token expires. The role always comes from the database, never from the token claim.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(
@@ -28,25 +40,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @org.springframework.lang.NonNull HttpServletResponse response,
             @org.springframework.lang.NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        try {
-            String jwt = getJwtFromRequest(request);
+        String jwt = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                String email = tokenProvider.getEmailFromToken(jwt);
-                String role = tokenProvider.getRoleFromToken(jwt);
+        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            String email = tokenProvider.getEmailFromToken(jwt);
+            Optional<User> account = userRepository.findByEmailAndDeletedFalse(email);
 
-                // Spring Security matches roles with 'ROLE_' prefix for standard role checks
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
-                
+            if (account.isPresent() && account.get().getStatus() == UserStatus.ACTIVE) {
+                User user = account.get();
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, Collections.singletonList(authority));
-                
+                        user.getEmail(), null, Collections.singletonList(authority));
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);

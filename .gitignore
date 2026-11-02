@@ -32,8 +32,8 @@ target/
 backend/target/
 
 # Storage uploads
-storage/
-backend/storage/
+/storage/
+/backend/storage/
 
 .vercel
 

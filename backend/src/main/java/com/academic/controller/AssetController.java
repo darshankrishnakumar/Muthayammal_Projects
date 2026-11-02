@@ -15,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/assets")
-@CrossOrigin(origins = "*")
 public class AssetController {
 
     @Autowired

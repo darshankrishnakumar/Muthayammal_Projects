@@ -1,0 +1,12 @@
+# Local development overrides. Copy to application-local.properties (git-ignored).
+spring.datasource.password=change-me
+
+# Generate with: openssl rand -base64 48
+academic.jwt.secret=REPLACE_WITH_BASE64_SECRET_OF_AT_LEAST_32_BYTES
+
+academic.flyway.repair-on-start=true
+academic.payments.simulation-enabled=true
+academic.seed.demo-accounts=true
+
+# Optional: local checkout of the master project repository for the library importer
+# academic.library.import-root=/absolute/path/to/Muthayammal_Projects

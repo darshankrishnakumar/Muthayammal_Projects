@@ -30,10 +30,10 @@ class ProjectControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("Unauthenticated request to /api/projects should return 403 Forbidden or 401 Unauthorized")
+    @DisplayName("Unauthenticated request to /api/projects should return 401 Unauthorized")
     void testUnauthenticatedAccessDenied() throws Exception {
         mockMvc.perform(get("/api/projects"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
