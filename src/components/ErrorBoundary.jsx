@@ -1,6 +1,12 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
+const CHUNK_ERROR_HINTS = ['dynamically imported module', 'Failed to fetch', 'Loading chunk', 'Unexpected token'];
+
+/**
+ * Catches render errors anywhere below it. Renders outside the toast provider and layout shell,
+ * so it only relies on design-system CSS classes.
+ */
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -12,107 +18,56 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Unhandled UI render error caught by ErrorBoundary:', error, errorInfo);
-    
-    // Auto-reload if error was caused by a stale Vite chunk after a new deployment
-    const errMsg = error?.message || '';
-    if (
-      errMsg.includes('dynamically imported module') ||
-      errMsg.includes('Failed to fetch') ||
-      errMsg.includes('Loading chunk') ||
-      errMsg.includes('Unexpected token')
-    ) {
-      const lastReload = sessionStorage.getItem('chunk_error_reload');
-      const now = Date.now();
-      if (!lastReload || now - Number(lastReload) > 10000) {
-        sessionStorage.setItem('chunk_error_reload', String(now));
-        window.location.reload();
+    console.error('Unhandled render error caught by ErrorBoundary:', error, errorInfo);
+
+    // A stale lazy chunk after a deployment: reload once (at most every 10 seconds).
+    const message = error?.message || '';
+    if (CHUNK_ERROR_HINTS.some((hint) => message.includes(hint))) {
+      try {
+        const lastReload = sessionStorage.getItem('chunk_error_reload');
+        const now = Date.now();
+        if (!lastReload || now - Number(lastReload) > 10000) {
+          sessionStorage.setItem('chunk_error_reload', String(now));
+          window.location.reload();
+        }
+      } catch {
+        /* storage unavailable */
       }
     }
   }
 
   handleReload = () => {
-    // Clear caches and reload
     if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => caches.delete(name));
-      });
+      caches.keys().then((names) => names.forEach((name) => caches.delete(name))).catch(() => {});
     }
     window.location.reload();
   };
 
   render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'var(--bg-main, #0f172a)',
-          color: 'var(--text-main, #f8fafc)',
-          padding: '24px',
-          fontFamily: 'system-ui, -apple-system, sans-serif'
-        }}>
-          <div style={{
-            maxWidth: '480px',
-            width: '100%',
-            background: 'var(--bg-card, #1e293b)',
-            border: '1px solid var(--border-color, rgba(255,255,255,0.1))',
-            borderRadius: '16px',
-            padding: '32px',
-            textAlign: 'center',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.4)'
-          }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: 'rgba(239, 68, 68, 0.15)',
-              color: '#ef4444',
-              marginBottom: '16px'
-            }}>
-              <AlertTriangle size={28} />
-            </div>
+    if (!this.state.hasError) return this.props.children;
 
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '0 0 8px 0' }}>
-              Interface Render Notice
-            </h2>
-
-            <p style={{ color: 'var(--text-muted, #94a3b8)', fontSize: '0.88rem', margin: '0 0 24px 0', lineHeight: 1.5 }}>
-              The application encountered an update transition. Click below to refresh your workspace assets.
+    return (
+      <div className="flex items-center justify-center" style={{ minHeight: '100vh', padding: 24, background: 'var(--bg)' }}>
+        <div className="card" style={{ maxWidth: 440, width: '100%' }}>
+          <div className="empty-state">
+            <div className="empty-icon"><AlertTriangle aria-hidden="true" /></div>
+            <div className="empty-title">Something went wrong</div>
+            <p className="empty-text">
+              The page could not be displayed. Reloading usually fixes this, especially right after an update.
             </p>
-
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <button
-                onClick={this.handleReload}
-                style={{
-                  background: 'var(--primary, #4f46e5)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '10px 20px',
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <RefreshCw size={16} />
-                <span>Refresh Workspace</span>
-              </button>
-            </div>
+            {import.meta.env.DEV && this.state.error?.message && (
+              <pre className="surface-muted text-xs text-left mt-4 w-full overflow-auto" style={{ padding: 12, whiteSpace: 'pre-wrap' }}>
+                {this.state.error.message}
+              </pre>
+            )}
+            <button type="button" className="btn btn-primary" onClick={this.handleReload}>
+              <RefreshCw aria-hidden="true" />
+              Reload
+            </button>
           </div>
         </div>
-      );
-    }
-
-    return this.props.children;
+      </div>
+    );
   }
 }
 

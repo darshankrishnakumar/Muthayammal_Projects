@@ -1,188 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import { History, X, CheckCircle2, RotateCcw, Eye, Clock, User, FileText, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Eye, History, RotateCcw } from 'lucide-react';
 import { api } from '../utils/api';
+import { useAsync } from '../hooks/useAsync';
+import { Modal, ConfirmDialog, Badge, EmptyState, Alert, SkeletonRows, useToast } from './ui';
+import { bytes, dateTime } from '../utils/format';
 
-const VersionHistoryModal = ({ asset, project, onClose, onPreviewVersion, onVersionRestored }) => {
-  const [versions, setVersions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [actionSuccess, setActionSuccess] = useState('');
-  const [restoringVersionNo, setRestoringVersionNo] = useState(null);
+const isCurrent = (v) => Boolean(v.currentVersion ?? v.isCurrentVersion);
 
-  useEffect(() => {
-    fetchVersions();
-  }, [asset.id]);
+/**
+ * Lists every stored version of an asset. Previewing is available to anyone who can open the file;
+ * restoring is a write action and only offered when `canRestore` is true.
+ */
+const VersionHistoryModal = ({ asset, canRestore = false, onClose, onPreviewVersion, onVersionRestored }) => {
+  const { notify } = useToast();
+  const { data, loading, error, reload } = useAsync(() => api.getAssetVersions(asset.id), [asset.id]);
+  const versions = (data || []).slice().sort((a, b) => b.versionNo - a.versionNo);
 
-  const fetchVersions = async () => {
+  const [restoreTarget, setRestoreTarget] = useState(null);
+  const [restoring, setRestoring] = useState(false);
+
+  const confirmRestore = async () => {
+    if (!restoreTarget) return;
+    setRestoring(true);
     try {
-      setLoading(true);
-      setError('');
-      const list = await api.getAssetVersions(asset.id);
-      setVersions(list);
+      await api.restoreAssetVersion(asset.id, restoreTarget.versionNo);
+      notify(`Version ${restoreTarget.versionNo} is now current`);
+      setRestoreTarget(null);
+      await reload();
+      onVersionRestored?.();
     } catch (err) {
-      setError(err.message || 'Failed to load version history');
+      notify(err.message, { tone: 'error' });
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRestore = async (versionNo) => {
-    if (!window.confirm(`Are you sure you want to restore Version v${versionNo} as the current active file?`)) {
-      return;
-    }
-
-    try {
-      setRestoringVersionNo(versionNo);
-      setError('');
-      setActionSuccess('');
-
-      await api.restoreAssetVersion(asset.id, versionNo);
-      setActionSuccess(`Successfully restored Version v${versionNo} as active.`);
-      await fetchVersions();
-      if (onVersionRestored) onVersionRestored();
-    } catch (err) {
-      setError(err.message || 'Failed to restore version');
-    } finally {
-      setRestoringVersionNo(null);
+      setRestoring(false);
     }
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal-card card" style={{ maxWidth: '650px', width: '100%', padding: '24px', maxHeight: '85vh', display: 'flex', flexDirection: 'column' }}>
-        {/* Header */}
-        <div className="flex justify-between items-center" style={{ marginBottom: '16px' }}>
-          <div className="flex items-center gap-3">
-            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <History size={20} />
-            </div>
-            <div>
-              <h3 className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
-                Version History
-              </h3>
-              <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
-                {asset.originalFileName} (Total Versions: {versions.length})
-              </p>
-            </div>
-          </div>
-          <button className="btn-close" onClick={onClose}>×</button>
-        </div>
-
-        {/* Notifications */}
-        {error && (
-          <div className="card text-error" style={{ padding: '10px 14px', marginBottom: '16px', backgroundColor: 'var(--error-light)' }}>
-            <AlertCircle size={15} inline style={{ marginRight: '6px' }} />
-            {error}
-          </div>
-        )}
-        {actionSuccess && (
-          <div className="card text-success" style={{ padding: '10px 14px', marginBottom: '16px', backgroundColor: 'var(--success-light)' }}>
-            <CheckCircle2 size={15} inline style={{ marginRight: '6px' }} />
-            {actionSuccess}
-          </div>
-        )}
-
-        {/* Versions Timeline List */}
-        <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-          {loading ? (
-            <div className="text-center p-8">
-              <div className="loading-spinner-sm" style={{ margin: '0 auto 8px' }}></div>
-              <p className="text-muted" style={{ fontSize: '0.85rem' }}>Loading version lineage...</p>
-            </div>
-          ) : versions.length === 0 ? (
-            <div className="text-center p-8 text-muted">No version history available.</div>
-          ) : (
-            <div className="version-timeline">
-              {versions.map((ver) => (
-                <div key={ver.id} className={`version-item card ${ver.isCurrentVersion ? 'version-current' : ''}`}>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`badge ${ver.isCurrentVersion ? 'badge-primary' : 'badge-secondary'}`} style={{ fontWeight: 700 }}>
-                          v{ver.versionNo}
-                        </span>
-                        {ver.isCurrentVersion && (
-                          <span className="badge badge-success flex items-center gap-1" style={{ fontSize: '0.7rem' }}>
-                            <CheckCircle2 size={11} /> CURRENT ACTIVE
-                          </span>
-                        )}
-                        <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{ver.originalFileName}</span>
-                      </div>
-
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', margin: '6px 0', lineHeight: 1.4 }}>
-                        {ver.description || 'No description notes provided for this version.'}
-                      </p>
-
-                      <div className="flex items-center gap-4 text-muted" style={{ fontSize: '0.75rem', marginTop: '8px' }}>
-                        <span className="flex items-center gap-1">
-                          <User size={12} /> {ver.uploadedBy}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={12} /> {new Date(ver.createdAt).toLocaleString()}
-                        </span>
-                        <span>
-                          {(ver.fileSize / 1024).toFixed(1)} KB
-                        </span>
-                      </div>
+    <>
+      <Modal
+        open
+        size="lg"
+        onClose={onClose}
+        title="Version history"
+        description={`${asset.originalFileName}${versions.length ? ` · ${versions.length} version${versions.length === 1 ? '' : 's'}` : ''}`}
+        footer={<button type="button" className="btn btn-secondary" onClick={onClose}>Close</button>}
+      >
+        {loading && !data ? (
+          <SkeletonRows rows={3} height={64} />
+        ) : error ? (
+          <Alert tone="danger" title="Could not load versions">{error.message}</Alert>
+        ) : versions.length === 0 ? (
+          <EmptyState icon={History} title="No versions recorded" />
+        ) : (
+          <div className="list border rounded">
+            {versions.map((v) => {
+              const current = isCurrent(v);
+              return (
+                <div key={v.id ?? v.versionNo} className="list-item items-start" style={current ? { background: 'var(--accent-soft)' } : undefined}>
+                  <Badge tone={current ? 'accent' : 'neutral'} className="font-mono shrink-0">v{v.versionNo}</Badge>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium truncate">{v.originalFileName}</span>
+                      {current && <Badge tone="success" dot>Current</Badge>}
                     </div>
-
-                    {/* Version Actions */}
-                    <div className="flex items-center gap-2">
-                      <button 
-                        className="btn btn-secondary btn-sm flex items-center gap-1"
-                        style={{ fontSize: '0.75rem', padding: '5px 10px' }}
-                        onClick={() => onPreviewVersion(ver.versionNo)}
-                      >
-                        <Eye size={13} />
-                        <span>Preview</span>
-                      </button>
-
-                      {!ver.isCurrentVersion && (
-                        <button 
-                          className="btn btn-primary btn-sm flex items-center gap-1"
-                          style={{ fontSize: '0.75rem', padding: '5px 10px' }}
-                          onClick={() => handleRestore(ver.versionNo)}
-                          disabled={restoringVersionNo === ver.versionNo}
-                        >
-                          <RotateCcw size={13} />
-                          <span>{restoringVersionNo === ver.versionNo ? 'Restoring...' : 'Restore'}</span>
-                        </button>
-                      )}
+                    <p className="text-sm mt-1">{v.description || 'No change notes.'}</p>
+                    <div className="text-xs text-subtle mt-1">
+                      {[v.uploadedBy, dateTime(v.createdAt), v.fileSize != null ? bytes(v.fileSize) : null].filter(Boolean).join(' · ')}
                     </div>
                   </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => onPreviewVersion?.(v.versionNo)}>
+                      <Eye aria-hidden="true" /> Preview
+                    </button>
+                    {canRestore && !current && (
+                      <button type="button" className="btn btn-secondary btn-sm" onClick={() => setRestoreTarget(v)}>
+                        <RotateCcw aria-hidden="true" /> Restore
+                      </button>
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              );
+            })}
+          </div>
+        )}
+      </Modal>
 
-        {/* Footer */}
-        <div className="flex justify-end" style={{ marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
-          <button className="btn btn-secondary" onClick={onClose}>
-            Close
-          </button>
-        </div>
-      </div>
-
-      <style>{`
-        .version-timeline {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        .version-item {
-          padding: 14px 16px;
-          border: 1px solid var(--border-color);
-          background: var(--bg-main);
-          border-radius: 8px;
-          transition: all 0.2s ease;
-        }
-        .version-current {
-          border-color: var(--primary);
-          background: rgba(59, 130, 246, 0.05);
-        }
-      `}</style>
-    </div>
+      <ConfirmDialog
+        open={Boolean(restoreTarget)}
+        title={restoreTarget ? `Restore version ${restoreTarget.versionNo}?` : ''}
+        text="The restored version becomes the current file. Newer versions stay in the history."
+        confirmLabel="Restore"
+        busy={restoring}
+        onConfirm={confirmRestore}
+        onClose={() => !restoring && setRestoreTarget(null)}
+      />
+    </>
   );
 };
 

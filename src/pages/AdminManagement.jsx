@@ -1,529 +1,341 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import { Pencil, Power, Search, Shield, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
+import { useAsync, useDebounced } from '../hooks/useAsync';
 import AdminAccessControlModal from '../components/AdminAccessControlModal';
-import { 
-  ShieldCheck, 
-  UserPlus, 
-  Edit3, 
-  Trash2,
-  X, 
-  Check, 
-  AlertTriangle,
-  Lock,
-  Shield
-} from 'lucide-react';
+import {
+  PageHeader, Card, Avatar, Badge, StatusBadge, EmptyState, ErrorState, SkeletonRows,
+  Modal, ConfirmDialog, Field, useToast,
+} from '../components/ui';
+import { date } from '../utils/format';
+
+const MIN_PASSWORD = 8;
+const EMPTY_FORM = { fullName: '', email: '', password: '', collegeId: '', status: 'ACTIVE' };
 
 const AdminManagement = () => {
   const { user: currentUser } = useAuth();
-  const [admins, setAdmins] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { notify } = useToast();
 
-  // Access Control Modal State
-  const [accessModalOpen, setAccessModalOpen] = useState(false);
-  const [selectedAdminForAccess, setSelectedAdminForAccess] = useState(null);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const debouncedSearch = useDebounced(search);
 
-  // Edit/Create Modal State
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingAdmin, setEditingAdmin] = useState(null); // null means "Create Mode"
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    status: 'ACTIVE'
-  });
+  const { data, loading, error, reload } = useAsync(
+    () => api.getAdmins(debouncedSearch, statusFilter),
+    [debouncedSearch, statusFilter],
+  );
+  const admins = data || [];
 
-  const isSuperAdmin = currentUser?.role === 'SUPER_ADMIN';
+  const colleges = useAsync(() => api.getColleges(), []);
+  const collegeOptions = useMemo(
+    () => (colleges.data || []).slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')),
+    [colleges.data],
+  );
 
-  const loadAdmins = useCallback(async () => {
-    if (!isSuperAdmin) return;
-    setLoading(true);
-    setError('');
-    try {
-      const data = await api.getAdmins();
-      setAdmins(data);
-    } catch (err) {
-      setError(err.message || 'Failed to retrieve administrator directories.');
-    } finally {
-      setLoading(false);
-    }
-  }, [isSuperAdmin]);
+  // Create / edit
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [formError, setFormError] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadAdmins();
-  }, [loadAdmins]);
+  // Delete / access control
+  const [deleting, setDeleting] = useState(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [accessAdmin, setAccessAdmin] = useState(null);
 
-  // Access Denied Fallback
-  if (!isSuperAdmin) {
-    return (
-      <div className="card text-center" style={{ padding: '60px 20px', maxWidth: '500px', margin: '40px auto' }}>
-        <div className="error-icon-wrapper" style={{ margin: '0 auto 20px', width: '56px', height: '56px', borderRadius: '50%', backgroundColor: 'var(--error-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--error)' }}>
-          <Lock size={24} />
-        </div>
-        <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: '8px' }}>Security Access Denied</h2>
-        <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '24px' }}>
-          This administrative management interface is restricted exclusively to <strong>Super Administrators</strong>.
-        </p>
-        <button className="btn btn-primary" onClick={() => window.history.back()}>
-          Return to Dashboard
-        </button>
-      </div>
-    );
-  }
+  const openCreate = () => {
+    setEditing(null);
+    setForm(EMPTY_FORM);
+    setFormError('');
+    setFormOpen(true);
+  };
 
-  const handleOpenCreateModal = () => {
-    setEditingAdmin(null);
-    setFormData({
-      fullName: '',
-      email: '',
+  const openEdit = (admin) => {
+    setEditing(admin);
+    setForm({
+      fullName: admin.fullName || '',
+      email: admin.email || '',
       password: '',
-      status: 'ACTIVE'
+      collegeId: admin.college?.id ? String(admin.college.id) : '',
+      status: admin.status || 'ACTIVE',
     });
-    setModalOpen(true);
+    setFormError('');
+    setFormOpen(true);
   };
 
-  const handleOpenEditModal = (admin) => {
-    setEditingAdmin(admin);
-    setFormData({
-      fullName: admin.fullName,
-      email: admin.email,
-      password: '', // Keep blank unless resetting
-      status: admin.status
-    });
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setEditingAdmin(null);
-  };
-
-  const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const setField = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    try {
-      if (editingAdmin) {
-        // Update Admin
-        const updatePayload = {
-          fullName: formData.fullName,
-          email: formData.email,
-          status: formData.status
-        };
-        if (formData.password) {
-          updatePayload.password = formData.password;
-        }
-
-        await api.updateAdmin(editingAdmin.id, updatePayload);
-        setSuccess(`Administrator account "${formData.fullName}" updated successfully.`);
-      } else {
-        // Create Admin
-        if (!formData.password) {
-          setError('A password is required to create new administrator credentials.');
-          return;
-        }
-        await api.createAdmin(formData);
-        setSuccess(`Administrator account "${formData.fullName}" registered successfully.`);
-      }
-
-      handleCloseModal();
-      loadAdmins();
-      setTimeout(() => setSuccess(''), 4000);
-    } catch (err) {
-      setError(err.message || 'An error occurred while saving the administrator profile.');
-    }
-  };
-
-  const handleToggleStatus = async (admin) => {
-    setError('');
-    const newStatus = admin.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    try {
-      await api.updateAdmin(admin.id, { status: newStatus });
-      loadAdmins();
-      setSuccess(`Status of Administrator ${admin.fullName} changed to ${newStatus}.`);
-      setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
-      setError(err.message || 'Failed to update administrator status.');
-    }
-  };
-
-  const handleDeleteAdmin = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete administrator account "${name}"? This action will revoke their administrative access.`)) {
+    setFormError('');
+    if (!form.collegeId) {
+      setFormError('Select the college this administrator manages.');
       return;
     }
-
-    setError('');
+    if ((!editing || form.password) && form.password.length < MIN_PASSWORD) {
+      setFormError(`Password must be at least ${MIN_PASSWORD} characters.`);
+      return;
+    }
+    setSaving(true);
     try {
-      await api.deleteAdmin(id);
-      loadAdmins();
-      setSuccess(`Administrator account "${name}" successfully deleted.`);
-      setTimeout(() => setSuccess(''), 3000);
+      const payload = {
+        fullName: form.fullName.trim(),
+        email: form.email.trim().toLowerCase(),
+        status: form.status,
+        collegeId: String(form.collegeId),
+      };
+      if (form.password) payload.password = form.password;
+      if (editing) {
+        await api.updateAdmin(editing.id, payload);
+        notify(`${payload.fullName} updated`);
+      } else {
+        await api.createAdmin(payload);
+        notify(`${payload.fullName} added as a college admin`);
+      }
+      setFormOpen(false);
+      reload();
     } catch (err) {
-      setError(err.message || 'Failed to delete administrator.');
+      setFormError(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
+  const toggleStatus = async (admin) => {
+    const next = admin.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    try {
+      await api.updateAdmin(admin.id, { status: next });
+      notify(`${admin.fullName} is now ${next === 'ACTIVE' ? 'active' : 'inactive'}`);
+      reload();
+    } catch (err) {
+      notify(err.message, { tone: 'error' });
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!deleting) return;
+    setDeleteBusy(true);
+    try {
+      await api.deleteAdmin(deleting.id);
+      notify(`${deleting.fullName} deleted`);
+      setDeleting(null);
+      reload();
+    } catch (err) {
+      notify(err.message, { tone: 'error' });
+    } finally {
+      setDeleteBusy(false);
+    }
+  };
+
+  if (currentUser?.role !== 'SUPER_ADMIN') {
+    return <ErrorState error={{ status: 403, message: 'Only the Super Admin can manage college administrators.' }} />;
+  }
+
   return (
-    <div className="admin-manager-wrapper">
-      {success && (
-        <div className="alert alert-success">
-          <Check size={16} />
-          <span>{success}</span>
-        </div>
-      )}
-      {error && (
-        <div className="alert alert-danger">
-          <AlertTriangle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Control Panel */}
-      <div className="control-bar card">
-        <div className="flex items-center gap-2">
-          <ShieldCheck size={20} className="text-primary" />
-          <h4 style={{ fontWeight: 600, fontSize: '1rem' }}>Administrator Directory</h4>
-        </div>
-
-        <button onClick={handleOpenCreateModal} className="btn btn-primary">
-          <UserPlus size={16} />
-          <span>Register Admin</span>
-        </button>
-      </div>
-
-      {/* Admins Table */}
-      <div className="table-container card">
-        {loading ? (
-          <div className="table-loading">
-            <p>Loading secure administrator records...</p>
-          </div>
-        ) : admins.length === 0 ? (
-          <div className="table-empty">
-            <ShieldCheck size={48} className="text-muted" />
-            <h3>No administrators found</h3>
-            <p className="text-muted">Register a new administrator to assign project management tasks.</p>
-          </div>
-        ) : (
-          <table className="custom-table">
-            <thead>
-              <tr>
-                <th>Administrator Name</th>
-                <th>Email Address</th>
-                <th>Access Level</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {admins.map((a) => (
-                <tr key={a.id}>
-                  <td>
-                    <div className="table-user-name">
-                      <span className="avatar-sm" style={{ backgroundColor: 'var(--error-light)', color: 'var(--error)' }}>
-                        {a.fullName.charAt(0)}
-                      </span>
-                      <span style={{ fontWeight: 600 }}>{a.fullName}</span>
-                      {currentUser?.id === a.id && <span className="badge badge-primary ms-1" style={{ fontSize: '0.6rem' }}>You</span>}
-                    </div>
-                  </td>
-                  <td>{a.email}</td>
-                  <td>
-                    <span className="badge badge-danger">ADMIN</span>
-                  </td>
-                  <td>
-                    <button 
-                      onClick={() => handleToggleStatus(a)}
-                      className={`status-toggle ${a.status === 'ACTIVE' ? 'status-active' : 'status-inactive'}`}
-                      title="Click to toggle administrator status"
-                    >
-                      <span className="indicator-dot"></span>
-                      <span>{a.status}</span>
-                    </button>
-                  </td>
-                  <td>
-                    <span className="text-muted" style={{ fontSize: '0.85rem' }}>
-                      {new Date(a.createdAt).toLocaleDateString()}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="table-actions-cell">
-                      <button
-                        onClick={() => {
-                          setSelectedAdminForAccess(a);
-                          setAccessModalOpen(true);
-                        }}
-                        className="btn-action"
-                        style={{ color: 'var(--primary)', borderColor: 'rgba(99, 102, 241, 0.3)' }}
-                        title="Manage Permissions, Presets & User Scopes"
-                      >
-                        <Shield size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleOpenEditModal(a)}
-                        className="btn-action edit-action"
-                        title="Edit administrator credentials"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteAdmin(a.id, a.fullName)}
-                        className="btn-action delete-action"
-                        disabled={currentUser?.id === a.id || a.role === 'SUPER_ADMIN'}
-                        title={currentUser?.id === a.id ? 'Cannot delete your own account' : 'Delete administrator account'}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Create / Edit Admin Modal */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3 className="modal-title">
-                {editingAdmin ? 'Modify Administrator Profile' : 'Register New Administrator'}
-              </h3>
-              <button onClick={handleCloseModal} className="modal-close">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  className="form-control"
-                  placeholder="e.g. Sarah Jenkins"
-                  value={formData.fullName}
-                  onChange={handleFormChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  placeholder="e.g. sjenkins@academic.com"
-                  value={formData.email}
-                  onChange={handleFormChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">
-                  <span>Secret Password</span>
-                  {editingAdmin && <span className="text-muted" style={{ fontWeight: 400, fontSize: '0.75rem' }}>(leave blank to keep current)</span>}
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder={editingAdmin ? "••••••••" : "Choose a secure password"}
-                  value={formData.password}
-                  onChange={handleFormChange}
-                  required={!editingAdmin}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Account Status</label>
-                <select
-                  name="status"
-                  className="form-control form-select"
-                  value={formData.status}
-                  onChange={handleFormChange}
-                >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                </select>
-              </div>
-
-              <div className="modal-footer">
-                <button type="button" onClick={handleCloseModal} className="btn btn-secondary">
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingAdmin ? 'Save Changes' : 'Register Administrator'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Admin Access Control & Permission Scoping Modal */}
-      <AdminAccessControlModal
-        admin={selectedAdminForAccess}
-        isOpen={accessModalOpen}
-        onClose={() => {
-          setAccessModalOpen(false);
-          setSelectedAdminForAccess(null);
-        }}
-        onUpdated={loadAdmins}
+    <>
+      <PageHeader
+        title="College admins"
+        description="Administrators manage students and review requirements for their own college."
+        actions={
+          <button type="button" className="btn btn-primary" onClick={openCreate}>
+            <UserPlus aria-hidden="true" /> Add admin
+          </button>
+        }
       />
 
-      <style>{`
-        .admin-manager-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
+      <div className="toolbar">
+        <div className="input-with-icon grow">
+          <Search aria-hidden="true" />
+          <input className="input" placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        <select className="select" style={{ width: 160 }} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} aria-label="Status">
+          <option value="">All statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
 
-        .alert {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 20px;
-          border-radius: var(--radius-md);
-          font-size: 0.9rem;
-          text-align: left;
-        }
+      {error ? (
+        <ErrorState error={error} onRetry={reload} />
+      ) : (
+        <Card flush>
+          {loading && !data ? (
+            <div className="p-4"><SkeletonRows rows={5} /></div>
+          ) : admins.length === 0 ? (
+            <EmptyState
+              icon={ShieldCheck}
+              title={search || statusFilter ? 'No admins match these filters' : 'No college admins yet'}
+              text={search || statusFilter ? 'Try a different search or status.' : 'Add an administrator for each college you onboard.'}
+              action={!search && !statusFilter && (
+                <button type="button" className="btn btn-primary" onClick={openCreate}><UserPlus aria-hidden="true" /> Add admin</button>
+              )}
+            />
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Administrator</th>
+                    <th>College</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th className="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {admins.map((a) => {
+                    const isSelf = currentUser?.id === a.id;
+                    return (
+                      <tr key={a.id}>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <Avatar name={a.fullName} />
+                            <div className="min-w-0">
+                              <div className="font-medium flex items-center gap-2">
+                                {a.fullName}
+                                {isSelf && <Badge tone="accent">You</Badge>}
+                              </div>
+                              <div className="text-sm text-muted">{a.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          {a.college ? (
+                            <>
+                              <div>{a.college.name}</div>
+                              {a.college.code && <div className="text-xs text-subtle font-mono">{a.college.code}</div>}
+                            </>
+                          ) : (
+                            <Badge tone="warning">No college</Badge>
+                          )}
+                        </td>
+                        <td><StatusBadge status={a.status} /></td>
+                        <td className="cell-muted nowrap">{date(a.createdAt)}</td>
+                        <td>
+                          <div className="flex items-center justify-end gap-1">
+                            <button type="button" className="btn btn-ghost btn-icon btn-sm" onClick={() => setAccessAdmin(a)} title="Permissions and scopes" aria-label="Permissions and scopes">
+                              <Shield aria-hidden="true" />
+                            </button>
+                            <button type="button" className="btn btn-ghost btn-icon btn-sm" onClick={() => openEdit(a)} title="Edit" aria-label="Edit">
+                              <Pencil aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-icon btn-sm"
+                              onClick={() => toggleStatus(a)}
+                              disabled={isSelf}
+                              title={a.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                              aria-label={a.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                            >
+                              <Power aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-danger-ghost btn-icon btn-sm"
+                              onClick={() => setDeleting(a)}
+                              disabled={isSelf || a.role === 'SUPER_ADMIN'}
+                              title="Delete"
+                              aria-label="Delete"
+                            >
+                              <Trash2 aria-hidden="true" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
+      )}
 
-        .alert-success {
-          background-color: var(--success-light);
-          color: var(--success);
-          border: 1px solid hsla(142, 70%, 45%, 0.15);
+      <Modal
+        open={formOpen}
+        onClose={() => !saving && setFormOpen(false)}
+        title={editing ? 'Edit college admin' : 'Add college admin'}
+        description={editing ? editing.email : 'The administrator can sign in immediately with this password.'}
+        footer={
+          <>
+            <button type="button" className="btn btn-secondary" onClick={() => setFormOpen(false)} disabled={saving}>Cancel</button>
+            <button type="submit" form="admin-form" className="btn btn-primary" disabled={saving}>
+              {saving && <span className="spinner" />} {editing ? 'Save changes' : 'Add admin'}
+            </button>
+          </>
         }
+      >
+        <form id="admin-form" onSubmit={handleSubmit}>
+          {formError && <div className="alert alert-danger">{formError}</div>}
+          <Field label="Full name" htmlFor="admin-name">
+            <input id="admin-name" name="fullName" className="input" value={form.fullName} onChange={setField} required autoComplete="off" />
+          </Field>
+          <Field label="Email" htmlFor="admin-email">
+            <input id="admin-email" name="email" type="email" className="input" value={form.email} onChange={setField} required autoComplete="off" />
+          </Field>
+          <Field
+            label="College"
+            htmlFor="admin-college"
+            error={colleges.error ? `Could not load colleges: ${colleges.error.message}` : undefined}
+            hint={!colleges.loading && collegeOptions.length === 0 ? 'Create a college first.' : undefined}
+          >
+            <select id="admin-college" name="collegeId" className="select" value={form.collegeId} onChange={setField} required disabled={colleges.loading}>
+              <option value="">{colleges.loading ? 'Loading colleges…' : 'Select a college'}</option>
+              {collegeOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}{c.code ? ` (${c.code})` : ''}{c.active === false ? ' — inactive' : ''}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <div className="form-grid">
+            <Field
+              label="Password"
+              htmlFor="admin-password"
+              hint={editing ? 'Leave blank to keep the current password.' : `At least ${MIN_PASSWORD} characters.`}
+            >
+              <input
+                id="admin-password"
+                name="password"
+                type="password"
+                className="input"
+                value={form.password}
+                onChange={setField}
+                required={!editing}
+                minLength={MIN_PASSWORD}
+                autoComplete="new-password"
+              />
+            </Field>
+            <Field label="Status" htmlFor="admin-status">
+              <select id="admin-status" name="status" className="select" value={form.status} onChange={setField}>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+              </select>
+            </Field>
+          </div>
+        </form>
+      </Modal>
 
-        .alert-danger {
-          background-color: var(--error-light);
-          color: var(--error);
-          border: 1px solid hsla(350, 80%, 55%, 0.15);
-        }
+      <ConfirmDialog
+        open={Boolean(deleting)}
+        title="Delete college admin"
+        text={deleting ? `${deleting.fullName} will lose administrative access immediately.` : ''}
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleteBusy}
+        onConfirm={confirmDelete}
+        onClose={() => !deleteBusy && setDeleting(null)}
+      />
 
-        .control-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 16px 24px;
-        }
-
-        .table-loading, .table-empty {
-          padding: 60px 20px;
-          text-align: center;
-        }
-
-        .table-empty h3 {
-          font-family: var(--font-display);
-          font-size: 1.2rem;
-          font-weight: 600;
-          margin: 16px 0 4px;
-        }
-
-        .table-user-name {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .avatar-sm {
-          width: 32px;
-          height: 32px;
-          border-radius: var(--radius-full);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          font-size: 0.85rem;
-        }
-
-        .status-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 10px;
-          border-radius: var(--radius-full);
-          border: none;
-          font-size: 0.75rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .indicator-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: var(--radius-full);
-        }
-
-        .status-active {
-          background-color: var(--success-light);
-          color: var(--success);
-        }
-
-        .status-active .indicator-dot {
-          background-color: var(--success);
-        }
-
-        .status-inactive {
-          background-color: var(--error-light);
-          color: var(--error);
-        }
-
-        .status-inactive .indicator-dot {
-          background-color: var(--error);
-        }
-
-        .table-actions-cell {
-          display: flex;
-          justify-content: flex-end;
-          gap: 8px;
-        }
-
-        .btn-action {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px;
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--border-color);
-          background-color: var(--bg-card);
-          color: var(--text-muted);
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-
-        .btn-action:hover:not(:disabled) {
-          border-color: transparent;
-        }
-
-        .edit-action:hover:not(:disabled) {
-          background-color: var(--primary-light);
-          color: var(--primary);
-        }
-
-        .delete-action:hover:not(:disabled) {
-          background-color: var(--error-light);
-          color: var(--error);
-        }
-
-        .btn-action:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-      `}</style>
-    </div>
+      <AdminAccessControlModal
+        admin={accessAdmin}
+        isOpen={Boolean(accessAdmin)}
+        onClose={() => setAccessAdmin(null)}
+        onUpdated={reload}
+      />
+    </>
   );
 };
 

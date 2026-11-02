@@ -1,786 +1,360 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { api } from '../utils/api';
-import { useAuth } from '../context/AuthContext';
-import { 
-  ArrowLeft, 
-  FolderKanban, 
-  UserPlus, 
-  Clock, 
-  CheckCircle2, 
-  XCircle, 
-  AlertCircle, 
-  UserCheck, 
-  UserX, 
-  FileText, 
-  IndianRupee, 
-  Code, 
-  ShieldCheck, 
-  Calendar,
-  Folder,
-  Layers,
-  Users,
-  Lock
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import {
+  CheckCircle2, Send, Undo2, Wallet, PlayCircle, Lock, UserCog, Eye, AlertTriangle, ArrowRight, Terminal,
 } from 'lucide-react';
+import { api } from '../utils/api';
+import { useAsync } from '../hooks/useAsync';
+import { useAuth } from '../context/AuthContext';
 import FolderExplorer from '../components/FolderExplorer';
-import { formatDate, toDateInputValue, isDeadlineExpired } from '../utils/dateUtils';
-
-const ProjectDetail = () => {
-  const { id, folderId } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const [project, setProject] = useState(null);
-  const [assignments, setAssignments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  // Assign User Modal State
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
-  const [usersList, setUsersList] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [assignmentNotes, setAssignmentNotes] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [activeTab, setActiveTab] = useState('folders');
-  const [selectedAdminForAssignment, setSelectedAdminForAssignment] = useState(undefined);
-  const [adminAssignmentDeadline, setAdminAssignmentDeadline] = useState('');
-  const [assignmentStatusModal, setAssignmentStatusModal] = useState(null);
-  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
-  const isAdmin = user?.role === 'ADMIN';
-  const canAssign = isSuperAdmin;
-  const canManageStatus = isSuperAdmin;
-
-  const [linkedReq, setLinkedReq] = useState(null);
-  const [activeFolder, setActiveFolder] = useState(null);
-
-  useEffect(() => {
-    fetchProjectAndAssignments();
-  }, [id]);
-
-  const fetchProjectAndAssignments = async () => {
-    try {
-      setLoading(true);
-      setError('');
-
-      const [proj, assignList] = await Promise.all([
-        api.getProjectById(id),
-        api.getProjectAssignments(id)
-      ]);
-
-      setProject(proj);
-      setAssignments(assignList);
-
-      // Find active admin assignment from assignList or proj.assignedUserId
-      const activeAdminAssignment = assignList.find(a => a.active && (a.user?.role === 'ADMIN' || a.user?.role === 'SUPER_ADMIN'));
-      const activeAdminId = activeAdminAssignment ? activeAdminAssignment.user.id : (proj.assignedUserId || '');
-      setSelectedAdminForAssignment(activeAdminId ? String(activeAdminId) : '');
-      if (activeAdminAssignment && activeAdminAssignment.expiredAt) {
-        setAdminAssignmentDeadline(toDateInputValue(activeAdminAssignment.expiredAt));
-      } else {
-        setAdminAssignmentDeadline('');
-      }
-
-      if (proj && proj.linkedRequirementId) {
-        try {
-          const reqData = await api.getRequirementById(proj.linkedRequirementId);
-          setLinkedReq(reqData);
-        } catch (e) {
-          console.warn('Could not fetch linked requirement details', e);
-        }
-      }
-
-      if (canAssign) {
-        const uList = await api.getAdmins();
-        setUsersList(uList.filter(u => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN'));
-      }
-    } catch (err) {
-      setError(err.message || 'Failed to load project details');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [paying, setPaying] = useState(false);
-
-  const handlePayRemaining = async () => {
-    if (!project) return;
-    setPaying(true);
-    setError('');
-    setSuccess('');
-    try {
-      const idempotencyKey = 'rem_' + project.id + '_' + Date.now();
-      await api.payProjectRemaining(project.id, project.remainingAmount || (project.budget ? project.budget * 0.5 : 200.0), idempotencyKey);
-      setSuccess('Remaining balance payment verified! Full project deliverables and source files are now unlocked.');
-      await fetchProjectAndAssignments();
-    } catch (err) {
-      setError(err.message || 'Failed to process remaining payment.');
-    } finally {
-      setPaying(false);
-    }
-  };
-
-  const handleOpenAssignModal = async () => {
-    try {
-      const uList = await api.getAdmins();
-      setUsersList(uList.filter(u => u.role === 'ADMIN'));
-      setIsAssignModalOpen(true);
-    } catch (err) {
-      setError(err.message || 'Failed to load administrator accounts');
-    }
-  };
-
-  const handleStatusChange = async (targetStatus) => {
-    try {
-      setError('');
-      setSuccess('');
-      const updated = await api.updateProjectStatus(id, targetStatus);
-      setProject(updated);
-      setSuccess(`Project status successfully transitioned to ${targetStatus}!`);
-    } catch (err) {
-      setError(err.message || `Failed to transition status to ${targetStatus}`);
-    }
-  };
-
-  const handleAssignSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedUserId) return;
-
-    try {
-      setError('');
-      setSuccess('');
-
-      const payload = {
-        userId: Number(selectedUserId),
-        notes: assignmentNotes,
-        expiredAt: expiryDate || null
-      };
-
-      await api.assignUserToProject(id, payload);
-      setSuccess('Administrator successfully assigned to project!');
-      setIsAssignModalOpen(false);
-      setSelectedUserId('');
-      setAssignmentNotes('');
-      setExpiryDate('');
-      fetchProjectAndAssignments();
-    } catch (err) {
-      setError(err.message || 'Failed to assign administrator');
-    }
-  };
-
-  const handleRevokeAssignment = async (assignmentId) => {
-    if (!window.confirm('Are you sure you want to revoke this administrator assignment?')) return;
-
-    try {
-      setError('');
-      setSuccess('');
-      await api.deleteAssignment(id, assignmentId);
-      setSuccess('Project assignment revoked successfully.');
-      fetchProjectAndAssignments();
-    } catch (err) {
-      setError(err.message || 'Failed to revoke assignment');
-    }
-  };
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'DRAFT': return <span className="badge badge-secondary">DRAFT</span>;
-      case 'APPROVED': return <span className="badge badge-primary">APPROVED</span>;
-      case 'IN_PROGRESS': return <span className="badge badge-warning">IN PROGRESS</span>;
-      case 'COMPLETED': return <span className="badge badge-success">COMPLETED</span>;
-      case 'REJECTED': return <span className="badge badge-danger">REJECTED</span>;
-      case 'INACTIVE': return <span className="badge" style={{ backgroundColor: 'var(--text-muted)', color: '#fff' }}>INACTIVE</span>;
-      default: return <span className="badge">{status}</span>;
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="card text-center" style={{ padding: '60px' }}>
-        <div style={{ border: '3px solid var(--border-color)', borderTop: '3px solid var(--primary)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 1s linear infinite', margin: '0 auto 12px' }}></div>
-        <p className="text-muted">Loading project workspace...</p>
-      </div>
-    );
-  }
-
-  if (!project) {
-    return (
-      <div className="card text-center" style={{ padding: '40px' }}>
-        <AlertCircle size={36} style={{ color: 'var(--error)', margin: '0 auto 12px' }} />
-        <h4 className="font-display">Project Not Found</h4>
-        <button className="btn btn-secondary" style={{ marginTop: '16px' }} onClick={() => navigate('/projects')}>
-          Back to Projects
-        </button>
-      </div>
-    );
-  }
-
-  const isAssignedAdmin = assignments.some(
-    a => a.active && (a.user?.id === user?.id || a.user?.email === user?.email)
-  );
-
-  return (
-    <div className="project-detail-wrapper flex flex-col gap-4">
-      {/* Alert Banners */}
-      {success && (
-        <div className="alert alert-success">
-          <CheckCircle2 size={16} />
-          <span>{success}</span>
-        </div>
-      )}
-      {error && (
-        <div className="alert alert-danger">
-          <XCircle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Header Bar */}
-      <div className="flex justify-between items-center card" style={{ padding: '20px' }}>
-        <div className="flex items-center gap-3">
-          <button className="btn btn-secondary flex items-center gap-1" onClick={() => navigate('/projects')}>
-            <ArrowLeft size={16} />
-            <span>Back to Projects</span>
-          </button>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-muted font-mono" style={{ fontSize: '0.85rem' }}>{project.projectCode}</span>
-              {getStatusBadge(project.status)}
-            </div>
-            <h2 className="font-display" style={{ fontSize: '1.4rem', fontWeight: 700, marginTop: '2px' }}>
-              {project.projectName}
-            </h2>
-          </div>
-        </div>
-      </div>
-
-      {/* Project Specifications & Associated Requirements (Only visible on Project Root, hidden inside folder view) */}
-      {!folderId && !activeFolder && (
-        <div className="card" style={{ padding: '24px' }}>
-          <h3 className="font-display" style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '16px' }}>
-            Project Specifications
-          </h3>
-
-          <p className="text-muted" style={{ fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '24px' }}>
-            {project.description || 'No detailed description provided.'}
-          </p>
-
-          <div className="grid grid-cols-3 gap-4" style={{ paddingTop: '16px', borderTop: '1px solid var(--border-color)', marginBottom: '16px' }}>
-            <div>
-              <span className="text-muted" style={{ fontSize: '0.8rem', display: 'block' }}>Project Budget</span>
-              <strong style={{ fontSize: '1.1rem', color: 'var(--primary)' }}>
-                Rs. {project.budget != null ? project.budget.toLocaleString(undefined, { minimumFractionDigits: 2 }) : '0.00'}
-              </strong>
-            </div>
-            <div>
-              <span className="text-muted" style={{ fontSize: '0.8rem', display: 'block' }}>Technology Stack</span>
-              <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{project.technologyStack || 'Not specified'}</span>
-            </div>
-            <div>
-              <span className="text-muted" style={{ fontSize: '0.8rem', display: 'block' }}>Linked Requirement</span>
-              {project.linkedRequirementId ? (
-                <Link to={`/requirements/${project.linkedRequirementId}`} className="text-primary font-semibold hover:underline" style={{ fontSize: '0.9rem' }}>
-                  Requirement #{project.linkedRequirementId} &rarr;
-                </Link>
-              ) : (
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }} className="text-muted">Direct Creation (None)</span>
-              )}
-            </div>
-          </div>
-
-          {/* Super Admin Exclusive: Assign Managing Administrator Section */}
-          {user?.role === 'SUPER_ADMIN' && (
-            <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', padding: '20px', borderRadius: 'var(--radius-md)' }}>
-              <div className="flex justify-between items-center gap-6 flex-wrap">
-                <div style={{ flex: '1 1 280px' }}>
-                  <div style={{ marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--primary)' }}>
-                      Super Admin Clearance
-                    </span>
-                  </div>
-                  <h4 className="font-display" style={{ fontSize: '1.05rem', fontWeight: 700, margin: '0 0 4px 0' }}>
-                    Managing Administrator Assignment
-                  </h4>
-                  <p className="text-muted" style={{ fontSize: '0.82rem', margin: 0, lineHeight: '1.4' }}>
-                    Assign an Administrator to manage folder structure and user access for this project.
-                  </p>
-                </div>
-
-                <div className="flex items-end gap-3 flex-wrap">
-                  <div style={{ width: '220px' }}>
-                    <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
-                      Select Administrator
-                    </label>
-                    <select
-                      className="form-control form-select"
-                      style={{ fontSize: '0.85rem', height: '38px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}
-                      value={selectedAdminForAssignment !== undefined ? selectedAdminForAssignment : (project.assignedUserId || '')}
-                      onChange={(e) => setSelectedAdminForAssignment(e.target.value)}
-                    >
-                      <option value="">Unassigned (No Admin)</option>
-                      {usersList.map(u => (
-                        <option key={u.id} value={u.id}>{u.fullName} ({u.email})</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={{ width: '160px' }}>
-                    <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-main)', display: 'block', marginBottom: '6px' }}>
-                      Assignment Deadline
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      style={{ fontSize: '0.85rem', height: '38px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}
-                      value={adminAssignmentDeadline}
-                      onChange={(e) => setAdminAssignmentDeadline(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <button
-                      type="button"
-                      className="btn btn-primary flex items-center justify-center gap-1.5"
-                      style={{ padding: '0 18px', fontSize: '0.85rem', fontWeight: 600, whiteSpace: 'nowrap', height: '38px', borderRadius: 'var(--radius-md)' }}
-                      onClick={async () => {
-                        try {
-                          setError('');
-                          setSuccess('');
-                          const targetId = selectedAdminForAssignment !== undefined ? selectedAdminForAssignment : project.assignedUserId;
-                          if (!targetId) {
-                            setAssignmentStatusModal({
-                              show: true,
-                              type: 'error',
-                              title: 'Assignment Status Failed',
-                              message: 'Please select an Administrator from the dropdown before clicking Assign Project.',
-                              details: null
-                            });
-                            return;
-                          }
-                          const targetAdminId = Number(targetId);
-                          const assignedAdminObj = usersList.find(u => u.id === targetAdminId);
-
-                          await api.assignProjectAdmin(project.id, targetAdminId, adminAssignmentDeadline || null);
-                          await fetchProjectAndAssignments();
-
-                          setAssignmentStatusModal({
-                            show: true,
-                            type: 'success',
-                            title: 'Project Assignment Status',
-                            message: targetAdminId 
-                              ? `Project '${project.projectName}' (${project.projectCode}) has been successfully assigned!` 
-                              : `Project assignment for '${project.projectName}' has been cleared (Unassigned).`,
-                            details: {
-                              projectCode: project.projectCode,
-                              projectName: project.projectName,
-                              assignedAdmin: assignedAdminObj ? `${assignedAdminObj.fullName} (${assignedAdminObj.email})` : 'Unassigned (No Admin)',
-                              deadline: adminAssignmentDeadline ? formatDate(adminAssignmentDeadline) : 'Permanent (No Deadline)',
-                              assignedBy: user?.email || 'superadmin@academic.com',
-                              targetTable: 'project_assignments',
-                              status: targetAdminId ? 'ACTIVE_ASSIGNMENT' : 'UNASSIGNED',
-                              assignedAt: new Date().toLocaleString()
-                            }
-                          });
-                        } catch (err) {
-                          setAssignmentStatusModal({
-                            show: true,
-                            type: 'error',
-                            title: 'Assignment Status Failed',
-                            message: err.message || 'Failed to update project assignment in database.',
-                            details: null
-                          });
-                        }
-                      }}
-                    >
-                      <ShieldCheck size={16} />
-                      <span>Assign Project</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Locked Deliverables Banner for Users */}
-      {user?.role === 'USER' && (
-        (project.isMarketplace && !project.purchasedByUserId) ||
-        (!project.isMarketplace && project.remainingPaymentStatus !== 'COMPLETED')
-      ) ? (
-        <div className="card" style={{
-          padding: '36px 28px',
-          background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.08))',
-          border: '1px solid rgba(245, 158, 11, 0.35)',
-          borderRadius: 'var(--radius-xl)',
-          textAlign: 'center',
-          boxShadow: '0 12px 28px rgba(0,0,0,0.2)'
-        }}>
-          <div style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '16px',
-            background: 'rgba(245, 158, 11, 0.15)',
-            color: '#f59e0b',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 16px auto'
-          }}>
-            <Lock size={28} />
-          </div>
-
-          <h3 style={{ fontSize: '1.3rem', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--text-main)' }}>
-            Project Deliverables & Repository Locked
-          </h3>
-
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '540px', margin: '0 auto 24px auto', lineHeight: 1.6 }}>
-            {project.isMarketplace 
-              ? 'This marketplace project requires full purchase payment before repository files and source code can be accessed.'
-              : 'Project development and review have been completed. Complete the remaining balance payment to unlock full repository source files and deliverables.'}
-          </p>
-
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px' }}>
-            <button
-              onClick={handlePayRemaining}
-              disabled={paying}
-              className="btn btn-primary"
-              style={{
-                background: 'linear-gradient(135deg, #10b981, #059669)',
-                border: 'none',
-                padding: '12px 24px',
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <IndianRupee size={18} />
-              {paying ? 'Verifying Payment...' : `Pay Remaining Balance (Rs. ${project.remainingAmount != null ? project.remainingAmount.toFixed(2) : (project.budget != null ? (project.budget * 0.5).toFixed(2) : '200.00')}) & Unlock`}
-            </button>
-          </div>
-        </div>
-      ) : (
-        /* Project Root Folders & Secure Repository Explorer */
-        <FolderExplorer 
-          project={project} 
-          onFolderChange={(folder) => setActiveFolder(folder)}
-        />
-      )}
-
-      {/* TAB 2: Project Assignments Section */}
-      {activeTab === 'team' && (
-        <div className="card" style={{ padding: '24px' }}>
-
-          <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
-            <div>
-              <h3 className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                Team Assignments & Access Control
-              </h3>
-              <p className="text-muted" style={{ fontSize: '0.8rem' }}>
-                `PROJECT_ASSIGNMENT` table records defining active user and administrator access for this project.
-              </p>
-            </div>
-
-            {canAssign && (
-              <button className="btn btn-primary flex items-center gap-2" onClick={handleOpenAssignModal}>
-                <UserPlus size={16} />
-                <span>Assign User</span>
-              </button>
-            )}
-          </div>
-
-          {assignments.length === 0 ? (
-            <div className="text-center" style={{ padding: '32px 16px', backgroundColor: 'var(--bg-main)', borderRadius: 'var(--radius-md)' }}>
-              <UserX size={32} style={{ color: 'var(--text-muted)', margin: '0 auto 8px' }} />
-              <p className="text-muted" style={{ fontSize: '0.9rem' }}>No users are currently assigned to this project.</p>
-            </div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table" style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ borderBottom: '2px solid var(--border-color)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '12px' }}>Assigned User</th>
-                    <th style={{ padding: '12px' }}>Role / Notes</th>
-                    <th style={{ padding: '12px' }}>Assigned Date</th>
-                    <th style={{ padding: '12px' }}>Expiry Date</th>
-                    <th style={{ padding: '12px' }}>Access Status</th>
-                    {canAssign && <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {assignments.map((assignment) => {
-                    const isExpired = isDeadlineExpired(assignment.expiredAt);
-                    const isCurrentlyActive = assignment.active && !isExpired;
-
-                    return (
-                      <tr key={assignment.id} style={{ borderBottom: '1px solid var(--border-color)', fontSize: '0.9rem', backgroundColor: isExpired && assignment.active ? 'rgba(239, 68, 68, 0.05)' : 'transparent' }}>
-                        <td style={{ padding: '12px' }}>
-                          <div style={{ fontWeight: 600 }}>{assignment.user?.fullName}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{assignment.user?.email}</div>
-                        </td>
-
-                        <td style={{ padding: '12px' }}>
-                          {assignment.notes || 'Project Member'}
-                        </td>
-
-                        <td style={{ padding: '12px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                          {formatDate(assignment.assignedAt)}
-                        </td>
-
-                        <td style={{ padding: '12px', fontSize: '0.8rem', color: isExpired ? 'var(--error)' : 'var(--text-muted)', fontWeight: isExpired ? 600 : 400 }}>
-                          {formatDate(assignment.expiredAt, 'Never (Permanent)')}
-                        </td>
-
-                        <td style={{ padding: '12px' }}>
-                          {isCurrentlyActive ? (
-                            <span className="badge badge-success"><ShieldCheck size={12} /> ACTIVE</span>
-                          ) : isExpired && assignment.active ? (
-                            <span className="badge badge-danger"><Clock size={12} /> EXPIRED (PENDING REVOCATION)</span>
-                          ) : (
-                            <span className="badge badge-secondary">REVOKED</span>
-                          )}
-                        </td>
-
-                        {canAssign && (
-                          <td style={{ padding: '12px', textAlign: 'right' }}>
-                            {assignment.active && (
-                              <button 
-                                className="btn btn-secondary btn-sm" 
-                                style={{ color: 'var(--error)', borderColor: 'var(--error)', padding: '6px 12px', fontSize: '0.75rem', fontWeight: 600 }}
-                                onClick={() => handleRevokeAssignment(assignment.id)}
-                                title="Revoke and deactivate access for this project assignment"
-                              >
-                                Revoke Access
-                              </button>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* TAB 3: State Machine Lifecycle Actions */}
-      {activeTab === 'lifecycle' && canManageStatus && (
-        <div className="card" style={{ padding: '20px', marginBottom: '24px', backgroundColor: 'var(--bg-main)' }}>
-          <h4 className="font-display" style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '12px' }}>
-            Project Lifecycle & State Machine Actions
-          </h4>
-
-          <p className="text-muted" style={{ fontSize: '0.8rem', marginBottom: '16px' }}>
-            Current Status: <strong>{project.status}</strong>. Click an allowed target status button below to execute a valid state transition:
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {(project.status === 'DRAFT' || project.status === 'APPROVED') && (
-              <>
-                <button className="btn btn-primary" onClick={() => handleStatusChange('IN_PROGRESS')}>
-                  Start Development (IN PROGRESS)
-                </button>
-                <button className="btn btn-secondary" onClick={() => handleStatusChange('INACTIVE')}>
-                  Deactivate Project
-                </button>
-              </>
-            )}
-
-            {project.status === 'IN_PROGRESS' && (
-              <>
-                <button className="btn btn-success" onClick={() => handleStatusChange('COMPLETED')}>
-                  Mark as COMPLETED
-                </button>
-                <button className="btn btn-secondary" onClick={() => handleStatusChange('INACTIVE')}>
-                  Deactivate Project
-                </button>
-              </>
-            )}
-
-            {project.status === 'COMPLETED' && (
-              <>
-                <button className="btn btn-primary" onClick={() => handleStatusChange('IN_PROGRESS')}>
-                  Reopen Development
-                </button>
-                <button className="btn btn-secondary" onClick={() => handleStatusChange('INACTIVE')}>
-                  Deactivate Project
-                </button>
-              </>
-            )}
-
-            {project.status === 'INACTIVE' && (
-              <button className="btn btn-primary" onClick={() => handleStatusChange('IN_PROGRESS')}>
-                Reactivate Project
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-      {isAssignModalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-card card" style={{ maxWidth: '500px', width: '100%', padding: '24px' }}>
-            <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
-              <h3 className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700 }}>Assign Administrator to Project</h3>
-              <button className="btn-close" onClick={() => setIsAssignModalOpen(false)}>×</button>
-            </div>
-
-            <form onSubmit={handleAssignSubmit}>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                  Select Administrator Account *
-                </label>
-                <select 
-                  className="form-control" 
-                  value={selectedUserId} 
-                  onChange={(e) => setSelectedUserId(e.target.value)}
-                  required
-                >
-                  <option value="">-- Choose Administrator --</option>
-                  {usersList.map(u => (
-                    <option key={u.id} value={u.id}>{u.fullName} ({u.email}) - Role: {u.role}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                  Role / Notes on Project
-                </label>
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  value={assignmentNotes} 
-                  onChange={(e) => setAssignmentNotes(e.target.value)}
-                  placeholder="e.g. Lead Project Coordinator" 
-                />
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>
-                  Expiration Date (Optional)
-                </label>
-                <input 
-                  type="date" 
-                  className="form-control" 
-                  value={expiryDate} 
-                  onChange={(e) => setExpiryDate(e.target.value)}
-                />
-                <small className="text-muted" style={{ fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
-                  Leave empty for permanent access until manually revoked.
-                </small>
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <button type="button" className="btn btn-secondary" onClick={() => setIsAssignModalOpen(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Confirm Assignment
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Super Admin Project Assignment Status Pop-up Modal */}
-      {assignmentStatusModal?.show && (
-        <div className="modal-backdrop" onClick={() => setAssignmentStatusModal(null)}>
-          <div className="card modal-card" style={{ width: '100%', maxWidth: '520px', padding: '24px' }} onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4 pb-2" style={{ borderBottom: '1px solid var(--border-color)' }}>
-              <div className="flex items-center gap-2">
-                {assignmentStatusModal.type === 'success' ? (
-                  <CheckCircle2 size={24} style={{ color: 'var(--success)' }} />
-                ) : (
-                  <XCircle size={24} style={{ color: 'var(--error)' }} />
-                )}
-                <h3 className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>
-                  {assignmentStatusModal.title}
-                </h3>
-              </div>
-              <button className="btn-close" onClick={() => setAssignmentStatusModal(null)}>&times;</button>
-            </div>
-
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '16px' }}>
-              {assignmentStatusModal.message}
-            </p>
-
-            {assignmentStatusModal.details && (
-              <div style={{ backgroundColor: 'var(--bg-main)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                  Recorded Database Assignment Details
-                </h4>
-
-                <div className="grid grid-cols-2 gap-3" style={{ fontSize: '0.82rem' }}>
-                  <div>
-                    <span className="text-muted" style={{ display: 'block' }}>Project Code:</span>
-                    <strong>{assignmentStatusModal.details.projectCode}</strong>
-                  </div>
-
-                  <div>
-                    <span className="text-muted" style={{ display: 'block' }}>Target Table:</span>
-                    <strong className="font-mono text-primary">{assignmentStatusModal.details.targetTable}</strong>
-                  </div>
-
-                  <div style={{ gridColumn: 'span 2' }}>
-                    <span className="text-muted" style={{ display: 'block' }}>Assigned Managing Administrator:</span>
-                    <strong style={{ color: 'var(--primary)' }}>{assignmentStatusModal.details.assignedAdmin}</strong>
-                  </div>
-
-                  <div>
-                    <span className="text-muted" style={{ display: 'block' }}>Assignment Status:</span>
-                    <span className="badge badge-success" style={{ fontSize: '0.75rem', marginTop: '2px' }}>
-                      {assignmentStatusModal.details.status}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="text-muted" style={{ display: 'block' }}>Assigned By (Super Admin):</span>
-                    <span>{assignmentStatusModal.details.assignedBy}</span>
-                  </div>
-
-                  <div style={{ gridColumn: 'span 2' }}>
-                    <span className="text-muted" style={{ display: 'block' }}>Timestamp:</span>
-                    <span className="font-mono" style={{ fontSize: '0.78rem' }}>{assignmentStatusModal.details.assignedAt}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-end">
-              <button className="btn btn-primary" onClick={() => setAssignmentStatusModal(null)}>
-                Close & Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        .modal-backdrop {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0, 0, 0, 0.6);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          padding: 20px;
-        }
-        .btn-close {
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
-          color: var(--text-muted);
-        }
-      `}</style>
-    </div>
-  );
+import {
+  PageHeader, ErrorState, LoadingBlock, StatusBadge, Card, Timeline, Steps, Field, AsyncButton, useToast, Alert,
+  Progress, Badge, Tabs, ConfirmDialog, Avatar,
+} from '../components/ui';
+import { money, date } from '../utils/format';
+
+const STEPS = [
+  { key: 'DEVELOPER_ASSIGNED', label: 'Assigned' },
+  { key: 'IN_PROGRESS', label: 'In development' },
+  { key: 'READY_FOR_REVIEW', label: 'Review' },
+  { key: 'READY_FOR_FINAL_PAYMENT', label: 'Final payment' },
+  { key: 'ACCESS_GRANTED', label: 'Delivered' },
+];
+const STEP_OF = {
+  DEVELOPER_ASSIGNED: 'DEVELOPER_ASSIGNED', IN_PROGRESS: 'IN_PROGRESS', TESTING: 'IN_PROGRESS', CHANGES_REQUESTED: 'IN_PROGRESS',
+  READY_FOR_REVIEW: 'READY_FOR_REVIEW', REVIEW_APPROVED: 'READY_FOR_FINAL_PAYMENT', READY_FOR_FINAL_PAYMENT: 'READY_FOR_FINAL_PAYMENT',
+  ACCESS_GRANTED: 'ACCESS_GRANTED', COMPLETED: 'ACCESS_GRANTED',
 };
 
-export default ProjectDetail;
+export default function ProjectDetail() {
+  const { id } = useParams();
+  const { user } = useAuth();
+  const project = useAsync(() => api.getProjectById(id), [id]);
+  const isCustom = project.data?.projectType === 'CUSTOM';
+  const timeline = useAsync(() => (isCustom ? api.getProjectTimeline(id) : Promise.resolve([])), [id, isCustom]);
+  const [tab, setTab] = useState('overview');
+
+  useEffect(() => setTab('overview'), [id]);
+  const refresh = () => { project.reload(); timeline.reload(); };
+
+  if (project.error) return <><PageHeader title="Project" breadcrumbs={[{ label: 'Projects', to: '/projects' }]} /><ErrorState error={project.error} onRetry={project.reload} /></>;
+  if (project.loading && !project.data) return <LoadingBlock />;
+
+  const p = project.data;
+  const lifecycle = p.lifecycleStatus || p.status;
+  const full = p.accessLevel === 'FULL';
+  const crumbs = user?.role === 'SUPER_ADMIN' && !isCustom
+    ? [{ label: 'Project library', to: '/library' }, { label: p.projectCode }]
+    : [{ label: user?.role === 'USER' ? 'My projects' : 'Projects', to: '/projects' }, { label: p.projectCode }];
+
+  return (
+    <>
+      <PageHeader
+        breadcrumbs={crumbs}
+        title={p.projectName}
+        description={[p.projectCode, isCustom ? p.requirement?.collegeName : p.domain].filter(Boolean).join(' · ')}
+        actions={
+          <div className="flex items-center gap-2">
+            <Badge tone={isCustom ? 'accent' : 'neutral'}>{isCustom ? 'Custom project' : 'Library project'}</Badge>
+            {isCustom ? <StatusBadge status={lifecycle} /> : <StatusBadge status={full ? 'ACCESS_GRANTED' : 'PREVIEW'} label={full ? 'Full access' : 'Preview'} />}
+          </div>
+        }
+      />
+
+      {isCustom && !['REJECTED', 'INACTIVE'].includes(lifecycle) && (
+        <div className="card mb-6" style={{ padding: '14px 18px' }}><Steps steps={STEPS} current={STEP_OF[lifecycle] || 'DEVELOPER_ASSIGNED'} /></div>
+      )}
+
+      <Tabs value={tab} onChange={setTab} tabs={[
+        { value: 'overview', label: 'Overview' },
+        { value: 'files', label: full ? 'Deliverables' : 'Files' },
+        ...(isCustom ? [{ value: 'activity', label: 'Activity' }] : []),
+      ]} />
+
+      {tab === 'overview' && (
+        <div className="layout-split">
+          <div className="space-y-6">
+            {isCustom ? <CustomOverview p={p} /> : <LibraryOverview p={p} full={full} user={user} />}
+          </div>
+          <div className="space-y-4 aside-priority">
+            {isCustom && <WorkflowPanel p={p} user={user} onDone={refresh} />}
+            {isCustom && <PeopleCard p={p} />}
+            {isCustom && <AmountsCard p={p} />}
+            {!isCustom && user?.role === 'SUPER_ADMIN' && (
+              <div className="card">
+                <div className="section-title mb-1">Catalogue</div>
+                <p className="text-sm mb-3">Manage metadata, pricing and publishing from the library.</p>
+                <Link to={`/library?search=${encodeURIComponent(p.projectCode)}`} className="btn btn-secondary btn-block">Open in library</Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {tab === 'files' && (
+        <>
+          {!full && (
+            <Alert tone="info" title="Preview access">
+              {isCustom ? 'Deliverables unlock for you after the final payment is verified.' : 'Screenshots and demo files are visible now. The rest unlock after purchase.'}
+            </Alert>
+          )}
+          <FolderExplorer project={p} />
+        </>
+      )}
+
+      {tab === 'activity' && (
+        <Card title="Timeline" subtitle="Every status change, review and payment on this project">
+          <Timeline items={timeline.data || []} />
+        </Card>
+      )}
+    </>
+  );
+}
+
+function LibraryOverview({ p, full, user }) {
+  const techs = (p.technologyStack || '').split(',').map((t) => t.trim()).filter(Boolean);
+  return (
+    <>
+      {!full && user?.role === 'USER' && (
+        <div className="alert alert-info">
+          <Lock aria-hidden="true" />
+          <div className="flex-1">You are viewing a preview. <Link to={`/marketplace/${p.id}`}>Buy this project</Link> to unlock the code and documentation.</div>
+        </div>
+      )}
+      <Card title="Abstract">
+        <p style={{ whiteSpace: 'pre-wrap', color: 'var(--text)', lineHeight: 1.7 }}>{p.abstractText || 'No abstract yet.'}</p>
+      </Card>
+      {p.description && p.description !== p.abstractText && (
+        <Card title="Overview"><p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{p.description}</p></Card>
+      )}
+      {full && p.installationInstructions && (
+        <Card title="Installation and execution" actions={<Terminal size={15} className="text-subtle" />}>
+          <pre className="surface-muted p-4 text-sm" style={{ whiteSpace: 'pre-wrap', overflowX: 'auto', fontFamily: 'var(--font-mono)' }}>{p.installationInstructions}</pre>
+        </Card>
+      )}
+      {techs.length > 0 && (
+        <Card title="Technologies"><div className="flex flex-wrap gap-2">{techs.map((t) => <span key={t} className="tag">{t}</span>)}</div></Card>
+      )}
+    </>
+  );
+}
+
+function CustomOverview({ p }) {
+  return (
+    <>
+      {p.lifecycleStatus === 'CHANGES_REQUESTED' && p.changeRequestNotes && (
+        <Alert tone="warning" title="Changes requested by the reviewer">{p.changeRequestNotes}</Alert>
+      )}
+      <Card title="Progress">
+        <div className="flex items-end justify-between mb-2">
+          <span className="text-3xl font-semibold tabular" style={{ fontSize: 'var(--text-3xl)', letterSpacing: '-0.03em' }}>{p.progressPercent ?? 0}%</span>
+          <span className="text-sm text-muted">{p.developerAcceptedAt ? `Accepted ${date(p.developerAcceptedAt)}` : 'Not accepted yet'}</span>
+        </div>
+        <Progress value={p.progressPercent} tone={['ACCESS_GRANTED', 'COMPLETED'].includes(p.lifecycleStatus) ? 'success' : undefined} />
+        {p.reviewNotes && <p className="text-sm mt-4"><span className="font-medium" style={{ color: 'var(--text)' }}>Latest notes:</span> {p.reviewNotes}</p>}
+      </Card>
+      <Card title="Brief" actions={p.requirement && <Link to={`/requirements/${p.requirement.id}`} className="btn btn-ghost btn-sm">Requirement <ArrowRight /></Link>}>
+        <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{p.description || '—'}</p>
+        {p.technologyStack && <div className="flex flex-wrap gap-2 mt-4">{p.technologyStack.split(',').map((t) => t.trim()).filter(Boolean).map((t) => <span key={t} className="tag">{t}</span>)}</div>}
+      </Card>
+    </>
+  );
+}
+
+function PeopleCard({ p }) {
+  const people = [
+    ['Student', p.requirement?.studentName],
+    ['Developer', p.developer?.fullName],
+    ['Reviewer', p.reviewerAdmin?.fullName || 'Platform owner'],
+  ];
+  return (
+    <div className="card">
+      <div className="section-title mb-3">People</div>
+      <ul className="space-y-3">
+        {people.map(([role, name]) => (
+          <li key={role} className="flex items-center gap-3">
+            <Avatar name={name || '?'} size="sm" />
+            <div className="min-w-0">
+              <div className="text-sm font-medium truncate">{name || 'Not assigned'}</div>
+              <div className="text-xs text-subtle">{role}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function AmountsCard({ p }) {
+  if (p.budget == null) return null;
+  return (
+    <div className="card">
+      <div className="section-title mb-3">Payments</div>
+      <dl className="kv" style={{ gridTemplateColumns: '1fr auto' }}>
+        <dt>Total</dt><dd className="text-right tabular font-medium">{money(p.budget)}</dd>
+        <dt>Advance</dt><dd className="text-right tabular">{money(p.advanceAmount)} <span className="text-xs text-success">{p.advancePaymentStatus === 'COMPLETED' ? 'paid' : ''}</span></dd>
+        <dt>Balance</dt><dd className="text-right tabular">{money(p.remainingAmount)} <span className="text-xs text-success">{p.remainingPaymentStatus === 'COMPLETED' ? 'paid' : ''}</span></dd>
+      </dl>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+function WorkflowPanel({ p, user, onDone }) {
+  const s = p.lifecycleStatus || p.status;
+  if (p.isDeveloper && user.role === 'PROJECT_DEVELOPER') return <DeveloperActions p={p} s={s} onDone={onDone} />;
+  if ((p.isReviewer || user.role === 'SUPER_ADMIN') && s === 'READY_FOR_REVIEW') return <ReviewActions p={p} onDone={onDone} />;
+  if (p.isRequester && s === 'READY_FOR_FINAL_PAYMENT') return <FinalPayment p={p} onDone={onDone} />;
+  if (user.role === 'SUPER_ADMIN') return <AssignmentActions p={p} onDone={onDone} />;
+  const help = {
+    DEVELOPER_ASSIGNED: 'Waiting for the developer to accept the assignment.',
+    IN_PROGRESS: 'The developer is building the project.',
+    CHANGES_REQUESTED: 'The developer is addressing review feedback.',
+    READY_FOR_REVIEW: 'Submitted and waiting for review.',
+    READY_FOR_FINAL_PAYMENT: 'Approved. Waiting for the student to pay the balance.',
+    REVIEW_APPROVED: 'Approved.',
+    ACCESS_GRANTED: 'Delivered. The student has full access.',
+  }[s];
+  return <div className="card"><div className="section-title mb-1">Status</div><p className="text-sm">{help || 'No action needed.'}</p></div>;
+}
+
+function DeveloperActions({ p, s, onDone }) {
+  const { notify } = useToast();
+  const [percent, setPercent] = useState(p.progressPercent ?? 0);
+  const [note, setNote] = useState('');
+  const [submitNotes, setSubmitNotes] = useState('');
+  const run = (fn, msg) => async () => {
+    try {
+      await fn();
+      notify(msg);
+      onDone();
+    } catch (e) {
+      notify(e.message, { tone: 'error' });
+    }
+  };
+
+  if (s === 'DEVELOPER_ASSIGNED') {
+    return (
+      <div className="card">
+        <div className="section-title mb-1">New assignment</div>
+        <p className="text-sm mb-4">Review the brief and accept to start development. The platform owner is notified.</p>
+        <AsyncButton className="btn btn-primary btn-block" onClick={run(() => api.acceptAssignment(p.id), 'Assignment accepted.')}><PlayCircle /> Accept assignment</AsyncButton>
+      </div>
+    );
+  }
+  if (['IN_PROGRESS', 'CHANGES_REQUESTED', 'TESTING'].includes(s)) {
+    return (
+      <div className="card">
+        <div className="section-title mb-3">Update progress</div>
+        <Field label={`Progress · ${percent}%`}>
+          <input type="range" min={0} max={100} step={5} value={percent} onChange={(e) => setPercent(Number(e.target.value))} style={{ accentColor: 'var(--accent)' }} />
+        </Field>
+        <Field label="What changed?"><textarea className="textarea" rows={2} value={note} onChange={(e) => setNote(e.target.value)} /></Field>
+        <AsyncButton className="btn btn-secondary btn-block" onClick={run(() => api.updateProgress(p.id, percent, note), 'Progress updated.')}>Save progress</AsyncButton>
+        <hr className="divider" />
+        <div className="section-title mb-1">Submit for review</div>
+        <p className="text-sm mb-3">Upload source code, documentation and the demo video under Deliverables first.</p>
+        <Field label="Notes for the reviewer"><textarea className="textarea" rows={2} value={submitNotes} onChange={(e) => setSubmitNotes(e.target.value)} /></Field>
+        <AsyncButton className="btn btn-primary btn-block" onClick={run(() => api.developerSubmitReview(p.id, submitNotes), 'Submitted for review.')}><Send /> Submit for review</AsyncButton>
+      </div>
+    );
+  }
+  return <div className="card"><div className="section-title mb-1">Status</div><p className="text-sm">{s === 'READY_FOR_REVIEW' ? 'Waiting for the reviewer.' : 'Nothing to do right now.'}</p></div>;
+}
+
+function ReviewActions({ p, onDone }) {
+  const { notify } = useToast();
+  const [notes, setNotes] = useState('');
+  const act = (action, msg) => async () => {
+    if (action === 'REQUEST_CHANGES' && !notes.trim()) return notify('Describe the changes you need.', { tone: 'error' });
+    try {
+      await api.adminReviewProject(p.id, action, notes);
+      notify(msg);
+      onDone();
+    } catch (e) {
+      notify(e.message, { tone: 'error' });
+    }
+  };
+  return (
+    <div className="card">
+      <div className="section-title mb-1">Review submission</div>
+      <p className="text-sm mb-4">Check the deliverables tab, then approve or request changes.</p>
+      <Field label="Review notes" hint="Required when requesting changes"><textarea className="textarea" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} /></Field>
+      <div className="flex flex-col gap-2">
+        <AsyncButton className="btn btn-primary btn-block" onClick={act('APPROVE', 'Approved. The student has been asked to pay the balance.')}><CheckCircle2 /> Approve</AsyncButton>
+        <AsyncButton className="btn btn-secondary btn-block" onClick={act('REQUEST_CHANGES', 'Changes requested.')}><Undo2 /> Request changes</AsyncButton>
+      </div>
+    </div>
+  );
+}
+
+function FinalPayment({ p, onDone }) {
+  const { notify } = useToast();
+  const payment = useAsync(() => api.getPaymentConfig(), []);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const pay = async () => {
+    setBusy(true);
+    try {
+      const res = await api.payProjectRemaining(p.id);
+      notify(res.message, { title: 'Payment complete' });
+      setOpen(false);
+      onDone();
+    } catch (e) {
+      notify(e.message, { tone: 'error' });
+    } finally {
+      setBusy(false);
+    }
+  };
+  const cfg = payment.data || {};
+  return (
+    <div className="card">
+      <div className="section-title mb-1">Your project is ready</div>
+      <p className="text-sm">It passed review. Pay the balance to unlock every deliverable.</p>
+      <div className="price price-lg mt-3">{money(p.remainingAmount)}</div>
+      {cfg.simulation && <div className="mt-2"><span className="notice-simulated"><AlertTriangle size={12} /> Development payment mode</span></div>}
+      <button className="btn btn-primary btn-block btn-lg mt-4" onClick={() => setOpen(true)} disabled={cfg.available === false}><Wallet /> Pay balance</button>
+      <ConfirmDialog open={open} title="Confirm final payment" confirmLabel={`Pay ${money(p.remainingAmount)}`} busy={busy} onConfirm={pay} onClose={() => setOpen(false)}
+        text={`Paying the balance for "${p.projectName}" unlocks the source code, documentation and demo.`}>
+        {cfg.simulation && <Alert tone="warning" title="Simulated payment">No money is charged on this development server.</Alert>}
+      </ConfirmDialog>
+    </div>
+  );
+}
+
+function AssignmentActions({ p, onDone }) {
+  const { notify } = useToast();
+  const devs = useAsync(() => api.getWorkflowDevelopers(), []);
+  const reviewers = useAsync(() => api.getWorkflowReviewers(), []);
+  const [developerId, setDeveloperId] = useState('');
+  const [reviewerId, setReviewerId] = useState('');
+  const delivered = ['ACCESS_GRANTED', 'COMPLETED'].includes(p.lifecycleStatus);
+  return (
+    <div className="card">
+      <div className="section-title mb-3 flex items-center gap-2"><UserCog size={15} /> Assignment</div>
+      <Field label="Reassign developer">
+        <div className="flex gap-2">
+          <select className="select" value={developerId} onChange={(e) => setDeveloperId(e.target.value)} disabled={delivered}>
+            <option value="">{p.developer ? `Current: ${p.developer.fullName}` : 'Select developer'}</option>
+            {(devs.data || []).filter((d) => d.id !== p.developer?.id).map((d) => <option key={d.id} value={d.id}>{d.fullName} · {d.activeProjects} active</option>)}
+          </select>
+          <AsyncButton className="btn btn-secondary" disabled={!developerId} onClick={async () => {
+            try { await api.assignDeveloperToProject(p.id, Number(developerId)); notify('Developer reassigned.'); setDeveloperId(''); onDone(); } catch (e) { notify(e.message, { tone: 'error' }); }
+          }}>Save</AsyncButton>
+        </div>
+      </Field>
+      <Field label="Reviewer">
+        <div className="flex gap-2">
+          <select className="select" value={reviewerId} onChange={(e) => setReviewerId(e.target.value)}>
+            <option value="">{p.reviewerAdmin ? `Current: ${p.reviewerAdmin.fullName}` : 'Platform owner (default)'}</option>
+            {(reviewers.data || []).map((u) => <option key={u.id} value={u.id}>{u.fullName}{u.collegeName ? ` · ${u.collegeName}` : ''}</option>)}
+          </select>
+          <AsyncButton className="btn btn-secondary" disabled={!reviewerId} onClick={async () => {
+            try { await api.assignReviewerToProject(p.id, Number(reviewerId)); notify('Reviewer updated.'); setReviewerId(''); onDone(); } catch (e) { notify(e.message, { tone: 'error' }); }
+          }}><Eye /> Save</AsyncButton>
+        </div>
+      </Field>
+    </div>
+  );
+}

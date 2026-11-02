@@ -31,8 +31,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> searchUsersOnly(@Param("status") UserStatus status,
                                @Param("query") String query);
 
-    // Fetch only admin users (role = ADMIN or SUPER_ADMIN) from user_management table
-    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.role IN (com.academic.model.Role.ADMIN, com.academic.model.Role.SUPER_ADMIN) " +
+    // College administrators (role = ADMIN). Super Admins are platform owners, not listed here.
+    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.role = com.academic.model.Role.ADMIN " +
            "AND (:status IS NULL OR u.status = :status) " +
            "AND (:query IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<User> searchAdminsOnly(@Param("status") UserStatus status,

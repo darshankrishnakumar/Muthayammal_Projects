@@ -46,8 +46,8 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (err) {
         console.warn('Session verification notice:', err.message);
-        // Only clear storage if token was explicitly invalid/expired (401)
-        if (err.message && (err.message.includes('Session expired') || err.message.includes('Unauthenticated') || err.message.includes('401'))) {
+        // Only clear the session when the server rejected the token
+        if (err.status === 401 || err.status === 403) {
           localStorage.removeItem('token');
           localStorage.removeItem('currentUser');
           if (!isCancelled) setUser(null);
@@ -57,8 +57,21 @@ export const AuthProvider = ({ children }) => {
       }
     };
     initAuth();
-    return () => { isCancelled = true; };
+    const onExpired = () => {
+      if (!isCancelled) setUser(null);
+    };
+    window.addEventListener('auth:expired', onExpired);
+    return () => {
+      isCancelled = true;
+      window.removeEventListener('auth:expired', onExpired);
+    };
   }, []);
+
+  const refreshUser = async () => {
+    const current = await api.getCurrentUser();
+    setUser(current);
+    return current;
+  };
 
   const login = async (email, password) => {
     setLoading(true);
@@ -114,6 +127,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
+    refreshUser,
     hasRole,
     isAuthenticated: !!user
   };

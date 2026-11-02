@@ -1,258 +1,124 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { FileText, Plus, Search } from 'lucide-react';
 import { api } from '../utils/api';
-import { 
-  FileText, 
-  Plus, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  CheckCircle2, 
-  XCircle, 
-  Clock, 
-  Send,
-  AlertCircle
-} from 'lucide-react';
+import { useAsync } from '../hooks/useAsync';
+import { useAuth } from '../context/AuthContext';
+import { PageHeader, EmptyState, ErrorState, SkeletonRows, StatusBadge, Tabs } from '../components/ui';
+import { money, relativeTime } from '../utils/format';
 
-const Requirements = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
-  const [rawRequirements, setRawRequirements] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-
-  // Debounce search input by 250ms to prevent request thrashing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  const fetchRequirements = async () => {
-    try {
-      if (rawRequirements.length === 0) setLoading(true);
-      setError(null);
-      const data = await api.getRequirements(debouncedSearch, statusFilter);
-      setRawRequirements(data || []);
-    } catch (err) {
-      console.error('Error fetching requirements:', err);
-      setError(err.message || 'Failed to load requirements.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRequirements();
-  }, [debouncedSearch, statusFilter]);
-
-  // Instant client-side filtering for immediate 0ms response on user input
-  const filteredRequirements = useMemo(() => {
-    if (!debouncedSearch && !statusFilter) return rawRequirements;
-    const q = debouncedSearch.toLowerCase().trim();
-    return rawRequirements.filter(req => {
-      const matchesSearch = !q || 
-        (req.title && req.title.toLowerCase().includes(q)) ||
-        (req.problemStatement && req.problemStatement.toLowerCase().includes(q)) ||
-        (req.technologyStack && req.technologyStack.toLowerCase().includes(q));
-      const matchesStatus = !statusFilter || req.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-  }, [rawRequirements, debouncedSearch, statusFilter]);
-
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'DRAFT':
-        return <span className="badge badge-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={12}/> DRAFT</span>;
-      case 'SUBMITTED':
-        return <span className="badge badge-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Send size={12}/> SUBMITTED</span>;
-      case 'APPROVED':
-        return <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><CheckCircle2 size={12}/> APPROVED</span>;
-      case 'REJECTED':
-        return <span className="badge badge-danger" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><XCircle size={12}/> REJECTED</span>;
-      case 'IN_PROGRESS':
-        return <span className="badge badge-warning" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={12}/> IN PROGRESS</span>;
-      case 'COMPLETED':
-        return <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><CheckCircle2 size={12}/> COMPLETED</span>;
-      default:
-        return <span className="badge badge-secondary">{status}</span>;
-    }
-  };
-
-  return (
-    <div className="requirements-page flex flex-col gap-4 text-left perf-contain">
-      {/* Action Header */}
-      <div className="flex justify-between items-center flex-wrap gap-4 card">
-        <div>
-          <h2 className="font-display text-xl font-semibold">
-            {user.role === 'USER' ? 'My Requirements' : 'Requirement Management & Review'}
-          </h2>
-          <p className="text-muted text-sm">
-            {user.role === 'USER' 
-              ? 'Track, edit, and submit your research and project requirements.' 
-              : 'Review submitted student requirements, approve or reject applications.'}
-          </p>
-        </div>
-
-        {user.role === 'USER' && (
-          <Link to="/requirements/new" className="btn btn-primary flex items-center gap-2">
-            <Plus size={18} />
-            <span>Submit New Requirement</span>
-          </Link>
-        )}
-      </div>
-
-      {/* Search Toolbar */}
-      <div className="filter-toolbar card" style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <div className="search-input-wrapper flex-1" style={{ position: 'relative' }}>
-          <Search size={16} className="search-icon" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input 
-            type="text" 
-            className="form-control" 
-            placeholder="Search by requirement title or problem statement..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '36px', width: '100%' }}
-          />
-        </div>
-
-        <div className="status-filter-wrapper" style={{ minWidth: '180px' }}>
-          <select 
-            className="form-control"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="">All Statuses</option>
-            <option value="DRAFT">Draft</option>
-            <option value="SUBMITTED">Submitted</option>
-            <option value="APPROVED">Approved</option>
-            <option value="REJECTED">Rejected</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Error Alert */}
-      {error && (
-        <div className="card" style={{ borderLeft: '4px solid var(--error)', backgroundColor: 'var(--error-light)' }}>
-          <div className="flex items-center gap-2 text-error">
-            <AlertCircle size={18} />
-            <span style={{ fontWeight: 600 }}>{error}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Data Table */}
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        {loading && rawRequirements.length === 0 ? (
-          <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-            <div style={{ border: '3px solid var(--border-color)', borderTop: '3px solid var(--primary)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 0.6s linear infinite', margin: '0 auto 12px' }}></div>
-            <p className="text-muted" style={{ fontSize: '0.85rem' }}>Loading requirements...</p>
-            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-          </div>
-        ) : filteredRequirements.length === 0 ? (
-          <div style={{ padding: '60px 20px', textAlign: 'center' }}>
-            <FileText size={48} className="text-muted" style={{ margin: '0 auto 12px', opacity: 0.4 }} />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '4px' }}>No requirements found.</h3>
-            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '20px' }}>
-              {searchTerm || statusFilter 
-                ? 'No matching records found for the applied search filters.' 
-                : user.role === 'USER' 
-                  ? 'You have not submitted any requirements yet.' 
-                  : 'There are no requirement records in the system.'}
-            </p>
-            {user.role === 'USER' && (
-              <Link to="/requirements/new" className="btn btn-primary">
-                Create First Requirement
-              </Link>
-            )}
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ backgroundColor: 'var(--bg-main)', borderBottom: '1px solid var(--border-color)', textAlign: 'left' }}>
-                  <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600 }}>TITLE & DETAILS</th>
-                  {user.role !== 'USER' && <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600 }}>SUBMITTED BY</th>}
-                  <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600 }}>BUDGET</th>
-                  <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600 }}>TECH STACK</th>
-                  <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600 }}>STATUS</th>
-                  <th style={{ padding: '14px 16px', fontSize: '0.8rem', fontWeight: 600, textAlign: 'right' }}>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRequirements.map((req) => (
-                  <tr key={req.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background-color 0.15s ease' }}>
-                    <td style={{ padding: '16px' }}>
-                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{req.title}</div>
-                      <div className="text-muted" style={{ fontSize: '0.8rem', marginTop: '2px', maxWidth: '340px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {req.problemStatement}
-                      </div>
-                    </td>
-
-                    {user.role !== 'USER' && (
-                      <td style={{ padding: '16px' }}>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 500 }}>{req.user?.fullName || 'N/A'}</div>
-                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>{req.user?.email}</div>
-                      </td>
-                    )}
-
-                    <td style={{ padding: '16px', fontSize: '0.9rem', fontWeight: 600 }}>
-                      {req.budget ? `Rs. ${Number(req.budget).toLocaleString()}` : 'N/A'}
-                    </td>
-
-                    <td style={{ padding: '16px' }}>
-                      <span style={{ fontSize: '0.8rem', backgroundColor: 'var(--bg-main)', border: '1px solid var(--border-color)', padding: '4px 8px', borderRadius: '4px' }}>
-                        {req.technologyStack || 'Unspecified'}
-                      </span>
-                    </td>
-
-                    <td style={{ padding: '16px' }}>
-                      {getStatusBadge(req.status)}
-                    </td>
-
-                    <td style={{ padding: '16px', textAlign: 'right' }}>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                        <button 
-                          onClick={() => navigate(`/requirements/${req.id}`)} 
-                          className="btn btn-secondary" 
-                          style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                          title="View Requirement Details"
-                        >
-                          <Eye size={14} />
-                          <span>View</span>
-                        </button>
-
-                        {user.role === 'USER' && req.status === 'DRAFT' && (
-                          <button 
-                            onClick={() => navigate(`/requirements/${req.id}/edit`)} 
-                            className="btn btn-primary" 
-                            style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                            title="Edit Requirement"
-                          >
-                            <Edit size={14} />
-                            <span>Edit</span>
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+/** Work queues per role: each tab is a set of statuses. */
+const QUEUES = {
+  USER: [
+    { value: 'all', label: 'All' },
+    { value: 'action', label: 'Needs your action', statuses: ['DRAFT', 'CHANGES_REQUESTED', 'ADVANCE_PAYMENT_PENDING'] },
+    { value: 'review', label: 'In review', statuses: ['SUBMITTED', 'SUPER_ADMIN_REVIEW'] },
+    { value: 'dev', label: 'In development', statuses: ['ADVANCE_PAYMENT_COMPLETED', 'IN_PROGRESS'] },
+    { value: 'closed', label: 'Closed', statuses: ['COMPLETED', 'REJECTED', 'INACTIVE'] },
+  ],
+  ADMIN: [
+    { value: 'review', label: 'To review', statuses: ['SUBMITTED'] },
+    { value: 'forwarded', label: 'Forwarded', statuses: ['SUPER_ADMIN_REVIEW', 'ADVANCE_PAYMENT_PENDING', 'ADVANCE_PAYMENT_COMPLETED'] },
+    { value: 'dev', label: 'In development', statuses: ['IN_PROGRESS'] },
+    { value: 'all', label: 'All' },
+  ],
+  SUPER_ADMIN: [
+    { value: 'approve', label: 'Awaiting approval', statuses: ['SUPER_ADMIN_REVIEW'] },
+    { value: 'assign', label: 'Ready to assign', statuses: ['ADVANCE_PAYMENT_COMPLETED'] },
+    { value: 'payment', label: 'Awaiting advance', statuses: ['ADVANCE_PAYMENT_PENDING'] },
+    { value: 'dev', label: 'In development', statuses: ['IN_PROGRESS'] },
+    { value: 'all', label: 'All' },
+  ],
+  PROJECT_DEVELOPER: [{ value: 'all', label: 'Assigned to me' }],
 };
 
-export default Requirements;
+export default function Requirements() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const queues = QUEUES[user?.role] || QUEUES.USER;
+  const initial = (() => {
+    const s = params.get('status');
+    if (!s) return queues[0].value;
+    return queues.find((q) => q.statuses?.includes(s))?.value || 'all';
+  })();
+  const [tab, setTab] = useState(initial);
+  const [search, setSearch] = useState('');
+  const { data, loading, error, reload } = useAsync(() => api.getRequirements(), []);
+
+  const all = useMemo(() => data || [], [data]);
+  const counts = useMemo(() => Object.fromEntries(queues.map((q) => [q.value, q.statuses ? all.filter((r) => q.statuses.includes(r.status)).length : all.length])), [all, queues]);
+  const current = queues.find((q) => q.value === tab) || queues[0];
+  const rows = all
+    .filter((r) => !current.statuses || current.statuses.includes(r.status))
+    .filter((r) => !search.trim() || r.title.toLowerCase().includes(search.trim().toLowerCase()) || (r.user?.fullName || '').toLowerCase().includes(search.trim().toLowerCase()));
+
+  const isStudent = user?.role === 'USER';
+
+  return (
+    <>
+      <PageHeader
+        title={isStudent ? 'My requirements' : 'Requirements'}
+        description={
+          isStudent ? "Request a custom project when the library doesn't have what you need. Your college reviews it first."
+            : user?.role === 'ADMIN' ? 'Custom project requests from your students. Forward feasible ones for development approval.'
+              : user?.role === 'SUPER_ADMIN' ? 'Custom development requests from every college: quote, collect the advance and assign developers.'
+                : 'Requirements behind the projects assigned to you.'
+        }
+        actions={isStudent && <Link to="/requirements/new" className="btn btn-primary"><Plus /> New requirement</Link>}
+      />
+
+      <Tabs value={tab} onChange={setTab} tabs={queues.map((q) => ({ value: q.value, label: q.label, count: loading ? undefined : counts[q.value] }))} />
+
+      <div className="toolbar">
+        <div className="input-with-icon grow" style={{ maxWidth: 420 }}>
+          <Search aria-hidden="true" />
+          <input className="input" placeholder={isStudent ? 'Search requirements' : 'Search by title or student'} value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+      </div>
+
+      {error ? <ErrorState error={error} onRetry={reload} /> : (
+        <div className="card card-flush">
+          {loading && !data ? <div className="p-4"><SkeletonRows rows={6} /></div> : rows.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title={all.length === 0 ? (isStudent ? 'No requirements yet' : 'Nothing here yet') : 'Nothing in this queue'}
+              text={all.length === 0 && isStudent ? 'Describe the project you need. Your college reviews it, then the platform quotes and assigns a developer.' : 'Requests appear here as they move through review.'}
+              action={all.length === 0 && isStudent && <Link to="/requirements/new" className="btn btn-primary"><Plus /> New requirement</Link>}
+            />
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Requirement</th>
+                    {!isStudent && <th>Student</th>}
+                    {user?.role === 'SUPER_ADMIN' && <th>College</th>}
+                    <th className="cell-num">{isStudent ? 'Budget / quote' : 'Budget'}</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.id} className="is-clickable" onClick={() => navigate(`/requirements/${r.id}`)}>
+                      <td style={{ maxWidth: 380 }}>
+                        <div className="font-medium truncate">{r.title}</div>
+                        <div className="text-xs text-subtle truncate">{r.technologyStack || r.problemStatement}</div>
+                      </td>
+                      {!isStudent && <td className="cell-muted">{r.user?.fullName}</td>}
+                      {user?.role === 'SUPER_ADMIN' && <td className="cell-muted">{r.collegeName || '—'}</td>}
+                      <td className="cell-num">{r.budget != null ? money(r.budget) : '—'}</td>
+                      <td><StatusBadge status={r.status} /></td>
+                      <td className="cell-muted text-sm">{relativeTime(r.updatedAt || r.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+}

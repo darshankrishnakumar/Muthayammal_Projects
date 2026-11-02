@@ -113,7 +113,7 @@ public class LibraryImportService {
             row.put("title", parsed.title);
             row.put("domain", parsed.domain);
             row.put("technologyStack", parsed.technologyStack);
-            row.put("hasVideo", Files.isDirectory(dir.resolve("walkthrough")));
+            row.put("hasVideo", containsFileWithExtension(dir.resolve("walkthrough"), Set.of("mp4", "webm", "mov")));
             row.put("hasSourceCode", Files.isDirectory(dir.resolve("source_code")));
             Optional<Project> existing = projectRepository.findBySourceRef(dir.getFileName().toString());
             row.put("imported", existing.isPresent());
@@ -483,6 +483,17 @@ public class LibraryImportService {
             }
         }
         return file.getFileName().toString().endsWith(".pyc") || file.getFileName().toString().equals(".DS_Store");
+    }
+
+    private static boolean containsFileWithExtension(Path dir, Set<String> extensions) {
+        if (!Files.isDirectory(dir)) {
+            return false;
+        }
+        try (Stream<Path> s = Files.list(dir)) {
+            return s.anyMatch(f -> Files.isRegularFile(f) && extensions.contains(ext(f)));
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private boolean isImage(Path f) {

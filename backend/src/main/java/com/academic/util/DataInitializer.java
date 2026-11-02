@@ -1,8 +1,10 @@
 package com.academic.util;
 
+import com.academic.model.College;
 import com.academic.model.Role;
 import com.academic.model.User;
 import com.academic.model.UserStatus;
+import com.academic.repository.CollegeRepository;
 import com.academic.repository.UserRepository;
 import com.academic.service.AuditLogService;
 import org.slf4j.Logger;
@@ -26,6 +28,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CollegeRepository collegeRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -56,14 +61,30 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        seedIfMissing("superadmin@academic.com", "Superadmin123!", "Super Administrator", Role.SUPER_ADMIN);
-        seedIfMissing("admin@academic.com", "Admin123!", "College Administrator", Role.ADMIN);
-        seedIfMissing("developer@academic.com", "Developer123!", "Project Developer", Role.PROJECT_DEVELOPER);
-        seedIfMissing("user@academic.com", "User123!", "Demo Student", Role.USER);
+        College demo = collegeRepository.findByCodeIgnoreCase("DEMO").orElseGet(() -> {
+            College c = new College();
+            c.setName("Demo College");
+            c.setCode("DEMO");
+            c.setCity("Demo City");
+            c.setCreatedBy("system");
+            return collegeRepository.save(c);
+        });
+
+        seedIfMissing("superadmin@academic.com", "Superadmin123!", "Super Administrator", Role.SUPER_ADMIN, null);
+        seedIfMissing("admin@academic.com", "Admin123!", "College Administrator", Role.ADMIN, demo);
+        seedIfMissing("developer@academic.com", "Developer123!", "Project Developer", Role.PROJECT_DEVELOPER, null);
+        seedIfMissing("user@academic.com", "User123!", "Demo Student", Role.USER, demo);
     }
 
-    private void seedIfMissing(String email, String password, String fullName, Role role) {
-        if (userRepository.findByEmail(email).isPresent()) {
+    private void seedIfMissing(String email, String password, String fullName, Role role, College college) {
+        var existing = userRepository.findByEmail(email);
+        if (existing.isPresent()) {
+            // Earlier versions seeded demo accounts without a college; link them so they can be used.
+            User u = existing.get();
+            if (college != null && u.getCollege() == null && u.getRole() == role) {
+                u.setCollege(college);
+                userRepository.save(u);
+            }
             return;
         }
         User user = new User();
@@ -73,6 +94,7 @@ public class DataInitializer implements CommandLineRunner {
         user.setRole(role);
         user.setStatus(UserStatus.ACTIVE);
         user.setEmailVerified(true);
+        user.setCollege(college);
         userRepository.save(user);
         auditLogService.log("system", "SYSTEM_INIT", "Seeded demo account " + email + " (" + role + ").");
         logger.info("Seeded demo account {} ({})", email, role);

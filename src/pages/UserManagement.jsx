@@ -1,639 +1,400 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import { GraduationCap, Pencil, Power, Search, Trash2, UserPlus, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
+import { useAsync, useDebounced } from '../hooks/useAsync';
 import BulkUserCreateModal from '../components/BulkUserCreateModal';
-import { 
-  Search, 
-  UserPlus, 
-  Edit3, 
-  Trash2, 
-  Check, 
-  X, 
-  User, 
-  Users,
-  Filter, 
-  AlertTriangle 
-} from 'lucide-react';
+import {
+  PageHeader, Card, Avatar, Badge, StatusBadge, EmptyState, ErrorState, SkeletonRows,
+  Modal, ConfirmDialog, Field, Alert, useToast,
+} from '../components/ui';
+import { ROLE_LABELS, date } from '../utils/format';
+
+const MIN_PASSWORD = 8;
+const ASSIGNABLE_ROLES = ['USER', 'ADMIN', 'PROJECT_DEVELOPER'];
+const EMPTY_FORM = { fullName: '', email: '', mobileNumber: '', password: '', status: 'ACTIVE', role: 'USER', collegeId: '' };
 
 const UserManagement = () => {
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { notify } = useToast();
+  const isSuperAdmin = currentUser?.role === 'SUPER_ADMIN';
+  const isAdmin = currentUser?.role === 'ADMIN';
+  const ownCollege = currentUser?.college;
 
-  // Filters
-  const [searchTerm, setSearchTerm] = useState('');
+  const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [collegeFilter, setCollegeFilter] = useState('');
+  const debouncedSearch = useDebounced(search);
 
-  // Modal State
-  const [modalOpen, setModalOpen] = useState(false);
-  const [bulkModalOpen, setBulkModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null); // null means "Create Mode"
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    role: 'USER',
-    status: 'ACTIVE'
-  });
+  // Super Admin: every student platform-wide. College admin: the server scopes to their college.
+  const { data, loading, error, reload } = useAsync(
+    () => api.getUsers(debouncedSearch, statusFilter, isSuperAdmin ? 'USER' : ''),
+    [debouncedSearch, statusFilter, isSuperAdmin],
+  );
+  const allUsers = useMemo(() => data || [], [data]);
+  const users = useMemo(
+    () => (collegeFilter ? allUsers.filter((u) => String(u.college?.id) === collegeFilter) : allUsers),
+    [allUsers, collegeFilter],
+  );
 
-  const isSuperAdmin = currentUser.role === 'SUPER_ADMIN';
-  const isAdmin = currentUser.role === 'ADMIN';
+  const colleges = useAsync(() => (isSuperAdmin ? api.getColleges() : Promise.resolve([])), [isSuperAdmin]);
+  const collegeOptions = useMemo(
+    () => (colleges.data || []).slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')),
+    [colleges.data],
+  );
 
-  // Load Users
-  const loadUsers = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const data = await api.getUsers(searchTerm, statusFilter);
-      setUsers(data);
-    } catch (err) {
-      setError(err.message || 'Failed to load user directories.');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchTerm, statusFilter]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [formError, setFormError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [deleting, setDeleting] = useState(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
 
-  useEffect(() => {
-    loadUsers();
-  }, [loadUsers]);
+  const canModify = (u) => isSuperAdmin || (isAdmin && u.role === 'USER');
 
-  const handleOpenCreateModal = () => {
-    setEditingUser(null);
-    setFormData({
-      fullName: '',
-      email: '',
+  const openCreate = () => {
+    setEditing(null);
+    setForm(EMPTY_FORM);
+    setFormError('');
+    setFormOpen(true);
+  };
+
+  const openEdit = (u) => {
+    setEditing(u);
+    setForm({
+      fullName: u.fullName || '',
+      email: u.email || '',
+      mobileNumber: u.mobileNumber || '',
       password: '',
-      role: 'USER',
-      status: 'ACTIVE'
+      status: u.status || 'ACTIVE',
+      role: u.role || 'USER',
+      collegeId: u.college?.id ? String(u.college.id) : '',
     });
-    setModalOpen(true);
+    setFormError('');
+    setFormOpen(true);
   };
 
-  const handleOpenEditModal = (user) => {
-    setEditingUser(user);
-    setFormData({
-      fullName: user.fullName,
-      email: user.email,
-      password: '', // Keep blank unless resetting
-      role: user.role,
-      status: user.status
-    });
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setEditingUser(null);
-  };
-
-  const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const setField = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const roleNeedsCollege = form.role === 'USER' || form.role === 'ADMIN';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    
-    try {
-      if (editingUser) {
-        // Edit User
-        const updatePayload = {
-          fullName: formData.fullName,
-          email: formData.email,
-          role: formData.role,
-          status: formData.status
-        };
-        // Only update password if provided
-        if (formData.password) {
-          updatePayload.password = formData.password;
-        }
-
-        await api.updateUser(editingUser.id, updatePayload);
-        setSuccess(`User "${formData.fullName}" updated successfully.`);
-      } else {
-        // Create User
-        if (!formData.password) {
-          setError('A password is required for new accounts.');
-          return;
-        }
-        await api.createUser(formData);
-        setSuccess(`User "${formData.fullName}" created successfully.`);
-      }
-      
-      handleCloseModal();
-      loadUsers();
-      
-      // Auto clear success alert
-      setTimeout(() => setSuccess(''), 4000);
-    } catch (err) {
-      setError(err.message || 'An error occurred while saving the user profile.');
-    }
-  };
-
-  const handleToggleStatus = async (user) => {
-    setError('');
-    const newStatus = user.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    try {
-      await api.updateUser(user.id, { status: newStatus });
-      loadUsers();
-      setSuccess(`Status of ${user.fullName} changed to ${newStatus}.`);
-      setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
-      setError(err.message || 'Failed to toggle account state.');
-    }
-  };
-
-  const handleDeleteUser = async (id, name) => {
-    if (!window.confirm(`Are you sure you want to delete ${name}? This action can be undone by restoring the profile.`)) {
+    setFormError('');
+    if ((!editing || form.password) && form.password.length < MIN_PASSWORD) {
+      setFormError(`Password must be at least ${MIN_PASSWORD} characters.`);
       return;
     }
-    setError('');
+    if (isSuperAdmin && roleNeedsCollege && !form.collegeId) {
+      setFormError('Select a college.');
+      return;
+    }
+    setSaving(true);
     try {
-      await api.deleteUser(id);
-      loadUsers();
-      setSuccess(`User "${name}" successfully deleted.`);
-      setTimeout(() => setSuccess(''), 3000);
+      const base = {
+        fullName: form.fullName.trim(),
+        email: form.email.trim().toLowerCase(),
+        mobileNumber: form.mobileNumber.trim(),
+        status: form.status,
+      };
+      if (form.password) base.password = form.password;
+
+      if (editing) {
+        await api.updateUser(editing.id, base);
+        const roleChanged = isSuperAdmin && form.role !== editing.role;
+        const collegeChanged = isSuperAdmin && roleNeedsCollege && form.collegeId !== String(editing.college?.id ?? '');
+        if (roleChanged || collegeChanged) {
+          await api.updateUserRole(editing.id, form.role, roleNeedsCollege ? String(form.collegeId) : null);
+        }
+        notify(roleChanged ? `${base.fullName} is now ${ROLE_LABELS[form.role] || form.role}` : `${base.fullName} updated`);
+      } else {
+        const payload = { ...base, role: 'USER' };
+        if (isSuperAdmin) payload.collegeId = String(form.collegeId);
+        await api.createUser(payload);
+        notify(`${base.fullName} added`);
+      }
+      setFormOpen(false);
+      reload();
     } catch (err) {
-      setError(err.message || 'Failed to delete user.');
+      setFormError(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
+  const toggleStatus = async (u) => {
+    const next = u.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    try {
+      await api.updateUser(u.id, { status: next });
+      notify(`${u.fullName} is now ${next === 'ACTIVE' ? 'active' : 'inactive'}`);
+      reload();
+    } catch (err) {
+      notify(err.message, { tone: 'error' });
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!deleting) return;
+    setDeleteBusy(true);
+    try {
+      await api.deleteUser(deleting.id);
+      notify(`${deleting.fullName} deleted`);
+      setDeleting(null);
+      reload();
+    } catch (err) {
+      notify(err.message, { tone: 'error' });
+    } finally {
+      setDeleteBusy(false);
+    }
+  };
+
+  const filtersActive = Boolean(search || statusFilter || collegeFilter);
+
   return (
-    <div className="user-manager-wrapper">
-      {/* Alert Banners */}
-      {success && (
-        <div className="alert alert-success">
-          <Check size={16} />
-          <span>{success}</span>
-        </div>
-      )}
-      {error && (
-        <div className="alert alert-danger">
-          <AlertTriangle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Control Panel */}
-      <div className="control-bar card">
-        <div className="search-box">
-          <Search size={18} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search by full name or email address..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="filter-actions">
-          <div className="select-wrapper">
-            <Filter size={14} className="select-icon" />
-            <select 
-              value={statusFilter} 
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="form-control form-select select-filter"
-            >
-              <option value="">All Statuses</option>
-              <option value="ACTIVE">Active Users</option>
-              <option value="INACTIVE">Inactive Users</option>
-            </select>
-          </div>
-
-          {(isSuperAdmin || isAdmin) && (
-            <button 
-              onClick={() => setBulkModalOpen(true)} 
-              className="btn btn-secondary flex items-center gap-2"
-              title="Bulk upload users via CSV or interactive table"
-            >
-              <Users size={16} />
-              <span>Bulk Create Users</span>
+    <>
+      <PageHeader
+        title="Students"
+        description={
+          isSuperAdmin
+            ? 'Student accounts across every college.'
+            : `Student accounts at ${ownCollege?.name || 'your college'}.`
+        }
+        actions={
+          <>
+            <button type="button" className="btn btn-secondary" onClick={() => setBulkOpen(true)}>
+              <Users aria-hidden="true" /> Bulk create
             </button>
-          )}
-
-          <button onClick={handleOpenCreateModal} className="btn btn-primary flex items-center gap-2">
-            <UserPlus size={16} />
-            <span>Add User</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Users Table */}
-      <div className="table-container card">
-        {loading ? (
-          <div className="table-loading">
-            <p>Loading secure user directory...</p>
-          </div>
-        ) : users.length === 0 ? (
-          <div className="table-empty">
-            <User size={48} className="text-muted" />
-            <h3>No users found</h3>
-            <p className="text-muted">Try adjusting your filters or search query.</p>
-          </div>
-        ) : (
-          <table className="custom-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email Address</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((u) => {
-                // Rule: Admins cannot edit/delete another Admin
-                const canModify = isSuperAdmin || (isAdmin && u.role === 'USER');
-                
-                return (
-                  <tr key={u.id}>
-                    <td>
-                      <div className="table-user-name">
-                        <span className="avatar-sm">
-                          {u.fullName.charAt(0)}
-                        </span>
-                        <div>
-                          <span style={{ fontWeight: 600 }}>{u.fullName}</span>
-                          {currentUser.id === u.id && <span className="badge badge-primary ms-1" style={{ fontSize: '0.6rem' }}>You</span>}
-                        </div>
-                      </div>
-                    </td>
-                    <td>{u.email}</td>
-                    <td>
-                      <span className={`badge ${
-                        u.role === 'ADMIN' ? 'badge-primary' : 'badge-success'
-                      }`}>
-                        {u.role}
-                      </span>
-                    </td>
-                    <td>
-                      <button 
-                        onClick={() => canModify && handleToggleStatus(u)}
-                        className={`status-toggle ${u.status === 'ACTIVE' ? 'status-active' : 'status-inactive'}`}
-                        disabled={!canModify}
-                        title={canModify ? 'Click to toggle status' : 'Unauthorized to change status'}
-                      >
-                        <span className="indicator-dot"></span>
-                        <span>{u.status}</span>
-                      </button>
-                    </td>
-                    <td>
-                      <span className="text-muted" style={{ fontSize: '0.85rem' }}>
-                        {new Date(u.createdAt).toLocaleDateString()}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="table-actions-cell">
-                        <button
-                          onClick={() => handleOpenEditModal(u)}
-                          className="btn-action edit-action"
-                          disabled={!canModify}
-                          title={canModify ? 'Edit user profile' : 'Admins cannot modify Admin accounts'}
-                        >
-                          <Edit3 size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteUser(u.id, u.fullName)}
-                          className="btn-action delete-action"
-                          disabled={!canModify || currentUser.id === u.id}
-                          title={canModify ? 'Delete user account' : 'Cannot delete this user'}
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Create / Edit User Modal */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3 className="modal-title">
-                {editingUser ? 'Modify User Profile' : 'Register New User'}
-              </h3>
-              <button onClick={handleCloseModal} className="modal-close">
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  className="form-control"
-                  placeholder="e.g. John Doe"
-                  value={formData.fullName}
-                  onChange={handleFormChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  placeholder="e.g. jdoe@academic.com"
-                  value={formData.email}
-                  onChange={handleFormChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">
-                  <span>Password</span>
-                  {editingUser && <span className="text-muted" style={{ fontWeight: 400, fontSize: '0.75rem' }}>(leave blank to keep current)</span>}
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder={editingUser ? "••••••••" : "Choose a secure password"}
-                  value={formData.password}
-                  onChange={handleFormChange}
-                  required={!editingUser}
-                />
-              </div>
-
-
-              <div className="form-group">
-                <label className="form-label">Account Status</label>
-                <select
-                  name="status"
-                  className="form-control form-select"
-                  value={formData.status}
-                  onChange={handleFormChange}
-                >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                </select>
-              </div>
-
-              <div className="modal-footer">
-                <button type="button" onClick={handleCloseModal} className="btn btn-secondary">
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingUser ? 'Save Changes' : 'Register User'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Bulk User Creation Modal */}
-      <BulkUserCreateModal
-        isOpen={bulkModalOpen}
-        onClose={() => setBulkModalOpen(false)}
-        onSuccess={() => {
-          loadUsers();
-          setSuccess('Bulk user creation completed successfully.');
-          setTimeout(() => setSuccess(''), 4000);
-        }}
-        existingUsers={users}
+            <button type="button" className="btn btn-primary" onClick={openCreate}>
+              <UserPlus aria-hidden="true" /> Add student
+            </button>
+          </>
+        }
       />
 
-      <style>{`
-        .user-manager-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
+      {isAdmin && !ownCollege && (
+        <Alert tone="warning" title="Your account is not linked to a college">
+          Ask the Super Admin to assign your college before managing students.
+        </Alert>
+      )}
 
-        .alert {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 20px;
-          border-radius: var(--radius-md);
-          font-size: 0.9rem;
-          text-align: left;
-        }
+      <div className="toolbar">
+        <div className="input-with-icon grow">
+          <Search aria-hidden="true" />
+          <input className="input" placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        {isSuperAdmin && (
+          <select className="select" style={{ width: 220 }} value={collegeFilter} onChange={(e) => setCollegeFilter(e.target.value)} aria-label="College">
+            <option value="">All colleges</option>
+            {collegeOptions.map((c) => <option key={c.id} value={String(c.id)}>{c.name}</option>)}
+          </select>
+        )}
+        <select className="select" style={{ width: 160 }} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} aria-label="Status">
+          <option value="">All statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
 
-        .alert-success {
-          background-color: var(--success-light);
-          color: var(--success);
-          border: 1px solid hsla(142, 70%, 45%, 0.15);
-        }
+      {error ? (
+        <ErrorState error={error} onRetry={reload} />
+      ) : (
+        <Card flush>
+          {loading && !data ? (
+            <div className="p-4"><SkeletonRows rows={6} /></div>
+          ) : users.length === 0 ? (
+            <EmptyState
+              icon={GraduationCap}
+              title={filtersActive ? 'No students match these filters' : 'No students yet'}
+              text={filtersActive ? 'Try a different search, college or status.' : 'Add students one at a time or upload a CSV.'}
+              action={!filtersActive && (
+                <button type="button" className="btn btn-primary" onClick={openCreate}><UserPlus aria-hidden="true" /> Add student</button>
+              )}
+            />
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>College</th>
+                    {isSuperAdmin && <th>Role</th>}
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th className="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => {
+                    const modifiable = canModify(u);
+                    const isSelf = currentUser?.id === u.id;
+                    return (
+                      <tr key={u.id}>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <Avatar name={u.fullName} />
+                            <div className="min-w-0">
+                              <div className="font-medium flex items-center gap-2">
+                                {u.fullName}
+                                {isSelf && <Badge tone="accent">You</Badge>}
+                              </div>
+                              <div className="text-sm text-muted">{u.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          {u.college ? (
+                            <>
+                              <div>{u.college.name}</div>
+                              {u.college.code && <div className="text-xs text-subtle font-mono">{u.college.code}</div>}
+                            </>
+                          ) : (
+                            <span className="text-subtle">—</span>
+                          )}
+                        </td>
+                        {isSuperAdmin && <td><Badge>{ROLE_LABELS[u.role] || u.role}</Badge></td>}
+                        <td><StatusBadge status={u.status} /></td>
+                        <td className="cell-muted nowrap">{date(u.createdAt)}</td>
+                        <td>
+                          <div className="flex items-center justify-end gap-1">
+                            <button type="button" className="btn btn-ghost btn-icon btn-sm" onClick={() => openEdit(u)} disabled={!modifiable} title="Edit" aria-label="Edit">
+                              <Pencil aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-icon btn-sm"
+                              onClick={() => toggleStatus(u)}
+                              disabled={!modifiable || isSelf}
+                              title={u.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                              aria-label={u.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                            >
+                              <Power aria-hidden="true" />
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-danger-ghost btn-icon btn-sm"
+                              onClick={() => setDeleting(u)}
+                              disabled={!modifiable || isSelf}
+                              title="Delete"
+                              aria-label="Delete"
+                            >
+                              <Trash2 aria-hidden="true" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Card>
+      )}
 
-        .alert-danger {
-          background-color: var(--error-light);
-          color: var(--error);
-          border: 1px solid hsla(350, 80%, 55%, 0.15);
+      <Modal
+        open={formOpen}
+        onClose={() => !saving && setFormOpen(false)}
+        title={editing ? 'Edit account' : 'Add student'}
+        description={editing ? editing.email : 'The student can sign in immediately with this password.'}
+        footer={
+          <>
+            <button type="button" className="btn btn-secondary" onClick={() => setFormOpen(false)} disabled={saving}>Cancel</button>
+            <button type="submit" form="user-form" className="btn btn-primary" disabled={saving}>
+              {saving && <span className="spinner" />} {editing ? 'Save changes' : 'Add student'}
+            </button>
+          </>
         }
+      >
+        <form id="user-form" onSubmit={handleSubmit}>
+          {formError && <div className="alert alert-danger">{formError}</div>}
+          <div className="form-grid">
+            <Field label="Full name" htmlFor="user-name" className="span-2">
+              <input id="user-name" name="fullName" className="input" value={form.fullName} onChange={setField} required autoComplete="off" />
+            </Field>
+            <Field label="Email" htmlFor="user-email">
+              <input id="user-email" name="email" type="email" className="input" value={form.email} onChange={setField} required autoComplete="off" />
+            </Field>
+            <Field label="Mobile number" htmlFor="user-mobile">
+              <input id="user-mobile" name="mobileNumber" type="tel" className="input" value={form.mobileNumber} onChange={setField} placeholder="Optional" />
+            </Field>
 
-        .control-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 16px 24px;
-          gap: 20px;
-        }
+            {isSuperAdmin && editing && (
+              <Field label="Role" htmlFor="user-role" hint={editing.id === currentUser?.id ? 'You cannot change your own role.' : undefined}>
+                <select id="user-role" name="role" className="select" value={form.role} onChange={setField} disabled={editing.id === currentUser?.id}>
+                  {ASSIGNABLE_ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
+                </select>
+              </Field>
+            )}
 
-        .search-box {
-          position: relative;
-          flex: 1;
-          max-width: 450px;
-        }
+            {isSuperAdmin ? (
+              roleNeedsCollege && (
+                <Field
+                  label="College"
+                  htmlFor="user-college"
+                  className={editing ? '' : 'span-2'}
+                  error={colleges.error ? `Could not load colleges: ${colleges.error.message}` : undefined}
+                >
+                  <select id="user-college" name="collegeId" className="select" value={form.collegeId} onChange={setField} required disabled={colleges.loading}>
+                    <option value="">{colleges.loading ? 'Loading colleges…' : 'Select a college'}</option>
+                    {collegeOptions.map((c) => (
+                      <option key={c.id} value={String(c.id)}>{c.name}{c.code ? ` (${c.code})` : ''}</option>
+                    ))}
+                  </select>
+                </Field>
+              )
+            ) : (
+              <Field label="College" className="span-2">
+                <input className="input" value={ownCollege?.name || 'Your college'} disabled readOnly />
+              </Field>
+            )}
 
-        .search-icon {
-          position: absolute;
-          left: 14px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--text-muted);
-        }
+            <Field
+              label="Password"
+              htmlFor="user-password"
+              hint={editing ? 'Leave blank to keep the current password.' : `At least ${MIN_PASSWORD} characters.`}
+            >
+              <input
+                id="user-password"
+                name="password"
+                type="password"
+                className="input"
+                value={form.password}
+                onChange={setField}
+                required={!editing}
+                minLength={MIN_PASSWORD}
+                autoComplete="new-password"
+              />
+            </Field>
+            <Field label="Status" htmlFor="user-status">
+              <select id="user-status" name="status" className="select" value={form.status} onChange={setField} disabled={editing?.id === currentUser?.id}>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+              </select>
+            </Field>
+          </div>
+        </form>
+      </Modal>
 
-        .search-box input {
-          width: 100%;
-          padding: 10px 16px 10px 42px;
-          border-radius: var(--radius-md);
-          border: 1.5px solid var(--border-color);
-          font-family: var(--font-sans);
-          font-size: 0.9rem;
-          outline: none;
-          transition: all 0.2s ease;
-        }
+      <ConfirmDialog
+        open={Boolean(deleting)}
+        title="Delete account"
+        text={deleting ? `${deleting.fullName} will no longer be able to sign in.` : ''}
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleteBusy}
+        onConfirm={confirmDelete}
+        onClose={() => !deleteBusy && setDeleting(null)}
+      />
 
-        .search-box input:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 0 3px var(--primary-glow);
-        }
-
-        .filter-actions {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .select-wrapper {
-          position: relative;
-        }
-
-        .select-icon {
-          position: absolute;
-          left: 12px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--text-muted);
-          pointer-events: none;
-        }
-
-        .select-filter {
-          padding: 9px 36px 9px 34px !important;
-          font-size: 0.88rem;
-          border-radius: var(--radius-md);
-          border: 1.5px solid var(--border-color);
-          cursor: pointer;
-        }
-
-        .table-loading, .table-empty {
-          padding: 60px 20px;
-          text-align: center;
-        }
-
-        .table-empty h3 {
-          font-family: var(--font-display);
-          font-size: 1.2rem;
-          font-weight: 600;
-          margin: 16px 0 4px;
-        }
-
-        .table-user-name {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .avatar-sm {
-          width: 32px;
-          height: 32px;
-          border-radius: var(--radius-full);
-          background-color: var(--primary-light);
-          color: var(--primary);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 600;
-          font-size: 0.85rem;
-        }
-
-        .ms-1 {
-          margin-left: 6px;
-        }
-
-        .status-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 10px;
-          border-radius: var(--radius-full);
-          border: none;
-          font-size: 0.75rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .status-toggle:disabled {
-          cursor: default;
-        }
-
-        .indicator-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: var(--radius-full);
-        }
-
-        .status-active {
-          background-color: var(--success-light);
-          color: var(--success);
-        }
-
-        .status-active .indicator-dot {
-          background-color: var(--success);
-        }
-
-        .status-inactive {
-          background-color: var(--error-light);
-          color: var(--error);
-        }
-
-        .status-inactive .indicator-dot {
-          background-color: var(--error);
-        }
-
-        .table-actions-cell {
-          display: flex;
-          justify-content: flex-end;
-          gap: 8px;
-        }
-
-        .btn-action {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 8px;
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--border-color);
-          background-color: var(--bg-card);
-          color: var(--text-muted);
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-
-        .btn-action:hover:not(:disabled) {
-          border-color: transparent;
-        }
-
-        .edit-action:hover:not(:disabled) {
-          background-color: var(--primary-light);
-          color: var(--primary);
-        }
-
-        .delete-action:hover:not(:disabled) {
-          background-color: var(--error-light);
-          color: var(--error);
-        }
-
-        .btn-action:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-
-        @media (max-width: 768px) {
-          .control-bar {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 16px;
-          }
-          .filter-actions {
-            flex-direction: column;
-            align-items: stretch;
-          }
-          .select-filter {
-            width: 100%;
-          }
-        }
-      `}</style>
-    </div>
+      <BulkUserCreateModal
+        isOpen={bulkOpen}
+        onClose={() => setBulkOpen(false)}
+        onSuccess={reload}
+        existingUsers={allUsers}
+        colleges={collegeOptions}
+      />
+    </>
   );
 };
 

@@ -4,23 +4,18 @@ import './index.css';
 import App from './App.jsx';
 import { AuthProvider } from './context/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ToastProvider } from './components/ui';
+import { applyTheme } from './utils/theme';
 
-// Sanitize stale insecure URLs from previous visits on HTTPS origins
-if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-  try {
-    const custom = localStorage.getItem('CUSTOM_API_URL');
-    if (custom && (custom.startsWith('http://localhost') || custom.startsWith('http://127.0.0.1') || (custom.startsWith('http://') && !custom.startsWith('https://')))) {
-      console.log('Sanitizing obsolete insecure CUSTOM_API_URL on HTTPS origin.');
-      localStorage.removeItem('CUSTOM_API_URL');
-    }
-  } catch (e) {}
-}
+applyTheme();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
       <AuthProvider>
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </AuthProvider>
     </ErrorBoundary>
   </StrictMode>

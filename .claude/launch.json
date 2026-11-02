@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend-e2e",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["/private/tmp/claude-501/-Users-eash-Downloads-ACADEMIC-INTEGRATION-TOOL/7488c543-4fe8-4534-858d-fb014779d76d/scratchpad/run-backend.sh"],
+      "port": 8080
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
+    }
+  ]
+}

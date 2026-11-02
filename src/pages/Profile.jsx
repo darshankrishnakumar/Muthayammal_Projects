@@ -1,303 +1,193 @@
 import { useState } from 'react';
+import { KeyRound, Save } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { 
-  User, 
-  Mail, 
-  KeyRound, 
-  CheckCircle2, 
-  AlertTriangle,
-  ShieldCheck,
-  Building,
-  Calendar,
-  Lock,
-  BadgeCheck,
-  Save,
-  Shield
-} from 'lucide-react';
+import { api } from '../utils/api';
+import { PageHeader, Card, Avatar, Badge, StatusBadge, Field, useToast } from '../components/ui';
+import { ROLE_LABELS, date } from '../utils/format';
+
+const MIN_PASSWORD = 8;
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const { notify } = useToast();
+
   const [fullName, setFullName] = useState(user?.fullName || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [mobileNumber, setMobileNumber] = useState(user?.mobileNumber || '');
+  const [savingDetails, setSavingDetails] = useState(false);
+  const [detailsError, setDetailsError] = useState('');
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [activeTab, setActiveTab] = useState('general');
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
-  const handleSubmit = async (e) => {
+  if (!user) return null;
+
+  const detailsChanged = fullName.trim() !== (user.fullName || '') || mobileNumber.trim() !== (user.mobileNumber || '');
+
+  const handleSaveDetails = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (!fullName || !email) {
-      setError('Name and Email fields are required.');
+    setDetailsError('');
+    if (!fullName.trim()) {
+      setDetailsError('Enter your full name.');
       return;
     }
-
-    if (password && password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-
-    setLoading(true);
+    setSavingDetails(true);
     try {
-      const payload = { fullName, email };
-      if (password) {
-        payload.password = password;
-      }
-      
-      await updateProfile(payload);
-      setSuccess('Profile updated successfully.');
+      await api.updateUser(user.id, { fullName: fullName.trim(), mobileNumber: mobileNumber.trim() });
+      const fresh = await refreshUser();
+      setFullName(fresh?.fullName || fullName.trim());
+      setMobileNumber(fresh?.mobileNumber || '');
+      notify('Profile updated');
+    } catch (err) {
+      setDetailsError(err.message);
+    } finally {
+      setSavingDetails(false);
+    }
+  };
+
+  const handleSavePassword = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    if (password.length < MIN_PASSWORD) {
+      setPasswordError(`Use at least ${MIN_PASSWORD} characters.`);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setPasswordError('The passwords do not match.');
+      return;
+    }
+    setSavingPassword(true);
+    try {
+      await api.updateUser(user.id, { password });
+      await refreshUser();
       setPassword('');
       setConfirmPassword('');
-      setTimeout(() => setSuccess(''), 4000);
+      notify('Password changed');
     } catch (err) {
-      setError(err.message || 'Failed to update profile settings.');
+      setPasswordError(err.message);
     } finally {
-      setLoading(false);
+      setSavingPassword(false);
     }
   };
 
   return (
-    <div className="profile-container text-left" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Alert Notifications */}
-      {success && (
-        <div className="alert alert-success card flex items-center gap-3" style={{ marginBottom: '20px' }}>
-          <CheckCircle2 size={18} />
-          <span style={{ fontWeight: 500 }}>{success}</span>
-        </div>
-      )}
-      {error && (
-        <div className="alert alert-danger card flex items-center gap-3" style={{ marginBottom: '20px' }}>
-          <AlertTriangle size={18} />
-          <span style={{ fontWeight: 500 }}>{error}</span>
-        </div>
-      )}
+    <>
+      <PageHeader title="Profile" description="Manage your personal details and password." />
 
-      {/* Top Profile Header Hero Bar */}
-      <div className="card profile-hero-card" style={{ padding: '20px 28px', marginBottom: '24px' }}>
-        <div className="flex items-center justify-between gap-4" style={{ flexWrap: 'nowrap' }}>
-          <div className="flex items-center gap-4" style={{ minWidth: 0, flex: 1 }}>
-            <div className="profile-hero-avatar" style={{ flexShrink: 0 }}>
-              {user?.fullName ? user.fullName.substring(0, 2).toUpperCase() : 'US'}
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{user?.fullName}</h2>
-                <span className={`badge ${
-                  user?.role === 'SUPER_ADMIN' ? 'badge-danger' : 
-                  user?.role === 'ADMIN' ? 'badge-primary' : 'badge-success'
-                }`} style={{ fontSize: '0.7rem', padding: '3px 10px' }}>
-                  {user?.role ? user.role.replace('_', ' ') : 'USER'}
-                </span>
-              </div>
-              <p className="text-muted" style={{ fontSize: '0.85rem', marginTop: '3px', margin: 0 }}>{user?.email}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-6" style={{ flexShrink: 0, paddingRight: '4px' }}>
-            <div className="flex flex-col items-end" style={{ minWidth: '90px' }}>
-              <span className="text-muted" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                Account ID
-              </span>
-              <strong className="font-mono text-primary" style={{ fontSize: '1rem', lineHeight: '1.2' }}>
-                #{user?.id}
-              </strong>
-            </div>
-
-            <div className="flex flex-col items-end" style={{ borderLeft: '1px solid var(--border-color)', paddingLeft: '24px', minWidth: '90px' }}>
-              <span className="text-muted" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                Status
-              </span>
-              <span className="badge badge-success" style={{ fontSize: '0.7rem', padding: '3px 10px', marginTop: '2px' }}>
-                ACTIVE
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Settings Card */}
-      <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
-        {/* Sub-navigation Tabs Bar */}
-        <div className="profile-tabs-bar flex" style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-main)', padding: '0 24px' }}>
-          <button 
-            className={`tab-btn flex items-center gap-2 ${activeTab === 'general' ? 'active' : ''}`}
-            onClick={() => setActiveTab('general')}
-          >
-            <User size={15} />
-            <span>General Information</span>
-          </button>
-          <button 
-            className={`tab-btn flex items-center gap-2 ${activeTab === 'security' ? 'active' : ''}`}
-            onClick={() => setActiveTab('security')}
-          >
-            <Lock size={15} />
-            <span>Security & Password</span>
-          </button>
-        </div>
-
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} style={{ padding: '32px' }}>
-          {activeTab === 'general' && (
-            <div className="tab-content flex flex-col gap-6">
-              <div>
-                <h4 className="font-display" style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '4px' }}>Personal Details</h4>
-                <p className="text-muted" style={{ fontSize: '0.85rem' }}>Update your account display name and email address.</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5">
-                <div className="form-group mb-0">
-                  <label className="form-label">
-                    <User size={14} className="text-muted" />
-                    <span>Full Name</span>
-                  </label>
+      <div className="layout-split">
+        <div className="space-y-6">
+          <Card title="Personal details" subtitle="Your name and contact number are visible to administrators.">
+            <form onSubmit={handleSaveDetails} noValidate>
+              {detailsError && <div className="alert alert-danger">{detailsError}</div>}
+              <div className="form-grid">
+                <Field label="Full name" htmlFor="profile-name">
                   <input
-                    type="text"
-                    className="form-control"
+                    id="profile-name"
+                    className="input"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    disabled={loading}
+                    disabled={savingDetails}
+                    autoComplete="name"
                     required
-                    placeholder="Enter full name"
                   />
-                </div>
-
-                <div className="form-group mb-0">
-                  <label className="form-label">
-                    <Mail size={14} className="text-muted" />
-                    <span>Email Address</span>
-                  </label>
+                </Field>
+                <Field label="Mobile number" htmlFor="profile-mobile">
                   <input
-                    type="email"
-                    className="form-control"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={loading}
-                    required
-                    placeholder="Enter email address"
+                    id="profile-mobile"
+                    className="input"
+                    type="tel"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    disabled={savingDetails}
+                    autoComplete="tel"
+                    placeholder="Optional"
                   />
-                </div>
+                </Field>
+                <Field label="Email" hint="Contact your administrator to change your email." className="span-2" htmlFor="profile-email">
+                  <input id="profile-email" className="input" value={user.email || ''} disabled readOnly />
+                </Field>
               </div>
-
-              <div className="info-box flex items-center gap-3" style={{ background: 'var(--primary-light)', padding: '16px 20px', borderRadius: 'var(--radius-md)', border: '1px solid hsla(220, 90%, 56%, 0.2)' }}>
-                <ShieldCheck size={20} className="text-primary" />
-                <div>
-                  <h5 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary)' }}>Role Authorization</h5>
-                  <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
-                    Your role <strong style={{ color: 'var(--text-main)' }}>{user?.role}</strong> grants automatic access to authorized project folders.
-                  </p>
-                </div>
+              <div className="flex justify-end">
+                <button type="submit" className="btn btn-primary" disabled={savingDetails || !detailsChanged}>
+                  {savingDetails ? <span className="spinner" /> : <Save aria-hidden="true" />}
+                  Save changes
+                </button>
               </div>
-            </div>
-          )}
+            </form>
+          </Card>
 
-          {activeTab === 'security' && (
-            <div className="tab-content flex flex-col gap-6">
-              <div>
-                <h4 className="font-display" style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '4px' }}>Change Password</h4>
-                <p className="text-muted" style={{ fontSize: '0.85rem' }}>Set a new password to keep your account safe.</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5">
-                <div className="form-group mb-0">
-                  <label className="form-label">
-                    <KeyRound size={14} className="text-muted" />
-                    <span>New Password</span>
-                  </label>
+          <Card title="Password" subtitle={`Choose a new password with at least ${MIN_PASSWORD} characters.`}>
+            <form onSubmit={handleSavePassword} noValidate>
+              {passwordError && <div className="alert alert-danger">{passwordError}</div>}
+              <div className="form-grid">
+                <Field label="New password" htmlFor="profile-password">
                   <input
+                    id="profile-password"
+                    className="input"
                     type="password"
-                    className="form-control"
-                    placeholder="Enter new password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    disabled={loading}
+                    disabled={savingPassword}
+                    autoComplete="new-password"
+                    minLength={MIN_PASSWORD}
                   />
-                </div>
-
-                <div className="form-group mb-0">
-                  <label className="form-label">
-                    <KeyRound size={14} className="text-muted" />
-                    <span>Confirm New Password</span>
-                  </label>
+                </Field>
+                <Field label="Confirm new password" htmlFor="profile-password-confirm">
                   <input
+                    id="profile-password-confirm"
+                    className="input"
                     type="password"
-                    className="form-control"
-                    placeholder="Re-enter new password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    disabled={loading}
+                    disabled={savingPassword}
+                    autoComplete="new-password"
                   />
-                </div>
+                </Field>
               </div>
+              <div className="flex justify-end">
+                <button type="submit" className="btn btn-secondary" disabled={savingPassword || !password}>
+                  {savingPassword ? <span className="spinner" /> : <KeyRound aria-hidden="true" />}
+                  Update password
+                </button>
+              </div>
+            </form>
+          </Card>
+        </div>
+
+        <Card>
+          <div className="flex items-center gap-3 mb-4">
+            <Avatar name={user.fullName} size="lg" />
+            <div className="min-w-0">
+              <div className="font-semibold truncate">{user.fullName}</div>
+              <div className="text-sm text-muted truncate">{user.email}</div>
             </div>
-          )}
-
-          {/* Action Footer */}
-          <div className="flex justify-end items-center" style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--border-color)' }}>
-            <button type="submit" className="btn btn-primary flex items-center gap-2" disabled={loading}>
-              <Save size={16} />
-              <span>{loading ? 'Saving Changes...' : 'Save Profile Changes'}</span>
-            </button>
           </div>
-        </form>
+          <dl className="kv" style={{ gridTemplateColumns: '96px 1fr' }}>
+            <dt>Role</dt>
+            <dd><Badge tone="accent">{ROLE_LABELS[user.role] || user.role}</Badge></dd>
+            <dt>College</dt>
+            <dd>
+              {user.college ? (
+                <>
+                  {user.college.name}
+                  {user.college.code && <span className="text-subtle"> · {user.college.code}</span>}
+                </>
+              ) : (
+                <span className="text-subtle">Not applicable</span>
+              )}
+            </dd>
+            <dt>Status</dt>
+            <dd><StatusBadge status={user.status || 'ACTIVE'} /></dd>
+            <dt>Member since</dt>
+            <dd>{date(user.createdAt)}</dd>
+            <dt>Account ID</dt>
+            <dd className="font-mono">#{user.id}</dd>
+          </dl>
+          <p className="text-xs text-subtle mt-4">Your role and college are managed by your administrator.</p>
+        </Card>
       </div>
-
-      <style>{`
-        .profile-hero-avatar {
-          width: 64px;
-          height: 64px;
-          border-radius: var(--radius-lg);
-          background: linear-gradient(135deg, var(--primary) 0%, hsl(220, 90%, 45%) 100%);
-          color: #ffffff;
-          font-family: var(--font-display);
-          font-weight: 700;
-          font-size: 1.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 14px hsla(220, 90%, 56%, 0.25);
-        }
-
-        .tab-btn {
-          padding: 16px 20px;
-          font-size: 0.9rem;
-          font-weight: 600;
-          color: var(--text-muted);
-          border: none;
-          background: transparent;
-          border-bottom: 2px solid transparent;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-          color: var(--text-main);
-        }
-
-        .tab-btn.active {
-          color: var(--primary);
-          border-bottom-color: var(--primary);
-          background-color: var(--bg-card);
-        }
-
-        .alert-success {
-          background-color: var(--success-light);
-          color: var(--success);
-          border: 1px solid hsla(158, 70%, 40%, 0.2);
-          padding: 12px 18px;
-        }
-
-        .alert-danger {
-          background-color: var(--error-light);
-          color: var(--error);
-          border: 1px solid hsla(350, 84%, 55%, 0.2);
-          padding: 12px 18px;
-        }
-      `}</style>
-    </div>
+    </>
   );
 };
 
