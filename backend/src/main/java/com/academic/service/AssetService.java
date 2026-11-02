@@ -60,7 +60,9 @@ public class AssetService {
             "zip", "tar", "gz", "7z", "rar",
             // Source Code & Config
             "java", "js", "jsx", "ts", "tsx", "py", "c", "cpp", "h", "hpp", "cs", "go",
-            "html", "htm", "css", "scss", "json", "xml", "yaml", "yml", "sql", "sh", "bat", "properties"
+            "html", "htm", "css", "scss", "json", "xml", "yaml", "yml", "sql", "sh", "bat", "properties", "ipynb",
+            // Databases
+            "db", "sqlite", "sqlite3"
     ));
 
     /**

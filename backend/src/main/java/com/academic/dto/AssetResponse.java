@@ -140,4 +140,23 @@ public class AssetResponse {
     public void setRestricted(boolean restricted) {
         this.restricted = restricted;
     }
+
+    private String category;
+    private boolean previewable;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public boolean isPreviewable() {
+        return previewable;
+    }
+
+    public void setPreviewable(boolean previewable) {
+        this.previewable = previewable;
+    }
 }

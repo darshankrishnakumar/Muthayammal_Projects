@@ -33,4 +33,6 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
            "ORDER BY l.timestamp DESC")
     List<AuditLog> findRestrictedLogsByDateRange(@Param("startDate") LocalDateTime startDate, 
                                                 @Param("endDate") LocalDateTime endDate);
+
+    List<AuditLog> findTop10ByOrderByTimestampDesc();
 }

@@ -64,6 +64,16 @@ public class Order {
     @Column(name = "payment_type", length = 50)
     private String paymentType = "FULL";
 
+    @Column(name = "college_id")
+    private Long collegeId;
+
+    @Column(length = 10)
+    private String currency = "INR";
+
+    /** True when the payment was recorded by the development simulator. */
+    @Column(name = "simulated_payment", nullable = false)
+    private boolean simulatedPayment = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -247,5 +257,29 @@ public class Order {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(Long collegeId) {
+        this.collegeId = collegeId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public boolean isSimulatedPayment() {
+        return simulatedPayment;
+    }
+
+    public void setSimulatedPayment(boolean simulatedPayment) {
+        this.simulatedPayment = simulatedPayment;
     }
 }

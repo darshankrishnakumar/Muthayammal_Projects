@@ -4,25 +4,23 @@ import com.academic.dto.AssignmentRequest;
 import com.academic.dto.ProjectCreateRequest;
 import com.academic.dto.ProjectStatusUpdateRequest;
 import com.academic.dto.ProjectUpdateRequest;
-import com.academic.model.Project;
-import com.academic.model.ProjectAssignment;
-import com.academic.model.ProjectStatus;
-import com.academic.model.Role;
-import com.academic.model.User;
-import com.academic.repository.ProjectAssignmentRepository;
-import com.academic.service.ProjectAssignmentService;
-import com.academic.service.ProjectService;
-import com.academic.service.UserService;
+import com.academic.model.*;
+import com.academic.repository.ProjectEntitlementRepository;
+import com.academic.repository.ProjectRepository;
+import com.academic.repository.RequirementRepository;
+import com.academic.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -35,460 +33,304 @@ public class ProjectController {
     private ProjectAssignmentService projectAssignmentService;
 
     @Autowired
-    private ProjectAssignmentRepository projectAssignmentRepository;
+    private DevelopmentWorkflowService workflowService;
 
     @Autowired
-    private UserService userService;
+    private OrderService orderService;
 
-    private User getAuthenticatedUser() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Authenticated user context not found."));
+    @Autowired
+    private AccessControlService accessControlService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private RequirementRepository requirementRepository;
+
+    @Autowired
+    private ProjectEntitlementRepository entitlementRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private User actor() {
+        return accessControlService.getCurrentAuthenticatedUser();
     }
 
+    // ------------------------------------------------------------------
+    // Listing and detail (role and college scoped)
+    // ------------------------------------------------------------------
+
     @GetMapping
-    public ResponseEntity<?> getProjects(
+    public List<Project> getProjects(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String techStack,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(required = false) Long assignedUserId) {
-        
-        User actor = getAuthenticatedUser();
-        ProjectStatus projectStatus = null;
-        if (status != null && !status.isBlank()) {
-            try {
-                projectStatus = ProjectStatus.valueOf(status.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Invalid project status filter: " + status));
+            @RequestParam(required = false) Long assignedUserId,
+            @RequestParam(required = false) String type) {
+
+        User actor = actor();
+        ProjectStatus projectStatus = parseStatus(status);
+        List<Project> projects;
+        switch (actor.getRole()) {
+            case SUPER_ADMIN -> projects = projectService.searchProjects(search, projectStatus, techStack, startDate, endDate, assignedUserId);
+            case ADMIN -> {
+                Long collegeId = actor.getCollege() != null ? actor.getCollege().getId() : null;
+                Stream<Project> own = collegeId != null ? projectRepository.findCustomProjectsByCollegeId(collegeId).stream() : Stream.empty();
+                projects = Stream.concat(own, projectRepository.findByReviewerAdminId(actor.getId()).stream())
+                        .distinct().collect(Collectors.toList());
+            }
+            case PROJECT_DEVELOPER -> projects = projectRepository.findByDeveloperId(actor.getId());
+            default -> {
+                Stream<Project> requested = projectRepository.findCustomProjectsByRequesterId(actor.getId()).stream();
+                Stream<Project> owned = entitlementRepository.findActiveByUserId(actor.getId()).stream().map(ProjectEntitlement::getProject);
+                projects = Stream.concat(requested, owned).distinct().collect(Collectors.toList());
             }
         }
-
-        Long effectiveUserId = null;
-        if (actor.getRole() == Role.SUPER_ADMIN || "superadmin@academic.com".equalsIgnoreCase(actor.getEmail())) {
-            effectiveUserId = assignedUserId;
-        } else if (actor.getRole() == Role.ADMIN) {
-            effectiveUserId = assignedUserId;
-        } else {
-            // Regular USER or PROJECT_DEVELOPER sees scoped projects
-            effectiveUserId = actor.getId();
+        if (actor.getRole() != Role.SUPER_ADMIN) {
+            String q = search == null ? null : search.trim().toLowerCase();
+            projects = projects.stream()
+                    .filter(p -> q == null || q.isEmpty() || p.getProjectName().toLowerCase().contains(q) || p.getProjectCode().toLowerCase().contains(q))
+                    .filter(p -> projectStatus == null || p.getStatus() == projectStatus || p.getLifecycleStatus() == projectStatus)
+                    .collect(Collectors.toList());
         }
-
-        List<Project> projects = projectService.searchProjects(search, projectStatus, techStack, startDate, endDate, effectiveUserId);
-        return ResponseEntity.ok(projects);
+        if (type != null && !type.isBlank()) {
+            ProjectType t = ProjectType.valueOf(type.trim().toUpperCase());
+            projects = projects.stream().filter(p -> p.getProjectType() == t).collect(Collectors.toList());
+        }
+        return projects;
     }
 
     @GetMapping("/user/projects")
-    public ResponseEntity<?> getUserProjects() {
-        User actor = getAuthenticatedUser();
-        List<Project> projects = projectService.getAssignedProjectsForUser(actor.getId());
-        return ResponseEntity.ok(projects);
+    public List<Project> getUserProjects() {
+        return getProjects(null, null, null, null, null, null, null);
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<?> getDashboardSummary() {
-        User actor = getAuthenticatedUser();
-        Map<String, Object> dashboard = projectService.getDashboardSummary(actor);
-        return ResponseEntity.ok(dashboard);
+    public Map<String, Object> getDashboardSummary() {
+        return projectService.getDashboardSummary(actor());
     }
 
+    /**
+     * Project detail with the caller's access level and, for custom projects, the requesting
+     * student and college. Requires at least PREVIEW access.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
-        User actor = getAuthenticatedUser();
-        try {
-            // Authorization Check for non-superadmin roles (Admins and Users must be assigned)
-            if (actor.getRole() != Role.SUPER_ADMIN) {
-                boolean isAssigned = projectAssignmentRepository.findActiveAssignment(id, actor.getId()).isPresent();
-                if (!isAssigned) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(Map.of("message", "Access denied: You are not assigned to this project."));
-                }
-            }
-
-            Project project = projectService.getProjectById(id);
-            return ResponseEntity.ok(project);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+    public Map<String, Object> getProjectById(@PathVariable Long id) {
+        User actor = actor();
+        Project project = projectService.getProjectById(id);
+        AccessControlService.ProjectAccessLevel level = accessControlService.getAccessLevel(project, actor);
+        if (level == AccessControlService.ProjectAccessLevel.NONE) {
+            throw new AccessDeniedException("Access denied: You are not assigned to this project.");
         }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> body = objectMapper.convertValue(project, LinkedHashMap.class);
+        body.put("accessLevel", level.name());
+        if (level != AccessControlService.ProjectAccessLevel.FULL) {
+            body.remove("installationInstructions");
+        }
+        if (project.getLinkedRequirementId() != null) {
+            requirementRepository.findById(project.getLinkedRequirementId()).ifPresent(r -> {
+                Map<String, Object> req = new LinkedHashMap<>();
+                req.put("id", r.getId());
+                req.put("title", r.getTitle());
+                req.put("status", r.getStatus());
+                req.put("studentName", r.getUser() != null ? r.getUser().getFullName() : null);
+                req.put("studentId", r.getUser() != null ? r.getUser().getId() : null);
+                req.put("collegeName", r.getCollege() != null ? r.getCollege().getName() : null);
+                body.put("requirement", req);
+            });
+        }
+        body.put("isRequester", accessControlService.isRequesterOf(project, actor));
+        body.put("isDeveloper", accessControlService.isDeveloperOf(project, actor));
+        body.put("isReviewer", project.getReviewerAdmin() != null && project.getReviewerAdmin().getId().equals(actor.getId()));
+        return body;
+    }
+
+    @GetMapping("/{id}/timeline")
+    public List<StatusHistory> timeline(@PathVariable Long id) {
+        return workflowService.timeline(id, actor());
     }
 
     @GetMapping("/by-requirement/{reqId}")
     public ResponseEntity<?> getProjectByRequirementId(@PathVariable Long reqId) {
-        getAuthenticatedUser();
+        User actor = actor();
+        Requirement req = requirementRepository.findById(reqId)
+                .orElseThrow(() -> new NoSuchElementException("Requirement not found: " + reqId));
+        if (!accessControlService.canViewRequirement(actor, req)) {
+            throw new AccessDeniedException("Access denied.");
+        }
         return projectService.getProjectByLinkedRequirementId(reqId)
                 .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No linked project found for requirement ID " + reqId)));
     }
 
+    // ------------------------------------------------------------------
+    // Super Admin project administration
+    // ------------------------------------------------------------------
+
     @PostMapping
-    public ResponseEntity<?> createProject(@RequestBody ProjectCreateRequest request) {
-        User actor = getAuthenticatedUser();
-
-        // RBAC Check: Only Super Admin can create new projects
-        if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Super Admin is authorized to create new projects."));
-        }
-
-        try {
-            Project project = projectService.createProject(request, actor.getEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body(project);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public ResponseEntity<Project> createProject(@RequestBody ProjectCreateRequest request) {
+        User actor = requireSuperAdmin();
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request, actor.getEmail()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody ProjectUpdateRequest request) {
-        User actor = getAuthenticatedUser();
-
-        // RBAC Check: Only Super Admin can edit project parameters
-        if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Super Admin is authorized to edit project details."));
-        }
-
-        try {
-            Project project = projectService.updateProject(id, request, actor.getEmail());
-            return ResponseEntity.ok(project);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Project updateProject(@PathVariable Long id, @RequestBody ProjectUpdateRequest request) {
+        User actor = requireSuperAdmin();
+        return projectService.updateProject(id, request, actor.getEmail());
     }
 
+    /** Manual status override (validated against allowed transitions). Super Admin only. */
     @RequestMapping(value = "/{id}/status", method = {RequestMethod.PATCH, RequestMethod.PUT})
-    public ResponseEntity<?> updateProjectStatus(@PathVariable Long id, @RequestBody ProjectStatusUpdateRequest request) {
-        User actor = getAuthenticatedUser();
-
-        // RBAC Check: Regular users cannot transition project status
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Regular users are unauthorized to alter project status."));
-        }
-
-        try {
-            Project project = projectService.changeStatus(id, request.getStatus(), actor.getEmail());
-            return ResponseEntity.ok(project);
-        } catch (IllegalStateException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
-        }
+    public Project updateProjectStatus(@PathVariable Long id, @RequestBody ProjectStatusUpdateRequest request) {
+        User actor = requireSuperAdmin();
+        return projectService.changeStatus(id, request.getStatus(), actor.getEmail());
     }
 
-    // ----------------------------------------------------
-    // Project Assignments Endpoints
-    // ----------------------------------------------------
+    @DeleteMapping("/{id}")
+    public Map<String, Object> deleteProjectById(@PathVariable Long id) {
+        User actor = requireSuperAdmin();
+        projectService.deleteProject(id, actor.getEmail());
+        return Map.of("success", true, "message", "Project successfully deleted.");
+    }
+
+    // ------------------------------------------------------------------
+    // Manual access grants (project assignments)
+    // ------------------------------------------------------------------
 
     @GetMapping("/{id}/assignments")
-    public ResponseEntity<?> getProjectAssignments(@PathVariable Long id) {
-        getAuthenticatedUser();
-        try {
-            List<ProjectAssignment> assignments = projectAssignmentService.getActiveAssignmentsByProject(id);
-            return ResponseEntity.ok(assignments);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+    public List<ProjectAssignment> getProjectAssignments(@PathVariable Long id) {
+        User actor = actor();
+        if (actor.getRole() != Role.SUPER_ADMIN && actor.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied.");
         }
+        accessControlService.validateProjectAccess(id);
+        List<ProjectAssignment> all = projectAssignmentService.getActiveAssignmentsByProject(id);
+        if (actor.getRole() == Role.ADMIN) {
+            return all.stream().filter(a -> accessControlService.sameCollege(actor, a.getUser())).collect(Collectors.toList());
+        }
+        return all;
     }
 
     @PostMapping({"/{id}/assign", "/{id}/assignments"})
     public ResponseEntity<?> assignUserToProject(@PathVariable Long id, @RequestBody AssignmentRequest request) {
-        User actor = getAuthenticatedUser();
-
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Admins are authorized to assign users to projects."));
-        }
-
-        try {
-            ProjectAssignment assignment = projectAssignmentService.assignUserToProject(
-                    id,
-                    request.getUserId(),
-                    request.getExpiredAt(),
-                    request.getNotes(),
-                    actor.getEmail()
-            );
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "success", true,
-                    "message", "Project assigned successfully",
-                    "assignment", assignment
-            ));
-        } catch (org.springframework.security.access.AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage()));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
-        }
+        User actor = requireSuperAdmin();
+        ProjectAssignment assignment = projectAssignmentService.assignUserToProject(
+                id, request.getUserId(), request.getExpiredAt(), request.getNotes(), actor.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "success", true,
+                "message", "Project assigned successfully",
+                "assignment", assignment));
     }
 
     @DeleteMapping({"/{id}/assign/{userId}", "/{id}/assignments/user/{userId}"})
-    public ResponseEntity<?> removeAssignmentByUser(@PathVariable Long id, @PathVariable Long userId) {
-        User actor = getAuthenticatedUser();
-
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Admins can revoke project assignments."));
-        }
-
-        try {
-            projectAssignmentService.deactivateAssignmentByUser(id, userId, actor.getEmail());
-            return ResponseEntity.ok(Map.of("success", true, "message", "Project assignment successfully revoked."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Map<String, Object> removeAssignmentByUser(@PathVariable Long id, @PathVariable Long userId) {
+        User actor = requireSuperAdmin();
+        projectAssignmentService.deactivateAssignmentByUser(id, userId, actor.getEmail());
+        return Map.of("success", true, "message", "Project assignment successfully revoked.");
     }
 
-    @Autowired
-    private com.academic.service.OrderService orderService;
-
-    @Autowired
-    private com.academic.service.NotificationService notificationService;
+    // ------------------------------------------------------------------
+    // Development workflow
+    // ------------------------------------------------------------------
 
     @PostMapping("/{id}/assign-developer")
-    public ResponseEntity<?> assignDeveloper(
-            @PathVariable Long id,
-            @RequestBody Map<String, Long> payload) {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.SUPER_ADMIN && actor.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        Long devId = payload.get("developerId");
-        if (devId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "developerId is required."));
-        }
-
-        User dev = userService.findById(devId)
-                .orElseThrow(() -> new IllegalArgumentException("Developer not found: " + devId));
-
-        Project p = projectService.getProjectById(id);
-        p.setDeveloper(dev);
-        p.setStatus(ProjectStatus.DEVELOPER_ASSIGNED);
-        p.setLifecycleStatus(ProjectStatus.DEVELOPER_ASSIGNED);
-        Project saved = projectService.save(p);
-
-        // Also assign developer in project_assignments
-        projectAssignmentService.assignUserToProject(id, devId, null, "Assigned Developer", actor.getEmail());
-
-        notificationService.sendNotification(dev.getEmail(), "PROJECT_DEVELOPER",
-                "New Project Assigned",
-                "You have been assigned to project '" + p.getProjectName() + "' (" + p.getProjectCode() + ").",
-                "/developer/workspace");
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Developer assigned successfully.", "project", saved));
+    public Project assignDeveloper(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        return workflowService.reassignDeveloper(id, toLong(body.get("developerId")), actor());
     }
 
     @PostMapping("/{id}/assign-reviewer")
-    public ResponseEntity<?> assignReviewer(
-            @PathVariable Long id,
-            @RequestBody Map<String, Long> payload) {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied. Only Super Admin can assign Reviewer Admins."));
-        }
+    public Project assignReviewer(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        return workflowService.assignReviewer(id, toLong(body.get("reviewerId")), actor());
+    }
 
-        Long reviewerId = payload.get("reviewerId");
-        if (reviewerId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "reviewerId is required."));
-        }
+    @PostMapping("/{id}/accept")
+    public Project accept(@PathVariable Long id) {
+        return workflowService.accept(id, actor());
+    }
 
-        User reviewer = userService.findById(reviewerId)
-                .orElseThrow(() -> new IllegalArgumentException("Reviewer Admin not found: " + reviewerId));
-
-        Project p = projectService.getProjectById(id);
-        p.setReviewerAdmin(reviewer);
-        Project saved = projectService.save(p);
-
-        // Also assign reviewer in project_assignments
-        projectAssignmentService.assignUserToProject(id, reviewerId, null, "Assigned Reviewer Admin", actor.getEmail());
-
-        notificationService.sendNotification(reviewer.getEmail(), "ADMIN",
-                "Assigned as Project Reviewer",
-                "You have been assigned as Reviewer for project '" + p.getProjectName() + "' (" + p.getProjectCode() + ").",
-                "/admin/project-review");
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Reviewer Admin assigned successfully.", "project", saved));
+    @PostMapping("/{id}/progress")
+    public Project progress(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Integer percent = body.get("percent") != null ? Integer.valueOf(body.get("percent").toString()) : null;
+        return workflowService.updateProgress(id, percent, (String) body.get("note"), actor());
     }
 
     @PostMapping("/{id}/developer-submit-review")
-    public ResponseEntity<?> developerSubmitReview(
-            @PathVariable Long id,
-            @RequestBody(required = false) Map<String, String> payload) {
-        User actor = getAuthenticatedUser();
-        Project p = projectService.getProjectById(id);
-
-        if (actor.getRole() != Role.PROJECT_DEVELOPER && actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Only assigned developer can submit deliverables for review."));
-        }
-        if (actor.getRole() == Role.PROJECT_DEVELOPER && (p.getDeveloper() == null || !p.getDeveloper().getId().equals(actor.getId()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You can only submit deliverables for projects assigned to you."));
-        }
-
-        String notes = payload != null ? payload.getOrDefault("notes", "Developer marked development complete and submitted for review.") : "";
-        p.setStatus(ProjectStatus.READY_FOR_REVIEW);
-        p.setLifecycleStatus(ProjectStatus.READY_FOR_REVIEW);
-        p.setReviewNotes(notes);
-        Project saved = projectService.save(p);
-
-        if (p.getReviewerAdmin() != null) {
-            notificationService.sendNotification(p.getReviewerAdmin().getEmail(), "ADMIN",
-                    "Project Ready for Review",
-                    "Developer has submitted deliverables for '" + p.getProjectName() + "' (" + p.getProjectCode() + ").",
-                    "/admin/project-review");
-        }
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Project submitted for review successfully.", "project", saved));
+    public Project developerSubmitReview(@PathVariable Long id, @RequestBody(required = false) Map<String, String> body) {
+        return workflowService.submitForReview(id, body != null ? body.get("notes") : null, actor());
     }
 
     @PostMapping("/{id}/admin-review")
-    public ResponseEntity<?> adminReview(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> payload) {
-        User actor = getAuthenticatedUser();
-        Project p = projectService.getProjectById(id);
-
-        if (actor.getRole() != Role.SUPER_ADMIN && actor.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied. Only Super Admin or assigned Reviewer Admin can review projects."));
-        }
-        if (actor.getRole() == Role.ADMIN && (p.getReviewerAdmin() == null || !p.getReviewerAdmin().getId().equals(actor.getId()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "You can only review projects assigned to you."));
-        }
-
-        String action = payload.getOrDefault("action", "APPROVE");
-        String notes = payload.getOrDefault("notes", "");
-
-        if ("APPROVE".equalsIgnoreCase(action)) {
-            p.setStatus(ProjectStatus.REVIEW_APPROVED);
-            p.setLifecycleStatus(ProjectStatus.READY_FOR_FINAL_PAYMENT);
-            p.setReviewNotes(notes);
-            projectService.save(p);
-
-            // Notify assigned users/customers that project is ready for final payment
-            if (p.getDeveloper() != null) {
-                notificationService.sendNotification(p.getDeveloper().getEmail(), "PROJECT_DEVELOPER",
-                        "Project Review Approved",
-                        "Deliverables for '" + p.getProjectName() + "' passed review with status APPROVED.",
-                        "/developer/workspace");
-            }
-            return ResponseEntity.ok(Map.of("success", true, "message", "Project review approved. Ready for customer final payment.", "project", p));
-        } else if ("REQUEST_CHANGES".equalsIgnoreCase(action)) {
-            p.setStatus(ProjectStatus.CHANGES_REQUESTED);
-            p.setLifecycleStatus(ProjectStatus.CHANGES_REQUESTED);
-            p.setChangeRequestNotes(notes);
-            projectService.save(p);
-
-            if (p.getDeveloper() != null) {
-                notificationService.sendNotification(p.getDeveloper().getEmail(), "PROJECT_DEVELOPER",
-                        "Revisions Requested on Project",
-                        "Reviewer requested changes for '" + p.getProjectName() + "': " + notes,
-                        "/developer/workspace");
-            }
-            return ResponseEntity.ok(Map.of("success", true, "message", "Revisions requested from developer.", "project", p));
-        }
-
-        return ResponseEntity.badRequest().body(Map.of("message", "Invalid review action: " + action));
+    public Project adminReview(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        return workflowService.review(id, body.getOrDefault("action", ""), body.get("notes"), actor());
     }
 
+    /** Final balance for a reviewed custom project. Amount is computed server-side. */
     @PostMapping("/{id}/pay-remaining")
-    public ResponseEntity<?> payRemaining(
-            @PathVariable Long id,
-            @RequestBody(required = false) Map<String, Object> body) {
-        try {
-            User actor = getAuthenticatedUser();
-            Double amount = body != null && body.containsKey("amount") ? Double.valueOf(body.get("amount").toString()) : null;
-            String idempotencyKey = body != null && body.containsKey("idempotencyKey") ? (String) body.get("idempotencyKey") : null;
-
-            var order = orderService.processProjectRemainingPayment(id, amount, idempotencyKey, actor);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "Final payment verified! Project deliverables and files are now unlocked.",
-                    "order", order
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Map<String, Object> payRemaining(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body,
+                                            @RequestHeader(value = "Idempotency-Key", required = false) String headerKey) {
+        String key = headerKey != null ? headerKey : body != null && body.get("idempotencyKey") != null ? body.get("idempotencyKey").toString() : null;
+        Order order = orderService.processProjectRemainingPayment(id, key, actor());
+        return Map.of(
+                "success", true,
+                "message", order.isSimulatedPayment()
+                        ? "Final payment recorded (SIMULATED — development mode). Deliverables unlocked."
+                        : "Final payment verified. Deliverables unlocked.",
+                "order", order);
     }
 
+    /** Deprecated alias kept for older clients; use POST /api/marketplace/{id}/purchase. */
     @PostMapping("/{id}/purchase-marketplace")
-    public ResponseEntity<?> purchaseMarketplace(
-            @PathVariable Long id,
-            @RequestBody(required = false) Map<String, Object> body) {
-        try {
-            User actor = getAuthenticatedUser();
-            String idempotencyKey = body != null && body.containsKey("idempotencyKey") ? (String) body.get("idempotencyKey") : null;
-
-            var order = orderService.processMarketplacePurchase(id, idempotencyKey, actor);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "Marketplace project purchased successfully! Project access unlocked.",
-                    "order", order
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Map<String, Object> purchaseMarketplace(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
+        String key = body != null && body.get("idempotencyKey") != null ? body.get("idempotencyKey").toString() : null;
+        Order order = orderService.purchaseLibraryProject(id, key, actor());
+        return Map.of("success", true, "message", "Purchase completed.", "order", order);
     }
 
     @GetMapping("/my-developer-projects")
-    public ResponseEntity<?> getMyDeveloperProjects() {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.PROJECT_DEVELOPER && actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-        List<Project> list = actor.getRole() == Role.SUPER_ADMIN 
-                ? projectService.getAllProjectsList() 
-                : projectService.getProjectsByDeveloperId(actor.getId());
-        return ResponseEntity.ok(list);
+    public List<Project> getMyDeveloperProjects() {
+        return workflowService.developerProjects(actor());
     }
 
     @GetMapping("/my-review-projects")
-    public ResponseEntity<?> getMyReviewProjects() {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.ADMIN && actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-        List<Project> list = actor.getRole() == Role.SUPER_ADMIN
-                ? projectService.getAllProjectsList()
-                : projectService.getProjectsByReviewerAdminId(actor.getId());
-        return ResponseEntity.ok(list);
+    public List<Project> getMyReviewProjects() {
+        return workflowService.reviewProjects(actor());
     }
 
-    @GetMapping("/marketplace")
-    public ResponseEntity<?> getMarketplaceProjects() {
-        List<Project> list = projectService.getMarketplaceProjects();
-        return ResponseEntity.ok(list);
+    @GetMapping("/workflow/developers")
+    public List<Map<String, Object>> developerOptions() {
+        requireSuperAdmin();
+        return workflowService.developerOptions();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProjectById(@PathVariable Long id) {
-        User actor = getAuthenticatedUser();
+    @GetMapping("/workflow/reviewers")
+    public List<Map<String, Object>> reviewerOptions() {
+        requireSuperAdmin();
+        return workflowService.reviewerOptions();
+    }
+
+    private User requireSuperAdmin() {
+        User actor = actor();
         if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Super Admin is authorized to delete projects."));
+            throw new AccessDeniedException("Access denied. Only the Super Admin can perform this action.");
         }
+        return actor;
+    }
 
+    private static ProjectStatus parseStatus(String status) {
+        if (status == null || status.isBlank()) return null;
         try {
-            projectService.deleteProject(id, actor.getEmail());
-            return ResponseEntity.ok(Map.of("success", true, "message", "Project successfully deleted."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ProjectStatus.valueOf(status.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid project status filter: " + status);
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteAllProjects() {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Access denied. Only Super Admin is authorized to delete all projects."));
-        }
-
-        try {
-            projectService.deleteAllProjects(actor.getEmail());
-            return ResponseEntity.ok(Map.of("success", true, "message", "All projects successfully deleted."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    private static Long toLong(Object o) {
+        if (o == null || o.toString().isBlank()) throw new IllegalArgumentException("A user must be selected.");
+        return Long.valueOf(o.toString());
     }
 }

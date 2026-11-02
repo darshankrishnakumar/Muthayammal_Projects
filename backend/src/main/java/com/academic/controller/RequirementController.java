@@ -1,18 +1,17 @@
 package com.academic.controller;
 
 import com.academic.dto.RequirementSummaryDto;
-import com.academic.model.Requirement;
-import com.academic.model.RequirementStatus;
-import com.academic.model.Role;
-import com.academic.model.User;
+import com.academic.model.*;
+import com.academic.service.AccessControlService;
+import com.academic.service.DevelopmentWorkflowService;
+import com.academic.service.OrderService;
 import com.academic.service.RequirementService;
-import com.academic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,205 +23,103 @@ public class RequirementController {
     private RequirementService requirementService;
 
     @Autowired
-    private UserService userService;
+    private DevelopmentWorkflowService workflowService;
 
-    private User getAuthenticatedUser() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Authenticated user not found."));
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private AccessControlService accessControlService;
+
+    private User actor() {
+        return accessControlService.getCurrentAuthenticatedUser();
     }
 
+    /** Own requirements (student), college requirements (admin), all (super admin), assigned (developer). */
     @GetMapping
-    public ResponseEntity<?> getRequirements(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String status) {
-        User actor = getAuthenticatedUser();
-        List<RequirementSummaryDto> requirements;
-
-        if (actor.getRole() == Role.USER) {
-            requirements = requirementService.getUserRequirements(actor, search, status);
-        } else {
-            requirements = requirementService.getAllRequirements(search, status);
-        }
-
-        return ResponseEntity.ok(requirements);
+    public List<RequirementSummaryDto> getRequirements(@RequestParam(required = false) String search,
+                                                       @RequestParam(required = false) String status) {
+        return requirementService.listForActor(actor(), search, status);
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<?> getStats() {
-        User actor = getAuthenticatedUser();
-        Map<String, Object> stats = requirementService.getUserStats(actor);
-        return ResponseEntity.ok(stats);
-    }
-
-    @GetMapping("/approved")
-    public ResponseEntity<?> getApprovedRequirements() {
-        List<Requirement> approved = requirementService.getApprovedRequirements();
-        return ResponseEntity.ok(approved);
+    public Map<String, Object> getStats() {
+        return requirementService.getUserStats(actor());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRequirementById(@PathVariable Long id) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement req = requirementService.getRequirementById(id, actor);
-            return ResponseEntity.ok(req);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage()));
-        }
+    public Requirement getRequirementById(@PathVariable Long id) {
+        return requirementService.getRequirementById(id, actor());
+    }
+
+    @GetMapping("/{id}/timeline")
+    public List<StatusHistory> timeline(@PathVariable Long id) {
+        return requirementService.timeline(id, actor());
     }
 
     @PostMapping
-    public ResponseEntity<?> createRequirement(@RequestBody Requirement requirement) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement created = requirementService.createRequirement(requirement, actor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
+    public ResponseEntity<Requirement> createRequirement(@RequestBody Requirement requirement) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(requirementService.createRequirement(requirement, actor()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRequirement(@PathVariable Long id, @RequestBody Requirement requirement) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement updated = requirementService.updateRequirement(id, requirement, actor);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
+    public Requirement updateRequirement(@PathVariable Long id, @RequestBody Requirement requirement) {
+        return requirementService.updateRequirement(id, requirement, actor());
     }
 
     @PostMapping("/{id}/submit")
-    public ResponseEntity<?> submitRequirement(@PathVariable Long id) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement submitted = requirementService.submitRequirement(id, actor);
-            return ResponseEntity.ok(submitted);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
+    public Requirement submitRequirement(@PathVariable Long id) {
+        return requirementService.submitRequirement(id, actor());
     }
 
-    @Autowired
-    private com.academic.service.OrderService orderService;
-
-    @Autowired
-    private com.academic.service.NotificationService notificationService;
-
-    @PostMapping("/{id}/pay-advance")
-    public ResponseEntity<?> payAdvance(
-            @PathVariable Long id,
-            @RequestBody(required = false) Map<String, Object> body) {
-        try {
-            User actor = getAuthenticatedUser();
-            Double amount = body != null && body.containsKey("amount") ? Double.valueOf(body.get("amount").toString()) : null;
-            String idempotencyKey = body != null && body.containsKey("idempotencyKey") ? (String) body.get("idempotencyKey") : null;
-
-            var order = orderService.processRequirementAdvancePayment(id, amount, idempotencyKey, actor);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "Advance payment received and verified successfully.",
-                    "order", order
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    /** College admin: FORWARD to the Super Admin, RETURN for changes, or REJECT. */
+    @PostMapping("/{id}/college-review")
+    public Requirement collegeReview(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        return requirementService.collegeReview(id, body.get("action"), body.get("notes"), actor());
     }
 
+    /** Super Admin: APPROVE (with total price and advance), REQUEST_CHANGES or REJECT. */
     @PostMapping("/{id}/review")
-    public ResponseEntity<?> reviewRequirement(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> body) {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.SUPER_ADMIN && actor.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        String action = body.getOrDefault("action", "APPROVE");
-        String notes = body.getOrDefault("notes", "");
-
-        try {
-            Requirement req = requirementService.getRequirementEntityById(id);
-            if ("APPROVE".equalsIgnoreCase(action)) {
-                req.setStatus(RequirementStatus.APPROVED);
-                notificationService.sendNotification(req.getUser().getEmail(), "USER",
-                        "Requirement Approved!",
-                        "Your requirement '" + req.getTitle() + "' has been approved by Super Admin. Project initialization is now underway.",
-                        "/requirements");
-            } else if ("REQUEST_CHANGES".equalsIgnoreCase(action)) {
-                req.setStatus(RequirementStatus.CHANGES_REQUESTED);
-                req.setSuperAdminNotes(notes);
-                notificationService.sendNotification(req.getUser().getEmail(), "USER",
-                        "Changes Requested on Requirement",
-                        "Super Admin requested revisions for '" + req.getTitle() + "': " + notes,
-                        "/requirements");
-            } else if ("REJECT".equalsIgnoreCase(action)) {
-                req.setStatus(RequirementStatus.REJECTED);
-                req.setSuperAdminNotes(notes);
-                notificationService.sendNotification(req.getUser().getEmail(), "USER",
-                        "Requirement Update",
-                        "Your requirement '" + req.getTitle() + "' has been closed: " + notes,
-                        "/requirements");
-            }
-            req.setSuperAdminNotes(notes);
-            Requirement saved = requirementService.save(req);
-            return ResponseEntity.ok(Map.of("success", true, "requirement", saved));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Map<String, Object> reviewRequirement(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Requirement req = requirementService.superAdminReview(id,
+                (String) body.get("action"),
+                (String) body.get("notes"),
+                toDecimal(body.get("budget")),
+                toDecimal(body.get("advanceAmount")),
+                actor());
+        return Map.of("success", true, "requirement", req);
     }
 
-    @PostMapping("/{id}/approve")
-    public ResponseEntity<?> approveRequirement(@PathVariable Long id) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement approved = requirementService.approveRequirement(id, actor);
-            return ResponseEntity.ok(approved);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage()));
-        }
+    /** Advance payment. The amount is the advance quoted by the Super Admin; client amounts are ignored. */
+    @PostMapping("/{id}/pay-advance")
+    public Map<String, Object> payAdvance(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body,
+                                          @RequestHeader(value = "Idempotency-Key", required = false) String headerKey) {
+        String key = headerKey != null ? headerKey : body != null && body.get("idempotencyKey") != null ? body.get("idempotencyKey").toString() : null;
+        Order order = orderService.processRequirementAdvancePayment(id, key, actor());
+        return Map.of(
+                "success", true,
+                "message", order.isSimulatedPayment()
+                        ? "Advance payment recorded (SIMULATED — development mode)."
+                        : "Advance payment verified.",
+                "order", order);
     }
 
-    @PostMapping("/{id}/reject")
-    public ResponseEntity<?> rejectRequirement(@PathVariable Long id) {
-        try {
-            User actor = getAuthenticatedUser();
-            Requirement rejected = requirementService.rejectRequirement(id, actor);
-            return ResponseEntity.ok(rejected);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage()));
-        }
+    /** Super Admin: create the development project and assign the developer (and optional reviewer). */
+    @PostMapping("/{id}/start-development")
+    public Project startDevelopment(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long developerId = body.get("developerId") != null ? Long.valueOf(body.get("developerId").toString()) : null;
+        Long reviewerId = body.get("reviewerId") != null && !body.get("reviewerId").toString().isBlank()
+                ? Long.valueOf(body.get("reviewerId").toString()) : null;
+        return workflowService.startDevelopment(id, developerId, reviewerId, (String) body.get("notes"), actor());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRequirementById(@PathVariable Long id) {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        try {
-            requirementService.deleteRequirement(id, actor.getEmail());
-            return ResponseEntity.ok(Map.of("success", true, "message", "Requirement successfully deleted."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    public Map<String, Object> deleteRequirementById(@PathVariable Long id) {
+        requirementService.deleteRequirement(id, actor());
+        return Map.of("success", true, "message", "Requirement deleted.");
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteAllRequirements() {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() != Role.SUPER_ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied. Only Super Admin can delete all requirements."));
-        }
-
-        try {
-            requirementService.deleteAllRequirements(actor.getEmail());
-            return ResponseEntity.ok(Map.of("success", true, "message", "All requirements successfully deleted."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
+    private static BigDecimal toDecimal(Object o) {
+        return o == null || o.toString().isBlank() ? null : new BigDecimal(o.toString());
     }
 }

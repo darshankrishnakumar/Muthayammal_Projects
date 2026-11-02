@@ -83,7 +83,7 @@ class ProjectControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value("Access denied. Only Super Admin is authorized to create new projects."));
+                .andExpect(jsonPath("$.message").value("Access denied. Only the Super Admin can perform this action."));
     }
 
     @Test
@@ -105,6 +105,6 @@ class ProjectControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value("Access denied. Only Super Admin is authorized to create new projects."));
+                .andExpect(jsonPath("$.message").value("Access denied. Only the Super Admin can perform this action."));
     }
 }

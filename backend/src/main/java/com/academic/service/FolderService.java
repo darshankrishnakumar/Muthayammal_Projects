@@ -244,7 +244,7 @@ public class FolderService {
         Project project = projectRepository.findById(projectId).orElse(null);
         if (project == null) return;
 
-        List<String> defaultFolders = Arrays.asList("Documentation", "Source Code", "Presentation", "Resources");
+        List<String> defaultFolders = Arrays.asList("Documentation", "Source Code", "Database", "Demo Video", "Screenshots", "Presentation", "Resources");
 
         for (String folderName : defaultFolders) {
             Optional<Folder> existing = folderRepository.findByProjectIdAndParentFolderIsNullAndActiveTrue(projectId)
@@ -257,11 +257,16 @@ public class FolderService {
                 folderRepository.save(root);
             }
         }
-        logger.info("Initialized 4 standard default folders (Documentation, Source Code, Presentation, Resources) for project ID: {}", projectId);
+        logger.info("Initialized standard default folders {} for project ID: {}", defaultFolders, projectId);
     }
 
     private FolderResponse mapToFolderResponseWithChildren(Folder folder) {
         User currentUser = accessControlService.getCurrentAuthenticatedUser();
+        return mapToFolderResponseWithChildren(folder, currentUser,
+                accessControlService.getAccessLevel(folder.getProject(), currentUser));
+    }
+
+    private FolderResponse mapToFolderResponseWithChildren(Folder folder, User currentUser, AccessControlService.ProjectAccessLevel level) {
         boolean folderAllowed = accessControlService.isFolderAllowed(folder, currentUser);
 
         FolderResponse response = new FolderResponse();
@@ -278,7 +283,7 @@ public class FolderService {
         // Subfolders
         List<Folder> childFolders = folderRepository.findByParentFolderIdAndActiveTrue(folder.getId());
         response.setSubFolders(childFolders.stream()
-                .map(this::mapToFolderResponseWithChildren)
+                .map(child -> mapToFolderResponseWithChildren(child, currentUser, level))
                 .collect(Collectors.toList()));
 
         // Current active files in this folder (filter to accessible only for non-superadmin)
@@ -286,9 +291,8 @@ public class FolderService {
         List<AssetResponse> mappedAssets = new ArrayList<>();
 
         for (Asset asset : assets) {
-            boolean assetAllowed = accessControlService.isAssetAllowed(asset, currentUser);
-            AssetResponse resp = mapToAssetResponse(asset);
-            resp.setRestricted(!assetAllowed);
+            boolean assetAllowed = accessControlService.isAssetAllowed(asset, currentUser, level);
+            AssetResponse resp = mapToAssetResponse(asset, assetAllowed);
 
             // If folder is restricted or asset is restricted, still return mapped item with restricted=true so UI can show 🔒 or filter
             mappedAssets.add(resp);
@@ -300,8 +304,10 @@ public class FolderService {
 
     public AssetResponse mapToAssetResponse(Asset asset) {
         User currentUser = accessControlService.getCurrentAuthenticatedUser();
-        boolean assetAllowed = accessControlService.isAssetAllowed(asset, currentUser);
+        return mapToAssetResponse(asset, accessControlService.isAssetAllowed(asset, currentUser));
+    }
 
+    public AssetResponse mapToAssetResponse(Asset asset, boolean assetAllowed) {
         AssetResponse resp = new AssetResponse();
         resp.setId(asset.getId());
         resp.setFolderId(asset.getFolder() != null ? asset.getFolder().getId() : null);
@@ -318,6 +324,8 @@ public class FolderService {
         resp.setCreatedAt(asset.getCreatedAt());
         resp.setUpdatedAt(asset.getUpdatedAt());
         resp.setRestricted(!assetAllowed);
+        resp.setCategory(asset.getCategory() != null ? asset.getCategory().name() : null);
+        resp.setPreviewable(asset.isPreviewable());
         return resp;
     }
 

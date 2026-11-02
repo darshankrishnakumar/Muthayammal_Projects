@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register", "/api/auth/verify-otp", "/api/auth/resend-otp").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/colleges").permitAll()
                 .requestMatchers("/api/auth/**").authenticated()
                 // Platform-owner only
                 .requestMatchers("/api/colleges/**", "/api/colleges").hasRole("SUPER_ADMIN")

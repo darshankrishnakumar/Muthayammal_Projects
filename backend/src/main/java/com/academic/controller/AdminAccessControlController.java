@@ -22,6 +22,9 @@ import java.util.Map;
 public class AdminAccessControlController {
 
     @Autowired
+    private com.academic.service.UserService userService;
+
+    @Autowired
     private AdminAccessControlService adminAccessControlService;
 
     @Autowired
@@ -41,7 +44,7 @@ public class AdminAccessControlController {
     public ResponseEntity<?> getAdminPermissions(@PathVariable Long adminId) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
         // Only Super Admin or the admin themselves can view their permissions
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail()) && !caller.getId().equals(adminId)) {
+        if (caller.getRole() != Role.SUPER_ADMIN && !caller.getId().equals(adminId)) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden: Cannot view permissions for other admins."));
         }
         return ResponseEntity.ok(adminAccessControlService.getAdminPermissions(adminId));
@@ -53,7 +56,7 @@ public class AdminAccessControlController {
             @PathVariable Long adminId,
             @RequestBody List<AdminAccessControlService.AdminPermissionRequest> requests) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail())) {
+        if (caller.getRole() != Role.SUPER_ADMIN) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden: Only Super Admin can modify admin permissions."));
         }
         List<AdminPermission> updated = adminAccessControlService.updateAdminPermissions(adminId, requests, caller);
@@ -76,7 +79,7 @@ public class AdminAccessControlController {
             @PathVariable(required = false) String presetName,
             @RequestBody(required = false) Map<String, String> payload) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail())) {
+        if (caller.getRole() != Role.SUPER_ADMIN) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden: Only Super Admin can apply presets."));
         }
         String preset = (presetName != null && !presetName.isBlank()) 
@@ -99,7 +102,7 @@ public class AdminAccessControlController {
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<?> getAssignedUsers(@PathVariable Long adminId) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail()) && !caller.getId().equals(adminId)) {
+        if (caller.getRole() != Role.SUPER_ADMIN && !caller.getId().equals(adminId)) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden."));
         }
         return ResponseEntity.ok(adminAccessControlService.getAssignedUsers(adminId));
@@ -111,7 +114,7 @@ public class AdminAccessControlController {
             @PathVariable Long adminId,
             @RequestBody(required = false) Map<String, List<Long>> payload) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail())) {
+        if (caller.getRole() != Role.SUPER_ADMIN) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden: Only Super Admin can assign users to admins."));
         }
         List<?> rawIds = (payload != null && payload.get("userIds") != null) ? payload.get("userIds") : List.of();
@@ -159,26 +162,28 @@ public class AdminAccessControlController {
             @PathVariable Long userId,
             @RequestBody Map<String, String> payload) {
         User caller = accessControlService.getCurrentAuthenticatedUser();
-        if (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail())) {
-            return ResponseEntity.status(403).body(Map.of("error", "Forbidden: Only Super Admin can change user roles."));
+        if (caller.getRole() != Role.SUPER_ADMIN) {
+            return ResponseEntity.status(403).body(Map.of("message", "Forbidden: Only Super Admin can change user roles."));
         }
         String roleStr = payload.get("role");
         if (roleStr == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Role is required."));
+            return ResponseEntity.badRequest().body(Map.of("message", "Role is required."));
         }
-        try {
-            Role role = Role.valueOf(roleStr);
-            User target = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
-            target.setRole(role);
-            userRepository.save(target);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "User role updated to " + role,
-                    "user", target
-            ));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        Role role = Role.valueOf(roleStr);
+        if (role == Role.SUPER_ADMIN) {
+            return ResponseEntity.status(403).body(Map.of("message", "Super Admin cannot be granted through the API."));
         }
+        if (caller.getId().equals(userId)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "You cannot change your own role."));
+        }
+        User target = userRepository.findById(userId)
+                .orElseThrow(() -> new java.util.NoSuchElementException("User not found: " + userId));
+        Long collegeId = payload.get("collegeId") != null && !payload.get("collegeId").isBlank() ? Long.valueOf(payload.get("collegeId")) : null;
+        User saved = userService.changeRoleAndCollege(target, role, collegeId, caller.getEmail());
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "User role updated to " + role,
+                "user", saved
+        ));
     }
 }

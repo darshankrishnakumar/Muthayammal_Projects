@@ -69,6 +69,40 @@ public class Project {
     @Column(name = "change_request_notes", columnDefinition = "TEXT")
     private String changeRequestNotes;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_type", nullable = false, length = 20)
+    private ProjectType projectType = ProjectType.CUSTOM;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "catalog_status", nullable = false, length = 20)
+    private CatalogStatus catalogStatus = CatalogStatus.DRAFT;
+
+    @Column(name = "abstract_text", columnDefinition = "TEXT")
+    private String abstractText;
+
+    @Column(length = 100)
+    private String domain;
+
+    @Column(length = 500)
+    private String tags;
+
+    /** Library list price; colleges may override it per allocation. */
+    @Column(precision = 12, scale = 2)
+    private java.math.BigDecimal price;
+
+    @Column(name = "installation_instructions", columnDefinition = "TEXT")
+    private String installationInstructions;
+
+    /** Identifier of the source the project was imported from (e.g. repository folder); used for idempotent re-imports. */
+    @Column(name = "source_ref", length = 255)
+    private String sourceRef;
+
+    @Column(name = "developer_accepted_at")
+    private LocalDateTime developerAcceptedAt;
+
+    @Column(name = "progress_percent", nullable = false)
+    private int progressPercent = 0;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -294,5 +328,90 @@ public class Project {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public ProjectType getProjectType() {
+        return projectType;
+    }
+
+    public void setProjectType(ProjectType projectType) {
+        this.projectType = projectType;
+    }
+
+    public CatalogStatus getCatalogStatus() {
+        return catalogStatus;
+    }
+
+    public void setCatalogStatus(CatalogStatus catalogStatus) {
+        this.catalogStatus = catalogStatus;
+    }
+
+    public String getAbstractText() {
+        return abstractText;
+    }
+
+    public void setAbstractText(String abstractText) {
+        this.abstractText = abstractText;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public java.math.BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(java.math.BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getInstallationInstructions() {
+        return installationInstructions;
+    }
+
+    public void setInstallationInstructions(String installationInstructions) {
+        this.installationInstructions = installationInstructions;
+    }
+
+    public String getSourceRef() {
+        return sourceRef;
+    }
+
+    public void setSourceRef(String sourceRef) {
+        this.sourceRef = sourceRef;
+    }
+
+    public LocalDateTime getDeveloperAcceptedAt() {
+        return developerAcceptedAt;
+    }
+
+    public void setDeveloperAcceptedAt(LocalDateTime developerAcceptedAt) {
+        this.developerAcceptedAt = developerAcceptedAt;
+    }
+
+    public int getProgressPercent() {
+        return progressPercent;
+    }
+
+    public void setProgressPercent(int progressPercent) {
+        this.progressPercent = progressPercent;
+    }
+
+    @Transient
+    public boolean isLibrary() {
+        return projectType == ProjectType.LIBRARY;
     }
 }

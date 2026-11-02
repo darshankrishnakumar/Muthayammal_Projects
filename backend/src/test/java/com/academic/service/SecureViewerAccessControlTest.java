@@ -42,6 +42,15 @@ public class SecureViewerAccessControlTest {
     @Mock
     private com.academic.repository.ProjectAssignmentRepository projectAssignmentRepository;
 
+    @Mock
+    private com.academic.repository.CollegeProjectAllocationRepository allocationRepository;
+
+    @Mock
+    private com.academic.repository.ProjectEntitlementRepository entitlementRepository;
+
+    @Mock
+    private com.academic.repository.RequirementRepository requirementRepository;
+
     @InjectMocks
     private AccessControlService accessControlService;
 

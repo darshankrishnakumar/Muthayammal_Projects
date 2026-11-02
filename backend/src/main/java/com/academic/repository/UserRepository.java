@@ -37,4 +37,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
            "AND (:query IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<User> searchAdminsOnly(@Param("status") UserStatus status,
                                 @Param("query") String query);
+
+    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.college.id = :collegeId AND u.role = :role " +
+           "AND (:status IS NULL OR u.status = :status) " +
+           "AND (:query IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "ORDER BY u.createdAt DESC")
+    List<User> searchByCollegeAndRole(@Param("collegeId") Long collegeId,
+                                      @Param("role") Role role,
+                                      @Param("status") UserStatus status,
+                                      @Param("query") String query);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.deleted = false AND u.college.id = :collegeId AND u.role = :role")
+    long countByCollegeAndRole(@Param("collegeId") Long collegeId, @Param("role") Role role);
+
+    long countByRoleAndDeletedFalse(Role role);
+
+    @Query("SELECT u FROM User u WHERE u.deleted = false AND u.college.id = :collegeId AND u.role = com.academic.model.Role.ADMIN ORDER BY u.fullName ASC")
+    List<User> findAdminsByCollegeId(@Param("collegeId") Long collegeId);
 }

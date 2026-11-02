@@ -22,6 +22,18 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
+    private com.academic.service.LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private com.academic.service.CollegeService collegeService;
+
+    /** Active colleges for the registration form (public). */
+    @GetMapping("/colleges")
+    public ResponseEntity<?> colleges() {
+        return ResponseEntity.ok(collegeService.activeOptions());
+    }
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -34,12 +46,27 @@ public class AuthController {
     private String activeProfile;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request, jakarta.servlet.http.HttpServletRequest http) {
         String email = request.get("email");
         String password = request.get("password");
+        String clientIp = http.getRemoteAddr();
+        try {
+            loginAttemptService.assertNotLocked(email, clientIp);
+        } catch (IllegalStateException locked) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("message", locked.getMessage()));
+        }
 
         try {
-            User user = userService.authenticate(email, password);
+            User user;
+            try {
+                user = userService.authenticate(email, password);
+            } catch (RuntimeException authFailure) {
+                if (!(authFailure instanceof IllegalStateException)) {
+                    loginAttemptService.recordFailure(email, clientIp);
+                }
+                throw authFailure;
+            }
+            loginAttemptService.recordSuccess(email, clientIp);
             String token = tokenProvider.generateToken(user.getEmail(), user.getRole().name());
 
             auditLogService.log(user.getEmail(), "LOGIN", "User successfully authenticated as " + user.getRole());

@@ -18,6 +18,9 @@ import java.util.Map;
 public class AssetController {
 
     @Autowired
+    private com.academic.service.AuditLogService auditLogService;
+
+    @Autowired
     private AssetService assetService;
 
     /**
@@ -43,16 +46,24 @@ public class AssetController {
     @GetMapping("/{id}/view")
     public ResponseEntity<Resource> viewAsset(
             @PathVariable("id") Long assetId,
-            @RequestParam(value = "version", required = false) Integer versionNo) {
+            @RequestParam(value = "version", required = false) Integer versionNo,
+            @RequestParam(value = "download", required = false, defaultValue = "false") boolean download,
+            Authentication authentication) {
         Map<String, Object> viewData = assetService.getAssetForSecureView(assetId, versionNo);
 
         Resource resource = (Resource) viewData.get("resource");
         String mimeType = (String) viewData.get("mimeType");
         String fileName = (String) viewData.get("fileName");
+        String safeName = fileName == null ? "file" : fileName.replaceAll("[\\r\\n\"\\\\]", "_");
+
+        if (download) {
+            auditLogService.log(authentication != null ? authentication.getName() : "unknown", "FILE_DOWNLOADED",
+                    String.format("Downloaded asset #%d '%s'", assetId, safeName));
+        }
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(mimeType != null ? mimeType : "application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition(download ? "attachment" : "inline", safeName))
                 .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")
                 .header(HttpHeaders.PRAGMA, "no-cache")
                 .header(HttpHeaders.EXPIRES, "0")
@@ -97,5 +108,13 @@ public class AssetController {
         String actorEmail = authentication != null ? authentication.getName() : "system";
         AssetResponse response = assetService.restoreVersion(assetId, versionNo, actorEmail);
         return ResponseEntity.ok(response);
+    }
+
+    private static String contentDisposition(String type, String name) {
+        boolean ascii = name.chars().allMatch(c -> c >= 0x20 && c < 0x7f);
+        if (ascii) {
+            return type + "; filename=\"" + name + "\"";
+        }
+        return ContentDisposition.builder(type).filename(name, java.nio.charset.StandardCharsets.UTF_8).build().toString();
     }
 }

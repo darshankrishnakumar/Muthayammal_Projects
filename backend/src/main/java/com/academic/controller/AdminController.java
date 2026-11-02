@@ -53,10 +53,17 @@ public class AdminController {
             String fullName = payload.get("fullName");
             String statusStr = payload.get("status");
 
-            User newAdmin = new User(email, password, fullName, Role.ADMIN, 
-                    UserStatus.valueOf(statusStr.toUpperCase()));
-
+            String collegeIdStr = payload.get("collegeId");
+            if (collegeIdStr == null || collegeIdStr.isBlank()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Select the college this administrator manages."));
+            }
+            if (password == null || password.length() < 8) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Password must be at least 8 characters long."));
+            }
+            User newAdmin = new User(email, password, fullName, Role.ADMIN,
+                    UserStatus.valueOf(statusStr != null ? statusStr.toUpperCase() : "ACTIVE"));
             User savedAdmin = userService.createUser(newAdmin, actor.getEmail());
+            savedAdmin = userService.changeRoleAndCollege(savedAdmin, Role.ADMIN, Long.valueOf(collegeIdStr), actor.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAdmin);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
@@ -83,6 +90,9 @@ public class AdminController {
             String newPassword = payload.get("password");
 
             User updatedAdmin = userService.updateUser(id, updateData, newPassword, actor.getEmail());
+            if (payload.get("collegeId") != null && !payload.get("collegeId").isBlank() && updatedAdmin.getRole() == Role.ADMIN) {
+                updatedAdmin = userService.changeRoleAndCollege(updatedAdmin, Role.ADMIN, Long.valueOf(payload.get("collegeId")), actor.getEmail());
+            }
             return ResponseEntity.ok(updatedAdmin);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

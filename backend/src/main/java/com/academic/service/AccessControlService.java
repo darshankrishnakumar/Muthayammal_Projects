@@ -1,12 +1,13 @@
 package com.academic.service;
 
-import com.academic.model.Asset;
-import com.academic.model.Folder;
-import com.academic.model.Project;
-import com.academic.model.ProjectStatus;
-import com.academic.model.Role;
-import com.academic.model.User;
+import com.academic.model.*;
+import com.academic.repository.CollegeProjectAllocationRepository;
+import com.academic.repository.FilePermissionRepository;
+import com.academic.repository.FolderPermissionRepository;
+import com.academic.repository.ProjectAssignmentRepository;
+import com.academic.repository.ProjectEntitlementRepository;
 import com.academic.repository.ProjectRepository;
+import com.academic.repository.RequirementRepository;
 import com.academic.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +18,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
+/**
+ * Central, deny-by-default authorization for projects, folders, files and college data.
+ *
+ * Every project resolves to one of three access levels for the current user:
+ * <ul>
+ *   <li>{@code NONE}    – the project is invisible.</li>
+ *   <li>{@code PREVIEW} – metadata and files marked previewable (screenshots, demo video).</li>
+ *   <li>{@code FULL}    – every deliverable, subject to folder/file permission rules.</li>
+ * </ul>
+ * College isolation: ADMIN and USER accounts only ever see projects allocated to, or
+ * requested from, their own college.
+ */
 @Service
 @SuppressWarnings("null")
 public class AccessControlService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessControlService.class);
+
+    public enum ProjectAccessLevel { NONE, PREVIEW, FULL }
 
     @Autowired
     private UserRepository userRepository;
@@ -31,7 +47,22 @@ public class AccessControlService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private com.academic.repository.ProjectAssignmentRepository projectAssignmentRepository;
+    private ProjectAssignmentRepository projectAssignmentRepository;
+
+    @Autowired
+    private FolderPermissionRepository folderPermissionRepository;
+
+    @Autowired
+    private FilePermissionRepository filePermissionRepository;
+
+    @Autowired
+    private CollegeProjectAllocationRepository allocationRepository;
+
+    @Autowired
+    private ProjectEntitlementRepository entitlementRepository;
+
+    @Autowired
+    private RequirementRepository requirementRepository;
 
     /**
      * Retrieves the currently authenticated User entity from the SecurityContext.
@@ -47,87 +78,105 @@ public class AccessControlService {
                 .orElseThrow(() -> new AccessDeniedException("Authenticated user not found or deactivated: " + email));
     }
 
+    // ------------------------------------------------------------------
+    // Project access levels
+    // ------------------------------------------------------------------
+
+    public ProjectAccessLevel getAccessLevel(Project project, User user) {
+        if (project == null || user == null || user.isDeleted() || user.getStatus() != UserStatus.ACTIVE) {
+            return ProjectAccessLevel.NONE;
+        }
+        Long projectId = project.getId();
+
+        switch (user.getRole()) {
+            case SUPER_ADMIN:
+                return ProjectAccessLevel.FULL;
+
+            case PROJECT_DEVELOPER: {
+                boolean assigned = isDeveloperOf(project, user)
+                        || projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent();
+                return assigned ? ProjectAccessLevel.FULL : ProjectAccessLevel.NONE;
+            }
+
+            case ADMIN: {
+                if (project.getReviewerAdmin() != null && Objects.equals(project.getReviewerAdmin().getId(), user.getId())) {
+                    return ProjectAccessLevel.FULL;
+                }
+                if (projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent()) {
+                    return ProjectAccessLevel.PREVIEW;
+                }
+                Long collegeId = collegeIdOf(user);
+                if (collegeId == null) {
+                    return ProjectAccessLevel.NONE;
+                }
+                if (project.isLibrary()) {
+                    return allocationRepository.findActive(collegeId, projectId).isPresent()
+                            ? ProjectAccessLevel.PREVIEW : ProjectAccessLevel.NONE;
+                }
+                return Objects.equals(requirementCollegeId(project), collegeId)
+                        ? ProjectAccessLevel.PREVIEW : ProjectAccessLevel.NONE;
+            }
+
+            case USER:
+            default: {
+                if (entitlementRepository.hasActive(user.getId(), projectId)
+                        || projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent()) {
+                    return ProjectAccessLevel.FULL;
+                }
+                if (project.isLibrary()) {
+                    Long collegeId = collegeIdOf(user);
+                    boolean visible = collegeId != null
+                            && project.getCatalogStatus() == CatalogStatus.PUBLISHED
+                            && allocationRepository.findActive(collegeId, projectId).isPresent();
+                    return visible ? ProjectAccessLevel.PREVIEW : ProjectAccessLevel.NONE;
+                }
+                return isRequesterOf(project, user) ? ProjectAccessLevel.PREVIEW : ProjectAccessLevel.NONE;
+            }
+        }
+    }
+
+    public ProjectAccessLevel getAccessLevel(Long projectId, User user) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
+        return getAccessLevel(project, user);
+    }
+
     /**
-     * Validates that the current user has clearance to access a specific Project.
-     * Hierarchy:
-     * 1. SUPER_ADMIN / ADMIN -> Full clearance
-     * 2. USER -> Must have an active entry in PROJECT_ASSIGNMENT
+     * Validates that the current user may at least see the project (PREVIEW or FULL).
      */
     public void validateProjectAccess(Long projectId) {
         User user = getCurrentAuthenticatedUser();
+        assertActive(user);
 
-        if (user.isDeleted() || user.getStatus() != com.academic.model.UserStatus.ACTIVE) {
-            throw new AccessDeniedException("User account is deactivated.");
-        }
-
-        // Verify project exists
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
 
-        // Hierarchy Enforcement:
-        // 1. SUPER_ADMIN -> Unrestricted global access
-        if (user.getRole() == Role.SUPER_ADMIN) {
-            logger.debug("Project access granted to SUPER_ADMIN {}", user.getEmail());
-            return;
-        }
-
-        // 2. PROJECT_DEVELOPER -> Access restricted strictly to assigned projects
-        if (user.getRole() == Role.PROJECT_DEVELOPER) {
-            boolean isDevAssigned = (project.getDeveloper() != null && project.getDeveloper().getId().equals(user.getId()))
-                    || projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent();
-            if (!isDevAssigned) {
-                throw new AccessDeniedException(String.format("Access Denied: Project %s is not assigned to you.", project.getProjectCode()));
-            }
-            return;
-        }
-
-        // 3. ADMIN -> Reviewer assignment check or project assignment
-        if (user.getRole() == Role.ADMIN) {
-            boolean isReviewer = (project.getReviewerAdmin() != null && project.getReviewerAdmin().getId().equals(user.getId()));
-            boolean hasAssignment = projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent();
-            if (!isReviewer && !hasAssignment) {
-                throw new AccessDeniedException(String.format("Access Denied: You are not assigned to project %s (%s).", project.getProjectCode(), project.getProjectName()));
-            }
-            return;
-        }
-
-        // 4. USER -> Must be assigned AND must fulfill payment and approval access requirements
-        boolean hasAssignment = projectAssignmentRepository.findActiveAssignment(projectId, user.getId()).isPresent()
-                || (project.getPurchasedByUserId() != null && project.getPurchasedByUserId().equals(user.getId()));
-
-        if (!hasAssignment) {
+        if (getAccessLevel(project, user) == ProjectAccessLevel.NONE) {
             throw new AccessDeniedException(String.format("Access Denied: You are not assigned to project %s.", project.getProjectCode()));
         }
-
-        // Check Marketplace vs Custom Requirement Payment Gating
-        if (project.isMarketplace()) {
-            // For Marketplace items, access is granted if purchased
-            if (project.getPurchasedByUserId() == null || !project.getPurchasedByUserId().equals(user.getId())) {
-                throw new AccessDeniedException("Access Denied: This marketplace project has not been purchased by your account.");
-            }
-        } else if (project.getLinkedRequirementId() != null) {
-            // For Custom Requirement projects with payment lifecycle, access is granted ONLY when:
-            // Advance = COMPLETED && Review = APPROVED / ACCESS_GRANTED && Remaining = COMPLETED
-            boolean isAdvancePaid = "COMPLETED".equalsIgnoreCase(project.getAdvancePaymentStatus());
-            boolean isRemainingPaid = "COMPLETED".equalsIgnoreCase(project.getRemainingPaymentStatus());
-            boolean isAccessGranted = project.getStatus() == ProjectStatus.ACCESS_GRANTED 
-                    || project.getStatus() == ProjectStatus.COMPLETED
-                    || project.getLifecycleStatus() == ProjectStatus.ACCESS_GRANTED
-                    || project.getLifecycleStatus() == ProjectStatus.COMPLETED;
-
-            if (!isAdvancePaid || !isRemainingPaid || !isAccessGranted) {
-                throw new AccessDeniedException(String.format("Access Denied: Protected deliverables for project %s are locked. Please complete the remaining payment to unlock access.", project.getProjectCode()));
-            }
-        }
-
-        logger.debug("Project access granted to user {} ({}) for project {}", user.getEmail(), user.getRole(), project.getProjectCode());
+        logger.debug("Project access granted to {} ({}) for project {}", user.getEmail(), user.getRole(), project.getProjectCode());
     }
 
-    @Autowired
-    private com.academic.repository.FolderPermissionRepository folderPermissionRepository;
+    /**
+     * Validates that the current user holds full access to the project's deliverables.
+     */
+    public void validateFullProjectAccess(Long projectId) {
+        User user = getCurrentAuthenticatedUser();
+        assertActive(user);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
+        ProjectAccessLevel level = getAccessLevel(project, user);
+        if (level == ProjectAccessLevel.NONE) {
+            throw new AccessDeniedException(String.format("Access Denied: You are not assigned to project %s.", project.getProjectCode()));
+        }
+        if (level != ProjectAccessLevel.FULL) {
+            throw new AccessDeniedException("Access Denied: Deliverables for " + project.getProjectCode() + " unlock after purchase or final payment.");
+        }
+    }
 
-    @Autowired
-    private com.academic.repository.FilePermissionRepository filePermissionRepository;
+    // ------------------------------------------------------------------
+    // Folder and file permissions
+    // ------------------------------------------------------------------
 
     /**
      * Evaluates effective permission for a folder for the current user.
@@ -138,50 +187,57 @@ public class AccessControlService {
             return true;
         }
 
-        // Check User-specific permission
         var userPerm = folderPermissionRepository.findByFolderIdAndUserId(folder.getId(), user.getId());
         if (userPerm.isPresent()) {
-            return userPerm.get().getPermissionStatus() == com.academic.model.PermissionStatus.ALLOWED;
+            return userPerm.get().getPermissionStatus() == PermissionStatus.ALLOWED;
         }
 
-        // Check Role-specific permission
         var rolePerm = folderPermissionRepository.findByFolderIdAndRole(folder.getId(), user.getRole());
         if (rolePerm.isPresent()) {
-            return rolePerm.get().getPermissionStatus() == com.academic.model.PermissionStatus.ALLOWED;
+            return rolePerm.get().getPermissionStatus() == PermissionStatus.ALLOWED;
         }
 
-        // Default ALLOWED
         return true;
     }
 
-    /**
-     * Evaluates effective permission for an asset for the current user.
-     * Folder -> File Inheritance: Folder DENIED -> File DENIED.
-     * Precedence: User-specific -> Role-specific -> Default ALLOWED.
-     */
     public boolean isAssetAllowed(Asset asset, User user) {
         if (user.getRole() == Role.SUPER_ADMIN) {
             return true;
         }
+        Project project = asset.getFolder() != null ? asset.getFolder().getProject() : null;
+        return isAssetAllowed(asset, user, getAccessLevel(project, user));
+    }
 
-        // 1. Folder Inheritance: Check Folder permission first
+    /**
+     * Evaluates effective permission for an asset given an already-resolved project level.
+     * PREVIEW only exposes previewable assets. Folder DENIED -> File DENIED.
+     * Precedence: User-specific -> Role-specific -> Default ALLOWED.
+     */
+    public boolean isAssetAllowed(Asset asset, User user, ProjectAccessLevel level) {
+        if (user.getRole() == Role.SUPER_ADMIN) {
+            return true;
+        }
+        if (level == ProjectAccessLevel.NONE) {
+            return false;
+        }
+        if (level == ProjectAccessLevel.PREVIEW && !asset.isPreviewable()) {
+            return false;
+        }
+
         if (!isFolderAllowed(asset.getFolder(), user)) {
             return false;
         }
 
-        // 2. Check User-specific file permission
         var userPerm = filePermissionRepository.findByAssetIdAndUserId(asset.getId(), user.getId());
         if (userPerm.isPresent()) {
-            return userPerm.get().getPermissionStatus() == com.academic.model.PermissionStatus.ALLOWED;
+            return userPerm.get().getPermissionStatus() == PermissionStatus.ALLOWED;
         }
 
-        // 3. Check Role-specific file permission
         var rolePerm = filePermissionRepository.findByAssetIdAndRole(asset.getId(), user.getRole());
         if (rolePerm.isPresent()) {
-            return rolePerm.get().getPermissionStatus() == com.academic.model.PermissionStatus.ALLOWED;
+            return rolePerm.get().getPermissionStatus() == PermissionStatus.ALLOWED;
         }
 
-        // Default ALLOWED
         return true;
     }
 
@@ -204,11 +260,8 @@ public class AccessControlService {
     }
 
     /**
-     * Validates the complete 4-tier chain for viewing/accessing an Asset:
-     * 1. Authenticate user
-     * 2. Check Project Clearance
-     * 3. Check Folder Permission
-     * 4. Check File Permission
+     * Validates the complete chain for viewing an Asset:
+     * authenticated -> project visible -> full access or previewable -> folder -> file permission.
      */
     public void validateAssetAccess(Asset asset) {
         if (asset == null) {
@@ -222,22 +275,122 @@ public class AccessControlService {
         }
 
         User user = getCurrentAuthenticatedUser();
-        validateProjectAccess(asset.getFolder().getProject().getId());
+        assertActive(user);
+        Project project = asset.getFolder().getProject();
+        validateProjectAccess(project.getId());
 
-        if (!isAssetAllowed(asset, user)) {
+        ProjectAccessLevel level = getAccessLevel(project, user);
+        if (!isAssetAllowed(asset, user, level)) {
+            if (level == ProjectAccessLevel.PREVIEW && !asset.isPreviewable()) {
+                throw new AccessDeniedException("Access Denied: This file unlocks after purchase or final payment.");
+            }
             throw new AccessDeniedException("Access Denied: You do not have clearance for file " + asset.getOriginalFileName());
         }
     }
 
     /**
      * Validates management permissions (creating/modifying folders or files).
-     * SUPER_ADMIN and ADMIN have write clearance. Regular USER has read-only access.
+     * SUPER_ADMIN manages every project; a PROJECT_DEVELOPER manages only custom projects
+     * assigned to them. College admins and students are read-only.
      */
     public void validateWriteClearance(Long projectId) {
         User user = getCurrentAuthenticatedUser();
+        assertActive(user);
         if (user.getRole() == Role.USER) {
             throw new AccessDeniedException("Access Denied: Regular users have read-only view access and cannot create, modify, or delete folders/files.");
         }
-        validateProjectAccess(projectId);
+        if (user.getRole() == Role.ADMIN) {
+            throw new AccessDeniedException("Access Denied: College administrators have read-only access to project files.");
+        }
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
+        if (user.getRole() == Role.PROJECT_DEVELOPER) {
+            if (project.isLibrary() || !isDeveloperOf(project, user)) {
+                throw new AccessDeniedException(String.format("Access Denied: Project %s is not assigned to you.", project.getProjectCode()));
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // College isolation helpers
+    // ------------------------------------------------------------------
+
+    public College requireCollege(User user) {
+        if (user.getCollege() == null) {
+            throw new IllegalStateException("Your account is not linked to a college. Contact the platform administrator.");
+        }
+        if (!user.getCollege().isActive()) {
+            throw new AccessDeniedException("Your college account is currently inactive.");
+        }
+        return user.getCollege();
+    }
+
+    public boolean sameCollege(User a, User b) {
+        Long ca = collegeIdOf(a);
+        Long cb = collegeIdOf(b);
+        return ca != null && ca.equals(cb);
+    }
+
+    /**
+     * SUPER_ADMIN manages anyone except other super admins' credentials elsewhere;
+     * an ADMIN manages only USER (student) accounts of their own college.
+     */
+    public void assertCanManageUser(User actor, User target) {
+        if (actor.getRole() == Role.SUPER_ADMIN) {
+            return;
+        }
+        if (actor.getRole() == Role.ADMIN && target.getRole() == Role.USER && sameCollege(actor, target)) {
+            return;
+        }
+        throw new AccessDeniedException("Access denied: you cannot manage this account.");
+    }
+
+    /** Whether the actor may see a requirement (owner, own-college admin, super admin, assigned developer). */
+    public boolean canViewRequirement(User actor, Requirement req) {
+        switch (actor.getRole()) {
+            case SUPER_ADMIN:
+                return true;
+            case ADMIN:
+                return req.getCollege() != null && Objects.equals(req.getCollege().getId(), collegeIdOf(actor));
+            case PROJECT_DEVELOPER:
+                return projectRepository.findByLinkedRequirementId(req.getId())
+                        .map(p -> isDeveloperOf(p, actor))
+                        .orElse(false);
+            case USER:
+            default:
+                return req.getUser() != null && Objects.equals(req.getUser().getId(), actor.getId());
+        }
+    }
+
+    public boolean isDeveloperOf(Project project, User user) {
+        return project.getDeveloper() != null && Objects.equals(project.getDeveloper().getId(), user.getId());
+    }
+
+    public boolean isRequesterOf(Project project, User user) {
+        if (project.getLinkedRequirementId() == null) {
+            return false;
+        }
+        return requirementRepository.findById(project.getLinkedRequirementId())
+                .map(r -> r.getUser() != null && Objects.equals(r.getUser().getId(), user.getId()))
+                .orElse(false);
+    }
+
+    private Long requirementCollegeId(Project project) {
+        if (project.getLinkedRequirementId() == null) {
+            return null;
+        }
+        return requirementRepository.findById(project.getLinkedRequirementId())
+                .map(r -> r.getCollege() != null ? r.getCollege().getId() : null)
+                .orElse(null);
+    }
+
+    private static Long collegeIdOf(User user) {
+        return user != null && user.getCollege() != null ? user.getCollege().getId() : null;
+    }
+
+    private static void assertActive(User user) {
+        if (user.isDeleted() || user.getStatus() != UserStatus.ACTIVE) {
+            throw new AccessDeniedException("User account is deactivated.");
+        }
     }
 }

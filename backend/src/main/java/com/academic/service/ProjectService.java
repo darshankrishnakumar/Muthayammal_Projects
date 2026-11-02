@@ -262,24 +262,23 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Long id, String actorEmail) {
         Project project = getProjectById(id);
-        jdbcTemplate.execute("DELETE FROM file_permissions WHERE asset_id IN (SELECT id FROM asset_master WHERE folder_id IN (SELECT id FROM folder_master WHERE project_id = " + id + "))");
-        jdbcTemplate.execute("DELETE FROM asset_master WHERE folder_id IN (SELECT id FROM folder_master WHERE project_id = " + id + ")");
-        jdbcTemplate.execute("DELETE FROM folder_permissions WHERE folder_id IN (SELECT id FROM folder_master WHERE project_id = " + id + ")");
-        jdbcTemplate.execute("DELETE FROM folder_master WHERE project_id = " + id);
-        jdbcTemplate.execute("DELETE FROM project_assignments WHERE project_id = " + id);
+        Integer paid = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM order_management WHERE project_id = ? AND payment_status = 'COMPLETED'", Integer.class, id);
+        Integer entitled = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM project_entitlements WHERE project_id = ?", Integer.class, id);
+        if ((paid != null && paid > 0) || (entitled != null && entitled > 0)) {
+            throw new IllegalStateException("Project " + project.getProjectCode()
+                    + " has orders or granted access and cannot be deleted. Archive it instead.");
+        }
+        String folders = "SELECT id FROM folder_master WHERE project_id = ?";
+        jdbcTemplate.update("DELETE FROM file_permissions WHERE asset_id IN (SELECT id FROM asset_master WHERE folder_id IN (" + folders + "))", id);
+        jdbcTemplate.update("DELETE FROM asset_master WHERE folder_id IN (" + folders + ")", id);
+        jdbcTemplate.update("DELETE FROM folder_permissions WHERE folder_id IN (" + folders + ")", id);
+        jdbcTemplate.update("DELETE FROM folder_master WHERE project_id = ?", id);
+        jdbcTemplate.update("DELETE FROM project_assignments WHERE project_id = ?", id);
+        jdbcTemplate.update("DELETE FROM college_project_allocations WHERE project_id = ?", id);
         projectRepository.delete(project);
         auditLogService.log(actorEmail, "DELETE_PROJECT", "Deleted project " + project.getProjectCode());
-    }
-
-    @Transactional
-    public void deleteAllProjects(String actorEmail) {
-        jdbcTemplate.execute("DELETE FROM file_permissions");
-        jdbcTemplate.execute("DELETE FROM asset_master");
-        jdbcTemplate.execute("DELETE FROM folder_permissions");
-        jdbcTemplate.execute("DELETE FROM folder_master");
-        jdbcTemplate.execute("DELETE FROM project_assignments");
-        projectRepository.deleteAll();
-        auditLogService.log(actorEmail, "DELETE_ALL_PROJECTS", "Super Admin deleted all projects and associated artifacts.");
     }
 
     private String generateUniqueProjectCode() {

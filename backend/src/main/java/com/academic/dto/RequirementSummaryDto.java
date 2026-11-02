@@ -54,6 +54,12 @@ public class RequirementSummaryDto {
         dto.setStatus(req.getStatus());
         dto.setCreatedAt(req.getCreatedAt());
         dto.setUpdatedAt(req.getUpdatedAt());
+        dto.setAdvanceAmount(req.getAdvanceAmount());
+        dto.setAdvancePaymentStatus(req.getAdvancePaymentStatus());
+        if (req.getCollege() != null) {
+            dto.setCollegeId(req.getCollege().getId());
+            dto.setCollegeName(req.getCollege().getName());
+        }
 
         if (req.getUser() != null) {
             dto.setUser(new UserSummary(
@@ -92,4 +98,18 @@ public class RequirementSummaryDto {
 
     public UserSummary getUser() { return user; }
     public void setUser(UserSummary user) { this.user = user; }
+
+    private BigDecimal advanceAmount;
+    private String advancePaymentStatus;
+    private Long collegeId;
+    private String collegeName;
+
+    public BigDecimal getAdvanceAmount() { return advanceAmount; }
+    public void setAdvanceAmount(BigDecimal advanceAmount) { this.advanceAmount = advanceAmount; }
+    public String getAdvancePaymentStatus() { return advancePaymentStatus; }
+    public void setAdvancePaymentStatus(String advancePaymentStatus) { this.advancePaymentStatus = advancePaymentStatus; }
+    public Long getCollegeId() { return collegeId; }
+    public void setCollegeId(Long collegeId) { this.collegeId = collegeId; }
+    public String getCollegeName() { return collegeName; }
+    public void setCollegeName(String collegeName) { this.collegeName = collegeName; }
 }

@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
 @SuppressWarnings("null")
 public class UserService {
 
+    @Autowired
+    private com.academic.repository.CollegeRepository collegeRepository;
+
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     // Indian Mobile Number: 10 digits starting with 6, 7, 8, or 9, with optional +91 or 0 prefix
     private static final Pattern MOBILE_PATTERN = Pattern.compile("^(?:\\+91[\\-\\s]?|0)?[6-9]\\d{9}$");
@@ -96,6 +99,13 @@ public class UserService {
             throw new IllegalArgumentException("Password and Confirm Password do not match.");
         }
 
+        if (req.getCollegeId() == null) {
+            throw new IllegalArgumentException("Please select your college.");
+        }
+        com.academic.model.College college = collegeRepository.findById(req.getCollegeId())
+                .filter(com.academic.model.College::isActive)
+                .orElseThrow(() -> new IllegalArgumentException("The selected college is not available."));
+
         // Check if email already registered in DB (including soft-deleted accounts)
         Optional<User> existingOpt = userRepository.findByEmail(email);
         if (existingOpt.isPresent()) {
@@ -107,9 +117,10 @@ public class UserService {
             // If previously soft-deleted, reactivate account with new details
             existing.setFullName(fullName);
             existing.setMobileNumber(mobile);
-            existing.setOrganization(organization);
+            existing.setOrganization(organization.isEmpty() ? college.getName() : organization);
             existing.setPassword(passwordEncoder.encode(password));
             existing.setRole(Role.USER);
+            existing.setCollege(college);
             existing.setStatus(UserStatus.ACTIVE);
             existing.setEmailVerified(true);
             existing.setDeleted(false);
@@ -124,8 +135,9 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setFullName(fullName);
         user.setMobileNumber(mobile);
-        user.setOrganization(organization);
+        user.setOrganization(organization.isEmpty() ? college.getName() : organization);
         user.setRole(Role.USER); // Force USER role
+        user.setCollege(college);
         user.setStatus(UserStatus.ACTIVE);
         user.setEmailVerified(true);
         user.setDeleted(false);
@@ -319,6 +331,14 @@ public class UserService {
             throw new org.springframework.security.access.AccessDeniedException("Unauthorized to perform bulk user creation.");
         }
 
+        com.academic.model.College bulkCollege = request.getCollegeId() != null
+                ? collegeRepository.findById(request.getCollegeId())
+                    .orElseThrow(() -> new java.util.NoSuchElementException("College not found: " + request.getCollegeId()))
+                : null;
+        if (isAdmin && actor.getCollege() == null) {
+            throw new IllegalStateException("Your account is not linked to a college.");
+        }
+
         List<com.academic.dto.BulkUserCreateRequest.UserCreateItemDto> items = request.getUsers();
         int total = items.size();
         int successCount = 0;
@@ -383,16 +403,30 @@ public class UserService {
                 targetRole = Role.USER;
             }
 
-            // Admin cannot create Super Admin or other Admins
-            if (isAdmin && (targetRole == Role.SUPER_ADMIN || targetRole == Role.ADMIN)) {
-                errorItems.add(new com.academic.dto.BulkUserCreateResponse.BulkUserErrorItem(rowNumber, email, "Admin cannot provision " + targetRole + " accounts"));
+            // College admins provision students of their own college only
+            if (isAdmin && targetRole != Role.USER) {
+                errorItems.add(new com.academic.dto.BulkUserCreateResponse.BulkUserErrorItem(rowNumber, email, "College administrators can only create student accounts"));
+                failedCount++;
+                continue;
+            }
+            if (targetRole == Role.SUPER_ADMIN) {
+                errorItems.add(new com.academic.dto.BulkUserCreateResponse.BulkUserErrorItem(rowNumber, email, "Super Admin accounts cannot be bulk-created"));
                 failedCount++;
                 continue;
             }
 
-            // Password validation & default fallback
-            if (rawPassword.length() < 6) {
-                rawPassword = "User12345!"; // Safe default password if missing/too short
+            if (rawPassword.length() < 8) {
+                errorItems.add(new com.academic.dto.BulkUserCreateResponse.BulkUserErrorItem(rowNumber, email, "Password must be at least 8 characters"));
+                failedCount++;
+                continue;
+            }
+
+            com.academic.model.College college = isAdmin ? actor.getCollege() : bulkCollege;
+            boolean needsCollege = targetRole == Role.USER || targetRole == Role.ADMIN;
+            if (needsCollege && college == null) {
+                errorItems.add(new com.academic.dto.BulkUserCreateResponse.BulkUserErrorItem(rowNumber, email, "Select a college for student and administrator accounts"));
+                failedCount++;
+                continue;
             }
 
             User user = new User();
@@ -405,6 +439,9 @@ public class UserService {
             user.setStatus(UserStatus.ACTIVE);
             user.setEmailVerified(true);
             user.setDeleted(false);
+            if (needsCollege) {
+                user.setCollege(college);
+            }
 
             validUsersToSave.add(user);
             processedEmailsInBatch.add(email);
@@ -427,5 +464,52 @@ public class UserService {
         response.setCreatedUsers(savedUsers);
         response.setErrors(errorItems);
         return response;
+    }
+
+    /**
+     * Role/college changes. Callers must already have verified the actor is a SUPER_ADMIN.
+     * ADMIN and USER accounts must belong to a college; SUPER_ADMIN and developers never do.
+     */
+    @Transactional
+    public User changeRoleAndCollege(User target, Role role, Long collegeId, String actorEmail) {
+        Role newRole = role != null ? role : target.getRole();
+        com.academic.model.College college = target.getCollege();
+        if (collegeId != null) {
+            college = collegeRepository.findById(collegeId)
+                    .orElseThrow(() -> new java.util.NoSuchElementException("College not found: " + collegeId));
+        }
+        if (newRole == Role.ADMIN || newRole == Role.USER) {
+            if (college == null) {
+                throw new IllegalArgumentException("College administrators and students must belong to a college.");
+            }
+            target.setCollege(college);
+        } else {
+            target.setCollege(null);
+        }
+        Role previous = target.getRole();
+        target.setRole(newRole);
+        User saved = userRepository.save(target);
+        if (previous != newRole || collegeId != null) {
+            auditLogService.log(actorEmail, "USER_ROLE_CHANGED", String.format("%s: %s -> %s%s", saved.getEmail(), previous, newRole,
+                    saved.getCollege() != null ? " (" + saved.getCollege().getName() + ")" : ""));
+        }
+        return saved;
+    }
+
+    public List<User> searchAll(String query, String statusStr, Role role) {
+        UserStatus status = parseStatus(statusStr);
+        String q = (query != null && !query.trim().isEmpty()) ? query.trim().toLowerCase() : null;
+        return userRepository.findAll().stream()
+                .filter(u -> !u.isDeleted())
+                .filter(u -> role == null || u.getRole() == role)
+                .filter(u -> status == null || u.getStatus() == status)
+                .filter(u -> q == null || u.getFullName().toLowerCase().contains(q) || u.getEmail().toLowerCase().contains(q))
+                .sorted(java.util.Comparator.comparing(User::getCreatedAt, java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder())))
+                .toList();
+    }
+
+    public List<User> searchCollegeStudents(Long collegeId, String query, String statusStr) {
+        String q = (query != null && !query.trim().isEmpty()) ? query.trim() : null;
+        return userRepository.searchByCollegeAndRole(collegeId, Role.USER, parseStatus(statusStr), q);
     }
 }

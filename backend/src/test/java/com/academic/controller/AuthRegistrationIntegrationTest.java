@@ -27,6 +27,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthRegistrationIntegrationTest {
 
     @Autowired
+    private com.academic.repository.CollegeRepository collegeRepository;
+
+    private Long collegeId;
+
+    @org.junit.jupiter.api.BeforeEach
+    void ensureCollege() {
+        com.academic.model.College college = collegeRepository.findByCodeIgnoreCase("REGTEST").orElseGet(() -> {
+            com.academic.model.College c = new com.academic.model.College();
+            c.setName("Registration Test College");
+            c.setCode("REGTEST");
+            return collegeRepository.save(c);
+        });
+        collegeId = college.getId();
+    }
+
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -41,6 +58,8 @@ class AuthRegistrationIntegrationTest {
         String email = "alice_student_" + System.currentTimeMillis() + "@academic.com";
 
         RegisterRequest request = new RegisterRequest();
+
+        request.setCollegeId(collegeId);
         request.setFullName("Alice Student");
         request.setEmail(email);
         request.setMobileNumber("9876543210");
@@ -80,6 +99,8 @@ class AuthRegistrationIntegrationTest {
         String email = "indian_user_" + System.currentTimeMillis() + "@academic.com";
 
         RegisterRequest request = new RegisterRequest();
+
+        request.setCollegeId(collegeId);
         request.setFullName("Rohan Sharma");
         request.setEmail(email);
         request.setMobileNumber("+91 9342666379");
@@ -103,6 +124,8 @@ class AuthRegistrationIntegrationTest {
         userRepository.save(activeUser);
 
         RegisterRequest request = new RegisterRequest();
+
+        request.setCollegeId(collegeId);
         request.setFullName("Duplicate Test");
         request.setEmail(activeEmail);
         request.setMobileNumber("9876543210");
@@ -121,6 +144,7 @@ class AuthRegistrationIntegrationTest {
     void testRegistrationValidationErrors() throws Exception {
         // Invalid mobile
         RegisterRequest invalidMobile = new RegisterRequest();
+        invalidMobile.setCollegeId(collegeId);
         invalidMobile.setFullName("Bob");
         invalidMobile.setEmail("bob_mob@academic.com");
         invalidMobile.setMobileNumber("12345"); // Invalid Indian mobile
@@ -135,6 +159,7 @@ class AuthRegistrationIntegrationTest {
 
         // Password mismatch
         RegisterRequest mismatch = new RegisterRequest();
+        mismatch.setCollegeId(collegeId);
         mismatch.setFullName("Bob");
         mismatch.setEmail("bob_mismatch@academic.com");
         mismatch.setMobileNumber("9876543210");
@@ -149,6 +174,7 @@ class AuthRegistrationIntegrationTest {
 
         // Short password
         RegisterRequest shortPass = new RegisterRequest();
+        shortPass.setCollegeId(collegeId);
         shortPass.setFullName("Bob");
         shortPass.setEmail("bob_short@academic.com");
         shortPass.setMobileNumber("9876543210");

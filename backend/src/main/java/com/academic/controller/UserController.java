@@ -2,16 +2,27 @@ package com.academic.controller;
 
 import com.academic.model.Role;
 import com.academic.model.User;
+import com.academic.model.UserStatus;
+import com.academic.service.AccessControlService;
 import com.academic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
+/**
+ * Account management.
+ * <ul>
+ *   <li>SUPER_ADMIN: every account; the only role that can grant roles.</li>
+ *   <li>ADMIN: student (USER) accounts of their own college only.</li>
+ *   <li>Everyone: their own profile (name, mobile, password) but never their own role or status.</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -19,182 +30,143 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Get current authenticated user helper
-    private User getAuthenticatedUser() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Authenticated user not found."));
-    }
+    @Autowired
+    private AccessControlService accessControlService;
 
     @GetMapping
-    public ResponseEntity<?> getUsers(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "status", required = false) String status) {
-        
-        User actor = getAuthenticatedUser();
-        
-        // Enforce RBAC: Regular Users cannot list users
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        List<User> users = userService.searchUsers(search, status);
-        return ResponseEntity.ok(users);
+    public List<User> getUsers(@RequestParam(value = "search", required = false) String search,
+                               @RequestParam(value = "status", required = false) String status,
+                               @RequestParam(value = "role", required = false) String role) {
+        User actor = accessControlService.getCurrentAuthenticatedUser();
+        return switch (actor.getRole()) {
+            case SUPER_ADMIN -> role == null || role.isBlank()
+                    ? userService.searchUsers(search, status)
+                    : userService.searchAll(search, status, Role.valueOf(role.trim().toUpperCase()));
+            case ADMIN -> userService.searchCollegeStudents(accessControlService.requireCollege(actor).getId(), search, status);
+            default -> throw new AccessDeniedException("Access denied.");
+        };
     }
 
     @GetMapping("/assignable")
-    public ResponseEntity<?> getAssignableUsers(@RequestParam(value = "role", required = false) String role) {
-        User actor = getAuthenticatedUser();
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        Role targetRole = null;
+    public List<User> getAssignableUsers(@RequestParam(value = "role", required = false) String role) {
+        User actor = accessControlService.getCurrentAuthenticatedUser();
         if (actor.getRole() == Role.ADMIN) {
-            targetRole = Role.USER; // Admins can only see and assign regular Users
-        } else if (role != null && !role.isBlank()) {
-            try {
-                targetRole = Role.valueOf(role.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                targetRole = Role.USER;
-            }
+            return userService.searchCollegeStudents(accessControlService.requireCollege(actor).getId(), null, "ACTIVE");
         }
-
-        List<User> users;
-        if (targetRole == Role.ADMIN) {
-            users = userService.getAdmins(null, "ACTIVE");
-        } else {
-            users = userService.getAssignableUsers();
+        if (actor.getRole() != Role.SUPER_ADMIN) {
+            throw new AccessDeniedException("Access denied.");
         }
-        return ResponseEntity.ok(users);
+        Role target = role != null && !role.isBlank() ? Role.valueOf(role.trim().toUpperCase()) : Role.USER;
+        return userService.searchAll(null, "ACTIVE", target);
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody Map<String, String> payload) {
-        User actor = getAuthenticatedUser();
+    public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
+        User actor = accessControlService.getCurrentAuthenticatedUser();
+        Role role = Role.valueOf(required(payload, "role").toUpperCase());
+        UserStatus status = payload.get("status") != null ? UserStatus.valueOf(payload.get("status").toUpperCase()) : UserStatus.ACTIVE;
+        Long collegeId = payload.get("collegeId") != null && !payload.get("collegeId").isBlank() ? Long.valueOf(payload.get("collegeId")) : null;
 
-        // Enforce RBAC: Regular Users cannot create accounts
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        try {
-            String email = payload.get("email");
-            String password = payload.get("password");
-            String fullName = payload.get("fullName");
-            String roleStr = payload.get("role");
-            String statusStr = payload.get("status");
-
-            Role role = Role.valueOf(roleStr.toUpperCase());
-            
-            // Enforce RBAC: Admin cannot create another Admin
-            if (actor.getRole() == Role.ADMIN && role == Role.ADMIN) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Administrators cannot register another Admin."));
+        switch (actor.getRole()) {
+            case SUPER_ADMIN -> {
+                if (role == Role.SUPER_ADMIN) {
+                    throw new AccessDeniedException("Additional Super Admin accounts must be created directly in the database by the platform owner.");
+                }
             }
-
-            User newUser = new User(email, password, fullName, role, 
-                    com.academic.model.UserStatus.valueOf(statusStr.toUpperCase()));
-
-            User savedUser = userService.createUser(newUser, actor.getEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            case ADMIN -> {
+                if (role != Role.USER) {
+                    throw new AccessDeniedException("College administrators can only create student accounts.");
+                }
+                collegeId = accessControlService.requireCollege(actor).getId();
+            }
+            default -> throw new AccessDeniedException("Access denied.");
         }
+
+        String password = required(payload, "password");
+        if (password.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
+        }
+        User newUser = new User(required(payload, "email").trim().toLowerCase(), password, required(payload, "fullName").trim(), role, status);
+        newUser.setMobileNumber(payload.get("mobileNumber"));
+        User saved = userService.createUser(newUser, actor.getEmail());
+        if (role == Role.USER || role == Role.ADMIN) {
+            saved = userService.changeRoleAndCollege(saved, role, collegeId, actor.getEmail());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(
-            @PathVariable("id") Long id,
-            @RequestBody Map<String, String> payload) {
-        
-        User actor = getAuthenticatedUser();
-        User target = userService.findById(id)
-                .orElseThrow(() -> new RuntimeException("User profile not found."));
+    public User updateUser(@PathVariable("id") Long id, @RequestBody Map<String, String> payload) {
+        User actor = accessControlService.getCurrentAuthenticatedUser();
+        User target = userService.findById(id).orElseThrow(() -> new NoSuchElementException("User profile not found."));
+        boolean self = actor.getId().equals(id);
 
-        // Enforce RBAC: Regular Users can only modify their own profile
-        if (actor.getRole() == Role.USER) {
-            if (!actor.getId().equals(id)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-            }
-            // Users cannot escalate their own role or status
-            payload.remove("role");
-            payload.remove("status");
+        if (!self) {
+            accessControlService.assertCanManageUser(actor, target);
         }
 
-        // Enforce RBAC: Admin cannot modify Admin or Super Admin accounts
-        if (actor.getRole() == Role.ADMIN) {
-            if (target.getRole() == Role.ADMIN || target.getRole() == Role.SUPER_ADMIN) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Administrators are unauthorized to modify other Admins."));
-            }
-            // Admin cannot escalate a User to Admin
-            if (payload.containsKey("role") && Role.valueOf(payload.get("role").toUpperCase()) == Role.ADMIN) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("message", "Only Super Administrators can designate Admin roles."));
-            }
+        User updateData = new User();
+        if (payload.containsKey("fullName")) updateData.setFullName(payload.get("fullName"));
+        if (payload.containsKey("mobileNumber")) updateData.setMobileNumber(payload.get("mobileNumber"));
+        if (payload.containsKey("organization")) updateData.setOrganization(payload.get("organization"));
+        if (payload.containsKey("email") && actor.getRole() != Role.USER) updateData.setEmail(payload.get("email"));
+        if (payload.containsKey("status") && !self) updateData.setStatus(UserStatus.valueOf(payload.get("status").toUpperCase()));
+
+        String newPassword = payload.get("password");
+        if (newPassword != null && !newPassword.isBlank() && newPassword.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
         }
 
-        try {
-            User updateData = new User();
-            if (payload.containsKey("fullName")) updateData.setFullName(payload.get("fullName"));
-            if (payload.containsKey("email")) updateData.setEmail(payload.get("email"));
-            if (payload.containsKey("role")) updateData.setRole(Role.valueOf(payload.get("role").toUpperCase()));
-            if (payload.containsKey("status")) updateData.setStatus(com.academic.model.UserStatus.valueOf(payload.get("status").toUpperCase()));
+        User saved = userService.updateUser(id, updateData, newPassword, actor.getEmail());
 
-            String newPassword = payload.get("password");
-
-            User updatedUser = userService.updateUser(id, updateData, newPassword, actor.getEmail());
-            return ResponseEntity.ok(updatedUser);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        boolean roleChange = payload.containsKey("role") && payload.get("role") != null && !payload.get("role").isBlank()
+                && Role.valueOf(payload.get("role").toUpperCase()) != target.getRole();
+        boolean collegeChange = payload.containsKey("collegeId") && payload.get("collegeId") != null && !payload.get("collegeId").isBlank();
+        if (roleChange || collegeChange) {
+            if (actor.getRole() != Role.SUPER_ADMIN) {
+                throw new AccessDeniedException("Only the Super Admin can change roles or college membership.");
+            }
+            if (self) {
+                throw new AccessDeniedException("You cannot change your own role.");
+            }
+            Role newRole = roleChange ? Role.valueOf(payload.get("role").toUpperCase()) : null;
+            if (newRole == Role.SUPER_ADMIN) {
+                throw new AccessDeniedException("Super Admin cannot be granted through the API.");
+            }
+            saved = userService.changeRoleAndCollege(saved, newRole, collegeChange ? Long.valueOf(payload.get("collegeId")) : null, actor.getEmail());
         }
+        return saved;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        User actor = getAuthenticatedUser();
-        User target = userService.findById(id)
-                .orElseThrow(() -> new RuntimeException("User profile not found."));
-
-        // Enforce RBAC: Regular Users cannot delete accounts
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied."));
-        }
-
-        // Enforce RBAC: Admin cannot delete other Admin or Super Admin accounts
-        if (actor.getRole() == Role.ADMIN && (target.getRole() == Role.ADMIN || target.getRole() == Role.SUPER_ADMIN)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message", "Administrators are unauthorized to delete other Admin profiles."));
-        }
-
-        // Enforce RBAC: Cannot delete self
+    public Map<String, String> deleteUser(@PathVariable("id") Long id) {
+        User actor = accessControlService.getCurrentAuthenticatedUser();
+        User target = userService.findById(id).orElseThrow(() -> new NoSuchElementException("User profile not found."));
         if (actor.getId().equals(id)) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Self-deletion is prohibited."));
+            throw new IllegalArgumentException("Self-deletion is prohibited.");
         }
-
-        try {
-            userService.deleteUser(id, actor.getEmail());
-            return ResponseEntity.ok(Map.of("message", "User account soft deleted successfully."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        accessControlService.assertCanManageUser(actor, target);
+        if (target.getRole() == Role.SUPER_ADMIN) {
+            throw new AccessDeniedException("Super Admin accounts cannot be deleted through the API.");
         }
+        userService.deleteUser(id, actor.getEmail());
+        return Map.of("message", "User account soft deleted successfully.");
     }
 
     @PostMapping("/bulk")
     public ResponseEntity<?> bulkCreateUsers(@RequestBody com.academic.dto.BulkUserCreateRequest payload) {
-        User actor = getAuthenticatedUser();
-
-        // Enforce RBAC: Regular Users cannot create accounts in bulk
-        if (actor.getRole() == Role.USER) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "Access denied. Only Admins and Super Admins can bulk create users."));
+        User actor = accessControlService.getCurrentAuthenticatedUser();
+        if (actor.getRole() != Role.SUPER_ADMIN && actor.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Access denied. Only administrators can bulk create users.");
         }
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.bulkCreateUsers(payload, actor));
+    }
 
-        try {
-            com.academic.dto.BulkUserCreateResponse response = userService.bulkCreateUsers(payload, actor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    private static String required(Map<String, String> payload, String key) {
+        String v = payload.get(key);
+        if (v == null || v.isBlank()) {
+            throw new IllegalArgumentException(key + " is required.");
         }
+        return v;
     }
 }

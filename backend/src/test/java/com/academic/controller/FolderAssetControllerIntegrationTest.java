@@ -51,6 +51,9 @@ class FolderAssetControllerIntegrationTest {
     @MockBean
     private AssetService assetService;
 
+    @MockBean
+    private com.academic.service.AuditLogService auditLogService;
+
     @Test
     @WithMockUser(username = "admin@academic.com", roles = {"ADMIN"})
     @DisplayName("Authenticated Admin can list folders via GET /api/projects/{id}/folders")

@@ -26,4 +26,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsByOrderNumber(String orderNumber);
 
     boolean existsByInvoiceNumber(String invoiceNumber);
+
+    List<Order> findAllByOrderByCreatedAtDesc();
+
+    List<Order> findByCollegeIdOrderByCreatedAtDesc(Long collegeId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT COALESCE(SUM(o.amount), 0) FROM Order o WHERE o.paymentStatus = com.academic.model.PaymentStatus.COMPLETED " +
+           "AND (:collegeId IS NULL OR o.collegeId = :collegeId) AND (:simulated IS NULL OR o.simulatedPayment = :simulated)")
+    Double sumCompletedRevenue(@org.springframework.data.repository.query.Param("collegeId") Long collegeId,
+                               @org.springframework.data.repository.query.Param("simulated") Boolean simulated);
+
+    long countByCollegeId(Long collegeId);
 }

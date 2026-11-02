@@ -258,7 +258,7 @@ public class AdminAccessControlService {
     }
 
     private void enforceSuperAdmin(User caller) {
-        if (caller == null || (caller.getRole() != Role.SUPER_ADMIN && !"superadmin@academic.com".equalsIgnoreCase(caller.getEmail()))) {
+        if (caller == null || (caller.getRole() != Role.SUPER_ADMIN)) {
             throw new AccessDeniedException("Forbidden: Only SUPER_ADMIN is authorized to manage Admin permissions and assignments.");
         }
     }

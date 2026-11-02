@@ -60,6 +60,20 @@ public class Requirement {
     @Column(name = "super_admin_notes", columnDefinition = "TEXT")
     private String superAdminNotes;
 
+    /** College of the requesting student, captured at creation for college-scoped queries. */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "college_id")
+    private College college;
+
+    @Column(name = "college_admin_notes", columnDefinition = "TEXT")
+    private String collegeAdminNotes;
+
+    @Column(name = "forwarded_by", length = 150)
+    private String forwardedBy;
+
+    @Column(name = "forwarded_at")
+    private LocalDateTime forwardedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -243,5 +257,37 @@ public class Requirement {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public College getCollege() {
+        return college;
+    }
+
+    public void setCollege(College college) {
+        this.college = college;
+    }
+
+    public String getCollegeAdminNotes() {
+        return collegeAdminNotes;
+    }
+
+    public void setCollegeAdminNotes(String collegeAdminNotes) {
+        this.collegeAdminNotes = collegeAdminNotes;
+    }
+
+    public String getForwardedBy() {
+        return forwardedBy;
+    }
+
+    public void setForwardedBy(String forwardedBy) {
+        this.forwardedBy = forwardedBy;
+    }
+
+    public LocalDateTime getForwardedAt() {
+        return forwardedAt;
+    }
+
+    public void setForwardedAt(LocalDateTime forwardedAt) {
+        this.forwardedAt = forwardedAt;
     }
 }

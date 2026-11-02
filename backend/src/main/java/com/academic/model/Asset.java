@@ -52,6 +52,14 @@ public class Asset {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private AssetCategory category = AssetCategory.OTHER;
+
+    /** Preview assets (screenshots, abstract, demo video) are visible before purchase. */
+    @Column(nullable = false)
+    private boolean previewable = false;
+
     @Column(name = "uploaded_by", nullable = false)
     private String uploadedBy;
 
@@ -225,5 +233,21 @@ public class Asset {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public AssetCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(AssetCategory category) {
+        this.category = category;
+    }
+
+    public boolean isPreviewable() {
+        return previewable;
+    }
+
+    public void setPreviewable(boolean previewable) {
+        this.previewable = previewable;
     }
 }

@@ -34,4 +34,18 @@ public interface RequirementRepository extends JpaRepository<Requirement, Long> 
            "AND (:query IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(r.problemStatement) LIKE LOWER(CONCAT('%', :query, '%')))")
     List<Requirement> searchAllRequirements(@Param("status") RequirementStatus status,
                                             @Param("query") String query);
+
+    @Query("SELECT r FROM Requirement r WHERE r.college.id = :collegeId " +
+           "AND (:status IS NULL OR r.status = :status) " +
+           "AND (:query IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+           "ORDER BY r.createdAt DESC")
+    List<Requirement> searchCollegeRequirements(@Param("collegeId") Long collegeId,
+                                                @Param("status") RequirementStatus status,
+                                                @Param("query") String query);
+
+    @Query("SELECT COUNT(r) FROM Requirement r WHERE r.college.id = :collegeId AND r.status = :status")
+    long countByCollegeAndStatus(@Param("collegeId") Long collegeId, @Param("status") RequirementStatus status);
+
+    @Query("SELECT COUNT(r) FROM Requirement r WHERE r.college.id = :collegeId")
+    long countByCollege(@Param("collegeId") Long collegeId);
 }

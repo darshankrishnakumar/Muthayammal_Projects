@@ -1,18 +1,40 @@
 package com.academic.service;
 
-import com.academic.dto.CatalogItemDto;
-import com.academic.dto.CheckoutRequest;
 import com.academic.model.*;
+import com.academic.repository.CollegeProjectAllocationRepository;
 import com.academic.repository.OrderRepository;
+import com.academic.repository.PaymentTransactionRepository;
+import com.academic.repository.ProjectRepository;
+import com.academic.repository.RequirementRepository;
+import com.academic.repository.UserRepository;
+import com.academic.service.payment.PaymentGateway;
+import com.academic.service.payment.PaymentResult;
+import com.academic.service.payment.PaymentUnavailableException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Orders and payments.
+ *
+ * Rules enforced here (never in the browser):
+ * <ul>
+ *   <li>The amount is always computed on the server from the allocation, requirement or project.</li>
+ *   <li>The buyer must own the requirement / project, or belong to a college the library project is allocated to.</li>
+ *   <li>The requirement or project must be in the state that expects the payment.</li>
+ *   <li>Access is granted only after the payment gateway reports success; every attempt is
+ *       stored as a {@link PaymentTransaction}.</li>
+ *   <li>Idempotency keys are scoped to the paying user.</li>
+ * </ul>
+ */
 @Service
 public class OrderService {
 
@@ -22,157 +44,47 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
+    private PaymentTransactionRepository transactionRepository;
+
+    @Autowired
+    private RequirementRepository requirementRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private CollegeProjectAllocationRepository allocationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EntitlementService entitlementService;
+
+    @Autowired
+    private AccessControlService accessControlService;
+
+    @Autowired
+    private StatusHistoryService statusHistoryService;
+
+    @Autowired
     private AuditLogService auditLogService;
 
-    public List<CatalogItemDto> getCatalog() {
-        List<CatalogItemDto> items = new ArrayList<>();
+    @Autowired
+    private NotificationService notificationService;
 
-        items.add(new CatalogItemDto(
-                "CAT-REQ-101",
-                "Automated Academic Evaluation Portal Package",
-                "Academic Requirements",
-                ItemType.REQUIREMENT,
-                "Complete IEEE standard requirement specification, architecture diagrams, and test matrix for student grading platforms.",
-                149.00,
-                "Java, Spring Boot 3, React 18, MySQL",
-                "Instant PDF Specs + Markdown + Data Schemas",
-                "Best Seller",
-                4.9,
-                38
-        ));
+    @Autowired
+    private List<PaymentGateway> gateways;
 
-        items.add(new CatalogItemDto(
-                "CAT-DS-202",
-                "Multi-Tenant Research Dataset & Citation Index",
-                "Datasets",
-                ItemType.DATASET,
-                "Curated 50,000+ academic citation graph with schema definitions, vector embeddings, and indexing scripts.",
-                89.00,
-                "Python, PostgreSQL, ElasticSearch",
-                "JSONL Data Dump + SQL Schema + Python Loader",
-                "Verified",
-                4.8,
-                24
-        ));
+    @Value("${academic.payments.provider:simulated}")
+    private String providerName;
 
-        items.add(new CatalogItemDto(
-                "CAT-MOD-303",
-                "Zero-Delay DRM Watermark Security Module",
-                "Premium Modules",
-                ItemType.MODULE,
-                "High-performance frontend DRM snapshot shutter with forensic diagonal canvas watermark curtain.",
-                199.00,
-                "React, HTML5 Canvas, Web Audio API",
-                "NPM Drop-in Module + Integration Guide",
-                "Security Standard",
-                5.0,
-                52
-        ));
+    @Value("${academic.payments.currency:INR}")
+    private String currency;
 
-        items.add(new CatalogItemDto(
-                "CAT-SRV-404",
-                "Comprehensive Code Security Audit & Compliance Review",
-                "Research Services",
-                ItemType.SERVICE,
-                "End-to-end automated penetration test, static code analysis (SAST), and OWASP Top 10 vulnerability remediation report.",
-                299.00,
-                "SonarQube, OWASP ZAP, JUnit 5",
-                "Signed Audit Certificate + PDF Executive Summary",
-                "Enterprise",
-                4.9,
-                19
-        ));
-
-        items.add(new CatalogItemDto(
-                "CAT-REQ-505",
-                "Campus Resource Scheduling Engine Blueprint",
-                "Academic Requirements",
-                ItemType.REQUIREMENT,
-                "Microservice architectural design and scheduling algorithm blueprints for university lab & classroom allocation.",
-                129.00,
-                "Node.js, Redis, Docker, RabbitMQ",
-                "Architecture Diagrams + API Specs",
-                "Popular",
-                4.7,
-                29
-        ));
-
-        items.add(new CatalogItemDto(
-                "CAT-DS-606",
-                "IoT Weather Telemetry & Sensor Analytics Dataset",
-                "Datasets",
-                ItemType.DATASET,
-                "Real-time sensor telemetry stream dataset covering 12 meteorological variables with time-series benchmarks.",
-                79.00,
-                "InfluxDB, MQTT, Python",
-                "Parquet Timeseries + InfluxDB DDL",
-                "New",
-                4.8,
-                14
-        ));
-
-        return items;
-    }
-
-    @Transactional
-    public Order processCheckout(CheckoutRequest req, User actor) {
-        if (actor == null) {
-            throw new IllegalArgumentException("Authenticated user required for purchase.");
-        }
-        if (req.getItemName() == null || req.getItemName().isBlank()) {
-            throw new IllegalArgumentException("Item name is required for purchase.");
-        }
-        if (req.getAmount() == null || req.getAmount() <= 0) {
-            throw new IllegalArgumentException("Invalid order amount.");
-        }
-        if (req.getPaymentMethod() == null) {
-            req.setPaymentMethod(PaymentMethod.CARD);
-        }
-        if (req.getItemType() == null) {
-            req.setItemType(ItemType.REQUIREMENT);
-        }
-
-        String orderNumber = generateUniqueOrderNumber();
-        String invoiceNumber = generateUniqueInvoiceNumber();
-
-        // Simulate instant mock payment gateway clearance
-        PaymentStatus paymentStatus = PaymentStatus.COMPLETED;
-        OrderStatus orderStatus = OrderStatus.COMPLETED;
-
-        String licenseKey = "LIC-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase() + "-" +
-                            UUID.randomUUID().toString().substring(0, 4).toUpperCase();
-        String fulfillment = "{"
-                + "\"licenseKey\":\"" + licenseKey + "\","
-                + "\"accessGrantedAt\":\"" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "\","
-                + "\"downloadPermitted\":true,"
-                + "\"resourceToken\":\"tok_" + UUID.randomUUID().toString().replace("-", "") + "\""
-                + "}";
-
-        Order order = new Order(
-                orderNumber,
-                invoiceNumber,
-                actor,
-                req.getItemName().trim(),
-                req.getItemType(),
-                req.getItemDescription() != null ? req.getItemDescription().trim() : "Purchased from Academic Store Catalog",
-                req.getAmount(),
-                req.getPaymentMethod(),
-                paymentStatus,
-                orderStatus,
-                fulfillment
-        );
-
-        Order saved = orderRepository.save(order);
-
-        auditLogService.log(
-                actor.getEmail(),
-                "PURCHASE_CHECKOUT",
-                String.format("User purchased '%s' (Order: %s, Invoice: %s, Amount: $%.2f via %s)",
-                        saved.getItemName(), saved.getOrderNumber(), saved.getInvoiceNumber(), saved.getAmount(), saved.getPaymentMethod())
-        );
-
-        return saved;
-    }
+    // ------------------------------------------------------------------
+    // Queries
+    // ------------------------------------------------------------------
 
     public List<Order> getUserOrders(User user) {
         if (user == null) {
@@ -181,18 +93,39 @@ public class OrderService {
         return orderRepository.findByUserOrderByCreatedAtDesc(user);
     }
 
+    /** Orders visible to the actor: own (USER), own college (ADMIN), all (SUPER_ADMIN). */
+    public List<Order> getOrdersForActor(User actor) {
+        switch (actor.getRole()) {
+            case SUPER_ADMIN:
+                return orderRepository.findAllByOrderByCreatedAtDesc();
+            case ADMIN:
+                return actor.getCollege() == null ? Collections.emptyList()
+                        : orderRepository.findByCollegeIdOrderByCreatedAtDesc(actor.getCollege().getId());
+            case USER:
+                return getUserOrders(actor);
+            default:
+                return Collections.emptyList();
+        }
+    }
+
+    public List<PaymentTransaction> getTransactions(Long orderId, User actor) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + orderId));
+        assertCanViewOrder(order, actor);
+        return transactionRepository.findByOrderIdOrderByCreatedAtDesc(orderId);
+    }
+
     public Map<String, Object> getInvoice(Long orderId, User actor) {
         if (orderId == null) {
             throw new IllegalArgumentException("Order ID is required.");
         }
 
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+                .orElseThrow(() -> new NoSuchElementException("Order not found with id: " + orderId));
+        assertCanViewOrder(order, actor);
 
-        // Strict RBAC & IDOR check: Users can only see their own invoices
-        if (actor.getRole() == Role.USER && !order.getUser().getId().equals(actor.getId())) {
-            throw new SecurityException("Access Denied: You cannot view invoices belonging to other users.");
-        }
+        List<PaymentTransaction> transactions = transactionRepository.findByOrderIdOrderByCreatedAtDesc(orderId);
+        PaymentTransaction latest = transactions.isEmpty() ? null : transactions.get(0);
 
         Map<String, Object> invoice = new HashMap<>();
         invoice.put("invoiceNumber", order.getInvoiceNumber());
@@ -200,240 +133,353 @@ public class OrderService {
         invoice.put("createdAt", order.getCreatedAt());
         invoice.put("customerName", order.getUser().getFullName());
         invoice.put("customerEmail", order.getUser().getEmail());
-        invoice.put("organization", order.getUser().getOrganization() != null ? order.getUser().getOrganization() : "Academic Independent");
+        invoice.put("organization", order.getUser().getCollege() != null ? order.getUser().getCollege().getName()
+                : (order.getUser().getOrganization() != null ? order.getUser().getOrganization() : "—"));
         invoice.put("mobileNumber", order.getUser().getMobileNumber() != null ? order.getUser().getMobileNumber() : "N/A");
 
         invoice.put("itemName", order.getItemName());
         invoice.put("itemType", order.getItemType().name());
         invoice.put("itemDescription", order.getItemDescription());
+        invoice.put("paymentType", order.getPaymentType());
         invoice.put("paymentMethod", order.getPaymentMethod().name());
         invoice.put("paymentStatus", order.getPaymentStatus().name());
         invoice.put("orderStatus", order.getStatus().name());
+        invoice.put("simulatedPayment", order.isSimulatedPayment());
+        invoice.put("transactionReference", latest != null ? latest.getProviderReference() : null);
+        invoice.put("paymentProvider", latest != null ? latest.getProvider() : null);
+        invoice.put("verifiedAt", latest != null ? latest.getVerifiedAt() : null);
 
         double subtotal = order.getAmount();
-        double tax = 0.00; // Academic tax exempt or transparent breakdown
-        double total = subtotal + tax;
-
         invoice.put("subtotal", subtotal);
-        invoice.put("tax", tax);
-        invoice.put("total", total);
-        invoice.put("currency", "USD");
+        invoice.put("tax", 0.0);
+        invoice.put("total", subtotal);
+        invoice.put("currency", order.getCurrency() != null ? order.getCurrency() : currency);
         invoice.put("fulfillmentDetails", order.getFulfillmentDetails());
-        invoice.put("qrVerificationPayload", String.format("VERIFY:INV=%s:ORD=%s:USER=%s:AMT=%.2f",
-                order.getInvoiceNumber(), order.getOrderNumber(), order.getUser().getEmail(), total));
-
         return invoice;
     }
 
-    @Autowired
-    private com.academic.repository.RequirementRepository requirementRepository;
+    // ------------------------------------------------------------------
+    // Library purchases
+    // ------------------------------------------------------------------
 
-    @Autowired
-    private com.academic.repository.ProjectRepository projectRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    /**
-     * Idempotent advance payment for custom requirements.
-     */
     @Transactional
-    public Order processRequirementAdvancePayment(Long requirementId, Double amount, String idempotencyKey, User actor) {
-        if (actor == null) throw new IllegalArgumentException("Authenticated user required.");
-        if (requirementId == null) throw new IllegalArgumentException("Requirement ID is required.");
+    public Order purchaseLibraryProject(Long projectId, String idempotencyKey, User actor) {
+        requireActor(actor);
+        if (actor.getRole() != Role.USER) {
+            throw new AccessDeniedException("Only student accounts can purchase projects.");
+        }
+        Optional<Order> replay = findReplay(idempotencyKey, actor);
+        if (replay.isPresent()) {
+            return replay.get();
+        }
 
-        // Idempotency guard: Return existing completed order if already processed
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            var existing = orderRepository.findByIdempotencyKey(idempotencyKey.trim());
-            if (existing.isPresent()) {
-                return existing.get();
-            }
+        College college = accessControlService.requireCollege(actor);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("Project not found: " + projectId));
+        if (!project.isLibrary() || project.getCatalogStatus() != CatalogStatus.PUBLISHED) {
+            throw new IllegalStateException("This project is not available for purchase.");
+        }
+        CollegeProjectAllocation allocation = allocationRepository.findActive(college.getId(), projectId)
+                .orElseThrow(() -> new AccessDeniedException("This project is not offered to your college."));
+        if (entitlementService.hasAccess(actor.getId(), projectId)) {
+            throw new IllegalStateException("You already have access to this project.");
+        }
+
+        BigDecimal amount = normalize(allocation.getEffectivePrice());
+        Order order = newOrder(actor, "Library project: " + project.getProjectName(), ItemType.PROJECT,
+                "Purchase of library project " + project.getProjectCode() + " for " + college.getName(),
+                amount, "FULL", idempotencyKey);
+        order.setProjectId(project.getId());
+        order = orderRepository.save(order);
+
+        settle(order, amount, actor);
+
+        entitlementService.grant(actor, project, EntitlementSource.PURCHASE, order.getId(), actor.getEmail());
+        order.setFulfillmentDetails("{\"accessGranted\":true,\"projectId\":" + project.getId() + "}");
+        order = orderRepository.save(order);
+
+        auditLogService.log(actor.getEmail(), "MARKETPLACE_PURCHASE_COMPLETED",
+                String.format("Purchased library project %s for %s %s (order %s)", project.getProjectCode(),
+                        order.getCurrency(), amount.toPlainString(), order.getOrderNumber()));
+        notificationService.sendNotification(actor.getEmail(), "USER",
+                "Purchase confirmed",
+                "You now have full access to '" + project.getProjectName() + "'.",
+                "/projects/" + project.getId());
+        return order;
+    }
+
+    // ------------------------------------------------------------------
+    // Custom development payments
+    // ------------------------------------------------------------------
+
+    @Transactional
+    public Order processRequirementAdvancePayment(Long requirementId, String idempotencyKey, User actor) {
+        requireActor(actor);
+        Optional<Order> replay = findReplay(idempotencyKey, actor);
+        if (replay.isPresent()) {
+            return replay.get();
         }
 
         Requirement req = requirementRepository.findById(requirementId)
                 .orElseThrow(() -> new NoSuchElementException("Requirement not found: " + requirementId));
-
-        if (!req.getUser().getId().equals(actor.getId()) && actor.getRole() != Role.SUPER_ADMIN) {
-            throw new SecurityException("Forbidden: You can only pay advance for your own requirement.");
+        if (req.getUser() == null || !req.getUser().getId().equals(actor.getId())) {
+            throw new AccessDeniedException("You can only pay the advance for your own requirement.");
+        }
+        if (req.getStatus() != RequirementStatus.ADVANCE_PAYMENT_PENDING) {
+            throw new IllegalStateException("This requirement is not awaiting an advance payment (status: " + req.getStatus() + ").");
+        }
+        BigDecimal amount = normalize(req.getAdvanceAmount());
+        if (amount.signum() <= 0) {
+            throw new IllegalStateException("No advance amount has been quoted for this requirement yet.");
         }
 
-        double payAmount = amount != null && amount > 0 ? amount : 
-                (req.getAdvanceAmount() != null ? req.getAdvanceAmount().doubleValue() : 200.00);
-
-        String orderNumber = generateUniqueOrderNumber();
-        String invoiceNumber = generateUniqueInvoiceNumber();
-
-        Order order = new Order(
-                orderNumber,
-                invoiceNumber,
-                actor,
-                "Advance Payment: " + req.getTitle(),
-                ItemType.REQUIREMENT,
-                "Advance project initiation payment for Requirement #" + req.getId(),
-                payAmount,
-                PaymentMethod.CARD,
-                PaymentStatus.COMPLETED,
-                OrderStatus.COMPLETED,
-                "{\"paymentType\":\"ADVANCE\",\"requirementId\":" + req.getId() + ",\"verified\":true}"
-        );
+        Order order = newOrder(actor, "Advance payment: " + req.getTitle(), ItemType.REQUIREMENT,
+                "Advance payment for custom development requirement #" + req.getId(), amount, "ADVANCE", idempotencyKey);
         order.setRequirementId(req.getId());
-        order.setPaymentType("ADVANCE");
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            order.setIdempotencyKey(idempotencyKey.trim());
-        }
+        order = orderRepository.save(order);
 
-        Order saved = orderRepository.save(order);
+        settle(order, amount, actor);
 
-        // Update requirement state
+        RequirementStatus previous = req.getStatus();
         req.setAdvancePaymentStatus("COMPLETED");
         req.setStatus(RequirementStatus.ADVANCE_PAYMENT_COMPLETED);
-        req.setAdvanceAmount(java.math.BigDecimal.valueOf(payAmount));
-        if (req.getBudget() != null && req.getBudget().doubleValue() > payAmount) {
-            req.setRemainingAmount(req.getBudget().subtract(java.math.BigDecimal.valueOf(payAmount)));
-        }
         requirementRepository.save(req);
+        statusHistoryService.record(StatusHistoryService.REQUIREMENT, req.getId(), previous, req.getStatus(), actor.getEmail(),
+                "Advance payment verified (order " + order.getOrderNumber() + ")");
 
         auditLogService.log(actor.getEmail(), "ADVANCE_PAYMENT_COMPLETED",
-                String.format("Advance payment of $%.2f received for Requirement #%d (%s)", payAmount, req.getId(), req.getTitle()));
-
-        notificationService.sendNotification(actor.getEmail(), "USER",
-                "Advance Payment Received",
-                "Your advance payment for '" + req.getTitle() + "' has been verified. Your requirement is now in Super Admin review.",
-                "/requirements");
-
-        return saved;
+                String.format("Advance of %s %s verified for requirement #%d (%s)", order.getCurrency(), amount.toPlainString(), req.getId(), req.getTitle()));
+        notifySuperAdmins("Advance payment received",
+                "Advance paid for '" + req.getTitle() + "'. The requirement is ready for developer assignment.",
+                "/requirements/" + req.getId());
+        notificationService.sendNotification(actor.getEmail(), "USER", "Advance payment received",
+                "Your advance payment for '" + req.getTitle() + "' was verified. A developer will be assigned shortly.",
+                "/requirements/" + req.getId());
+        return order;
     }
 
-    /**
-     * Idempotent remaining payment for completing and unlocking projects.
-     */
     @Transactional
-    public Order processProjectRemainingPayment(Long projectId, Double amount, String idempotencyKey, User actor) {
-        if (actor == null) throw new IllegalArgumentException("Authenticated user required.");
-        if (projectId == null) throw new IllegalArgumentException("Project ID is required.");
-
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            var existing = orderRepository.findByIdempotencyKey(idempotencyKey.trim());
-            if (existing.isPresent()) {
-                return existing.get();
-            }
+    public Order processProjectRemainingPayment(Long projectId, String idempotencyKey, User actor) {
+        requireActor(actor);
+        Optional<Order> replay = findReplay(idempotencyKey, actor);
+        if (replay.isPresent()) {
+            return replay.get();
         }
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found: " + projectId));
-
-        double payAmount = amount != null && amount > 0 ? amount : 
-                (project.getRemainingAmount() != null ? project.getRemainingAmount().doubleValue() : 300.00);
-
-        String orderNumber = generateUniqueOrderNumber();
-        String invoiceNumber = generateUniqueInvoiceNumber();
-
-        Order order = new Order(
-                orderNumber,
-                invoiceNumber,
-                actor,
-                "Final Balance: " + project.getProjectName(),
-                ItemType.MODULE,
-                "Remaining balance payment to unlock full deliverables for Project " + project.getProjectCode(),
-                payAmount,
-                PaymentMethod.CARD,
-                PaymentStatus.COMPLETED,
-                OrderStatus.COMPLETED,
-                "{\"paymentType\":\"REMAINING\",\"projectId\":" + project.getId() + ",\"accessGranted\":true}"
-        );
-        order.setProjectId(project.getId());
-        order.setPaymentType("REMAINING");
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            order.setIdempotencyKey(idempotencyKey.trim());
+        if (project.isLibrary()) {
+            throw new IllegalStateException("Library projects are purchased from the marketplace.");
+        }
+        if (!accessControlService.isRequesterOf(project, actor)) {
+            throw new AccessDeniedException("You can only pay for a project you requested.");
+        }
+        if (project.getLifecycleStatus() != ProjectStatus.READY_FOR_FINAL_PAYMENT) {
+            throw new IllegalStateException("This project is not awaiting final payment (status: " + project.getLifecycleStatus() + ").");
+        }
+        BigDecimal amount = normalize(project.getRemainingAmount());
+        if (amount.signum() <= 0) {
+            throw new IllegalStateException("No balance is due for this project.");
         }
 
-        Order saved = orderRepository.save(order);
+        Order order = newOrder(actor, "Final payment: " + project.getProjectName(), ItemType.PROJECT,
+                "Final balance to unlock deliverables for project " + project.getProjectCode(), amount, "REMAINING", idempotencyKey);
+        order.setProjectId(project.getId());
+        order.setRequirementId(project.getLinkedRequirementId());
+        order = orderRepository.save(order);
 
-        // Unlock Project Access
-        project.setRemainingPaymentStatus("COMPLETED");
-        project.setStatus(ProjectStatus.ACCESS_GRANTED);
-        project.setLifecycleStatus(ProjectStatus.ACCESS_GRANTED);
-        project.setPurchasedByUserId(actor.getId());
-        projectRepository.save(project);
-
-        auditLogService.log(actor.getEmail(), "FINAL_PAYMENT_COMPLETED",
-                String.format("Final payment of $%.2f received. Project %s (%s) access unlocked.", payAmount, project.getProjectCode(), project.getProjectName()));
-
-        notificationService.sendNotification(actor.getEmail(), "USER",
-                "Project Deliverables Unlocked",
-                "Final payment confirmed! Full access and protected deliverables for '" + project.getProjectName() + "' are now unlocked.",
-                "/projects/" + project.getId());
-
-        return saved;
+        settle(order, amount, actor);
+        completeCustomDelivery(project, actor, order.getId(), "Final payment verified (order " + order.getOrderNumber() + ")");
+        return order;
     }
 
     /**
-     * Idempotent direct purchase of existing Marketplace project.
+     * Unlocks a delivered custom project for its requester. Called after verified final payment,
+     * or directly when no balance is due.
      */
     @Transactional
-    public Order processMarketplacePurchase(Long projectId, String idempotencyKey, User actor) {
-        if (actor == null) throw new IllegalArgumentException("Authenticated user required.");
-        if (projectId == null) throw new IllegalArgumentException("Project ID is required.");
-
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            var existing = orderRepository.findByIdempotencyKey(idempotencyKey.trim());
-            if (existing.isPresent()) {
-                return existing.get();
-            }
-        }
-
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NoSuchElementException("Marketplace project not found: " + projectId));
-
-        double payAmount = project.getBudget() != null ? project.getBudget().doubleValue() : 199.00;
-
-        String orderNumber = generateUniqueOrderNumber();
-        String invoiceNumber = generateUniqueInvoiceNumber();
-
-        Order order = new Order(
-                orderNumber,
-                invoiceNumber,
-                actor,
-                "Marketplace: " + project.getProjectName(),
-                ItemType.MODULE,
-                "Instant purchase of marketplace project " + project.getProjectCode(),
-                payAmount,
-                PaymentMethod.CARD,
-                PaymentStatus.COMPLETED,
-                OrderStatus.COMPLETED,
-                "{\"paymentType\":\"FULL\",\"marketplaceProjectId\":" + project.getId() + ",\"accessGranted\":true}"
-        );
-        order.setProjectId(project.getId());
-        order.setPaymentType("FULL");
-        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
-            order.setIdempotencyKey(idempotencyKey.trim());
-        }
-
-        Order saved = orderRepository.save(order);
-
-        // Grant access to this purchased project
-        project.setPurchasedByUserId(actor.getId());
+    public void completeCustomDelivery(Project project, User requester, Long orderId, String note) {
+        ProjectStatus previous = project.getLifecycleStatus();
+        project.setRemainingPaymentStatus("COMPLETED");
         project.setStatus(ProjectStatus.ACCESS_GRANTED);
         project.setLifecycleStatus(ProjectStatus.ACCESS_GRANTED);
-        project.setAdvancePaymentStatus("COMPLETED");
-        project.setRemainingPaymentStatus("COMPLETED");
+        project.setProgressPercent(100);
         projectRepository.save(project);
+        statusHistoryService.record(StatusHistoryService.PROJECT, project.getId(), previous, ProjectStatus.ACCESS_GRANTED,
+                requester.getEmail(), note);
 
-        auditLogService.log(actor.getEmail(), "MARKETPLACE_PURCHASE_COMPLETED",
-                String.format("User %s purchased Marketplace Project %s ($%.2f)", actor.getEmail(), project.getProjectCode(), payAmount));
+        entitlementService.grant(requester, project, EntitlementSource.CUSTOM_DELIVERY, orderId, requester.getEmail());
 
-        notificationService.sendNotification(actor.getEmail(), "USER",
-                "Marketplace Purchase Confirmed",
-                "You have successfully purchased '" + project.getProjectName() + "'. Full project access is now available.",
-                "/projects/" + project.getId());
+        if (project.getLinkedRequirementId() != null) {
+            requirementRepository.findById(project.getLinkedRequirementId()).ifPresent(req -> {
+                RequirementStatus before = req.getStatus();
+                req.setStatus(RequirementStatus.COMPLETED);
+                req.setRemainingPaymentStatus("COMPLETED");
+                requirementRepository.save(req);
+                statusHistoryService.record(StatusHistoryService.REQUIREMENT, req.getId(), before, RequirementStatus.COMPLETED,
+                        requester.getEmail(), "Deliverables unlocked");
+            });
+        }
 
-        return saved;
+        auditLogService.log(requester.getEmail(), "FINAL_PAYMENT_COMPLETED",
+                String.format("Deliverables for %s (%s) unlocked for %s", project.getProjectCode(), project.getProjectName(), requester.getEmail()));
+        notificationService.sendNotification(requester.getEmail(), "USER", "Deliverables unlocked",
+                "Full access to '" + project.getProjectName() + "' is now available.", "/projects/" + project.getId());
+        if (project.getDeveloper() != null) {
+            notificationService.sendNotification(project.getDeveloper().getEmail(), "PROJECT_DEVELOPER", "Project delivered",
+                    "'" + project.getProjectName() + "' has been delivered to the student.", "/projects/" + project.getId());
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Internals
+    // ------------------------------------------------------------------
+
+    /**
+     * Charges the order through the configured gateway and records the transaction.
+     * Throws if the gateway is unavailable or the charge fails; callers grant access only after this returns.
+     */
+    private void settle(Order order, BigDecimal amount, User actor) {
+        if (amount.signum() == 0) {
+            order.setPaymentStatus(PaymentStatus.COMPLETED);
+            order.setStatus(OrderStatus.COMPLETED);
+            order.setPaymentMethod(PaymentMethod.ACADEMIC_CREDIT);
+            orderRepository.save(order);
+            statusHistoryService.record(StatusHistoryService.ORDER, order.getId(), OrderStatus.PENDING, OrderStatus.COMPLETED,
+                    actor.getEmail(), "No charge due");
+            return;
+        }
+
+        PaymentGateway gateway = activeGateway();
+        PaymentResult result = gateway.charge(order.getOrderNumber(), amount, currency, actor.getEmail());
+
+        PaymentTransaction tx = new PaymentTransaction();
+        tx.setOrder(order);
+        tx.setProvider(gateway.name());
+        tx.setProviderReference(result.getProviderReference());
+        tx.setAmount(amount);
+        tx.setCurrency(currency);
+        tx.setSimulated(gateway.isSimulated());
+
+        switch (result.getOutcome()) {
+            case SUCCEEDED:
+                tx.setStatus(PaymentTransactionStatus.SUCCEEDED);
+                tx.setVerifiedAt(LocalDateTime.now());
+                transactionRepository.save(tx);
+                order.setPaymentStatus(PaymentStatus.COMPLETED);
+                order.setStatus(OrderStatus.COMPLETED);
+                order.setSimulatedPayment(gateway.isSimulated());
+                orderRepository.save(order);
+                statusHistoryService.record(StatusHistoryService.ORDER, order.getId(), OrderStatus.PENDING, OrderStatus.COMPLETED,
+                        actor.getEmail(), (gateway.isSimulated() ? "SIMULATED payment " : "Payment ") + result.getProviderReference());
+                return;
+            case PENDING:
+                tx.setStatus(PaymentTransactionStatus.INITIATED);
+                transactionRepository.save(tx);
+                throw new IllegalStateException("Payment is pending confirmation from the provider.");
+            case FAILED:
+            default:
+                tx.setStatus(PaymentTransactionStatus.FAILED);
+                tx.setFailureReason(result.getFailureReason());
+                transactionRepository.save(tx);
+                order.setPaymentStatus(PaymentStatus.FAILED);
+                order.setStatus(OrderStatus.FAILED);
+                orderRepository.save(order);
+                throw new IllegalStateException("Payment failed: " + (result.getFailureReason() != null ? result.getFailureReason() : "declined"));
+        }
+    }
+
+    public boolean isPaymentAvailable() {
+        return gateways.stream().anyMatch(g -> g.name().equalsIgnoreCase(providerName) && g.isEnabled());
+    }
+
+    public boolean isSimulationMode() {
+        return gateways.stream().anyMatch(g -> g.name().equalsIgnoreCase(providerName) && g.isEnabled() && g.isSimulated());
+    }
+
+    private PaymentGateway activeGateway() {
+        return gateways.stream()
+                .filter(g -> g.name().equalsIgnoreCase(providerName))
+                .filter(PaymentGateway::isEnabled)
+                .findFirst()
+                .orElseThrow(() -> new PaymentUnavailableException(
+                        "Online payments are not configured on this server. Please contact the platform administrator."));
+    }
+
+    private Order newOrder(User actor, String itemName, ItemType type, String description, BigDecimal amount,
+                           String paymentType, String idempotencyKey) {
+        Order order = new Order(
+                generateUniqueOrderNumber(),
+                generateUniqueInvoiceNumber(),
+                actor,
+                itemName,
+                type,
+                description,
+                amount.doubleValue(),
+                PaymentMethod.CARD,
+                PaymentStatus.PENDING,
+                OrderStatus.PENDING,
+                null
+        );
+        order.setPaymentType(paymentType);
+        order.setCurrency(currency);
+        order.setCollegeId(actor.getCollege() != null ? actor.getCollege().getId() : null);
+        String scoped = scopedKey(idempotencyKey, actor);
+        if (scoped != null) {
+            order.setIdempotencyKey(scoped);
+        }
+        return order;
+    }
+
+    private Optional<Order> findReplay(String idempotencyKey, User actor) {
+        String scoped = scopedKey(idempotencyKey, actor);
+        if (scoped == null) {
+            return Optional.empty();
+        }
+        return orderRepository.findByIdempotencyKey(scoped)
+                .filter(o -> o.getUser().getId().equals(actor.getId()))
+                .filter(o -> o.getPaymentStatus() == PaymentStatus.COMPLETED);
+    }
+
+    private static String scopedKey(String key, User actor) {
+        if (key == null || key.isBlank()) {
+            return null;
+        }
+        String scoped = "u" + actor.getId() + ":" + key.trim();
+        return scoped.length() > 100 ? scoped.substring(0, 100) : scoped;
+    }
+
+    private void assertCanViewOrder(Order order, User actor) {
+        boolean allowed = switch (actor.getRole()) {
+            case SUPER_ADMIN -> true;
+            case ADMIN -> actor.getCollege() != null && Objects.equals(order.getCollegeId(), actor.getCollege().getId());
+            case USER -> order.getUser().getId().equals(actor.getId());
+            default -> false;
+        };
+        if (!allowed) {
+            throw new AccessDeniedException("Access Denied: You cannot view this order.");
+        }
+    }
+
+    private void notifySuperAdmins(String title, String message, String link) {
+        userRepository.findByRoleAndDeletedFalse(Role.SUPER_ADMIN)
+                .forEach(sa -> notificationService.sendNotification(sa.getEmail(), "SUPER_ADMIN", title, message, link));
+    }
+
+    private static void requireActor(User actor) {
+        if (actor == null) {
+            throw new IllegalArgumentException("Authenticated user required.");
+        }
+    }
+
+    private static BigDecimal normalize(BigDecimal value) {
+        return value == null ? BigDecimal.ZERO : value.setScale(2, RoundingMode.HALF_UP);
     }
 
     private String generateUniqueOrderNumber() {
         String num;
         do {
-            num = "ORD-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            num = "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         } while (orderRepository.existsByOrderNumber(num));
         return num;
     }
@@ -441,7 +487,7 @@ public class OrderService {
     private String generateUniqueInvoiceNumber() {
         String num;
         do {
-            num = "INV-" + (100000 + RANDOM.nextInt(900000));
+            num = "INV-" + (1000000 + RANDOM.nextInt(9000000));
         } while (orderRepository.existsByInvoiceNumber(num));
         return num;
     }

@@ -6,6 +6,17 @@ public class BulkUserCreateRequest {
 
     private List<UserCreateItemDto> users;
 
+    /** College for USER and ADMIN rows (Super Admin only; college admins always use their own). */
+    private Long collegeId;
+
+    public Long getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(Long collegeId) {
+        this.collegeId = collegeId;
+    }
+
     public BulkUserCreateRequest() {}
 
     public BulkUserCreateRequest(List<UserCreateItemDto> users) {
