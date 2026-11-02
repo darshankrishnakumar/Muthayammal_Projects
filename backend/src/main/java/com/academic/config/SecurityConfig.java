@@ -35,9 +35,6 @@ public class SecurityConfig {
     @Value("${academic.cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;
 
-    @Value("${academic.flyway.repair-on-start:false}")
-    private boolean repairOnStart;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -97,16 +94,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy flywayMigrationStrategy() {
-        return flyway -> {
-            if (repairOnStart) {
-                flyway.repair();
-            }
-            flyway.migrate();
-        };
     }
 
     private static void writeError(jakarta.servlet.http.HttpServletResponse res, HttpStatus status, String message) throws java.io.IOException {
